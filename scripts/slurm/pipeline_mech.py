@@ -111,12 +111,17 @@ def main() -> int:
                  "--seed", str(a.seed), "--arms", "base,sft,mix5"],
                 time="03:00:00", mem="96G", dry=a.dry_run)
 
-        print("\n== experiment 6: instruction sensitivity ==")
+        print("\n== experiment 6: instruction sensitivity, across the dose ladder ==")
         for d in domains_:
+            # The whole ladder, not just sft: arXiv:2509.13079 reports that mixing forward and
+            # reverse data weakens the directional distinction, and the mix arms ARE that
+            # mixture. If the prescription carries that cost it has to be measured on the
+            # prescribed doses (PREREGISTRATION.md Amendment 5).
             sub(f"m6_sens_{d}_{a.model}",
                 ["-m", "bidir.mech.sensitivity", "--domain", d, "--model", a.model,
-                 "--seed", str(a.seed), "--arms", "base,sft,mix5,mix50"],
-                time="03:00:00", dry=a.dry_run)
+                 "--seed", str(a.seed),
+                 "--arms", "base,sft,mix1,mix5,mix10,mix25,mix50,flip"],
+                time="04:00:00", dry=a.dry_run)
 
     print("\nRead them with: python scripts/53_mech_report.py")
     return 0

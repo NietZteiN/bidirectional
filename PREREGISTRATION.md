@@ -294,3 +294,38 @@ table of zeros or a silently skipped cell.
 training total from ~330 to ~391 GPU-h, within the plan's envelope. `mixedtask`'s five-task
 roster is deliberately **not** extended, because changing it would change what `mixedtask − sft`
 means between the two halves of the grid.
+
+### Amendment 5 — 2026-09-10, before any adapter was trained
+
+Prompted by a literature check ([`RELATED_WORK.md`](RELATED_WORK.md)). Two additions, both
+pre-registered here before the experiments they concern have been run.
+
+**1. A rank sweep on `rev`, and `fullft_*` reread as a capacity control.**
+
+"Directional Optimization Asymmetry in Transformers" (arXiv:2511.19997) reports that **LoRA hits
+a sharp capacity wall on high-entropy inverse mappings**. This project is LoRA-based at r=32
+throughout, and `rev` is the **kill-gate**: a near-zero `rev` is our licence to call a direction
+unlearnable and every other null uninterpretable in that cell. If the wall rather than the model
+produced that zero, the licence is void.
+
+So: `rev` is additionally trained at r ∈ {16, 32, 64, 128} in one domain, and the existing
+`fullft_*` arms are read as a direct control on this objection rather than only as the
+LoRA-forgets-less check they were specified as. **Prediction: `rev` at r=32 is within the seed
+band of `rev` at r=128** — i.e. the kill-gate is not capacity-limited. If it is not, every
+`rev`-based conclusion is restated with the rank caveat attached, and the kill-gate threshold is
+re-derived at the largest rank run.
+
+**2. Instruction sensitivity is measured on the `mix*` arms, not only on `sft`.**
+
+"When Inverse Data Outperforms" (arXiv:2509.13079) reports that naively mixing forward and
+reverse data during SFT **weakens the directional distinction** — the model becomes less able to
+tell which direction it was asked for. Our `mix*` arms are exactly that mixture, and the paper's
+prescription is to use them, so a cost they carry is a cost the prescription carries.
+
+Mechanism experiment 6 (`bidir.mech.sensitivity`) already measures this quantity; it was
+specified to run on collapsed models. It now also runs across the dose ladder.
+**Prediction: instruction sensitivity falls monotonically as the reverse share rises, and the
+fall is small below the knee.** If sensitivity collapses at the doses the paper recommends, the
+dose ladder has an upper bound as well as a lower one and the prescription becomes a range rather
+than a floor — which is a finding, not a failure, and is registered as such here rather than
+discovered later.
