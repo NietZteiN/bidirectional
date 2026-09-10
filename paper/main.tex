@@ -1,0 +1,209 @@
+% Directional collapse -- ACL 2027 draft skeleton.
+%
+% NO EXPERIMENT HAS BEEN RUN. Every quantity is a \NUM{} placeholder that renders in red as
+% <<name>> so an unfilled number cannot reach a PDF unnoticed, and \tabinput{} pulls generated
+% tables rather than pasting them. The prose here is the part of the paper that does not depend
+% on results: framing, definitions, the budget argument, related-work positioning, limitations.
+% The argument and its ordering are in ARGUMENT.md.
+%
+% Build (no LaTeX toolchain on juno as of 2026-09-10; see paper/README.md):
+%   tectonic -X compile main.tex
+
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{booktabs}
+\usepackage{natbib}
+\usepackage{graphicx}
+\usepackage{amsmath}
+\usepackage{xcolor}
+\usepackage{hyperref}
+
+% ---------------------------------------------------------------------------
+% An unfilled number must be impossible to miss. \NUM{key} renders <<key>> in red;
+% scripts/51_tables.py writes \newcommand definitions into numbers.tex as results land, and any
+% key still undefined at compile time shows up in the PDF and in a grep.
+\providecommand{\NUM}[1]{\textcolor{red}{$\langle\langle$\texttt{#1}$\rangle\rangle$}} % grep-skip
+\providecommand{\tabinput}[1]{\textcolor{red}{[table \texttt{#1} not generated yet]}}
+\IfFileExists{numbers.tex}{\input{numbers.tex}}{}
+
+\title{Directional Collapse: One-Way Fine-Tuning Erases the Way Back}
+\author{Anonymous}
+\date{}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+Many NLP tasks come in pairs whose training instances are the same data read in two directions:
+obfuscation and deobfuscation, translation each way, text-to-SQL and SQL-to-text, data-to-text
+and text-to-data. Fine-tuning on one direction destroys the ability the model already had in the
+other. We characterise this across \NUM{n-domains} paired domains and \NUM{n-families} model
+families, and show three things about it. The loss is disproportionate: the inverse direction
+falls to \NUM{abstract-reverse-after} while held-out general ability moves \NUM{abstract-general-cost}.
+It is cheap to prevent: replacing \NUM{abstract-knee} of the forward pairs with their own
+reversal restores \NUM{abstract-restored} of the lost capability, at matched instances, sequence
+tokens and optimizer steps. And what is lost is suppressed rather than erased --- recoverable by
+prompting, by scaling the adapter, by a few reversed examples, and by a closed-form filter on the
+weight update that uses no data at all. Invertibility bounds the repair, and separates two things
+usually run together: an inverse that is undetermined cannot be restored at any dose, while one
+that is merely hard to find can be. A consequence follows for attribution: any method credited
+with restoring an inverse capability on paired data must be compared against a baseline supplying
+the same directional content and none of the method.
+\end{abstract}
+
+\section{Introduction}
+\label{sec:intro}
+
+Paired data carries a direction. Obfuscating a program rewrites it so that it behaves identically
+but is hard to read; a model can be trained to perform that rewrite, or to undo it. The two tasks
+use the same pairs of programs, and training the second only requires swapping which half of each
+pair is the input. Compilation and decompilation, minification and beautification, translation
+between two languages, and the two directions of semantic parsing all work this way.
+
+% The hook: the data that would have prevented the failure was already in hand.
+This structure is what makes the failure we study both possible and avoidable. Fine-tuning a
+model on the forward direction of such a pair degrades its ability in the reverse direction ---
+an ability the base model already had. \citet{nikiema2025contrastive} name this
+\emph{cognitive specialization} and document it for code obfuscation;
+\citet{zhu2024finetuning} report the same shape in machine translation, where fine-tuning with
+English on the target side damages translation into other languages. We take the phenomenon as
+established in those settings and ask what is true of it in general.
+
+\paragraph{The loss is disproportionate, which is why it is easy to miss.}
+\NUM{intro-disproportion-sentence}
+
+\paragraph{It is cheap to prevent.}
+\NUM{intro-dose-sentence}
+
+\paragraph{Invertibility bounds the repair, and it is two properties, not one.}
+An inverse can be \emph{undetermined} --- the information needed is not present in the input, and
+no quantity of reverse data can supply it --- or \emph{determined but hard to find}, where the
+information is there and search is the obstacle. These predict different things about a cure, and
+\S\ref{sec:invertibility} separates them with a synthetic ladder that varies determinability
+directly and a domain that holds determinability fixed while varying search difficulty.
+
+\paragraph{What is lost is suppressed, not erased.}
+\NUM{intro-mechanism-sentence}
+
+\paragraph{A general test follows, and it needs no new data.}
+For any method that adds instances to paired training data, train the arm that supplies the same
+directional content and none of the method. This is more than advice because the ablation arm is
+also the remedy: running it pays for itself whichever way the comparison falls. \S\ref{sec:attrib}
+applies it to \NUM{n-attrib-methods} published objectives.
+
+\section{Directional collapse, defined}
+\label{sec:defined}
+
+A \emph{paired task} is a pair of datasets $(X, Y)$ and $(Y, X)$ over the same instances, where
+the reverse training set is obtained from the forward one by exchanging input and target. We call
+$X \to Y$ the \emph{forward} direction and $Y \to X$ the \emph{reverse}. \emph{Directional
+collapse} is a fall in reverse-direction success after fine-tuning on forward-direction data
+alone, measured against the untouched model.
+
+Every domain has a strict per-instance criterion with an automatic check
+(\S\ref{sec:setup}). Two failure modes are tracked separately and never counted as success:
+
+\begin{description}
+\item[Echo] the output reproduces its own input. This is not hygiene. In JSON-to-YAML
+  conversion, JSON is valid YAML, so a model that copies its input \emph{parses} and
+  \emph{compares structurally equal} to the target; without the echo guard the task is not a
+  task. Echo rates rose under forward-only training in earlier work, so a criterion that admits
+  them measures the criterion rather than the capability.
+\item[Off-target] the output is in the wrong language, format, or notation.
+\end{description}
+
+Thresholds for continuous criteria are fixed from the \emph{untouched} model's own score
+distribution before any fine-tuned model is scored, and are recorded with the date and quantile
+that produced them.
+
+\section{Setup}
+\label{sec:setup}
+
+\paragraph{Domains.} \NUM{setup-domains-sentence}
+\tabinput{domains}
+
+\paragraph{Models.} \NUM{setup-models-sentence}
+
+\paragraph{Arms and budget.}
+The forward-only baseline (\textsc{sft}) trains on forward pairs. Each \textsc{mix}$k$ arm
+replaces $k\%$ of those pairs with their own reversal, partitioned by pair identity so that no
+pair is seen in both directions. Because the reversal \emph{replaces} rather than adds, instance
+count, sequence tokens and optimizer steps are matched to \textsc{sft} at every dose, and the
+only quantity varying along the ladder is the share of pairs seen backwards.
+\citet{golovneva2024reversetraining} distinguish data-matched from compute-matched reverse
+training; replacement is matched on both simultaneously, which is what licenses the word
+``free'' in \S\ref{sec:dose} --- scoped, there and throughout, to training budget.
+
+Two controls separate directional loss from its alternatives. \textsc{replay} replaces the same
+share with generic instruction data, so \textsc{replay}~$-$~\textsc{sft} is ordinary forgetting
+and \textsc{mix}~$-$~\textsc{replay} is what direction specifically buys. \textsc{rev} trains on
+reverse pairs only and is the ceiling every reverse number is read against; where \textsc{rev} is
+near zero the direction is not learnable in that cell and no null there is interpretable.
+\tabinput{arms}
+
+\section{Collapse is general and disproportionate}
+\label{sec:general}
+\NUM{general-headline-sentence}
+\tabinput{main}
+
+\paragraph{It is not ordinary forgetting.} \NUM{general-replay-contrast}
+\paragraph{It is not a loss of instruction following.} \NUM{general-ifeval-contrast}
+\paragraph{Moderators.} \NUM{general-moderators}
+
+\section{A small reversed dose restores it at no cost}
+\label{sec:dose}
+\NUM{dose-headline-sentence}
+\tabinput{dose}
+
+\paragraph{Where the knee is.} We define the knee as the smallest dose whose reverse success
+reaches $90\%$ of \textsc{mix50}'s in that cell. \NUM{dose-knee-sentence}
+
+\paragraph{What it costs.} \NUM{dose-cost-sentence} Fine-tuning costs general ability at any
+direction mix; the dose is free relative to the forward-only baseline, not relative to the
+untouched model.
+
+\section{Invertibility bounds what can be restored}
+\label{sec:invertibility}
+\NUM{invertibility-headline-sentence}
+\tabinput{ladder}
+
+\paragraph{Two kinds of hardness.} \NUM{invertibility-two-kinds}
+
+\section{Suppressed, not erased}
+\label{sec:mechanism}
+
+Four instruments, reported as separate verdicts rather than averaged: they measure different
+things, and a disagreement between them is a finding rather than noise.
+
+\paragraph{Prompting recovers part of what tuning removed.} \NUM{mech-elicitation}
+\paragraph{The collapse is a cheap direction in weight space.} \NUM{mech-alpha}
+\paragraph{Relearning outruns a capability never held.} \NUM{mech-relearn}
+This is also where the contrast with the reversal curse \citep{berglund2024reversal} becomes
+experimental rather than rhetorical: that literature describes capabilities never acquired, and
+our never-had control is that case, constructed.
+\paragraph{A closed-form filter on the update restores it with no data.} \NUM{mech-spectral}
+
+\section{Consequences for attribution}
+\label{sec:attrib}
+\NUM{attrib-headline-sentence}
+
+We do not claim that every auxiliary-objective result on paired data is a directional artifact.
+We measured \NUM{n-attrib-methods}; the confound is real, cheap to test for, and currently
+untested, and anything stronger than that is unsupported.
+
+\section{Related work}
+\label{sec:related}
+\NUM{related-work-section}
+
+\section{Limitations}
+\label{sec:limitations}
+\NUM{limitations-section}
+
+\section{Conclusion}
+For any method that adds instances to paired training data, train the arm that supplies the same
+directional content and none of the method.
+
+\bibliographystyle{plainnat}
+\bibliography{../papers/references}
+
+\end{document}
