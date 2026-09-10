@@ -19,7 +19,9 @@
 grep -o '\\NUM{[^}]*}' paper/main.tex | sort -u
 ```
 
-lists everything still outstanding. As results land, `scripts/51_tables.py` writes
+lists everything still outstanding (28 at the time of writing). Comments are stripped
+first: the file explains its own convention in a comment, and counting that would make the
+check unreliable for the one job it has. As results land, `scripts/51_tables.py` writes
 `\newcommand` definitions into `paper/numbers.tex`, which `main.tex` inputs when it exists.
 
 **No number is hand-typed.** That rule cost the workshop paper three corrections when it was not
