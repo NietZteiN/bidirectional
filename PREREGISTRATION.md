@@ -329,3 +329,47 @@ fall is small below the knee.** If sensitivity collapses at the doses the paper 
 dose ladder has an upper bound as well as a lower one and the prescription becomes a range rather
 than a floor — which is a finding, not a failure, and is registered as such here rather than
 discovered later.
+
+### Amendment 6 — 2026-09-10, before any adapter was trained
+
+**Amendment 5's first item was based on an abstract and is withdrawn. The second stands, with a
+narrower claim.**
+
+Amendment 5 was written from abstracts. The papers have now been read
+([`papers/`](papers/), cited by page in [`RELATED_WORK.md`](RELATED_WORK.md)), and one of the two
+additions was aimed at a claim its source does not make.
+
+**Withdrawn: the `rev` rank sweep.** I registered it because arXiv:2511.19997's abstract reports
+that "LoRA encounters a sharp capacity wall on high-entropy inverse mappings", which I read as a
+threat to the kill-gate. The paper's Table 3 (p. 8) shows inverse excess loss of 5.06 at r=8,
+4.85 at r=64 and 4.75 at r=256 — rank buys almost nothing — and forward excess loss of
+4.85/1.66/1.60, so the wall is in **both directions**. It is not a directional finding about
+LoRA; LoRA simply underperforms scratch and full fine-tuning on that task either way. The task
+is also random i.i.d. strings with, in their words, no pattern appearing more often than chance
+(p. 2) — pure memorization over 40,000 arbitrary pairs, at GPT-2 Small scale. A low-rank update
+is the wrong instrument for a lookup table, which says little about structured inverses like
+deobfuscation or factorization.
+
+The registered prediction ("`rev` at r=32 within the seed band of r=128") is therefore withdrawn
+rather than left to be quietly not-run. The `fullft_*` arms remain the honest control for "is
+this a LoRA artifact", which is a question a reviewer will still ask.
+
+**Gained instead: an analytic prediction for RQ3.** The same paper's branching factor *K* is
+invertibility in formal dress — the forward map is deterministic (H = 0), the inverse one-to-many
+with entropy floor H(A|B) = log K — and at **K=1 they find forward and reverse converge
+identically** once the floor is accounted for (p. 3). That is our `fmt` baseline prediction,
+derived analytically on a semantics-free task. **Registered: `fmt` (100 % determinable) shows the
+smallest forward-reverse gap of any cell in the grid, and `automata` — determined but
+computationally hard — shows a large gap despite a determinability of 1.0.** If `automata`'s gap
+is small, the two kinds of hardness are not separable by this design and RQ3's refinement in
+Amendment 4 fails.
+
+**Retained, with a narrower claim: instruction sensitivity across the dose ladder.**
+arXiv:2509.13079's "directional distinction" turns out to be a log-likelihood margin between
+preferred and dispreferred reasoning paths, narrowed to 0.05--0.1 by mixing (p. 5) — not
+instruction-following sensitivity, which is what mechanism experiment 6 measures. Their mixture
+is also a single 1:1 blend, where our knee is predicted below 10 %. The experiment still runs
+across the ladder, but the prediction is downgraded from "sensitivity falls monotonically" to:
+**sensitivity at the recommended dose is within the seed band of `sft`**, with any fall
+concentrated at 50 % and above. A fall at 5 % would be the surprising result, and is the one
+worth having registered.

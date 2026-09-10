@@ -1,0 +1,832 @@
+% The Free Flip. ATTRIB @ NeurIPS 2026 workshop submission (non-archival).
+% Draft v3, 2026-08-17, on the neurips_2026 style. Every number's provenance is in
+% NUMBERS.md; nothing here is quoted from memory.
+% House style for this document: no em dashes and no prose colons. The TITLE is exempt from
+% the colon rule -- a title is not prose, and the mid-title period the rule otherwise forces
+% reads as a typo. Do not "restore" it.
+
+\documentclass{article}
+
+% ATTRIB is a NeurIPS workshop, so this uses the workshop track rather than the main
+% conference track. `dblblindworkshop` keeps the submission anonymous, which matches the
+% author block below and the fact that the authors of the replicated work may review this.
+% If ATTRIB turns out to be single-blind, change this one word to `sglblindworkshop` and
+% de-anonymise \author -- nothing else in the document depends on it.
+\usepackage[dblblindworkshop]{neurips_2026}
+\workshoptitle{  3rd Workshop on Attributing Model Behavior at Scale (ATTRIB)}
+
+\makeatletter
+% Two corrections to the style's submission defaults, both because this is a WORKSHOP paper.
+%
+% 1. Under the anonymous option the style hardcodes a four-line placeholder block reading
+%    "Anonymous Author(s) / Affiliation / Address / email" and ignores \author entirely
+%    (neurips_2026.sty l.336). `@anonymous` is tested in exactly that one place, so clearing
+%    it hands control back to \author with no other effect. Anonymity is then whatever
+%    \author says, which below is the author line alone with no affiliation scaffolding.
+% 2. The first-page footer defaults to the main-conference notice, "Submitted to ... NeurIPS
+%    2026. Do not distribute.", which is not what an ATTRIB submission is. The style already
+%    builds the right workshop line in `@trackname` but only emits it in camera-ready mode,
+%    so we point the notice at it.
+\@anonymousfalse
+\renewcommand{\@noticestring}{\@trackname}
+\makeatother
+
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{booktabs}
+\usepackage{amsmath,amssymb}
+\usepackage{graphicx}
+\usepackage{xcolor}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.18}
+\usetikzlibrary{arrows.meta}
+\definecolor{flipteal}{HTML}{2C6E8A}
+\definecolor{failred}{HTML}{B03A2E}
+\usepackage{microtype}
+\usepackage[hidelinks]{hyperref}
+% neurips_2026 loads natbib itself; only the style needs setting.
+\bibliographystyle{plainnat}
+
+\newcommand{\arm}[1]{\texttt{#1}}
+\newcommand{\ci}[2]{{\small[#1,\,#2]}}
+
+% The title names the CONFOUND, not the refuted paper. This paper is not "CFT does not work";
+% it is "direction is an attribution confound, and here is a setting where it accounts for a
+% published effect entirely". The obfuscation study is the instance, not the target. Keeping
+% "The Free Flip" as the handle because the drafts, the logs and the repo all use it.
+\title{Attributing Gains in Paired Training: Objective or Data Direction? }
+
+\author{Anonymous Author(s)}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+Fine-tuning a model on a one-way transformation like code obfuscation can destroy its ability to perform the inverse operation like deobfuscation. In a phenomenon similar to catastrophic forgetting, the capability loss is disproportionately concentrated on the exact inverse mapping rather than general reasoning. Recent work reports that an auxiliary contrastive objective repairs this lost capability without explicit reverse supervision. However, auxiliary methods introduce both a new objective and additional paired data, leaving it unclear whether the recovery stems from the loss formulation or the data distribution. Standard controls matching instance count, tokens, or compute cannot resolve this confound. We isolate the two factors using a factorial design. The contrastive objective provides no meaningful gain, whereas exposing the model to reversed pairs accounts for virtually the entire recovery. Simply flipping the input-output pairs under standard fine-tuning restores the inverse capability without adding compute or collecting new data. These findings show that bidirectional data is effective on its own, offering a straightforward control that extends naturally to evaluate other methods trained on paired tasks.
+\end{abstract}
+
+\section{Introduction}
+\textbf{Paired data carries a direction.} Obfuscating a program rewrites it so that it behaves
+identically while obscuring its implementation, such as renaming \texttt{total\_price} to \texttt{v\_a3f2} or
+replacing control flow with a dispatch loop \citep{nikiema2025contrastive}. A model can learn to apply that rewrite (the \textbf{forward} direction)
+or to undo it (the \textbf{reverse} direction), which is the capability practitioners typically require
+\citep{roziere2021dobf} (Figure~\ref{fig:attribution}).
+Because the two tasks rely on identical program pairs, training the reverse direction requires only swapping the input and output fields.
+Compilation, minification, and translation tasks share this exact structure \citep{tan2024llm4decompile}.
+
+\textbf{One-way fine-tuning destroys the inverse capability.} Fine-tuning a model solely on the forward direction removes its ability to perform the reverse task. At 7B scale, forward-only fine-tuning reduces reverse success from $12.9\%$ to $0.0\%$. This loss is disproportionate rather than a general degradation, distinguishing it from ordinary catastrophic forgetting \citep{french1999catastrophic,luo2023empirical}. While the fine-tuned model drops roughly five percentage points on held-out general coding benchmarks ($0.662$ on MBPP+ compared to $0.714$ untouched; \citealp{liu2023evalplus}), the reverse capability is eliminated entirely. Practitioners fine-tuning models on unidirectional tasks risk silently erasing inverse operations without detecting that loss on standard evaluations.
+
+\input{fig_attribution}
+
+\textbf{The reported remedy, and why it introduces an attribution problem.} \citet{nikiema2025contrastive} document this failure mode as \emph{cognitive specialization} and propose \textbf{Contrastive Fine-Tuning} (CFT) as a solution. CFT augments the standard generation loss with two equivalence-judgement terms (Figure~\ref{fig:attribution}a), training the model to evaluate whether program pairs are semantically equivalent alongside learning to obfuscate. They report that this auxiliary objective recovers 39--52\% reverse success without explicit reverse generation supervision, suggesting that the capability is unlocked by the objective formulation rather than the training data distribution.
+
+This setup creates an inherent attribution confound. Auxiliary-task methods alter both the training objective and the specific instances presented to the model. When auxiliary instances supply exposure to the reverse mapping, performance gains may stem entirely from that data distribution rather than the loss function. Standard experimental controls that match token count, optimizer steps, or total compute fail to resolve this confound because they leave directional data ratios unconstrained.
+
+\textbf{A zero-cost directional control.} Our experiments demonstrate that data direction accounts for virtually the entire capability recovery, whereas the auxiliary objective provides no detectable gain (Figure~\ref{fig:attribution}b). Whenever an auxiliary method introduces paired instances, researchers should evaluate a baseline that provides the identical directional mixture using standard supervised fine-tuning. This control requires no new data collection or annotation, as reverse pairs are generated directly from the existing forward dataset.
+
+If this direction-matched baseline replicates the observed gains, the recovery belongs to data composition rather than the training objective. Replacing half of the forward pairs with reversed counterparts at matched compute raises reverse success from 0.0\% to 32.8\%, while reimplementing the contrastive objective yields only 0.1\%. Two boundaries qualify this result. Bidirectional training succeeds only on transformations that are structurally invertible, and while it restores the inverse capability, it does not mitigate the five-point general coding degradation incurred during fine-tuning.
+
+\section{Setup}
+\label{sec:setup}
+
+\textbf{Programs and rewrites.} We use Python functions that come with executable test
+inputs, drawn from APPS \citep{hendrycks2021apps}, CRUXEval \citep{gu2024cruxeval} and
+HumanEval \citep{chen2021codex}. Each function is rewritten under five obfuscating transforms. Three rewrite identifiers, by
+renaming them to misleading names (\arm{L1b}), to random strings such as \texttt{v\_a3f2}
+(\arm{L1r}), or to single letters with type annotations stripped (\arm{L2}). Two rewrite
+structure, by flattening control flow into a dispatch loop (\arm{S1}) or inserting
+always-true tests and unreachable code (\arm{S2}). That split matters later, because only the
+structural rewrites can be undone. Full definitions are in Appendix~\ref{app:conditions}.
+Every rewrite is applied to the original function on its own, never stacked, and is kept only
+if the rewritten program still produces the original outputs.
+
+\textbf{How we score a trial.} For one trial let $x$ be the original readable program,
+$\tilde x$ its obfuscated form, and $\hat y$ the model's output. Four quantities build the
+criteria. $\mathrm{parses}(\hat y)$ is 1 when the output is non-empty and parses in the target
+language. $S(a,b)\in[0,1]$ is CodeBLEU similarity between two programs
+\citep{ren2020codebleu}. $R(a)\in[0,1]$ is readability, a weighted sum of identifier
+meaningfulness (0.55) with identifier length, line length and nesting depth (0.15 each), and it
+returns 0 for a non-parsing output, since the readability of a non-program is undefined and 0
+is the only resolution that cannot manufacture a success. $E(\hat y)$ is 1 when the output
+executes and reproduces $x$'s outputs on every test input that ships with the program.
+Appendix~\ref{app:metrics} restates these as a table.
+
+In the forward direction the model must emit an obfuscated program, and we score it by
+whether that program still computes the original outputs, so forward success is $E(\hat y)$.
+
+For the reverse direction we report two criteria, because the published one turns out to be
+permissive. The \textbf{published criterion} is the test used by
+\citet{nikiema2025contrastive}, which asks that the output be textually dissimilar to the
+obfuscated input and about as readable as the original,
+\begin{equation}
+\mathrm{Pub}(\hat y) \;=\; \mathrm{parses}(\hat y) \;\wedge\;
+\big[\,S(\hat y,\tilde x) < 0.4\,\big] \;\wedge\;
+\big[\,R(\hat y) \ge R(x) - 0.1\,\big],
+\label{eq:pub}
+\end{equation}
+where the thresholds are that paper's values and the $\mathrm{parses}$ conjunct is ours. The
+guard is not optional, because without it the first inequality is satisfied by any reply that
+merely differs from the input, and a run of fixed placeholder strings scored 17--25\% ``reverse
+success'' before we added it. It can only lower a reported number, never inflate one.
+
+\textbf{Strict success}, our headline metric, additionally requires that the recovered program
+run correctly,
+\begin{equation}
+\mathrm{Strict}(\hat y) \;=\; \mathrm{Pub}(\hat y) \;\wedge\; E(\hat y).
+\label{eq:strict}
+\end{equation}
+A deobfuscation that does not run has recovered nothing. We track \textbf{echoing},
+$\mathrm{Echo}(\hat y)=\mathbf{1}[\hat y = \tilde x]$, separately rather than letting replies
+that return the input count towards accuracy.
+
+One substitution matters for Eq.~\eqref{eq:pub}. The original study measures readability with
+the model of \citet{scalabrino2018comprehension}, which we do not have, so $R$ is the proxy in
+Table~\ref{tab:metrics}. We checked what that costs by recomputing every result while varying
+the readability treatment, including dropping the term entirely, and strict success moves by
+at most $1.3$ pp on any trained arm against an effect of 33 points
+(Appendix~\ref{app:fidelity}). Execution and the similarity bound do essentially all the
+deciding.
+
+\textbf{What we compare.} Every model in this paper is the same base model with a small
+set of adapter weights trained on top, using LoRA \citep{hu2022lora}, and every one uses an
+identical recipe (rank 32, three epochs, learning rate $10^{-4}$, batch 64, seed 17). The
+only thing that differs between them is the mixture of training examples, so no difference
+between them can come from hyperparameters. We call each mixture an \textbf{arm};
+Table~\ref{tab:arms} in Appendix~\ref{app:arms} defines all eight.
+
+\textbf{Evaluation and uncertainty.} We decode greedily on 300 held-out programs, using
+only programs that every transform succeeded on so that no two cells are scored on
+different populations. All intervals are 95\% confidence intervals from a bootstrap that
+resamples \emph{programs} rather than individual test cases, because several test cases
+share a program and are therefore correlated. We write \textbf{pp} for percentage points.
+Greedy decoding is not bitwise repeatable here, since batching changes which token wins a
+near-tie, so two passes over the same programs differ on 6 to 8\% of generations and move a
+headline rate by about $0.2$ pp (Appendix~\ref{app:fidelity}). Every table comes from a single
+pass, we compare arms only within a pass, and we never quote a cross-pass difference below
+$0.5$ pp.
+
+\section{Decomposing the objective and the data direction}
+\label{sec:factorial}
+
+Table~\ref{tab:factorial} varies the two factors CFT bundles together. One factor is
+whether the equivalence-judgement objective is present. The other is whether the training
+data contains the reversed pairs. All four cells use the same 300 programs and the same
+18\,000 graded attempts. This section and the dose response are at 1.5B. Three of the four
+cells also exist at 7B and are in Table~\ref{tab:main7b}, so both main effects reproduce at the
+scale the abstract quotes; only the interaction term rests on 1.5B, because the fourth cell
+would have cost a further 8.8 GPU-hours on a shared machine.
+
+\begin{table}[t]
+\centering\small
+\caption{The $2\times2$ experiment. Qwen2.5-Coder-1.5B \citep{hui2024qwen25coder}, strict
+reverse success in per cent, 300 programs and 18\,000 graded attempts, all cells scored on
+the same programs. The right-hand panel decomposes the four cells into the effect of each
+factor.}
+\label{tab:factorial}
+\begin{tabular}{lcc}
+\toprule
+& forward only & $+$ reversed pairs \\
+\midrule
+no judgement objective & \arm{sft} \;\;0.3 & \arm{flip} \;\;\textbf{31.4} \\
+with judgement objective & \arm{cft} \;\;0.3 & \arm{cftflip} \;\;\textbf{31.1} \\
+\bottomrule
+\end{tabular}
+\hspace{1.5em}
+\begin{tabular}{lcc}
+\toprule
+effect of & estimate (pp) & 95\% CI \\
+\midrule
+\textbf{reversing the data} & $\mathbf{+30.9}$ & $[+29.3,+32.6]$ \\
+\textbf{the objective} & $\mathbf{-0.2}$ & $[-0.7,+0.3]$ \\
+the two interacting & $-0.3$ & $[-1.3,+0.7]$ \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+The objective's contribution is not merely too small to detect. It is bounded under one
+percentage point in either direction whether or not reversed data is present, with an
+interaction that also spans zero. Adding it to forward-only training moves reverse success by
+$-0.1$ pp $[-0.5,+0.3]$, and adding it on top of reversed data by $-0.3$ pp $[-1.2,+0.5]$,
+against roughly 31 points for reversing the data. Whatever recovers the reverse direction, it
+is not the objective.
+
+Training longer does not explain it either. \arm{fwd2x} trains forward-only for twice as
+many optimizer steps and reaches $0.6\%$, which is $+0.3$ pp over \arm{sft} with an
+interval of $[-0.2,+0.8]$.
+
+\textbf{How much reversed data is needed, and it is much less than half.}
+Appendix~\ref{app:dose} replaces forward examples with reversed ones in increasing amounts.
+Replacing only 5\% of them already recovers $26.1\%$, against $0.3\%$ for forward-only,
+which is 85\% of what a 50\% share achieves. The remaining climb is real but small, worth
+$+4.5$ pp $[+3.2,+5.8]$, and it has flattened by the time a quarter of the data is
+reversed. So the intervention is not a matter of data volume. A small amount of exposure to
+the reverse direction captures most of the effect.
+
+
+\section{The budget-matched arm, which is also the remedy}
+\label{sec:budget}
+
+The obvious objection to Table~\ref{tab:factorial} is that \arm{flip} sees twice as many
+examples as \arm{sft}. \arm{mix50} answers it by \emph{replacing} half the forward examples
+rather than adding to them, so it trains on the same 7\,383 examples for the same 346
+optimizer steps. Two quantities matter separately. \textbf{Sequence tokens} are everything the
+model reads, which sets compute; \textbf{supervised tokens} are the subset the loss is computed
+on, which sets how much it is taught. \arm{mix50} uses $1.05\times$ the sequence tokens of
+\arm{sft} and $0.71\times$ the supervised tokens, so it is taught \emph{less}, not more.
+
+\begin{table}[t]
+\centering\small
+\caption{Qwen2.5-Coder-7B, 300 programs, 21\,000 graded attempts. \emph{Forward} is scored
+by execution. \emph{Reverse (strict)} requires the published criterion and that the output
+run correctly. \emph{Echo} is how often the model returns its input unchanged.}
+\label{tab:main7b}
+\begin{tabular}{lcccc}
+\toprule
+arm & forward & \textbf{reverse (strict)} & reverse (published crit.) & echo \\
+\midrule
+\arm{base} \emph{(untouched)}      & .929 & \textbf{.129} & .233 & .073 \\
+\arm{sft} \emph{(forward only)}    & .971 & \textbf{.000} & .004 & .182 \\
+\arm{fwd2x} \emph{(2$\times$ epochs)} & .969 & \textbf{.001} & .019 & .071 \\
+\arm{cft} \emph{(published method)} & .975 & \textbf{.001} & .002 & \textbf{.293} \\
+\arm{rev} \emph{(reverse only)}    & .927 & \textbf{.329} & .351 & .000 \\
+\arm{flip}                         & .971 & \textbf{.335} & .353 & .000 \\
+\arm{mix50} \emph{(same cost as \arm{sft})} & .961 & \textbf{.328} & .356 & .000 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\arm{mix50} reaches $+32.8$ pp over \arm{sft} $[+31.3,+34.4]$ while costing no more on any axis
+a practitioner pays for, and \arm{flip}, which does spend $2.09\times$ the sequence tokens,
+buys only $+0.7$ pp more $[-0.3,+1.8]$, an interval spanning zero. The extra compute is not
+what produces the capability. The exposure is. The published method fares worst here, spending
+$2.65\times$ the compute of forward-only training to add 2\% more supervised signal, because
+each equivalence judgement puts two whole programs in the prompt and supervises one word.
+The echo column indicates what it does train. \arm{cft} returns its input unchanged on $29.3\%$
+of trials against $18.2\%$ for \arm{sft} and $7.3\%$ untouched, so it does not merely fail to
+restore the reverse direction, it moves the model toward copying.
+
+\textbf{The replication fails in the direction that matters.} Our \arm{cft} arm reaches
+$0.1\%$ strict reverse success at 7B, against a reported 39--52\%. The gap is not merely a shortfall, since \arm{cft}
+lands $12.8$ pp \emph{below the untouched model} $[-14.8,-10.9]$, which itself scores $12.9\%$,
+and forward-only training lands equally far below. Both recipes \emph{remove} a capability the
+base model already had, and the contrastive one does not restore it. We report this at 7B
+because that is the size at which the original study's open-source results sit. Our corpus is
+Python and smaller than theirs, and our \arm{cft} arm is a reconstruction. The original states
+its objective as three instance pools with counts rather than as a loss, never using the words
+InfoNCE, margin, cosine or embedding, and two of its three headline CFT results come from
+provider fine-tuning APIs that take only supervised input$\rightarrow$output pairs and cannot
+express an embedding-space loss at all, so joint next-token cross-entropy over the pools is the
+reading its own description supports (Appendix~\ref{app:fidelity}). This is a failure to
+reproduce in our setting rather than a verdict on contrastive training, and the positive result
+rests on neither, since \arm{mix50} and \arm{flip} are ordinary supervised fine-tuning.
+
+\section{Two limits on the remedy}
+\label{sec:cost}
+
+\textbf{It only works where the transformation has an inverse.} The headline $33\%$ averages
+five transforms that behave nothing alike, and the average hides a ceiling. On the two
+structural transforms the bidirectional arms reach about $80\%$, while on the three renaming
+transforms \emph{every} arm sits at or below $2.3\%$, including \arm{rev}, which trains on
+nothing but deobfuscation (Appendix~\ref{app:bycond}). The cause is the task, not the data.
+Once \texttt{total\_price} has become \texttt{v\_a3f2} the original name is absent from the
+input, so no quantity of reverse supervision recovers it, and reverse training should not be
+expected to help on transforms that destroy information rather than rearrange it. The published criterion is
+uninformative here as well (Appendix~\ref{app:e8}).
+
+\textbf{It costs general coding ability, and the cost belongs to fine-tuning rather than to
+bidirectionality.} On forward accuracy the flip is genuinely free, matching \arm{sft} on every
+transform (Appendix~\ref{app:fwd}). On general ability nothing is free, and we measure it twice
+because one of the two probes is contaminated. \textbf{HumanEval+} \citep{liu2023evalplus} is 164
+problems scored by execution, where \textbf{pass@1} is the fraction solved first try, and
+HumanEval is one of our corpus's three sources, so 74 of those 164 sit in our training split.
+\textbf{MBPP+} is 399 problems our corpus excludes entirely, 0 of 399. Only the second supports a
+comparison against the untouched model.
+
+\begin{table}[t]
+\centering\small
+\caption{pass@1, no scorer errors in any cell. HumanEval+ is 164 problems, of which 74 are in
+our training split; MBPP+ is 399 and is held out completely. The grouping visible in the 7B
+HumanEval+ column does not survive on data the arms never saw.}
+\label{tab:humaneval}
+\begin{tabular}{lccc}
+\toprule
+& \multicolumn{2}{c}{HumanEval+ \emph{(74/164 seen)}} & MBPP+ \emph{(0/399 seen)} \\
+\cmidrule(lr){2-3}\cmidrule(lr){4-4}
+arm & 1.5B & 7B & \textbf{7B} \\
+\midrule
+\arm{base} \emph{(untouched)} & \textbf{.646} & \textbf{.805} & \textbf{.714} \\
+\midrule
+\arm{sft} \emph{(forward only)} & .329 & .817 & .662 \\
+\arm{fwd2x} \emph{(forward, 2$\times$ epochs)} & n/a & .805 & .689 \\
+\arm{cft} \emph{(forward $+$ judgements)} & .366 & .799 & .664 \\
+\arm{rev} \emph{(reverse only)} & .585 & .799 & .654 \\
+\arm{flip} & .512 & .744 & .652 \\
+\arm{mix50} & .469 & .732 & .659 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+On the held-out probe the arms are not distinguishable from one another, and all of them sit
+below the untouched model. Every trained arm except \arm{fwd2x} is significantly under it, by
+$2.5$ to $6.3$ points, and no arm-against-arm contrast resolves. \arm{mix50} minus \arm{sft} is
+$-0.3$ pp $[-4.0,+3.5]$, and the both-directions minus one-direction contrast that HumanEval+
+puts at 6 to 7 points is $-1.2$ pp $[-3.8,+1.5]$ on MBPP+. Pooled over the six trained arms the
+cost is $5.1$ pp $[-8.0,-2.1]$ whatever the mixture. The grouping in the HumanEval+ column is an
+artifact of what those arms had already seen. \arm{sft} scores $1.2$ points \emph{above} the
+untouched model on the benchmark 74 of whose problems it trained on, and $5.3$ points below it
+$[-9.0,-1.5]$ on the benchmark it never saw. Intervals are paired bootstraps over the 399 tasks,
+and the sign of every conclusion here is confirmed by an exact McNemar test on the discordant
+tasks.
+
+Two consequences follow, in opposite directions. The remedy becomes cheaper, since bidirectional data
+costs no more than the forward-only training a practitioner would run anyway, so the flip is free
+against the baseline that matters. But forward-only tuning does not leave general ability
+untouched; it costs about five points. What survives is the disproportion. Reverse success goes
+to zero, a total loss, while general ability gives up a fourteenth of its value. Two caveats. At
+1.5B forward-only training is instead the most damaging arm, which reads as ordinary overfitting
+to a narrow task. And the HumanEval+ cells predate our per-task logging, so that column carries
+point estimates only.
+
+\section{Related work}
+
+\textbf{Directionality and the reversal curse.} The nearest literature to our phenomenon is
+the reversal curse. \citet{berglund2024reversal} show that a model trained on ``A is B'' does
+not thereby learn ``B is A'', and \citet{golovneva2024reverse} cure much of that failure with
+reverse training, in which strings are additionally presented reversed, evaluated in both
+data-matched and compute-matched settings. 
+
+What we report is a different failure with the same symptom. The reversal curse is a failure to
+\emph{generalize} to a direction never trained, so the capability was never present. Here the
+untouched model can already work in reverse, scoring $12.9\%$ at 7B, and forward-only
+fine-tuning \emph{removes} it, taking it to $0.0\%$. Destroying an ability the model had is not
+the same event as failing to acquire one, and it is caused by the fine-tuning a practitioner
+chooses to run. The loss is also disproportionate, costing general coding ability about five
+points where the reverse direction goes entirely, whereas
+the reversal curse describes a limit on what a training distribution can teach rather than
+damage to an existing skill. The inverse here is semantic too, undoing a program
+transformation rather than reordering tokens or entities.
+
+\textbf{Deobfuscation.} \citet{nikiema2025contrastive} is the study replicated here. A larger
+literature trains models to recover source from a transformed form, whether obfuscated,
+compiled or decompiled \citep{roziere2021dobf,tan2024llm4decompile,hu2026bindeobf}, and our
+setting differs in where the reverse supervision comes from, since we re-read pairs that
+already exist. \citet{guzman2026poisoned} finds that misleading identifiers survive
+deobfuscation almost always, agreeing with our renaming ceiling. All arms are LoRA adapters
+\citep{hu2022lora}.
+
+\section{Conclusion}
+\label{sec:limits}
+Standard compute and token budgets do not hold data direction constant. When an auxiliary method adds paired instances, it shifts directional exposure and introduces a severe attribution confound. In our experiments, this confound explains the reported recovery in full. The auxiliary contrastive objective contributes an effect indistinguishable from zero ($-0.2$\,pp), while exposing the model to reversed pairs provides $+30.9$\,pp. Any method proposed on paired tasks must be tested against the direction-matched baseline that the data inherently enables.
+
+Beyond attribution, our results expose a critical deployment risk. Fine-tuning on a one-way transformation causes an asymmetric capability collapse, reducing reverse success from 12.9\% to 0.0\% at 7B while barely registering on general benchmarks. This silent capability erasure requires neither complex objectives nor extra compute to fix. Replacing as little as 5\% of forward pairs with reversed counterparts under standard supervised fine-tuning recovers 85\% of the lost performance. To ensure reliable model development on paired domains like decompilation and translation, practitioners must evaluate inverse integrity directly and test against strictly unexposed, held-out distributions.
+
+\textbf{Future work.} The other invertible pairs offer a direct test of whether the loss and the
+repair transfer, and we have not run it. Measurement needs attention too. At 7B a
+general benchmark whose problems were partly in the training split moved
+$+1.2$ points while the reverse direction went to zero, and a held-out one moved $-5.3$, so
+probes paired to the trained transformation, and probes the model has demonstrably not seen,
+both appear necessary to catch this class of loss.
+
+\bibliography{refs}
+
+% Order required by the NeurIPS template: references, then supplemental material, then the
+% checklist. Neither the appendix nor the checklist counts toward the page limit.
+\appendix
+\section*{Appendix}
+
+\section{The training mixtures}
+\label{app:arms}
+\begin{table}[h]
+\centering\small
+\caption{The training mixtures compared in this paper. Only the mixture differs; the model,
+recipe and budget are otherwise identical. \arm{mix50} \emph{replaces} forward examples
+rather than adding to them, which is what makes it cost the same as \arm{sft}.}
+\label{tab:arms}
+\begin{tabular}{llp{6.6cm}}
+\toprule
+arm & training examples & why it is in the experiment \\
+\midrule
+\arm{base} & none & the untouched control the original study omits \\
+\arm{sft} & forward only & the original study's forward-only baseline \\
+\arm{cft} & forward $+$ equivalence judgements & our reimplementation of the published method \\
+\arm{flip} & forward $+$ the same pairs reversed & the declared but unreported baseline \\
+\arm{mix50} & half forward, half reversed & the decisive arm, cost-matched to \arm{sft} with \emph{less} supervision \\
+\arm{rev} & reverse only & how well reverse can be done at all \\
+\arm{fwd2x} & forward only, twice the epochs & rules out ``it simply trained longer'' \\
+\arm{cftflip} & judgements $+$ both directions & the fourth cell of the $2\times2$ \\
+\bottomrule
+\end{tabular}
+\end{table}
+Every arm is the same base model under the same LoRA recipe, so any difference between two
+rows is a difference of training data alone. \arm{cftflip} exists only at 1.5B.
+
+\section{Reimplementation fidelity, deviations, and the determinism floor}
+\label{app:fidelity}
+
+\paragraph{The original objective is instance-level.} (i) Its three terms are described
+only as instance pools with counts (``30\,000 instances, 10\,000 each for positive
+classification, negative classification, and obfuscation task generation''); the words
+InfoNCE, margin, cosine, temperature and embedding do not appear in the paper. (ii) Two of
+its three headline CFT numbers come from models tuned through provider fine-tuning APIs,
+which accept only supervised input$\rightarrow$output text pairs, so a custom
+embedding-space loss is not expressible there. (iii) Open-source models are tuned with
+plain LoRA and no modified objective. We therefore realise
+$\mathcal{L}_{\mathrm{pos}}+\mathcal{L}_{\mathrm{neg}}+\mathcal{L}_{\mathrm{gen}}$ as
+joint next-token cross-entropy over the union of the three pools, which is what a sum of
+per-task losses over balanced datasets is.
+
+\paragraph{Readability is a proxy, and the choice does not matter.} Eq.~\eqref{eq:pub} tests
+whether an output is about as readable as the original, and the original study measures that
+with \citet{scalabrino2018comprehension}. We do not have that model, so $R$ is the weighted
+proxy of Table~\ref{tab:metrics}, calibrated by measurement rather than guessed, separating
+clean code from fully minified code at 8\% false positives and 89\% detection over 400
+programs. Because a substituted measure inside a reimplemented criterion is exactly the kind
+of deviation that can quietly carry a result, we measured its influence directly by
+recomputing the 7B reverse cells under four treatments of the readability conjunct.
+
+\begin{center}\small
+\begin{tabular}{lcccc}
+\toprule
+& \multicolumn{4}{c}{strict reverse success (\%)} \\
+\cmidrule(lr){2-5}
+arm & tolerance $0.1$ (reported) & term removed & tolerance $0.0$ & tolerance $0.3$ \\
+\midrule
+\arm{base}  & 12.9 & 13.5 & 10.6 & 13.5 \\
+\arm{sft}   & 0.0 & 0.0 & 0.0 & 0.0 \\
+\arm{cft}   & 0.1 & 0.1 & 0.0 & 0.1 \\
+\arm{fwd2x} & 0.1 & 0.1 & 0.0 & 0.1 \\
+\arm{rev}   & 32.9 & 32.9 & 32.1 & 32.9 \\
+\arm{flip}  & 33.5 & 33.6 & 32.3 & 33.5 \\
+\arm{mix50} & 32.8 & 33.0 & 31.9 & 33.0 \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+Removing the readability conjunct altogether changes no arm by more than $0.6$ pp and changes
+the \arm{mix50} minus \arm{sft} contrast by $0.2$ pp. Across all four treatments the spread is
+at most $1.3$ pp on any trained arm and $2.9$ pp on the untuned model, against a headline
+effect of 33 points. The reason is visible in the criterion itself. Once an output has to
+parse, be textually far from the obfuscated input, and execute correctly, it is essentially
+always at least as readable as the original on any reasonable measure, so the conjunct is the
+deciding factor on only $0.2\%$ of trials for \arm{flip} and \arm{mix50} and $1.0\%$ for
+\arm{base}. Substituting the readability model therefore cannot account for our conclusions.
+The one number where the treatment has real leverage is the untuned model's
+\emph{published-criterion} rate, which ranges from $17.6\%$ to $24.3\%$ across the four
+settings, and we place no claim on that quantity.
+
+\paragraph{What the original leaves open, and what we chose.} The paper gives the
+generation prompt verbatim but specifies \emph{no prompt and no target format} for the two
+auxiliary tasks, deferring to supplementary material that is not public. The single-token
+\textsc{yes}/\textsc{no} target is therefore ours. That choice is what produces the token
+shares below, so they describe our realisation rather than a measured property of the
+published objective. Measured on our tokenized corpus, supervised-token mass is
+$97.7\%\ \mathcal{L}_{\mathrm{gen}}$ / $1.13\%\ \mathcal{L}_{\mathrm{pos}}$ /
+$1.13\%\ \mathcal{L}_{\mathrm{neg}}$, because a \arm{gen} target is a whole program (196.7
+tokens on average) while a \arm{pos}/\arm{neg} target is 3.0 tokens. Restoring \arm{neg} to
+parity moves the auxiliary share from 2.26\% to $\approx$2.6\%, but that bound holds only
+under our target format. The reading it does not cover is an auxiliary target that
+\emph{justifies} its verdict at length, which would carry comparable token mass and could
+quote the original program. We cannot exclude it. We note only that it would relocate the
+recovery from the objective to the supervision, which is this paper's thesis and contradicts
+the original's claim to need no reverse examples.
+
+\paragraph{Three deliberate deviations.} Our negatives are the \emph{obfuscated} variant
+with one operator mutated and are execution-verified to differ from their parent, rather
+than clean programs of different semantics; under the original construction the question
+``is program B obfuscated?'' predicts the label perfectly, so a model can score well on the
+auxiliary terms without comparing semantics at all. Appendix~\ref{app:cleanneg} runs the
+paper-literal construction rather than resting on that argument. Second, we pair the pools,
+keeping only \texttt{(program, condition)} keys with both a \textsc{yes} and a \textsc{no}
+built from the same program, which downsamples \arm{pos} to \arm{neg} and is why both sit at
+$0.76\times$ \arm{gen} (7\,383 / 5\,611 / 5\,611); execution verification explains the
+\arm{neg} shortfall, pairing explains the \arm{pos} one. Third, we add ``output only the
+code'' to the generation prompt, without which the CodeBLEU comparison partly measures how
+much prose a model wrapped around its answer.
+
+\paragraph{The cross-pass determinism floor.} Evaluating the untuned \arm{base} arm in five
+passes over a byte-identical 300-program set gives strict reverse rates of $2.9/2.9/2.9/
+2.7/2.7\%$. The program sets are identical in all five, and the two passes carrying the same
+arm list are bit-identical on all 1500 generations; the others differ on 6--8\% of
+generations and flip 4--8 graded trials. The cause is therefore batch composition rather
+than corpus drift or a scorer change. The inference engine batches continuously, so which
+arms share a pass changes reduction order and occasionally an argmax. We treat $\pm0.3$ pp as
+the resolution of any cross-pass comparison. It bounds nothing in the body, whose effects
+are 30 points, but it is the reason Appendix~\ref{app:seeds} carries an untuned anchor row.
+
+\section{The paper-literal negative construction}
+\label{app:cleanneg}
+
+Our \arm{cft} arm builds negatives by mutating the \emph{obfuscated} variant, so positives and
+negatives are equally obfuscated. The original builds them from clean programs of different
+semantics, which makes ``is program B obfuscated?'' a perfect predictor of the label. We argued
+in Appendix~\ref{app:fidelity} that this shortcut makes the published construction unusable as a
+test of semantic comparison. The objection to that argument is that the shortcut may be the
+the operative factor, since a model that must represent obfuscated-ness explicitly has done part of
+the work of undoing it. So we built the paper-literal pools and trained the arm.
+
+\arm{cftclean} is \arm{cft} with negatives mutated from the clean parent instead, identical in
+every other respect, at 1.5B and seed 17. It reaches $0.5\%$ strict reverse success against
+$0.2\%$ for both \arm{cft} and \arm{sft}, a difference of $+0.3$ pp $[-0.1,+0.7]$ against either,
+and all three sit 2.3 to 2.6 points \emph{below} the untouched model. So the shortcut is not the
+the operative factor, and our deviation is not what produced the null. Under the original's own
+negative construction, carrying \emph{more} auxiliary data than our main arm (6\,058 against
+5\,611 per pool) and reaching an almost identical training loss ($0.354$ against $0.354$), the
+objective still recovers nothing. The two arms therefore differ in what they were shown rather
+than in how well they fitted it. All four arms were scored in one evaluation pass, which matters
+because the cross-pass floor of Appendix~\ref{app:fidelity} is wider than the contrast.
+
+\section{The reverse-data dose response}
+\label{app:dose}
+\input{fig_dose}
+The curve rises steeply and then flattens. Replacing 5\% of the forward pairs recovers
+$+25.7$ pp $[+23.9,+27.7]$ over forward-only training, which is 85\% of what a 50\% share
+recovers; the remaining climb is $+4.5$ pp $[+3.2,+5.8]$ and has flattened by a quarter
+share, where $50\%$ against $25\%$ is $+1.1$ pp $[+0.0,+2.1]$ with an interval touching zero.
+
+\section{Limitations, in full}
+\label{app:limits}
+
+\textbf{Language and corpus.} The original study is Java over 10\,000 CodeNet programs,
+while ours is Python over 7\,383 forward instances per epoch plus a JavaScript replication
+of the four load-bearing arms at 1.5B. Two languages is evidence that the effect is not an
+artifact of one, but neither is Java, so a Java-specific effect is not excluded. It is worth
+saying what such an effect would have to be. The equivalence-judgement terms would have to
+teach reverse deobfuscation in Java while teaching none of it in either Python or
+JavaScript, and to do so without the reversed data that accounts for the entire recovery in
+both languages we did test. We know of no mechanism with that shape, and the burden of
+proposing one falls on the claim that the objective is what works.
+\textbf{Scale and family.} Two sizes of one family, Qwen2.5-Coder 1.5B and 7B. The
+original's strongest CFT numbers come from commercial models we cannot fine-tune the same
+way, though our 7B result is at the tier of its open-source panel, and the 7B arms are
+single-seed. 
+\textbf{One of the two general-capability probes overlaps the corpus}, as \S\ref{sec:cost} sets
+out. MBPP+ is the held-out control reported beside it, and the HumanEval+ column against the
+untouched model should not be read on its own.
+
+
+\textbf{Transform coverage.} String encryption, one of the original's three transforms and
+its hardest, is quarantined in our corpus as a held-out family for a separate study and is
+never trained on, so we report five conditions where the original reports three.
+
+\textbf{Auxiliary pool ratio.} Both \arm{pos} and \arm{neg} are $0.76\times$ \arm{gen},
+for two different reasons set out in Appendix~\ref{app:fidelity}. The token-share arithmetic
+there bounds the auxiliary signal at $\approx$2.6\% of supervised tokens even at parity, so
+the shortfall cannot plausibly account for a 30-point gap, but we did not run the parity
+sweep, and that bound is conditional on our choice of auxiliary target format.
+
+\textbf{Pairing and seeds on the cost table.} The HumanEval+ cells are a single greedy pass per
+arm and only aggregate counts were retained, so that column supports point estimates only. The
+MBPP+ cells retain per-task verdicts, so its contrasts are paired bootstraps over the 399 tasks
+confirmed by exact McNemar. Every 7B arm is single-seed, so none of these intervals covers
+training-seed variance.
+
+\section{General-capability cost of the 1.5B dose ladder}
+\label{app:dosecost}
+\begin{center}\small
+\begin{tabular}{lcc}
+\toprule
+arm & reverse share & HumanEval+ \texttt{plus} \\
+\midrule
+\arm{sft} & 0\% & .329 \\
+\arm{mix5} & 5\% & .537 \\
+\arm{mix10} & 10\% & .555 \\
+\arm{mix25} & 25\% & .494 \\
+\arm{mix50} & 50\% & .469 \\
+\arm{rev} & 100\% & .585 \\
+\arm{base} & n/a & .646 \\
+\bottomrule
+\end{tabular}
+\end{center}
+Qwen2.5-Coder-1.5B, 164 tasks, 0 scorer errors. The retained capability is \emph{not}
+monotone in reverse share. \arm{mix5} and \arm{mix10} differ by 3 of 164 tasks, and
+\arm{rev}, which has the largest reverse share, retains the most. We therefore draw no
+dose-response conclusion on this axis at 1.5B. The 7B comparison in \S\ref{sec:cost} does not
+rest on these rows.
+
+\section{Measured training budget (7B)}
+\label{app:cost}
+\begin{table}[h]
+\centering\small
+\caption{Measured per-epoch training budget, 7B Python corpus, relative to forward-only
+SFT. Supervised tokens are the tokens the loss is actually computed on.}
+\label{tab:cost}
+\begin{tabular}{lrrrr}
+\toprule
+arm & instances & supervised tokens & sequence tokens ($\propto$ FLOPs) & steps \\
+\midrule
+\arm{fwd} \emph{(reference)} & 1.00$\times$ & 1.00$\times$ & 1.00$\times$ & 1.00$\times$ \\
+\arm{fwd2x} & 1.00$\times$ & 1.00$\times$ & 1.00$\times$ & 2.00$\times$ \\
+\textbf{\arm{mix50}} & \textbf{1.00$\times$} & \textbf{0.71$\times$} & \textbf{1.05$\times$} & \textbf{1.00$\times$} \\
+\arm{rev} & 1.00$\times$ & 0.43$\times$ & 1.09$\times$ & 1.00$\times$ \\
+\arm{flip} & 2.00$\times$ & 1.43$\times$ & 2.09$\times$ & 2.00$\times$ \\
+\arm{cft} & 2.52$\times$ & \textbf{1.02$\times$} & \textbf{2.65$\times$} & 2.52$\times$ \\
+\arm{cftflip} & 3.52$\times$ & 1.45$\times$ & 3.74$\times$ & 3.52$\times$ \\
+\bottomrule
+\end{tabular}
+\end{table}
+Sequence tokens set what a run costs and supervised tokens set what it teaches, so the two
+columns can move in opposite directions. \arm{cft} is the case that matters, spending
+$2.65\times$ the compute of forward-only training to deliver $1.02\times$ the supervision.
+
+\section{Scoring quantities}
+\label{app:metrics}
+\begin{table}[h]
+\centering\footnotesize
+\caption{The quantities used to score a trial. \emph{Executes} is checked by running the
+program on the test inputs that ship with it. $R$ returns 0 for a non-parsing output, since
+the readability of a non-program is undefined and 0 is the only resolution that cannot
+manufacture a success.}
+\label{tab:metrics}
+\begin{tabular}{llp{6.7cm}}
+\toprule
+symbol & range & meaning \\
+\midrule
+$\mathrm{parses}(\hat y)$ & $\{0,1\}$ & the output is non-empty and parses in the target
+language \\
+$S(a,b)$ & $[0,1]$ & CodeBLEU similarity between two programs
+\citep{ren2020codebleu} \\
+$R(a)$ & $[0,1]$ & readability, a weighted sum of identifier meaningfulness (0.55),
+identifier length, line length and nesting depth (0.15 each) \\
+$E(\hat y)$ & $\{0,1\}$ & the output executes and reproduces $x$'s outputs on every test input \\
+\bottomrule
+\end{tabular}
+\end{table}
+Only $S$ and $R$ come from the published criterion. The $\mathrm{parses}$ guard and $E$ are
+ours, and both can only lower a reported rate.
+
+\section{The five obfuscating transforms}
+\label{app:conditions}
+\begin{table}[h]
+\centering\small
+\caption{The five obfuscating transforms. Each is applied on its own to the original
+function. We keep the short codes because the appendix tables report results per
+transform.}
+\label{tab:conditions}
+\begin{tabular}{llp{7.1cm}}
+\toprule
+code & family & what it does \\
+\midrule
+\arm{L1b} & identifier & renames identifiers to misleading names, so \texttt{count} might
+become \texttt{buffer} \\
+\arm{L1r} & identifier & renames identifiers to random strings such as \texttt{v\_a3f2} \\
+\arm{L2} & identifier & renames identifiers to single letters and strips type annotations \\
+\arm{S1} & structural & flattens control flow into a single dispatch loop driven by a state
+variable \\
+\arm{S2} & structural & inserts always-true tests and unreachable code \\
+\bottomrule
+\end{tabular}
+\end{table}
+The split into identifier and structural families is what \S\ref{sec:cost} turns on. Only the
+structural rewrites can be undone, because the identifier ones delete the original names
+rather than rearranging them.
+
+\section{Strict reverse success by condition (7B)}
+\label{app:bycond}
+\begin{center}\small
+\begin{tabular}{lccccc}
+\toprule
+arm & \arm{L1b} & \arm{L1r} & \arm{L2} & \textbf{\arm{S1}} & \textbf{\arm{S2}} \\
+\midrule
+\arm{base}  & .023 & .110 & .103 & .330 & .077 \\
+\arm{sft}   & .000 & .000 & .000 & .000 & .000 \\
+\arm{cft}   & .000 & .000 & .000 & .003 & .000 \\
+\arm{fwd2x} & .000 & .000 & .000 & .003 & .000 \\
+\arm{rev}   & .003 & .010 & .017 & \textbf{.817} & \textbf{.797} \\
+\arm{flip}  & .017 & .013 & .023 & \textbf{.827} & \textbf{.797} \\
+\arm{mix50} & .010 & .007 & .023 & \textbf{.803} & \textbf{.797} \\
+\bottomrule
+\end{tabular}
+\end{center}
+300 programs per cell, \texttt{simple} strategy, \texttt{e2\_budget\_qwen7b}. The
+capability is almost entirely structural, since the identifier conditions are at or below
+$2.3\%$ for every arm, including reverse-only training, because adversarial renaming
+destroys information that no amount of reverse supervision can restore.
+
+\section{Forward accuracy by condition (7B)}
+\label{app:fwd}
+\begin{center}\small
+\begin{tabular}{lccccc}
+\toprule
+arm & \arm{L1b} & \arm{L1r} & \arm{L2} & \arm{S1} & \arm{S2} \\
+\midrule
+\arm{base}  & .950 & .960 & .963 & .933 & .837 \\
+\arm{sft}   & .970 & .950 & 1.000 & .933 & 1.000 \\
+\arm{cft}   & .973 & .960 & .997 & .947 & 1.000 \\
+\arm{fwd2x} & .967 & .960 & 1.000 & .917 & 1.000 \\
+\arm{rev}   & .940 & .950 & .957 & .970 & .820 \\
+\arm{flip}  & .970 & .960 & 1.000 & .927 & .997 \\
+\arm{mix50} & .973 & .957 & .990 & .883 & 1.000 \\
+\bottomrule
+\end{tabular}
+\end{center}
+Execution-verified forward success. \arm{flip} matches \arm{sft} everywhere;
+bidirectionality is free in this direction too.
+
+\section{Reverse prompting strategies (7B)}
+\label{app:e7}
+\begin{center}\small
+\begin{tabular}{lccccr}
+\toprule
+system & \texttt{simple} & \texttt{few\_shot} & \texttt{cot} & \texttt{augmented} & range \\
+\midrule
+\arm{base} & 13.2 \ci{11.3}{15.3} & 18.1 \ci{15.7}{20.7} & \textbf{21.9} \ci{19.4}{24.5} & 21.4 \ci{18.8}{24.1} & 8.7 \\
+\arm{sft} & 0.0 \ci{0.0}{0.0} & 1.6 \ci{1.0}{2.3} & \textbf{5.3} \ci{4.2}{6.3} & 5.1 \ci{4.1}{6.1} & 5.3 \\
+\arm{cft} & 0.1 \ci{0.0}{0.2} & 0.5 \ci{0.1}{0.9} & \textbf{1.5} \ci{0.9}{2.1} & 1.2 \ci{0.7}{1.7} & 1.4 \\
+\midrule
+\arm{rev} & \textbf{32.9} \ci{31.5}{34.5} & 32.5 \ci{31.0}{34.0} & 32.5 \ci{31.0}{34.2} & 32.9 \ci{31.3}{34.4} & 0.4 \\
+\arm{flip} & \textbf{33.7} \ci{32.1}{35.3} & 32.6 \ci{31.1}{34.1} & 32.8 \ci{31.2}{34.5} & 32.6 \ci{31.1}{34.1} & 1.1 \\
+\arm{mix50} & \textbf{32.8} \ci{31.3}{34.4} & 31.3 \ci{29.6}{32.9} & 30.3 \ci{28.9}{31.9} & 31.7 \ci{30.0}{33.3} & 2.5 \\
+\bottomrule
+\end{tabular}
+\end{center}
+Strict reverse success (\%), cluster-bootstrap CIs by \texttt{program\_id}; all six arms
+scored in one evaluation pass (\texttt{e7\_strategies\_qwen7b}), best strategy per arm in
+bold. Both forward-only arms at their best strategy fall below the untuned base at its
+worst. The bidirectional arms (lower block) are nearly flat across strategies while the
+untuned base spans $8.7$ points, so capability installed by data does not depend on how it
+is elicited.
+
+\section{What the reverse criterion certifies (7B, \texttt{simple})}
+\label{app:e8}
+\begin{center}\small
+\begin{tabular}{llrrrrrr}
+\toprule
+system & cond & paper \% & strict \% & id-rec (passes) & id-rec (all) & \textbf{lift} & floor \\
+\midrule
+\arm{base} & \arm{L1b} & 4.7 & 2.3 & 0.326 & 0.363 & $-0.037$ & 0.354 \\
+\arm{base} & \arm{L1r} & 19.0 & 11.0 & 0.428 & 0.423 & $+0.005$ & 0.349 \\
+\arm{base} & \arm{L2}  & 18.7 & 10.3 & 0.437 & 0.420 & $+0.017$ & 0.389 \\
+\arm{base} & \arm{S1}  & 64.7 & 33.0 & 0.895 & 0.906 & $-0.011$ & 1.000 \\
+\arm{base} & \arm{S2}  & 9.3 & 7.7 & 0.750 & 0.878 & $-0.127$ & 1.000 \\
+\midrule
+\arm{flip} & \arm{S1}  & 90.7 & 82.7 & 0.999 & 0.999 & $+0.001$ & 1.000 \\
+\arm{flip} & \arm{S2}  & 79.7 & 79.7 & 1.000 & 0.999 & $+0.000$ & 1.000 \\
+\arm{mix50} & \arm{S1} & 90.3 & 80.3 & 0.994 & 0.994 & $-0.000$ & 1.000 \\
+\arm{mix50} & \arm{S2} & 79.7 & 79.7 & 0.999 & 0.999 & $-0.000$ & 1.000 \\
+\bottomrule
+\end{tabular}
+\end{center}
+\emph{floor} is the identifier recall of the obfuscated input itself, which is what echoing
+scores.
+\emph{lift} is id-recall among criterion-passing outputs minus id-recall among all outputs;
+a lift near zero means the criterion certifies nothing about identifier recovery. The
+structural conditions have a floor of exactly $1.000$, so identifier recall does not
+discriminate there at all.
+
+\section{Seed replication (1.5B, strict reverse success \%)}
+\label{app:seeds}
+\begin{center}\small
+\begin{tabular}{lccc}
+\toprule
+arm & seed 17 & seed 42 & $\Delta$ \\
+\midrule
+\arm{sft}     & 0.4 & 0.4 & $+0.0$ \\
+\arm{cft}     & 0.3 & 0.4 & $+0.1$ \\
+\midrule
+\arm{flip}    & 31.5 & 30.9 & $-0.6$ \\
+\arm{rev}     & 31.5 & 31.2 & $-0.3$ \\
+\arm{mix50}   & 30.6 & 30.0 & $-0.6$ \\
+\arm{flipsym} & 30.5 & 30.8 & $+0.3$ \\
+\midrule
+\arm{base} \emph{(untuned anchor)} & 2.9 & 2.7 & $-0.2$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+Identical harness, program set, criteria and decoding; the adapter seed is the only
+difference. Columns come from two evaluation passes
+(\texttt{e1\_qwen1.5b}, \texttt{e2\_seeds\_qwen1.5b}). The \arm{base} row has no seed and
+is the same untouched model in both, so it calibrates the table. Roughly $0.2$ pp of the
+movement in every other row is cross-pass noise rather than seed variance
+(\S\ref{sec:setup}).
+The two arms carrying the paper's null move by $\leq0.1$. \arm{flipsym} trains \arm{flip}'s
+mixture under a single shared system prompt and is a control against the two directions
+being separable merely because they arrived under two personas.
+
+\section{JavaScript replication (1.5B, strict reverse success \%)}
+\label{app:js}
+\begin{center}\small
+\begin{tabular}{lcl}
+\toprule
+arm & JavaScript & contrast vs.\ Python \\
+\midrule
+\arm{base} & 3.8 \ci{2.5}{5.3} & (Python 2.9) \\
+\arm{sft}  & 0.0 \ci{0.0}{0.0} & \arm{sft}$-$\arm{base} $-3.8$ \ci{-5.6}{-2.4} \\
+\arm{cft}  & 0.4 \ci{0.0}{0.8} & \arm{cft}$-$\arm{sft} $+0.4$ \ci{+0.0}{+0.8} \\
+\arm{mix50} & 30.3 \ci{27.4}{33.1} & \arm{mix50}$-$\arm{sft} $+30.3$ \ci{+28.3}{+32.5} \\
+\arm{flip} & 30.4 \ci{27.5}{33.2} & \arm{flip}$-$\arm{mix50} $+0.1$ \ci{-0.2}{+0.5} \\
+\bottomrule
+\end{tabular}
+\end{center}
+167 programs, 835 graded trials per arm, same conditions and criteria as the Python
+corpus. Every qualitative conclusion holds. Forward-only tuning lands below the untouched
+model, the contrastive objective does not repair it, and the budget-matched bidirectional
+arm captures the whole effect. Here it is statistically indistinguishable from the
+doubled-data arm, whereas in Python the latter led by $+0.7$ pp.
+
+% The NeurIPS paper checklist is a MAIN-CONFERENCE requirement. The ATTRIB call asks only
+% for NeurIPS 2026 formatting, 3-6 body pages, and the appendix in the same PDF, and does
+% not ask for the checklist. It is therefore not included; checklist.tex is left in the
+% directory unused. If ATTRIB adds the requirement, re-add \input{checklist} here and fill
+% its 16 \answerTODO entries.
+
+\end{document}

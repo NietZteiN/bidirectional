@@ -6,9 +6,10 @@ Execution" (ACL 2026) already take this idea?*
 **Short answer: no.** But a different paper is much closer than that one, it is already known to
 this project, and the honest framing of the contribution depends on saying so first.
 
-Everything below was checked against the papers' own abstracts on 2026-09-10. Abstracts only —
-none of these has been read in full, and several claims worth relying on (especially §4) need
-the method sections before they go in a submission.
+**Read, not abstracted.** Every paper discussed here is in [`papers/`](papers/) and has been read
+past the abstract; claims below cite the page they came from. Reading changed three of the four
+conclusions I had drawn from abstracts alone, and §4.1 was reversed outright — which is the
+argument for keeping the PDFs in the repo rather than a list of links.
 
 ---
 
@@ -40,15 +41,19 @@ the base model *already had*. That premise needs evidence that base models can d
 directions, and DexBench is exactly that evidence for the execution domain — from a
 contemporaneous ACL paper, independently collected.
 
-Second, it **overlaps the `exec` cell's territory**. Our `exec` domain is CRUXEval output ↔ input
-prediction, which is the same duality on the same kind of data. The paper should say plainly
-that the duality framing for program execution is theirs, and that our contribution in that cell
-is the fine-tuning result, not the observation that both directions are worth measuring.
+Second, it is **adjacent to the `exec` cell, though less overlapping than the abstract suggested**.
+Reading the task definition (p.~3): their backward task is *counterfactual input mutation* —
+given a program, an input, and a target execution path, mutate the input so execution follows
+that path instead. Our `exec` cell is CRUXEval output ↔ input prediction: given a program and an
+output, find any input producing it. Both are inverse-execution reasoning; they are not the same
+task. The duality *framing* for program execution is theirs and should be credited as such,
+without implying we run their benchmark.
 
-If DexBench's paired instances are released, **evaluating on it directly is worth ~1 GPU-hour**
-and would let the paper report a directional-collapse result on someone else's benchmark rather
-than only its own corpora. That is a cheap, strong robustness check and is the single most
-valuable action item in this document.
+**Their code and data are public** — `https://github.com/sail-ucf/dexbench` (p.~2, footnote 2).
+So evaluating our arms on DexBench directly is available for roughly **1 GPU-hour**, and would
+let the paper report a directional-collapse result on an independent benchmark rather than only
+on its own corpora. That is the single most valuable action item in this document, and it is now
+concrete rather than conditional.
 
 ---
 
@@ -79,6 +84,19 @@ what the paper should lead with:
    tone rule in `paper_bidirectional/README.md` matters: diagnostic, not prosecutorial, and they
    may review this.
 
+**The load-bearing fact for that claim, verified in the PDF rather than trusted.** Nikiema et al.
+*do* declare a Bidirectional Fine-Tuning baseline: "CFT effectiveness is assessed through
+comparison against Standard Fine-Tuning (SFT) ... and Bidirectional Fine-Tuning (BFT) using
+forward generation plus reverse deobfuscation tasks" (p.~6). The string `BFT` appears **exactly
+once in the paper**, in that sentence, and **never in a results table**. So the precise and
+defensible statement is the one the workshop draft already makes — they name the baseline and
+report no number for it — and *not* "they never ran the obvious baseline", which would be false.
+Checked by full-text search of `papers/nikiema2025contrastive.pdf`.
+
+Scale, for the generality argument: six models, three obfuscation techniques, 10,000 Java
+programs from CodeNet (p.~1--3). Our grid is five model lineages across six paired domains, which
+is the axis their design does not cover.
+
 ---
 
 ## 3. Direction in machine translation
@@ -102,32 +120,47 @@ this; the citation is confirmed and the wording of their finding is as recorded.
 
 These were not in the plan. Two have design consequences.
 
-### 4.1 A LoRA capacity wall on inverse mappings — a live threat to our design
+### 4.1 The LoRA capacity wall — I had this wrong from the abstract
 
 **"Directional Optimization Asymmetry in Transformers: A Synthetic Stress Test."**
-[arXiv:2511.19997](https://arxiv.org/abs/2511.19997)
+[arXiv:2511.19997](https://arxiv.org/abs/2511.19997) · `papers/dirasym2025synthetic.pdf`
 
-A fully synthetic, entropy-controlled benchmark: forward tasks with zero conditional entropy,
-inverse tasks with analytically determined entropy floors. Even scratch-trained GPT-2 shows a
-reproducible directional optimization gap (1.16 nats at K=5), far larger than an MLP's on the
-same data. Pre-trained initialization shifts it but does not remove it.
+From the abstract I flagged "LoRA encounters a sharp capacity wall on high-entropy inverse
+mappings" as a live threat to our kill-gate, and proposed a rank sweep to settle it. **Reading
+the paper changes that on three counts.**
 
-**The sentence that matters for us: "LoRA encounters a sharp capacity wall on high-entropy
-inverse mappings."**
+*The task has no structure at all.* The corpus is random strings of length 8 drawn i.i.d.
+uniform, and "by design, no token, substring, or structural pattern appears with higher-than-
+random frequency" (p.~2). It is a pure memorization task over 40,000 arbitrary pairs. A low-rank
+update is exactly the wrong instrument for memorizing a lookup table, and that says little about
+inverse tasks with real structure — deobfuscation, translation, factorization. Our inverses are
+hard because the search is hard, not because the mapping is arbitrary.
 
-This paper is LoRA-based throughout (r=32). If LoRA specifically underperforms on inverse
-mappings, then a low `rev` score may be a capacity artifact rather than evidence about
-learnability — and `rev` is the **kill-gate**: if it is near zero we declare the direction
-unlearnable and treat every other null as uninterpretable. That interpretation would be wrong if
-the wall, not the model, produced the zero.
+*A rank sweep would not have settled it anyway.* Table 3 (p.~8): inverse excess loss is 5.06 at
+r=8, 4.85 at r=64, 4.75 at r=256. Rank buys almost nothing. And the wall is in **both**
+directions — forward excess loss is 4.85/1.66/1.60 — so it is not a directional finding about
+LoRA at all; LoRA simply underperforms scratch and full fine-tuning on this task, in both
+directions. My Amendment 5 prediction ("`rev` at r=32 within the seed band of r=128") was aimed
+at a claim the paper does not make.
 
-**Consequences, in order of cost:**
-- The `fullft_*` arms already exist for exactly this class of objection and should be read as a
-  *direct* control on it, not only as the LoRA-forgetting check they were specified as.
-- Add a **rank sweep on `rev`** (r ∈ {16, 32, 64, 128}) in at least one domain. Cheap — four
-  adapters — and it converts "is `rev` capacity-limited?" from an argument into a measurement.
-  obtune already ran a rank sweep, so the recipe exists.
-- State it in Limitations regardless of what the sweep shows.
+*The scale is GPT-2 Small.* Against our 1--12B panel.
+
+**What the paper actually gives us is better than a caveat — it is a formal version of RQ3.**
+Their branching factor *K* is invertibility made precise: the forward map is deterministic
+(H = 0), the inverse is one-to-many with an analytic entropy floor H(A|B) = log K. And their
+control result (p.~3): "Transformers trained on the bijective case K=1 exhibit matched forward
+and reverse convergence after accounting for the entropy floor ... the asymmetries observed for
+K>1 emerge only once the inverse task becomes many-to-one."
+
+That is our `fmt` (100 % determinable) baseline prediction, derived analytically on a
+semantics-free task. Our `fmt_det*` ladder varies the same quantity empirically, and our
+`automata` cell isolates the other half — an inverse that is *determined* (K=1 in their terms)
+but computationally hard. Their framework cannot express that case, because their difficulty is
+entirely entropic. **This is a citation that strengthens RQ3, not a threat to it.**
+
+Retained from the original worry, at much lower priority: the `fullft_*` arms are still the
+honest control for "is this a LoRA artifact?", and the question will still be asked in review.
+Keep them; drop the rank sweep unless a reviewer asks.
 
 ### 4.2 Mixing forward and reverse data may have a cost we do not measure
 
@@ -143,13 +176,19 @@ Our `mix*` arms are exactly "naively mixing forward and reverse data". Their fin
 contradiction of ours — they study reasoning-trace distillation, we study paired transformations
 — but it predicts a **cost we do not currently measure**: direction confusion.
 
-We are better placed to catch it than they were, and largely by accident. Mechanism experiment 6
-(`bidir.mech.sensitivity`) measures exactly this: how much the output changes when only the
-instruction changes. It was written to test H1 on collapsed models. **It should also be run on
-the `mix*` arms**, where their result predicts sensitivity *falls* as the reverse share rises.
-That is a free, pre-registerable prediction on an experiment already built — and if it holds, the
-dose ladder acquires an upper arm as well as a lower one, which strengthens the prescription
-rather than weakening it.
+**Two differences that reading turned up, and that bound the transfer.** Their "directional
+distinction" is a *log-likelihood margin between preferred and dispreferred reasoning paths*,
+narrowed to 0.05--0.1 by mixing (p.~5) — not instruction-following sensitivity, which is what our
+mechanism experiment 6 measures. And their mixture is a single 1:1 blend of reasoning traces,
+where our ladder predicts a knee **below 10 %** reverse share. Their result is about a regime our
+prescription does not occupy.
+
+So the prediction is worth registering but should not be overstated: mechanism experiment 6 now
+runs across the whole dose ladder rather than only on collapsed models, and if sensitivity does
+fall at the doses we recommend, the ladder acquires an upper bound as well as a lower one. If it
+does not, the natural reading is that a small dose sits below the regime where mixing costs
+discrimination — which is itself worth one sentence, and is why running it is cheap insurance
+rather than a concession.
 
 ### 4.3 Bidirectional objectives need not create a unified representation
 
@@ -204,12 +243,13 @@ confound rather than only as a citation.
    program execution to them when discussing the `exec` cell.
 3. **Try to evaluate on DexBench directly** if the instances are public. ~1 GPU-hour for a
    directional-collapse result on an independent benchmark.
-4. **Add a rank sweep on `rev`** in one domain, and read `fullft_*` as a control on the LoRA
-   capacity wall. State the caveat in Limitations either way.
+4. **Drop the planned rank sweep** (§4.1: it targets a claim the paper does not make), keep
+   `fullft_*` as the LoRA-artifact control, and cite arXiv:2511.19997 as analytic support for
+   RQ3's information-theoretic axis instead.
 5. **Run mechanism experiment 6 on the `mix*` arms**, and pre-register the prediction that
    instruction sensitivity falls as the reverse share rises.
-6. **Read in full before submission**: 2511.19997 §on LoRA, 2509.13079's method, 2605.20296.
-   Everything here rests on abstracts.
+6. **Still unread past the abstract**: `spectral2026unforgetting.pdf`. Everything else in
+   `papers/` has been read and is cited by page.
 
 ---
 

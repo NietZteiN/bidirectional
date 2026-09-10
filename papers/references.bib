@@ -1,0 +1,94 @@
+% Verified against the PDFs in this directory on 2026-09-10. Venue and year for every entry
+% were read off the paper itself, not from a search result.
+
+@inproceedings{nikiema2025contrastive,
+  title     = {Using Contrastive Learning to Improve Two-Way Reasoning in Large Language Models:
+               The Obfuscation Task as a Case Study},
+  author    = {Nikiema, Serge Lionel and Samhi, Jordan and Moumoula, Micheline and Dji{\'e}, Albarick
+               and Kabor{\'e}, Abdoul Kader and Klein, Jacques and Bissyand{\'e}, Tegawend{\'e} F.},
+  year      = {2025},
+  eprint    = {2509.05553},
+  archivePrefix = {arXiv},
+  primaryClass  = {cs.CL},
+  note      = {Names ``cognitive specialization'': forward-only fine-tuning degrades pre-existing
+               bidirectional reasoning. Declares a Bidirectional Fine-Tuning baseline (p.~6) and
+               reports no number for it.}
+}
+
+@inproceedings{hasanov2026pathnottaken,
+  title     = {The Path Not Taken: Duality in Reasoning about Program Execution},
+  author    = {Hasanov, Eshgin and Hassan Sibat, Md. Mahadi and Karmaker, Shubhra Kanti and
+               Yadavally, Aashish},
+  booktitle = {Proceedings of the 64th Annual Meeting of the Association for Computational Linguistics},
+  year      = {2026},
+  eprint    = {2604.20917},
+  archivePrefix = {arXiv},
+  note      = {DexBench: 445 paired instances, 13 LLMs evaluated. No fine-tuning.
+               Code and data at https://github.com/sail-ucf/dexbench}
+}
+
+@inproceedings{zhu2024finetuning,
+  title     = {Fine-Tuning Large Language Models to Translate: Will a Touch of Noisy Data in
+               Misaligned Languages Suffice?},
+  author    = {Zhu, Dawei and Chen, Pinzhen and Zhang, Miaoran and Haddow, Barry and Shen, Xiaoyu
+               and Klakow, Dietrich},
+  booktitle = {Proceedings of the 2024 Conference on Empirical Methods in Natural Language Processing},
+  year      = {2024},
+  url       = {https://aclanthology.org/2024.emnlp-main.24/},
+  note      = {Single-direction fine-tuning generalizes, EXCEPT that English on the target side
+               causes task misinterpretation damaging translation into non-English.}
+}
+
+@misc{dirasym2025synthetic,
+  title  = {Directional Optimization Asymmetry in Transformers: A Synthetic Stress Test},
+  year   = {2025},
+  eprint = {2511.19997},
+  archivePrefix = {arXiv},
+  note   = {Random i.i.d. string mappings, branching factor K, entropy floor log K. Forward and
+            reverse converge identically at K=1; asymmetry appears only as the inverse becomes
+            one-to-many. GPT-2 Small scale.}
+}
+
+@misc{inversedata2025pitfalls,
+  title  = {When Inverse Data Outperforms: Exploring the Pitfalls of Mixed Data in Multi-Stage
+            Fine-Tuning},
+  year   = {2025},
+  eprint = {2509.13079},
+  archivePrefix = {arXiv},
+  note   = {r1k (reverse) beats s1k (forward) by 1.6--6.8\%; a 1:1 mixture narrows the
+            preferred/dispreferred log-likelihood margin to 0.05--0.1.}
+}
+
+@misc{latentgen2026illusion,
+  title  = {The Illusion of Latent Generalization: Bi-directionality and the Reversal Curse},
+  year   = {2026},
+  eprint = {2604.04943},
+  archivePrefix = {arXiv},
+  note   = {Probes are consistent with forward and reverse stored as distinct entries rather than
+            one direction-agnostic representation.}
+}
+
+@misc{spectral2026unforgetting,
+  title  = {Spectral Unforgetting: Post-Hoc Recovery of Damaged Capabilities Without Retraining},
+  year   = {2026},
+  eprint = {2605.20296},
+  archivePrefix = {arXiv}
+}
+
+@inproceedings{berglund2024reversal,
+  title     = {The Reversal Curse: LLMs Trained on ``A is B'' Fail to Learn ``B is A''},
+  author    = {Berglund, Lukas and Tong, Meg and Kaufmann, Max and Balesni, Mikita and
+               Stickland, Asa Cooper and Korbak, Tomasz and Evans, Owain},
+  booktitle = {International Conference on Learning Representations},
+  year      = {2024},
+  eprint    = {2309.12288},
+  archivePrefix = {arXiv}
+}
+
+@misc{golovneva2024reversetraining,
+  title  = {Reverse Training to Nurse the Reversal Curse},
+  author = {Golovneva, Olga and Allen-Zhu, Zeyuan and Weston, Jason and Sukhbaatar, Sainbayar},
+  year   = {2024},
+  eprint = {2403.13799},
+  archivePrefix = {arXiv}
+}
