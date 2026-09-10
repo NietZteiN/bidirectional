@@ -424,8 +424,20 @@ a removable residue of the update.
 the `sft` baseline while leaving forward strict success within the seed band.** If reverse does
 not move, that is evidence against the suppression reading and should be reported as such.
 
-Not yet implemented; it is a new module, not a change to an existing one, and no adapter exists
-to apply it to. Recorded here so the prediction precedes the experiment rather than following it.
+**Implemented 2026-09-10** as `bidir.mech.spectral`, and it runs in the RQ5 **floor** rather than
+the upside: it needs no training, only a checkpoint. Two properties of the implementation matter
+for how the result may be read, and both are recorded in every output file:
+
+- The SVD is capped at the adapter's own rank. `B @ A` has rank at most *r* by construction, so
+  everything beyond that is bf16 round-trip noise; without the cap the median singular value lands
+  in that noise, the threshold collapses, and the "repaired" adapter comes out at *higher* rank
+  than the original. Verified on a synthetic adapter with a planted spectrum: it recovers exactly
+  the planted signal rank.
+- **Full fine-tuning deltas are not supported and the module refuses them.** Repairing one needs
+  both checkpoints and an SVD of every weight matrix. That is the arm this experiment most wants —
+  a LoRA delta is already low-rank, so there is no noise bulk to remove and this is a weaker
+  instrument than the source paper's. **A null result on a LoRA arm is therefore weak evidence
+  and must be reported as such**, not as evidence for erasure.
 
 **3. A framing claim about our own budget matching, now checkable against the literature.**
 

@@ -252,8 +252,9 @@ confound rather than only as a citation.
    [`papers/REFERENCES.md`](papers/REFERENCES.md). Three findings from that pass are registered
    in Amendments 6 and 7: the withdrawn LoRA rank sweep, the direction-specific MT prediction,
    and DG-Hard as mechanism experiment 7.
-7. **Implement mechanism experiment 7** (spectral repair of the `sft` adapter) — it is the
-   sharpest available test of suppressed-versus-erased and needs no training, only a checkpoint.
+7. ~~Implement mechanism experiment 7~~ — **done**, `bidir.mech.spectral`, in the RQ5 floor.
+   Remaining: it currently refuses full fine-tuning deltas, which is the arm it most wants, since
+   a LoRA delta is already low-rank and has no noise bulk to remove.
 
 ---
 

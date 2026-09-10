@@ -145,3 +145,52 @@ def test_effectiveness_guard_compares_against_the_init_adapter():
     assert rep["relearn10"]["reference"] == "sft"
     assert rep["relearn10"]["identical_rate"] == 1.0, "the guard must catch an untrained relearn arm"
     assert rep["sft"]["reference"] == "base" and rep["sft"]["identical_rate"] == 0.0
+
+
+def test_spectral_repair_recovers_the_planted_signal_rank():
+    """Mechanism experiment 7's arithmetic, on a synthetic adapter with a known spectrum.
+
+    Regression: without capping the SVD at the adapter's own rank, the bf16 round-trip's
+    numerical noise put the median singular value in the noise floor, collapsing the threshold
+    and returning an adapter of HIGHER rank than the original — rank 8 in, rank 64 out.
+    """
+    import json
+    import tempfile
+    from pathlib import Path
+
+    import torch
+    from safetensors.torch import save_file
+
+    from bidir.mech.spectral import repair_lora_adapter
+
+    tmp = Path(tempfile.mkdtemp())
+    src = tmp / "src"
+    src.mkdir()
+    torch.manual_seed(0)
+    r, d = 8, 64
+    tensors = {}
+    for i in (0, 1):
+        U = torch.linalg.qr(torch.randn(d, r))[0]
+        V = torch.linalg.qr(torch.randn(d, r))[0]
+        S = torch.tensor([10.0, 8.0, 6.0, 0.05, 0.04, 0.03, 0.02, 0.01])   # 3 signal, 5 bulk
+        tensors[f"m{i}.lora_B.weight"] = (U @ torch.diag(S.sqrt())).to(torch.bfloat16)
+        tensors[f"m{i}.lora_A.weight"] = (torch.diag(S.sqrt()) @ V.T).to(torch.bfloat16)
+    save_file(tensors, str(src / "adapter_model.safetensors"), metadata={"format": "pt"})
+    (src / "adapter_config.json").write_text(json.dumps({"r": r, "lora_alpha": r, "peft_type": "LORA"}))
+
+    rep = repair_lora_adapter(src, tmp / "out", 1.0)
+    cfg = json.loads((tmp / "out" / "adapter_config.json").read_text())
+    assert rep["total_rank_considered"] == 2 * r, "must consider exactly the adapter's own rank"
+    assert rep["total_rank_kept"] == 6, f"expected the 3 planted components per module, got {rep}"
+    assert cfg["r"] == 3 and cfg["r"] <= r, "the repaired adapter must not exceed the original rank"
+    assert rep["mean_energy_kept"] > 0.99
+
+
+def test_spectral_refuses_full_finetune_arms():
+    """The LoRA path would compute a meaningless delta for a full fine-tune, so it must refuse."""
+    import pytest as _pytest
+
+    from bidir.mech import spectral
+
+    with _pytest.raises(SystemExit, match="full fine-tune"):
+        spectral.main(["--domain", "fmt", "--model", "llama32-3b", "--arm", "fullft_sft"])

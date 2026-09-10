@@ -94,6 +94,16 @@ def main() -> int:
                  "--arms", "base,sft,relearn10,relearn50,relearn200,relearn1000", "--tag", "relearn"],
                 time="02:00:00", dep=jid, dry=a.dry_run)
 
+    if a.floor or a.all:
+        print("\n== experiment 7: spectral repair of the adapter ==")
+        for d in domains_:
+            # In the FLOOR, not the upside: it needs no training, only a checkpoint, and it is
+            # the sharpest suppressed-vs-erased instrument we have (PREREGISTRATION Amendment 7).
+            sub(f"m7_spectral_{d}_{a.model}",
+                ["-m", "bidir.mech.spectral", "--domain", d, "--model", a.model,
+                 "--arm", "sft", "--seed", str(a.seed)],
+                time="03:00:00", dry=a.dry_run)
+
     if a.upside or a.all:
         print("\n== experiment 4: layer ablation ==")
         for d in domains_:
