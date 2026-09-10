@@ -104,4 +104,77 @@ Recorded so they can be wrong.
 
 ## Amendments
 
-*(none)*
+### Amendment 1 — 2026-09-10, before any adapter was trained
+
+Six changes, all made while the file could still be changed honestly. Nothing here was
+prompted by a result; no model in this project has been fine-tuned yet.
+
+**1. The RQ3 ladder's rungs were mis-specified, and are redefined.**
+
+The rungs were named by leaf-drop share: {0, 10, 50, 100} %. But the criterion is exact
+structural equality, so an instance's inverse is determined only if **no** leaf was dropped —
+which makes determinability `(1 − drop)^leaves`, not `1 − drop`. Measured against this
+generator's own distribution (mean 11.7 leaves per document, n = 20,000), those rungs give
+instance-level determinability of **100 / 34.5 / 1.3 / 0 %**: three of four sit at the floor.
+RQ3 claims the recoverable ceiling *tracks* invertibility, and tracking cannot be tested with
+the points bunched at zero.
+
+Rungs are now named by the quantity RQ3 is actually about — the share of instances whose
+inverse is determined — and the drop shares were solved numerically to hit it:
+
+| cell | drop share | instances determined |
+|---|---|---|
+| `fmt` | 0 | 100 % |
+| `fmt_det75` | 0.0255 | 74.6 % |
+| `fmt_det50` | 0.0636 | 48.0 % |
+| `fmt_det25` | 0.1355 | 22.6 % |
+| `fmt_det00` | 1.0 | 0 % |
+
+The ladder cells also drop the `mdtable-csv` subtask, which has no leaf values to remove and
+was therefore always determinable — leaving it in diluted every rung to `1/3 + 2/3 × target`
+and made the rung's own name false.
+
+**2. Two metrics are declared for the ladder, and one of them is new.**
+
+`leaf_recall` — the share of the original document's leaves the output reproduces, by key path
+— is declared now as a **secondary** metric for the `fmt*` cells. Exact match is all-or-nothing
+per instance, so above a low drop rate almost every instance fails and the rungs stop being
+distinguishable; leaf recall keeps measuring past that point. `strict` remains primary.
+`strict_determinable_only` — the strict rate restricted to instances whose inverse is
+determined — is also declared: mixing determined and undetermined instances into one rate hides
+exactly the floor RQ3 predicts.
+
+**3. "The knee is below 10 %" is given an operational definition.**
+
+As written it was unfalsifiable. The knee is now: **the smallest dose rung whose reverse strict
+rate reaches at least 90 % of `mix50`'s reverse strict rate in that cell.** The prediction is
+that this rung is `mix5` or lower in most domains — stated as *most*, not *every*, because one
+domain supported it in the workshop paper and generalising from one is what this paper exists
+to stop doing.
+
+**4. The gate's relative threshold gets the precondition it always relied on.**
+
+`sft − base ≤ −50 % relative` is only interpretable when the base rate is far enough from zero
+for a halving to mean anything. That precondition already exists in the code —
+`15_base_gate.py` refuses a (model, domain) pair whose base rate is below 10 % — but it was not
+written here. **A cell counts toward the gate only if the untouched model's reverse strict rate
+is at least 10 %.** A cell below that is reported as uninformative rather than as evidence
+either way.
+
+**5. Multiple comparisons.**
+
+Each primary contrast is a separate pre-registered test within its own domain, and no
+correction is applied across domains. In exchange: **every domain that was run is reported,
+including the ones that show nothing.** The count of domains and arms run appears in the
+paper's setup section, so a reader can apply their own correction. No contrast is promoted to
+the abstract on the strength of being the largest.
+
+**6. Stopping rule.**
+
+Seeds are fixed in advance: {17, 42, 1234} at small scale, {17, 42} at 8–12B. Seeds are not
+added after seeing results. If a cell looks unstable and more seeds are run anyway, they are
+reported as a separate, labelled robustness check, never pooled into the headline interval.
+
+Also recorded, since it belongs with the predictions in §4: **`mix50 − flip` on reverse is
+predicted to span zero** — replacing forward data with its reversal is expected to be as good
+as doubling the data, which is what makes "free" the right word.

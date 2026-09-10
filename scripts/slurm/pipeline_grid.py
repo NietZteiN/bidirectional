@@ -42,7 +42,7 @@ TIERS = {
     },
     "ladder": {   # RQ3: the synthetic invertibility ladder
         "models": ["llama32-3b", "gemma3-4b", "olmo2-1b"],
-        "domains": ["fmt_lossy10", "fmt_lossy50", "fmt_lossy100"],
+        "domains": ["fmt_det75", "fmt_det50", "fmt_det25", "fmt_det00"],
         "seeds": [17], "arms": "sft,mix50", "train_time": "04:00:00",
     },
     "exec": {

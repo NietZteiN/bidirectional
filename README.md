@@ -42,7 +42,7 @@ make check                     # tests + the dry-runs that catch a broken pipeli
 ```bash
 # Data (CPU, partition `normal`)
 python scripts/10_build_domain.py --domain mt_en-de
-python scripts/10_build_domain.py --domain fmt --lossy 0.5 --out-name fmt_lossy50
+python scripts/10_build_domain.py --domain fmt_det50     # an RQ3 ladder rung
 
 # Freeze the criterion from the BASE model, before any tuned model is scored
 python scripts/15_base_gate.py --domain mt_en-de --model llama32-3b --write

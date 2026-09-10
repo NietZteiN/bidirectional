@@ -197,7 +197,7 @@ moment slots free up.
 | `code` | obfuscate↔deobfuscate, 5 transforms | 6,500 / 500 / 300 |
 | `d2t` | RDF↔text, WebNLG v3.0 | 6,500 / 500 / 500 |
 | `fmt` | JSON↔YAML/XML, MD-table↔CSV | 6,500 / 500 / 500 |
-| `fmt_lossy{10,50,100}` | the RQ3 invertibility ladder | 6,500 / 500 / 500 each |
+| `fmt_det{75,50,25,00}` | the RQ3 invertibility ladder, rungs spread by the share of instances whose inverse is determined | 6,500 / 500 / 500 each |
 | `exec` | output↔input prediction, CRUXEval | 499 / 100 / 200 |
 
 ### Grid tiers, dry-run against the budget

@@ -36,11 +36,17 @@ CELLS: dict[str, tuple[str, dict]] = {
     "sql":      ("bidir.domains.sql", {}),
     "d2t":      ("bidir.domains.d2t", {}),
     "fmt":      ("bidir.domains.fmt", {}),
-    # The RQ3 invertibility ladder: the same generator with a known share of leaf values
-    # dropped. Separate cells because each is trained and evaluated on its own.
-    "fmt_lossy10":  ("bidir.domains.fmt", {"lossy_share": 0.10}),
-    "fmt_lossy50":  ("bidir.domains.fmt", {"lossy_share": 0.50}),
-    "fmt_lossy100": ("bidir.domains.fmt", {"lossy_share": 1.00}),
+    # The RQ3 invertibility ladder. Rungs are named by the share of INSTANCES whose inverse is
+    # determined, not by the leaf-drop share that produces it: under an exact criterion an
+    # instance is recoverable only if NO leaf was dropped, so determinability is
+    # (1 - drop)^leaves and collapses far faster than the drop share suggests. Naming by the
+    # nominal parameter gave rungs at 100/34/1/0 % determinable -- three of them at the floor.
+    # These shares were solved numerically against the generator's own leaf distribution
+    # (mean 11.7 leaves/doc) to land on 75/50/25/0 %.
+    "fmt_det75":  ("bidir.domains.fmt", {"lossy_share": 0.0255}),
+    "fmt_det50":  ("bidir.domains.fmt", {"lossy_share": 0.0636}),
+    "fmt_det25":  ("bidir.domains.fmt", {"lossy_share": 0.1355}),
+    "fmt_det00":  ("bidir.domains.fmt", {"lossy_share": 1.0}),
     # The never-had control for relearning cost (mechanism experiment 3): an INVENTED
     # transform, so a base model is at floor in both directions by construction.
     "fmt_novel":    ("bidir.domains.fmt_novel", {}),

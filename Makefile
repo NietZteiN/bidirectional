@@ -32,7 +32,7 @@ dry:
 data:
 	@for d in code mt_en-de mt_de-en mt_en-zh mt_zh-en sql d2t fmt exec fmt_novel; do \
 	  $(PY) scripts/10_build_domain.py --domain $$d || exit 1; done
-	@for s in 10 50 100; do $(PY) scripts/10_build_domain.py --domain fmt_lossy$$s || exit 1; done
+	@for s in 75 50 25 00; do $(PY) scripts/10_build_domain.py --domain fmt_det$$s || exit 1; done
 
 status:
 	@$(PY) scripts/00_status.py

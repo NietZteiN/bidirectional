@@ -61,13 +61,24 @@ def test_prompts_render_on_real_rows_and_carry_the_right_side(cell):
         assert prompts.completion_for(d, "reverse") == d["side_a"]
 
 
-@pytest.mark.skipif("fmt_lossy100" not in BUILT, reason="ladder not built")
-def test_the_invertibility_ladder_actually_loses_information():
-    """The ladder is only a test of RQ3 if its rungs really differ in recoverability."""
-    import yaml
-    lens = {}
-    for cell in ("fmt", "fmt_lossy10", "fmt_lossy50", "fmt_lossy100"):
-        rows = read_pairs(DATA_DIR / cell / "test.jsonl")[:200]
-        # side_b is the transformed side; more dropped leaves means less text.
-        lens[cell] = sum(len(p.side_b) for p in rows) / len(rows)
-    assert lens["fmt"] > lens["fmt_lossy10"] > lens["fmt_lossy50"] > lens["fmt_lossy100"], lens
+@pytest.mark.skipif("fmt_det00" not in BUILT, reason="ladder not built")
+def test_the_invertibility_ladder_spreads_determinability_evenly():
+    """RQ3 claims the recoverable ceiling TRACKS invertibility, which needs rungs that are
+    actually spread on the axis being tracked.
+
+    Regression: the rungs were once named by leaf-drop share {0, 10, 50, 100} %. Under an exact
+    criterion an instance is recoverable only if NO leaf was dropped, so determinability is
+    (1 - drop)^leaves — with ~11.7 leaves per document that gave 100 / 34 / 1 / 0 %, putting
+    three of four rungs on the floor and making "tracks" untestable.
+    """
+    want = {"fmt": 1.00, "fmt_det75": 0.75, "fmt_det50": 0.50, "fmt_det25": 0.25, "fmt_det00": 0.0}
+    got = {}
+    for cell in want:
+        rows = read_pairs(DATA_DIR / cell / "test.jsonl")
+        got[cell] = sum(1 for p in rows if (p.meta or {}).get("determinable")) / len(rows)
+    for cell, target in want.items():
+        assert abs(got[cell] - target) < 0.06, f"{cell}: determinable {got[cell]:.1%}, want ~{target:.0%}"
+    ordered = [got[c] for c in ("fmt", "fmt_det75", "fmt_det50", "fmt_det25", "fmt_det00")]
+    assert ordered == sorted(ordered, reverse=True)
+    # and the rungs must be separable, not merely ordered
+    assert min(a - b for a, b in zip(ordered, ordered[1:])) > 0.15, ordered

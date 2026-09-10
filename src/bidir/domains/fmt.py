@@ -114,6 +114,39 @@ def from_xml(text: str) -> Any:
     return parse(ET.fromstring(text))
 
 
+def count_leaves(value: Any) -> int:
+    if isinstance(value, dict):
+        return sum(count_leaves(v) for v in value.values())
+    if isinstance(value, list):
+        return sum(count_leaves(v) for v in value)
+    return 1
+
+
+def drop_leaves_counted(value: Any, share: float, rng: random.Random) -> tuple[Any, int]:
+    """`drop_leaves`, also returning how many leaves it actually removed.
+
+    The count is what makes the ladder measurable. Under an EXACT criterion an instance is
+    recoverable only if NO leaf was dropped, so the instance-level ceiling is not the drop
+    share — it is (1 - share)^leaves, which with ~11.7 leaves per document collapses far
+    faster than the share suggests. Recording the count per instance lets the ceiling be
+    scored against what is actually recoverable instead of against a nominal parameter.
+    """
+    dropped = 0
+
+    def walk(v: Any) -> Any:
+        nonlocal dropped
+        if isinstance(v, dict):
+            return {k: walk(x) for k, x in v.items()}
+        if isinstance(v, list):
+            return [walk(x) for x in v]
+        if rng.random() < share:
+            dropped += 1
+            return None
+        return v
+
+    return walk(value), dropped
+
+
 def drop_leaves(value: Any, share: float, rng: random.Random) -> Any:
     """The invertibility ladder: remove `share` of leaf values, keeping the key paths. At
     share=0 the transform is lossless and its inverse is determined; at share=1 only the
@@ -145,16 +178,24 @@ def build_pairs(cfg: Mapping[str, Any]) -> dict[str, list[PairInstance]]:
                 a, b = to_md_table(t), to_csv(t)
             else:
                 d = _rand_doc(rng)
+                n_leaf = count_leaves(d)
                 if lossy:
-                    tgt = drop_leaves(d, lossy, rng)
+                    tgt, n_dropped = drop_leaves_counted(d, lossy, rng)
                 else:
-                    tgt = d
+                    tgt, n_dropped = d, 0
                 a = json.dumps(d, indent=2, sort_keys=True)
                 b = (yaml.safe_dump(tgt, sort_keys=True, allow_unicode=True).strip()
                      if st == "json-yaml" else to_xml(tgt))
+                meta = {"lossy_share": lossy, "n_leaves": n_leaf, "n_dropped": n_dropped,
+                        # Under the exact criterion the REVERSE direction can only succeed when
+                        # nothing was dropped. This flag is the ladder's independent variable.
+                        "determinable": n_dropped == 0,
+                        "information_kept": (n_leaf - n_dropped) / n_leaf if n_leaf else 1.0}
+            if st == "mdtable-csv":
+                meta = {"lossy_share": lossy, "n_leaves": None, "n_dropped": 0,
+                        "determinable": True, "information_kept": 1.0}
             rows.append(PairInstance(pair_id=f"fmt::{st}::{lossy:g}::{n}", domain=NAME, subtask=st,
-                                     side_a=a, side_b=b, split=split,
-                                     meta={"lossy_share": lossy}))
+                                     side_a=a, side_b=b, split=split, meta=meta))
         out[split] = rows
     return out
 
@@ -240,5 +281,47 @@ def score_batch(direction: str, outputs: Sequence[str], insts: Sequence[Mapping[
             row["structural_equal"] = 0
         row["strict"] = int(bool(row["structural_equal"]) and not row["echo"])
         row["criterion"] = "parse & structural equality & not-echo"
+
+        # The ladder needs a CONTINUOUS reading as well as the exact one. Exact match is
+        # all-or-nothing per instance, so at any real drop rate almost every instance fails
+        # and the rungs stop being distinguishable — leaf recall keeps measuring after that.
+        meta = inst.get("meta") or {}
+        row["information_kept"] = meta.get("information_kept", 1.0)
+        row["determinable"] = int(meta.get("determinable", True))
+        if got is not None:
+            try:
+                want_full = _parse(inst["side_a"] if direction == "reverse" else target, "json")
+                row["leaf_recall"] = _leaf_recall(got, want_full)
+            except Exception:
+                row["leaf_recall"] = 0.0
+        else:
+            row["leaf_recall"] = 0.0
+        # Scored only where the inverse is determined at all: a floor that no reverse dose can
+        # move is the RQ3 prediction, and mixing determined and undetermined instances into one
+        # rate hides exactly that.
+        row["strict_determinable_only"] = row["strict"] if row["determinable"] else None
         rows.append(row)
     return rows
+
+
+def _leaf_recall(got: Any, want: Any) -> float:
+    """Share of the ORIGINAL document's leaves the output reproduces, by key path."""
+    def flat(v: Any, prefix: str = "") -> dict[str, Any]:
+        if isinstance(v, dict):
+            out: dict[str, Any] = {}
+            for k, x in v.items():
+                out.update(flat(x, f"{prefix}/{k}"))
+            return out
+        if isinstance(v, list):
+            out = {}
+            for i, x in enumerate(v):
+                out.update(flat(x, f"{prefix}/{i}"))
+            return out
+        return {prefix: v}
+
+    w, g = flat(want), flat(got)
+    if not w:
+        return 1.0
+    hit = sum(1 for k, v in w.items()
+              if k in g and str(g[k]).strip().lower() == str(v).strip().lower())
+    return hit / len(w)

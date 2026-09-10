@@ -1,0 +1,15 @@
+# RQ3 invertibility ladder: the rung where **50 % of instances have a determined inverse**.
+#
+# The rung is named by determinability, not by the leaf-drop share that produces it. Under the
+# exact criterion an instance is recoverable only if NO leaf was dropped, so determinability is
+# (1 - drop)^leaves — with this generator's ~11.7 leaves per document, a 10 % drop leaves only
+# 34 % of instances determinable and a 50 % drop leaves 1.3 %. Naming by the nominal parameter
+# put three of four rungs on the floor. This share was solved numerically against the
+# generator's own leaf distribution.
+_extends: fmt.yaml
+lossy_share: 0.0636
+
+# Only the subtasks the ladder can actually make lossy. `mdtable-csv` has no leaf values to
+# drop, so it is always determinable — leaving it in diluted every rung to 1/3 + 2/3 x target
+# and made the rung's own name false.
+subtasks: [json-yaml, json-xml]

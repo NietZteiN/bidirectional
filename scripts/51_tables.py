@@ -118,7 +118,9 @@ def main() -> int:
     # RQ3 ladder.
     ladder = {d: v for d, v in by_domain.items() if d.startswith("fmt")}
     if len(ladder) > 1:
-        keep = {"fmt": 100, "fmt_lossy10": 90, "fmt_lossy50": 50, "fmt_lossy100": 0}
+        # The rung's independent variable is the share of instances whose inverse is
+        # DETERMINED, not the leaf-drop share that produces it (see configs/domains/fmt_det*).
+        keep = {"fmt": 100, "fmt_det75": 75, "fmt_det50": 50, "fmt_det25": 25, "fmt_det00": 0}
         lrows = []
         for domain in sorted(ladder, key=lambda x: -keep.get(x, 0)):
             for model in sorted(ladder[domain]):
@@ -126,11 +128,13 @@ def main() -> int:
                 lrows.append([f"{keep.get(domain, '?')}\\%", model.replace("_", "\\_"),
                               f"{100 * m[('sft', 'reverse')]:.1f}" if ("sft", "reverse") in m else "--",
                               f"{100 * m[('mix50', 'reverse')]:.1f}" if ("mix50", "reverse") in m else "--"])
+        lrows.sort(key=lambda r: -int(r[0].rstrip("\\%")))
         (a.out / "ladder.tex").write_text(latex_table(
-            lrows, ["Values kept", "Model", "sft", "mix50"],
-            "The synthetic invertibility ladder. The recoverable ceiling under \\textsc{mix50} "
-            "should track the share of leaf values the transformation preserves, and no reverse "
-            "dose should move the floor where it does not.", "ladder"))
+            lrows, ["Instances determined", "Model", "sft", "mix50"],
+            "The synthetic invertibility ladder. Rungs are the share of instances whose inverse "
+            "is determined by the input; the recoverable ceiling under \\textsc{mix50} should "
+            "track it, and no reverse dose should move the floor where the inverse is not "
+            "determined at all.", "ladder"))
         provenance["ladder"] = [str(r) for r in runs if r.parent.parent.name.startswith("fmt")]
 
     (a.out / "PROVENANCE.json").write_text(json.dumps(

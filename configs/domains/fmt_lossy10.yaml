@@ -1,6 +1,0 @@
-# RQ3 invertibility ladder, rung 10: the same generator as `fmt` with 10 % of leaf values
-# dropped from the target. The recoverable ceiling under mix50 should track this number and
-# nothing else — which is the point of a synthetic ladder, since natural domains confound
-# invertibility with difficulty.
-_extends: fmt.yaml
-lossy_share: 0.10
