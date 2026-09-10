@@ -79,7 +79,7 @@ ARMS: dict[str, ArmSpec] = {
     "fullft_sft": ArmSpec("fullft_sft", ("fwd",), full_ft=True, matched_to="sft", role="LoRA artifact check"),
     "fullft_mix5": ArmSpec("fullft_mix5", ("fwd",), reverse_fraction=0.05, full_ft=True, matched_to="mix5",
                            role="LoRA artifact check"),
-    "cft": ArmSpec("cft", ("fwd",), aux_tasks=("pos", "neg"), matched_to="sft",
+    "cft": ArmSpec("cft", ("fwd", "pos", "neg"), aux_tasks=("pos", "neg"), matched_to="sft",
                    role="attribution worked example: forward plus equivalence judgements (code)"),
     "unlikelihood": ArmSpec("unlikelihood", ("fwd",), loss="unlikelihood", matched_to="mix5",
                             role="attribution, second case: Zan et al. off-target fix (MT)"),

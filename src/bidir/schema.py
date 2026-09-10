@@ -15,8 +15,12 @@ from typing import Any, Iterable, Iterator, Literal, Optional
 from pydantic import BaseModel, Field, field_validator
 
 Direction = Literal["forward", "reverse"]
-Task = Literal["fwd", "rev", "replay"]
-DIRECTION_OF_TASK: dict[str, Optional[str]] = {"fwd": "forward", "rev": "reverse", "replay": None}
+Task = Literal["fwd", "rev", "replay", "pos", "neg"]
+#: `pos`/`neg` are the CFT arm's equivalence judgements (code only). They carry NO direction:
+#: that is the point of the attribution test — the objective adds instances without adding
+#: reverse exposure, and `direction_exposure` in the run summary is what makes that auditable.
+DIRECTION_OF_TASK: dict[str, Optional[str]] = {"fwd": "forward", "rev": "reverse",
+                                               "replay": None, "pos": None, "neg": None}
 
 
 class PairInstance(BaseModel):

@@ -41,6 +41,9 @@ CELLS: dict[str, tuple[str, dict]] = {
     "fmt_lossy10":  ("bidir.domains.fmt", {"lossy_share": 0.10}),
     "fmt_lossy50":  ("bidir.domains.fmt", {"lossy_share": 0.50}),
     "fmt_lossy100": ("bidir.domains.fmt", {"lossy_share": 1.00}),
+    # The never-had control for relearning cost (mechanism experiment 3): an INVENTED
+    # transform, so a base model is at floor in both directions by construction.
+    "fmt_novel":    ("bidir.domains.fmt_novel", {}),
     "exec":     ("bidir.domains.exec_pred", {}),
 }
 

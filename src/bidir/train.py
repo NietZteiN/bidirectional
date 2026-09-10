@@ -150,8 +150,8 @@ def main(argv: Optional[list[str]] = None) -> int:
     spec = arm_registry.resolve(args.arm)
     if not spec.trains:
         raise SystemExit("`base` is never trained")
-    if spec.aux_tasks and args.domain != "code":
-        raise SystemExit(f"arm {spec.name!r} needs the CFT auxiliary pools, which exist only for `code`")
+    if spec.aux_tasks and not hasattr(domains.get(args.domain), "aux_pairs"):
+        raise SystemExit(f"arm {spec.name!r} needs auxiliary pools, which {args.domain} does not provide")
 
     cfg = load_config(args.train_config)
     cfg.setdefault("train", {})

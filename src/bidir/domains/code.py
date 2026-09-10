@@ -175,3 +175,58 @@ def score_batch(direction: str, outputs: Sequence[str], insts: Sequence[Mapping[
         row["strict"] = int(verdict.all_match and row["criterion_paper"] == 1 and not row["echo"])
         row["criterion"] = "published criterion & execution & not-echo"
     return rows
+
+
+# --------------------------------------------------------------------------- CFT aux pools
+
+#: The equivalence-judgement formats the CFT arm adds (RQ6's worked example). Kept here rather
+#: than in `bidir.prompts` because only this domain knows what "these two programs compute the
+#: same thing" looks like — and because the whole attribution claim is that these pools add
+#: INSTANCES without adding reverse exposure, which is only checkable if their format is
+#: explicit.
+EQUIV_SYSTEM_HINT = (
+    "Decide whether the two programs below always compute the same result for the same input. "
+    "Answer with exactly one word: YES or NO."
+)
+
+
+def aux_pairs(task: str, split: str) -> list[PairInstance]:
+    """obtune's `pos`/`neg` pools, read-only.
+
+    `pos` pairs a clean program with its obfuscated variant (equivalent); `neg` pairs it with an
+    execution-verified semantics-ALTERING mutant. obtune's default `obfuscated_mutant` negative
+    style is used, so positives and negatives are equally obfuscated and surface
+    obfuscation-ness carries no label information — a confound the workshop paper measured and
+    discharged rather than argued about.
+    """
+    ensure_obtune()
+    from obtune.paths import iter_jsonl
+
+    if task not in ("pos", "neg"):
+        raise ValueError(f"unknown auxiliary task {task!r}")
+    pool = OBTUNE_ROOT / "data" / "train" / "cft" / LANGUAGE / f"{task}.jsonl"
+    if not pool.exists():
+        raise FileNotFoundError(f"{pool} missing — obtune's CFT pools are a prerequisite for the cft arm")
+    want = "train" if split == "train" else "val"
+    out = []
+    for r in iter_jsonl(pool):
+        if r.get("split") != want:
+            continue
+        out.append(PairInstance(
+            pair_id=f"{r['program_id']}::{r['condition']}::{task}", domain=NAME,
+            subtask=r["condition"], side_a=r["code_a"], side_b=r["code_b"], split=want,
+            meta={"label": r.get("label"), "task": task,
+                  "negative_style": r.get("negative_style")}))
+    return out
+
+
+def aux_example(task: str, row: Mapping[str, Any]) -> dict[str, Any]:
+    """One equivalence judgement in TRL's conversational prompt-completion form."""
+    from bidir.prompts import SYSTEM
+
+    label = (row.get("meta") or {}).get("label")
+    if label is None:
+        label = "YES" if task == "pos" else "NO"
+    user = (f"{EQUIV_SYSTEM_HINT}\n\nProgram A:\n{row['side_a']}\n\nProgram B:\n{row['side_b']}")
+    return {"prompt": [{"role": "system", "content": SYSTEM}, {"role": "user", "content": user}],
+            "completion": [{"role": "assistant", "content": str(label)}]}

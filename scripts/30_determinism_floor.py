@@ -1,0 +1,92 @@
+#!/usr/bin/env python
+"""Measure the cross-pass determinism floor, once, and write it down.
+
+    python scripts/30_determinism_floor.py --domain mt_en-de --model llama32-3b --passes 3
+
+Greedy decoding is NOT bitwise reproducible across evaluation passes. vLLM batches
+continuously, so which arms share a pass changes reduction order and occasionally an argmax.
+The workshop paper measured 6-8 % of generations differing and 4-8 of 1,500 graded trials
+flipping, and every table in it is built on the rule that follows: one pass per table,
+contrasts only within a pass, never quote a cross-pass difference finer than 0.5 pp.
+
+That rule needs a number behind it on THIS panel, so this script runs the identical pass N
+times and reports what moves. It is cheap, it is run once per model, and its output is what the
+paper's methods section cites instead of an assertion.
+"""
+from __future__ import annotations
+
+import argparse
+import json
+import sys
+from datetime import datetime, timezone
+from pathlib import Path
+
+ROOT = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(ROOT / "src"))
+
+from bidir import domains, engine as eng, prompts  # noqa: E402
+from bidir.config import GLOBAL_SEED, RESULTS_DIR, ensure_obtune, load_config  # noqa: E402
+from bidir.mixture import load_pairs  # noqa: E402
+
+
+def main() -> int:
+    ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
+    ap.add_argument("--domain", required=True)
+    ap.add_argument("--model", required=True)
+    ap.add_argument("--passes", type=int, default=3)
+    ap.add_argument("--limit", type=int, default=300)
+    ap.add_argument("--seed", type=int, default=GLOBAL_SEED)
+    a = ap.parse_args()
+
+    ensure_obtune()
+    cfg = load_config(f"domains/{a.domain}.yaml")
+    mod = domains.get(a.domain)
+    insts = [p.model_dump() for p in load_pairs(a.domain, "test")][: a.limit]
+    e = eng.get_engine(a.model, cfg.get("engine", {}))
+
+    runs = []
+    for i in range(a.passes):
+        per_pass = {}
+        for direction in ("forward", "reverse"):
+            msgs = [prompts.build_messages(x, direction, mod, "simple") for x in insts]
+            raw, _ = eng.generate(e, msgs, [None] * len(msgs), cfg.get("sampling", {}))
+            outs = [prompts.extract_answer(r) for r in raw]
+            scored = mod.score_batch(direction, outs, insts, cfg)
+            per_pass[direction] = {"raw": raw, "strict": [r["strict"] for r in scored]}
+        runs.append(per_pass)
+        print(f"  pass {i + 1}/{a.passes} done", flush=True)
+
+    report = {"domain": a.domain, "model": a.model, "passes": a.passes, "n_instances": len(insts),
+              "directions": {}}
+    for direction in ("forward", "reverse"):
+        base = runs[0][direction]
+        gen_diff, flips, rates = [], [], []
+        for r in runs:
+            rates.append(sum(r[direction]["strict"]) / len(r[direction]["strict"]))
+        for r in runs[1:]:
+            gen_diff.append(sum(1 for x, y in zip(base["raw"], r[direction]["raw"]) if x != y) / len(base["raw"]))
+            flips.append(sum(1 for x, y in zip(base["strict"], r[direction]["strict"]) if x != y))
+        report["directions"][direction] = {
+            "strict_rate_per_pass": rates,
+            "strict_rate_spread_pp": (max(rates) - min(rates)) * 100,
+            "generations_differing_frac": gen_diff,
+            "graded_trials_flipped": flips,
+        }
+        print(f"  {direction:<8s} rates={[f'{x:.4f}' for x in rates]} "
+              f"spread={report['directions'][direction]['strict_rate_spread_pp']:.2f} pp  "
+              f"gens differing={[f'{x:.1%}' for x in gen_diff]}  flips={flips}")
+
+    worst = max(v["strict_rate_spread_pp"] for v in report["directions"].values())
+    report["floor_pp"] = worst
+    report["rule"] = (f"never quote a cross-pass difference finer than {max(0.5, worst):.1f} pp; "
+                      "one pass per table, contrasts only within a pass")
+    out = RESULTS_DIR / "determinism" / f"{a.domain}__{a.model}.json"
+    out.parent.mkdir(parents=True, exist_ok=True)
+    out.write_text(json.dumps({**report, "finished_utc": datetime.now(timezone.utc).isoformat()}, indent=2))
+    print(f"\n  floor = {worst:.2f} pp -> {report['rule']}")
+    print(f"[determinism] wrote {out}")
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())

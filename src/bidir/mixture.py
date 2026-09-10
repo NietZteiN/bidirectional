@@ -140,7 +140,17 @@ def build_mixture(arm: ArmSpec, domain: str, split: str, seed: int = GLOBAL_SEED
         rows = mixed_task_rows(domain, split, len(pairs), seed, float(cfg.get("share", 0.2)), others)
     else:
         for t in arm.tasks:
+            if t in ("pos", "neg"):
+                continue        # auxiliary pools are loaded below, from the domain
             rows += [TrainRow.from_pair(p, t) for p in pairs]
+
+    if arm.aux_tasks:
+        from bidir import domains as _domains
+        mod = _domains.get(domain)
+        if not hasattr(mod, "aux_pairs"):
+            raise ValueError(f"arm {arm.name!r} needs auxiliary pools, which {domain} does not provide")
+        for t in arm.aux_tasks:
+            rows += [TrainRow.from_pair(p, t) for p in mod.aux_pairs(t, split)]
 
     assert_direction_disjoint(rows) if arm.reverse_fraction is not None else None
     rng = random.Random(seed)

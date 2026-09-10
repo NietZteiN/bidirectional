@@ -1,0 +1,10 @@
+# The never-had control (mechanism experiment 3). Same documents and generator as `fmt`, in an
+# INVENTED encoding no pretraining corpus contains, so the base model is at floor in both
+# directions by construction rather than by luck.
+#
+# Read it against `fmt`: relearn-k on a collapsed `fmt` model measures recovery of a capability
+# the model HAD; relearn-k here measures acquisition of one it never had. Fast recovery against
+# a slow never-had curve is suppression; matching curves are erasure. This is also the
+# experimental form of the contrast with the reversal-curse literature, which describes
+# capabilities that were never acquired.
+_extends: fmt.yaml

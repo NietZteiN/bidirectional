@@ -87,6 +87,10 @@ def build_example(row: Mapping[str, Any], domain: Any) -> dict[str, Any]:
     rows contains — not in format.
     """
     task = row["task"]
+    if task in ("pos", "neg"):
+        # Auxiliary judgement tasks (CFT). The domain owns their format because only it knows
+        # what "these two programs are equivalent" looks like.
+        return domain.aux_example(task, row)
     if task == "replay":
         prompt = [{"role": "system", "content": SYSTEM}, {"role": "user", "content": row["side_a"]}]
         return {"prompt": prompt, "completion": [{"role": "assistant", "content": row["side_b"]}]}

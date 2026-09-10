@@ -47,3 +47,37 @@ def test_missing_threshold_raises_rather_than_defaulting():
     from bidir.domains._common import threshold_for
     with pytest.raises(KeyError, match="not frozen"):
         threshold_for({}, "forward", "comet")
+
+
+def test_novel_transform_round_trips_losslessly():
+    """The never-had control is only a control if it is LOSSLESS and LEARNABLE. If its inverse
+    were undetermined, a slow relearning curve would be about the transform rather than about
+    novelty, and the erased-vs-suppressed comparison would say nothing.
+
+    Regression: an earlier key mangle prefixed the key's length, which was ambiguous for keys
+    ending in a digit (`channel0` reverses to `0lennahc`) and silently merged distinct fields.
+    """
+    import random
+    from bidir.domains import fmt as bf, fmt_novel as fn
+
+    rng = random.Random(17)
+    for _ in range(500):
+        d = bf._rand_doc(rng)
+        assert bf._equal(fn.decode(fn.encode(d)), d)
+
+
+def test_novel_transform_keys_survive_digits_and_nesting():
+    from bidir.domains import fmt as bf, fmt_novel as fn
+    doc = {"channel0": 1, "note1": {"a1": True, "b2": [1, 2, {"c3": "x"}]}, "note2": "y"}
+    assert bf._equal(fn.decode(fn.encode(doc)), doc)
+
+
+def test_novel_transform_is_scored_the_same_way_as_fmt():
+    from bidir.domains import fmt_novel as fn
+    doc_json = '{\n  "a1": 1\n}'
+    inst = {"pair_id": "p", "domain": "fmt_novel", "subtask": "json-sigil",
+            "side_a": doc_json, "side_b": fn.encode({"a1": 1}), "split": "test", "meta": {}}
+    gold, echo = fn.score_batch("forward", [inst["side_b"], inst["side_a"]], [inst, inst], {})
+    assert gold["strict"] == 1 and echo["strict"] == 0
+    rev = fn.score_batch("reverse", [inst["side_a"]], [inst], {})[0]
+    assert rev["strict"] == 1
