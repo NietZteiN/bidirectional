@@ -318,8 +318,11 @@ def main(argv: Optional[list[str]] = None) -> int:
         # than the same batch shape does on a GPU. A batch sized for an H200 OOM-killed a 64 GB
         # CPU node on 2026-09-10. Use --per-device-batch to shrink it for smoke runs.
         gradient_checkpointing=bool(tcfg.get("gradient_checkpointing", True)) and use_cuda,
-        save_strategy=tcfg.get("save_strategy", "epoch"),
-        save_total_limit=None,
+        save_strategy=tcfg.get("save_strategy", "no"),
+        # Belt and braces on the config: an intermediate checkpoint is never loaded by anything
+        # in this project, and keeping three of them per adapter is what took the storage
+        # estimate past the quota.
+        save_total_limit=int(tcfg.get("save_total_limit", 1)),
         eval_strategy="steps" if val_ds is not None else "no",
         eval_steps=int(tcfg.get("eval_steps", 200)),
         per_device_eval_batch_size=int(tcfg["per_device_batch"]),

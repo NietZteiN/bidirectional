@@ -25,7 +25,11 @@ train:
   max_grad_norm: 1.0
   seed: 17
   val_size: 500
-  save_strategy: epoch
+  # "no", not "epoch". We do not do checkpoint selection and we do not resume, so every
+  # intermediate checkpoint is pure storage: with 3 epochs it quadruples the campaign's
+  # footprint. Measured 2026-09-10 -- keeping them puts the grid at 1,819 GB against 306 GB of
+  # quota headroom, and dropping them puts it at 455 GB. Only final/ is ever loaded.
+  save_strategy: "no"
   eval_steps: 200
   logging_steps: 20
 

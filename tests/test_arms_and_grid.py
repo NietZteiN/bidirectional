@@ -194,3 +194,44 @@ def test_spectral_refuses_full_finetune_arms():
 
     with _pytest.raises(SystemExit, match="full fine-tune"):
         spectral.main(["--domain", "fmt", "--model", "llama32-3b", "--arm", "fullft_sft"])
+
+
+
+def test_reaper_keeps_every_domain_the_mechanism_pipeline_needs():
+    """The reaper protects `sft` in the mechanism domains. If pipeline_mech.py's list grows and
+    the reaper's does not, a tier's cleanup silently deletes weights a later experiment needs --
+    and experiment 7 needs the WEIGHTS, not a score, so it cannot be recovered from trials.jsonl.
+    """
+    import importlib.util
+    from pathlib import Path
+
+    root = Path(__file__).resolve().parents[1]
+
+    def load(name, rel):
+        spec = importlib.util.spec_from_file_location(name, root / rel)
+        m = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(m)
+        return m
+
+    mech = load("pipeline_mech", "scripts/slurm/pipeline_mech.py")
+    reaper = load("reap", "scripts/91_reap_adapters.py")
+    missing = set(mech.MECH_DOMAINS) - set(reaper.MECH_DOMAINS)
+    assert not missing, f"the reaper would delete sft adapters the mechanism pipeline needs: {missing}"
+
+
+def test_no_intermediate_checkpoints_are_kept():
+    """Keeping a checkpoint per epoch quadrupled the campaign's footprint to 1,819 GB against
+    306 GB of quota headroom. Nothing in this project loads one."""
+    from bidir.config import load_config
+
+    cfg = load_config("train/_base_lora.yaml")
+    assert str(cfg["train"]["save_strategy"]).lower() in ("no", "false"), \
+        "save_strategy must be 'no': see docs/STORAGE.md"
+
+
+def test_heavy_outputs_live_outside_the_git_tree():
+    from bidir.config import PROJECT_ROOT, RESULTS_DIR, RUNS_DIR
+
+    for p in (RUNS_DIR, RESULTS_DIR):
+        assert PROJECT_ROOT not in p.parents and p != PROJECT_ROOT, \
+            f"{p} is inside the repo; adapters and trials belong under BIDIR_OUT"

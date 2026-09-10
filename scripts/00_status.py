@@ -85,6 +85,26 @@ def main() -> int:
         print(f"\n  GATE: {'PASS' if v.get('passes') else 'FAIL'} — "
               f"collapsing NLP cells: {v.get('collapsing_nlp_cells')}")
 
+    print("\n=== storage ===")
+    import shutil as _sh
+    import subprocess as _sp
+    for label, path in (("adapters", RUNS_DIR), ("results", RESULTS_DIR), ("data", DATA_DIR)):
+        if path.exists():
+            n = sum(f.stat().st_size for f in path.rglob("*") if f.is_file())
+            print(f"  {label:<10} {n / 1e9:8.1f} GB   {path}")
+    try:
+        q = _sp.run(["mfsgetquota", "/work/jvl210002"], capture_output=True, text=True, timeout=20).stdout
+        for line in q.splitlines():
+            parts = [p_.strip() for p_ in line.split("|")]
+            if len(parts) > 3 and parts[0] == "size" and parts[2].isdigit():
+                used, soft = int(parts[1]), int(parts[2])
+                head = (soft - used) / 1e9
+                warn = "   <-- the grid needs ~455 GB final-only; reap as tiers finish" if head < 500 else ""
+                print(f"  quota      {used / 1e9:8.1f} GB of {soft / 1e9:.0f} GB soft, "
+                      f"{head:.0f} GB headroom{warn}")
+    except Exception:
+        pass
+
     print("\n=== queue ===")
     rows = squeue_rows()
     if not rows:

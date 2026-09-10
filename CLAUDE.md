@@ -121,9 +121,29 @@ command that does the job. Trained adapters and built corpora cost GPU-hours and
 
 ---
 
-## 6. Provenance
+## 6. Storage
 
-`data/`, `runs/` and `results/` are gitignored — all generated. Provenance lives in the files
+`/work/jvl210002` is at **694 GB of a 1,000 GB soft quota** — about 306 GB of headroom — and the
+grid produces ~455 GB of adapters even with intermediate checkpoints turned off. Three rules
+follow, and the numbers behind them are in [`docs/STORAGE.md`](docs/STORAGE.md):
+
+- **`save_strategy: "no"`.** Nothing here loads an intermediate checkpoint; keeping one per epoch
+  quadruples the footprint to 1,819 GB.
+- **Adapters and results live under `$BIDIR_OUT`, outside the working tree.** Same filesystem, so
+  it saves no quota; what it buys is that `git status` never scans hundreds of gigabytes and that
+  repointing at a real scratch filesystem is one variable.
+- **Reap after each tier's evals land** (`scripts/91_reap_adapters.py`, dry run by default). It
+  never touches an unevaluated adapter, an `sft` adapter in a mechanism domain, or an arm that
+  another arm initialises from.
+
+**`/scratch` is mounted (401 TB) and this account has no directory there** — `mkdir` is denied.
+Provisioning it is an admin request, and it is worth making: it would move the whole campaign off
+the quota.
+
+## 7. Provenance
+
+`data/` is committed (131 MB, and its build reports are provenance); `runs/` and `results/` are
+generated and live outside the tree. Provenance lives in the files
 themselves: every adapter carries a `run_manifest.json` with the git sha, the resolved config,
 the script hashes and the realised direction balance; every result carries a `summary.json`
 with the engine version, the systems and the adapter-effectiveness report.

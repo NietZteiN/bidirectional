@@ -17,8 +17,16 @@ import yaml
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 CONFIGS_DIR = PROJECT_ROOT / "configs"
 DATA_DIR = PROJECT_ROOT / "data"
-RUNS_DIR = PROJECT_ROOT / "runs"
-RESULTS_DIR = PROJECT_ROOT / "results"
+#: Adapters and trial files are large and disposable; the repo should not hold them. They
+#: default OUTSIDE the working tree so `git status` never scans hundreds of gigabytes and so a
+#: future move to a real scratch filesystem is one variable, not a rewrite.
+#:
+#: NOTE: /scratch exists on this cluster (401 TB) but the account has no directory there and
+#: cannot create one -- that needs an admin. Until then these live beside the repo on /work,
+#: which is quota-bound. See docs/STORAGE.md.
+_OUT = Path(os.environ.get("BIDIR_OUT", str(PROJECT_ROOT.parent / "bidir_out")))
+RUNS_DIR = Path(os.environ.get("BIDIR_RUNS", str(_OUT / "runs")))
+RESULTS_DIR = Path(os.environ.get("BIDIR_RESULTS", str(_OUT / "results")))
 THIRD_PARTY = PROJECT_ROOT / "third_party"
 
 OBTUNE_ROOT = Path(os.environ.get("OBTUNE_ROOT", "/work/jvl210002/migration/obtune"))
