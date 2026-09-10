@@ -178,3 +178,62 @@ reported as a separate, labelled robustness check, never pooled into the headlin
 Also recorded, since it belongs with the predictions in §4: **`mix50 − flip` on reverse is
 predicted to span zero** — replacing forward data with its reversal is expected to be as good
 as doubling the data, which is what makes "free" the right word.
+
+
+### Amendment 2 — 2026-09-10, before any adapter was trained
+
+**The `replay` arm did not satisfy its own specification, and is corrected.**
+
+`replay` is specified in §1 as replacing a share of forward pairs with generic instruction data
+**at matched budget**, which is what makes `replay − sft` a read on ordinary forgetting and
+`mix50 − replay` a read on what direction specifically buys. It was matched on row count only.
+Measured on 2026-09-10, before any training: an unmatched tulu-3 sample ran **1.24×** the
+rendered character budget of the `mt_en-de` pairs it replaced. Both contrasts would then have
+confounded direction with token budget.
+
+Replay rows are now drawn by nearest-length matching against the **rendered** examples they
+replace — the rendered length, not the raw pair, because the domain's own instruction wrapper is
+most of the sequence for some cells (SQL pairs are 185 raw characters and 988 rendered ones, so
+targeting the raw length left that arm at 0.80×). The pool was widened and its length cap raised
+to 2,600 characters so candidates exist at every target length.
+
+Realised ratios against `sft`, mean rendered characters per example: `mt_en-de` 1.01,
+`sql` 1.00, `fmt` 1.02, `code` 0.98, `d2t` 1.00, `exec` 1.00.
+
+This is a correction to make an arm meet its stated specification, not a change to the design.
+The contrasts, thresholds and predictions in §1–§6 are untouched. It is recorded here because
+the arm's construction materially changed and the change is only checkable if it is written
+down. `tests/test_mixture.py` now asserts every matched arm stays within 10 % of `sft`, and
+`scripts/16_audit_criteria.py` re-checks it with the real tokenizer.
+
+### Amendment 3 — 2026-09-10, before any adapter was trained
+
+**`relearn-k` would not have trained, and the guard that should have caught it was blind.**
+
+Two compounding defects, both found by arithmetic rather than by a run, and both fixed before
+any adapter exists.
+
+*The arm did not train.* `relearn-k` fine-tunes a collapsed model on as few as **10** reversed
+pairs. Under the shared recipe's effective batch of 64, ten rows is fewer than one optimizer
+step: measured across the panel, `relearn10` takes **zero** steps on `llama32-3b` and
+`gemma3-12b` and one on `olmo2-1b`, and `relearn50` takes two or three. Its adapter would have
+been byte-identical to `sft`, and the relearning curve would have read *no recovery at small k*
+— which is exactly the signature of erasure. RQ5's central claim would have been decided by
+batch arithmetic.
+
+*The guard could not see it.* `bidir.evaluate`'s adapter-effectiveness check compares each
+system's generations against `base`. But `relearn*` **starts from `sft`**, so it differs from
+`base` no matter what, and an arm that trained not at all passes silently.
+
+Both are corrected. For relearn arms the batch shrinks to fit `k` and the **optimizer-step count
+is held constant across k** (40 steps, in `configs/train/_base_lora.yaml`). That also makes the
+measurement better than it was specified: relearning cost is now denominated in **data** —
+which is the question RQ5 asks — with compute held fixed instead of varying with `k`. If larger
+`k` also bought more steps, a rising curve could not separate "more data helps" from "more
+training helps". The trainer additionally refuses to save an adapter that took zero steps, and
+the effectiveness guard now compares each arm against the adapter it was **initialised from**
+rather than always against `base`.
+
+This changes no contrast, threshold or prediction in §1–§6. §4's RQ5 prediction — that
+relearning from `sft` outruns the never-had control — is now testable rather than
+predetermined.

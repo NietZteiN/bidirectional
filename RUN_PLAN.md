@@ -265,7 +265,24 @@ the tests plus every pipeline dry-run), `CLAUDE.md` (operating rules), `README.m
   Its realised mixture is 6,500 forward + 7,384 `pos` + 5,612 `neg` at **reverse_share 0.0** —
   the attribution point in one number: instances added, no reverse exposure added.
 
-## 9. Immediate next actions
+## 9. Extending the domain set
+
+[`docs/TASK_CATALOGUE.md`](docs/TASK_CATALOGUE.md) holds 80 candidate paired tasks.
+[`docs/CANDIDATE_DOMAINS.md`](docs/CANDIDATE_DOMAINS.md) picks the three that close a hole this
+paper's argument actually has — a provably hard inverse (#30 cellular automata), a formal
+domain (#56 expansion ↔ factorization), and a task whose forward direction is trivial so a
+collapse cannot be capacity-spend (#66 diacritic restoration) — at ~23 GPU-h each, and says what
+to leave out and why.
+
+**None of them before the gate.** The gate may reframe the paper entirely, and each domain is
+23 GPU-h spent against an unchecked hypothesis. Any addition is declared in
+[`PREREGISTRATION.md`](PREREGISTRATION.md) before its results are seen.
+
+Two catalogue entries are already inside `code` and cost nothing: `L2` is minification (#4), and
+the structural-versus-renaming contrast is a within-domain invertibility test already in the
+grid.
+
+## 10. Immediate next actions
 
 **Nothing further can be built without GPU slots.** In order, when they free:
 

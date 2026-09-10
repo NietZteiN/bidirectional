@@ -56,3 +56,41 @@ def test_flip_is_the_only_doubled_arm():
     assert arms.resolve("fwd2x").cost_units == 2.0
     for name in ("sft", "rev", "mix1", "mix5", "mix50", "replay", "mixedtask"):
         assert arms.resolve(name).cost_units == 1.0, f"{name} must be budget-matched to sft"
+
+
+BUDGET_CELLS = ["mt_en-de", "sql", "fmt", "code", "d2t"]
+
+
+@pytest.mark.parametrize("cell", BUDGET_CELLS)
+def test_matched_arms_really_are_budget_matched(cell):
+    """Every arm except the doubled references claims to be matched to `sft` on the budget.
+
+    That claim is load-bearing twice over: it is why "reverse data is free" is literally true,
+    and it is what makes `mix50 - replay` a clean read on what direction buys. Matching on ROW
+    COUNT does not deliver it — measured 2026-09-10, an unmatched replay sample ran 1.24x the
+    rendered character budget of the mt_en-de pairs it replaced, and targeting the raw pair
+    length instead of the rendered one left sql at 0.80x.
+
+    Characters rather than tokens so this runs on the login node; `scripts/16_audit_criteria.py`
+    does the same check with the real tokenizer.
+    """
+    import statistics
+    from pathlib import Path
+
+    from bidir import domains, prompts
+    from bidir.config import DATA_DIR
+
+    if not (DATA_DIR / cell / "train.jsonl").exists():
+        pytest.skip(f"{cell} not built")
+    mod = domains.get(cell)
+
+    def mean_len(arm_name):
+        rows = build_mixture(arms.resolve(arm_name), cell, "train", seed=17)[:500]
+        return statistics.mean(
+            sum(len(m["content"]) for m in ex["prompt"]) + sum(len(m["content"]) for m in ex["completion"])
+            for ex in (prompts.build_example(r.model_dump(), mod) for r in rows))
+
+    base = mean_len("sft")
+    for arm_name in ("mix5", "mix50", "rev", "replay"):
+        ratio = mean_len(arm_name) / base
+        assert 0.90 <= ratio <= 1.10, f"{cell}/{arm_name} is {ratio:.2f}x sft; it claims to be matched"

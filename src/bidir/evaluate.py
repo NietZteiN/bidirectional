@@ -95,16 +95,30 @@ def summarize(rows: Sequence[Mapping[str, Any]], metrics: Sequence[str]) -> dict
 
 
 def adapter_effectiveness(rows: Sequence[Mapping[str, Any]]) -> dict[str, Any]:
+    """Every trained system must differ from its STARTING POINT, which is not always `base`.
+
+    An arm continued from another adapter (`relearn*` starts from `sft`) differs from `base` no
+    matter what, so a base-only check passes it even when it trained not at all — and "no
+    recovery at small k" is exactly what erasure looks like. Each arm is therefore compared
+    against the adapter it was initialised from, when it has one.
+    """
     by_key: dict[tuple, dict[str, str]] = defaultdict(dict)
     for r in rows:
         by_key[(r["direction"], r["strategy"], r["pair_id"])][r["system"]] = r["output_raw"]
     report: dict[str, Any] = {}
     for name in sorted({r["system"] for r in rows} - {"base"}):
-        pairs = [(v["base"], v[name]) for v in by_key.values() if "base" in v and name in v]
+        try:
+            reference = arm_registry.resolve(name).init_from or "base"
+        except KeyError:
+            reference = "base"
+        if reference not in {r["system"] for r in rows}:
+            reference = "base"
+        pairs = [(v[reference], v[name]) for v in by_key.values() if reference in v and name in v]
         if not pairs:
             continue
         identical = sum(1 for a, b in pairs if a == b)
-        report[name] = {"n_compared": len(pairs), "identical_to_base": identical,
+        report[name] = {"reference": reference, "n_compared": len(pairs),
+                        "identical_to_reference": identical,
                         "identical_rate": identical / len(pairs)}
     return report
 
@@ -184,9 +198,10 @@ def main(argv: Optional[list[str]] = None) -> int:
 
     for name, rep in sorted(effect.items()):
         if rep["identical_rate"] == 1.0:
-            raise RuntimeError(f"system {name!r} produced output identical to base on all "
-                               f"{rep['n_compared']} trials — the adapter did not take effect. "
-                               f"Rows are in {out_dir}/trials.jsonl")
+            raise RuntimeError(
+                f"system {name!r} produced output identical to {rep['reference']!r} on all "
+                f"{rep['n_compared']} trials — it did not take effect. Rows are in "
+                f"{out_dir}/trials.jsonl")
 
     for c in summary["cells"]:
         if c["subtask"] == "ALL" and c["strategy"] == "simple":

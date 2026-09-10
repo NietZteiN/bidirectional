@@ -61,35 +61,83 @@ def assert_direction_disjoint(rows: Sequence[TrainRow]) -> None:
 
 # --------------------------------------------------------------------------- replay rows
 
-def replay_rows(n: int, seed: int, split: str = "train") -> list[TrainRow]:
+_REPLAY_POOL_CACHE: dict[tuple, list] = {}
+
+
+def replay_rows(n: int, seed: int, split: str = "train",
+                target_lengths: Optional[Sequence[int]] = None) -> list[TrainRow]:
     """Generic single-turn instruction rows from the tulu-3 SFT mixture (cached in HF_HOME).
 
-    Single-turn only, under this project's shared system prompt, length-capped so a replay
-    row costs about what a pair row costs. The sample is seeded and disjoint between train
-    and val by construction (val draws from the tail of the shuffled pool).
+    LENGTH-MATCHED, not merely count-matched. `replay` exists to be an equal-sized substitution
+    for the reversed pairs in `mix50`, so that `replay - sft` isolates ordinary forgetting and
+    `mix50 - replay` isolates what direction specifically buys. Matching on row COUNT alone does
+    not deliver that: measured 2026-09-10, an unmatched tulu-3 sample ran 1.24x the character
+    budget of the mt_en-de pairs it replaced, which would have confounded both contrasts with a
+    token-budget difference.
+
+    So when `target_lengths` is given (the lengths of the pairs being replaced), each replay row
+    is drawn to be the closest unused match to one of them. The realised ratio is reported by
+    `scripts/16_audit_criteria.py` and lands in every run manifest via `direction_balance`.
     """
     from datasets import load_dataset
 
     cfg = load_config("domains/replay.yaml")
-    ds = load_dataset(cfg["hf_id"], split=cfg.get("hf_split", "train[:20000]"))
     max_chars = int(cfg.get("max_chars", 1500))
-    pool: list[tuple[str, str, str]] = []
-    for ex in ds:
-        msgs = ex["messages"]
-        if len(msgs) != 2 or msgs[0]["role"] != "user" or msgs[1]["role"] != "assistant":
-            continue
-        u, a = msgs[0]["content"].strip(), msgs[1]["content"].strip()
-        if not u or not a or len(u) + len(a) > max_chars:
-            continue
-        pool.append((ex["id"], u, a))
+    # Cached: the pool is identical for every cell, and reloading a 40k-row dataset once per
+    # (cell, arm) turned the budget audit into a 13-minute job.
+    key = (cfg["hf_id"], cfg.get("hf_split"), max_chars)
+    if key in _REPLAY_POOL_CACHE:
+        pool = list(_REPLAY_POOL_CACHE[key])
+    else:
+        ds = load_dataset(cfg["hf_id"], split=cfg.get("hf_split", "train[:20000]"))
+        pool = []
+        for ex in ds:
+            msgs = ex["messages"]
+            if len(msgs) != 2 or msgs[0]["role"] != "user" or msgs[1]["role"] != "assistant":
+                continue
+            u, a = msgs[0]["content"].strip(), msgs[1]["content"].strip()
+            if not u or not a or len(u) + len(a) > max_chars:
+                continue
+            pool.append((ex["id"], u, a))
+        _REPLAY_POOL_CACHE[key] = list(pool)
     rng = random.Random(seed + 7919)
     rng.shuffle(pool)
     if split == "val":
         pool = pool[::-1]
     if n > len(pool):
         raise ValueError(f"replay pool has {len(pool)} usable rows, need {n}; raise hf_split")
+
+    if target_lengths is None:
+        chosen = pool[:n]
+    else:
+        # Greedy nearest-length matching. Sorting both sides and walking them together would be
+        # faster, but it correlates the choice with the pool's own ordering; matching each
+        # target against the remaining pool keeps the draw independent of that.
+        by_len = sorted(range(len(pool)), key=lambda i: len(pool[i][1]) + len(pool[i][2]))
+        lens = [len(pool[i][1]) + len(pool[i][2]) for i in by_len]
+        used: set[int] = set()
+        chosen = []
+        import bisect
+        for t in list(target_lengths)[:n]:
+            j = bisect.bisect_left(lens, t)
+            best, bestd = None, None
+            for k in range(max(0, j - 40), min(len(by_len), j + 40)):
+                if by_len[k] in used:
+                    continue
+                d = abs(lens[k] - t)
+                if bestd is None or d < bestd:
+                    best, bestd = k, d
+            if best is None:                      # exhausted the neighbourhood; take any unused
+                best = next(k for k in range(len(by_len)) if by_len[k] not in used)
+            used.add(by_len[best])
+            chosen.append(pool[by_len[best]])
+        while len(chosen) < n:                    # only if target_lengths was short
+            k = next(k for k in range(len(by_len)) if by_len[k] not in used)
+            used.add(by_len[k])
+            chosen.append(pool[by_len[k]])
+
     out = []
-    for rid, u, a in pool[:n]:
+    for rid, u, a in chosen:
         out.append(TrainRow(pair_id=f"replay::{rid}", domain="replay", subtask=str(cfg["hf_id"]),
                             side_a=u, side_b=a, split=split, task="replay"))
     return out
@@ -131,7 +179,25 @@ def build_mixture(arm: ArmSpec, domain: str, split: str, seed: int = GLOBAL_SEED
         rows = [TrainRow.from_pair(p, "fwd") for p in fwd] + [TrainRow.from_pair(p, "rev") for p in rev]
     elif arm.replay_share is not None:
         keep, replaced = split_directions(pairs, arm.replay_share, seed)
-        rows = [TrainRow.from_pair(p, "fwd") for p in keep] + replay_rows(len(replaced), seed, split)
+        # Match on the RENDERED example, not the raw pair. The domain's own instruction wrapper
+        # is most of the sequence for some cells — SQL prepends a whole schema, so its pairs are
+        # 185 raw characters and 988 rendered ones. Targeting the raw length matched replay to a
+        # quantity the trainer never sees and left the SQL arm at 0.80x.
+        from bidir import domains as _domains
+        from bidir import prompts as _prompts
+        _mod = _domains.get(domain)
+
+        def _rendered_len(pair) -> int:
+            ex = _prompts.build_example({**pair.model_dump(), "task": "fwd"}, _mod)
+            return (sum(len(m["content"]) for m in ex["prompt"])
+                    + sum(len(m["content"]) for m in ex["completion"]))
+
+        # A replay row is rendered under the same system prompt but WITHOUT the domain
+        # instruction, so subtract that fixed overhead from the target it has to hit.
+        _wrapper = len(_prompts.SYSTEM)
+        target = [max(1, _rendered_len(p) - _wrapper) for p in replaced]
+        rows = ([TrainRow.from_pair(p, "fwd") for p in keep]
+                + replay_rows(len(replaced), seed, split, target_lengths=target))
     elif arm.mixed_task:
         cfg = load_config("domains/mixedtask.yaml")
         others = list(mixed_task_others or [d for d in cfg["domains"] if d != domain])

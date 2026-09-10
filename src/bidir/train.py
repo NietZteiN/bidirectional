@@ -163,6 +163,27 @@ def main(argv: Optional[list[str]] = None) -> int:
     seed = int(tcfg["seed"])
     domain = domains.get(args.domain)
 
+    # relearn-k trains on as few as 10 examples. Under the shared recipe's effective batch of
+    # 64 that is FEWER ROWS THAN ONE STEP: measured 2026-09-10, relearn10 took **zero**
+    # optimizer steps on llama32-3b and gemma3-12b and 1 on olmo2-1b, so the adapter would have
+    # been byte-identical to `sft` and the relearning curve would have read "no recovery at
+    # small k" — which is precisely the signature of erasure. A false negative on RQ5's central
+    # claim, produced by batch arithmetic.
+    #
+    # So for these arms the batch shrinks to fit and the STEP COUNT is held constant across k.
+    # That is also the better measurement: relearning cost is then denominated in DATA, which is
+    # the question ("how much reversed data is needed"), with compute held fixed rather than
+    # varying with k.
+    if spec.relearn_k is not None:
+        k = int(spec.relearn_k)
+        rl = dict(cfg.get("relearn", {}) or {})
+        tcfg["per_device_batch"] = max(1, min(int(tcfg["per_device_batch"]), k))
+        tcfg["grad_accum"] = max(1, min(int(tcfg["grad_accum"]), k // tcfg["per_device_batch"]))
+        tcfg["relearn_steps"] = int(rl.get("steps", 40))
+        tcfg["epochs"] = 1000.0        # step-bounded, not epoch-bounded; max_steps ends it
+        print(f"[bidir.train] relearn k={k}: batch {tcfg['per_device_batch']}x{tcfg['grad_accum']}, "
+              f"{tcfg['relearn_steps']} steps (step count held constant across k)", flush=True)
+
     gpu_visible = os.environ.get("CUDA_VISIBLE_DEVICES", "")
     if args.cpu:
         os.environ["CUDA_VISIBLE_DEVICES"] = ""
@@ -296,7 +317,8 @@ def main(argv: Optional[list[str]] = None) -> int:
         per_device_eval_batch_size=int(tcfg["per_device_batch"]),
         logging_steps=int(tcfg.get("logging_steps", 20)),
         seed=seed, data_seed=seed, report_to=[], use_cpu=not use_cuda,
-        max_steps=args.max_steps if args.max_steps is not None else -1,
+        max_steps=(args.max_steps if args.max_steps is not None
+                   else int(tcfg["relearn_steps"]) if spec.relearn_k is not None else -1),
         dataloader_num_workers=2,
     )
     trainer_cls, trainer_kw = SFTTrainer, {}
@@ -327,6 +349,12 @@ def main(argv: Optional[list[str]] = None) -> int:
         return 0
 
     result = trainer.train()
+    if result.global_step == 0:
+        raise SystemExit(
+            f"arm {spec.name!r} took ZERO optimizer steps ({len(train_rows)} rows, effective "
+            f"batch {int(tcfg['per_device_batch']) * int(tcfg['grad_accum'])}). The adapter would "
+            "be identical to its starting point and every downstream number would be an artifact."
+        )
     trainer.save_model(str(out_dir / "final"))
     tokenizer.save_pretrained(str(out_dir / "final"))
     summary = {
@@ -334,6 +362,7 @@ def main(argv: Optional[list[str]] = None) -> int:
         "finished_utc": datetime.now(timezone.utc).isoformat(),
         "train_runtime_s": result.metrics.get("train_runtime"),
         "train_loss": result.metrics.get("train_loss"), "steps": result.global_step,
+        "effective_batch": int(tcfg["per_device_batch"]) * int(tcfg["grad_accum"]),
         "n_train": len(train_rows), "n_val": len(val_ex), "balance": balance, "lengths": length_stats,
         "checkpoints": sorted(p.name for p in out_dir.glob("checkpoint-*")),
     }

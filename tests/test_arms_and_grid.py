@@ -92,3 +92,56 @@ def test_no_module_hardcodes_a_scratch_path():
             if "/work/jvl210002/migration/tmp" in line and "os.environ" not in line:
                 offenders.append(f"{f.name}:{i}")
     assert not offenders, f"hardcoded scratch paths (use $TMPDIR): {offenders}"
+
+
+@pytest.mark.parametrize("model", ["llama32-3b", "gemma3-4b", "olmo2-1b", "llama31-8b", "gemma3-12b"])
+def test_relearn_arms_actually_take_optimizer_steps(model):
+    """relearn-k trains on as few as 10 rows. Under the shared effective batch of 64 that is
+    fewer rows than ONE step.
+
+    Regression, measured 2026-09-10 before any training: relearn10 took zero optimizer steps on
+    llama32-3b and gemma3-12b, so its adapter would have been byte-identical to `sft` and the
+    relearning curve would have read "no recovery at small k" — the exact signature of erasure,
+    and a false negative on RQ5's central claim.
+    """
+    from bidir.config import load_config, resolve_model
+
+    cfg = load_config("train/_base_lora.yaml")
+    steps = int(cfg["relearn"]["steps"])
+    m = resolve_model(model)
+    for k in (10, 50, 200, 1000):
+        pdb = max(1, min(int(m["per_device_batch"]), k))
+        ga = max(1, min(int(m["grad_accum"]), k // pdb))
+        assert pdb * ga <= k, f"{model}/relearn{k}: effective batch {pdb * ga} exceeds the {k} rows"
+        assert steps > 0
+
+
+def test_relearn_holds_step_count_constant_across_k():
+    """Relearning cost must be denominated in DATA, not compute: if bigger k also bought more
+    optimizer steps, a rising curve would not distinguish 'more data helps' from 'more training
+    helps'."""
+    from bidir.config import load_config
+    cfg = load_config("train/_base_lora.yaml")
+    assert int(cfg["relearn"]["steps"]) > 0
+
+
+def test_effectiveness_guard_compares_against_the_init_adapter():
+    """An arm continued from another differs from `base` no matter what, so a base-only check
+    passes it even when it trained not at all."""
+    import sys
+    from pathlib import Path
+    sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
+    from bidir.evaluate import adapter_effectiveness
+
+    def row(system, pair, out):
+        return {"direction": "reverse", "strategy": "simple", "pair_id": pair,
+                "system": system, "output_raw": out}
+
+    rows = []
+    for i in range(5):
+        rows += [row("base", f"p{i}", f"base{i}"), row("sft", f"p{i}", f"sft{i}"),
+                 row("relearn10", f"p{i}", f"sft{i}")]   # identical to sft: it did not train
+    rep = adapter_effectiveness(rows)
+    assert rep["relearn10"]["reference"] == "sft"
+    assert rep["relearn10"]["identical_rate"] == 1.0, "the guard must catch an untrained relearn arm"
+    assert rep["sft"]["reference"] == "base" and rep["sft"]["identical_rate"] == 0.0

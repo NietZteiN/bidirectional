@@ -10,6 +10,11 @@ whether the lost capability is erased or merely suppressed.
 - **The execution plan:** [`RUN_PLAN.md`](RUN_PLAN.md) — panel, budget, phases, decision gate
 - **Operating rules:** [`CLAUDE.md`](CLAUDE.md) — compute, environment, and the rules that make
   a result mean something
+- **Pre-registration:** [`PREREGISTRATION.md`](PREREGISTRATION.md) — contrasts, thresholds, gate
+  rule, predictions and falsifiers, fixed before any adapter was trained
+- **Candidate domains:** [`docs/TASK_CATALOGUE.md`](docs/TASK_CATALOGUE.md) is a menu of 80
+  paired tasks; [`docs/CANDIDATE_DOMAINS.md`](docs/CANDIDATE_DOMAINS.md) argues which three
+  would close a hole in this paper's argument, what each costs, and what to leave out
 
 ## Layout
 

@@ -36,3 +36,9 @@ attribution:
   roundtrip_lambda: 1.0
   roundtrip_every: 4            # generation is the cost; the realised fraction is recorded
   roundtrip_max_new_tokens: 256
+
+# relearn-k (mechanism experiment 3). The batch shrinks to fit k and the STEP COUNT is held
+# constant across k, so relearning cost is denominated in data rather than in compute. Under the
+# shared effective batch of 64, k=10 is fewer rows than one step and the arm trains not at all.
+relearn:
+  steps: 40

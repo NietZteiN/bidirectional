@@ -3,5 +3,9 @@
 # format. Length-capped so a replay row costs roughly what a pair row costs, which is what
 # keeps `replay` budget-matched to `mix50`.
 hf_id: allenai/tulu-3-sft-mixture
-hf_split: train[:20000]     # 17,536 of these are single-turn; mix50 needs at most ~3.5k
-max_chars: 1500
+hf_split: train[:40000]     # a wider pool: length-matching needs candidates AT every
+                            # target length, not just enough rows overall
+# Must exceed the longest rendered example the matcher has to hit. Measured
+# 2026-09-10: p90 rendered length is 1,431 for sql and 1,949 for code, so a 1,500
+# cap made the pool unable to match the long tail and left those arms short.
+max_chars: 2600
