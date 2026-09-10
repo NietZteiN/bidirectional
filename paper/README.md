@@ -29,19 +29,47 @@ followed, all caught by trying to fill in `NUMBERS.md` and failing.
 
 ## Building
 
-There is **no LaTeX toolchain on juno** as of 2026-09-10 — no `pdflatex`, `latexmk`, `xelatex`
-or `tectonic` on `PATH`, and the conda `tex` env from the old host did not migrate. Install one
-before the first compile:
+Tectonic 0.17.0 is installed at **`/work/jvl210002/migration/envs/tex/bin/tectonic`**
+(installed 2026-09-10). It is the **musl static build**, taken from the project's GitHub release
+rather than conda, because there is no conda on juno -- only `uv`, which does not carry TeX. A
+static binary also has no glibc dependency, so it keeps working if the host is upgraded.
 
 ```bash
-conda create -y -p /work/jvl210002/migration/envs/tex -c conda-forge tectonic
+make paper        # from the repo root
+```
+
+or by hand:
+
+```bash
+export TECTONIC_CACHE_DIR=/work/jvl210002/migration/cache/tectonic
+export TMPDIR=/work/jvl210002/migration/tmp
 /work/jvl210002/migration/envs/tex/bin/tectonic -X compile paper/main.tex
 ```
 
-Tectonic is one binary, pulls only the packages the document uses, and runs BibTeX and the
-reruns itself. Two checks the workshop paper learned the hard way:
+Set the cache directory. Tectonic downloads the packages a document actually uses on first
+compile, and the default location is under `$HOME`, which on juno is the same contended MooseFS
+volume the compute nodes fight over. Keeping it on `/work` costs nothing and keeps `$HOME` small.
+
+First compile pulls ~30 files and takes about a minute; later ones are seconds.
+
+## Pre-submission checks
 
 ```bash
-grep -nP '[^\x00-\x7F]' paper/main.tex     # must print nothing: a literal § lands on T1 0xA7
-grep -o '\\NUM{[^}]*}' paper/main.tex      # must be empty before submission
+sed 's/%.*//' paper/main.tex | grep -o '\NUM{[^}]*}'      # must be empty
+grep -nP '[^\x00-\x7F]' paper/main.tex                    # must print nothing
 ```
+
+And on the built PDF -- placeholders render as red `<<key>>` using **mathematical angle
+brackets**, so grep for those, not for ASCII `<`:
+
+```bash
+python -c "
+from pypdf import PdfReader; import re
+t = ''.join(p.extract_text() or '' for p in PdfReader('paper/main.pdf').pages)
+print('unfilled:', sorted(set(re.findall(r'\u27e8\u27e8([a-z0-9-]+)\u27e9\u27e9', t))))
+print('unresolved citations:', t.count('[?]'))"
+```
+
+The ASCII-only rule is not pedantry: Tectonic is XeTeX, so `\usepackage[utf8]{inputenc}` is a
+no-op while `[T1]{fontenc}` stays in force, and a literal section sign lands on T1 slot 0xA7 --
+which is how four of them shipped in a workshop draft rendering as `ğ`.

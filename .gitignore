@@ -17,3 +17,7 @@ __pycache__/
 # and a related-work claim that cannot be checked against the actual PDF is not a claim.
 !papers/
 !papers/*.pdf
+
+# The draft PDF IS committed (56 KB): a collaborator should be able to read it without
+# installing a TeX toolchain, and its unfilled numbers are visible on the page.
+!paper/main.pdf

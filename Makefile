@@ -4,7 +4,7 @@
 PY ?= /work/jvl210002/migration/envs/bidir-cu129/bin/python
 export PYTHONPATH := $(CURDIR)/src:/work/jvl210002/migration/obtune/src
 
-.PHONY: check test test-full dry data status clean-scratch
+.PHONY: check test test-full dry data status clean-scratch paper
 
 ## tests that fit in the login node's memory cap, plus every pipeline dry-run
 check: test dry
@@ -40,3 +40,14 @@ status:
 ## temporary adapters written by the mechanism experiments
 clean-scratch:
 	rm -rf $${TMPDIR:-/work/jvl210002/migration/tmp}/alpha_* $${TMPDIR:-/work/jvl210002/migration/tmp}/ablate_*
+
+TECTONIC ?= /work/jvl210002/migration/envs/tex/bin/tectonic
+
+## compile the draft. Unfilled numbers render as red <<key>> rather than failing the build --
+## the point is that a circulated draft shows them, not that a draft cannot be circulated.
+paper:
+	@TECTONIC_CACHE_DIR=/work/jvl210002/migration/cache/tectonic \
+	 TMPDIR=/work/jvl210002/migration/tmp \
+	 $(TECTONIC) -X compile $(CURDIR)/paper/main.tex
+	@echo "--- unfilled placeholders ---"
+	@sed 's/%.*//' paper/main.tex | grep -o '\\NUM{[^}]*}' | sort -u | wc -l
