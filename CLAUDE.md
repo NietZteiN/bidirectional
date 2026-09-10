@@ -123,22 +123,26 @@ command that does the job. Trained adapters and built corpora cost GPU-hours and
 
 ## 6. Storage
 
-`/work/jvl210002` is at **694 GB of a 1,000 GB soft quota** — about 306 GB of headroom — and the
-grid produces ~455 GB of adapters even with intermediate checkpoints turned off. Three rules
-follow, and the numbers behind them are in [`docs/STORAGE.md`](docs/STORAGE.md):
+Adapters, trials and results go to **`/scratch/juno/jvl210002/bidir`** (`$BIDIR_OUT`): 29 TB
+free, no MooseFS quota. The grid produces ~455 GB, which fits easily there and would not fit on
+`/work`, which is at 694 GB of a 1,000 GB soft quota. Numbers in
+[`docs/STORAGE.md`](docs/STORAGE.md).
 
-- **`save_strategy: "no"`.** Nothing here loads an intermediate checkpoint; keeping one per epoch
-  quadruples the footprint to 1,819 GB.
-- **Adapters and results live under `$BIDIR_OUT`, outside the working tree.** Same filesystem, so
-  it saves no quota; what it buys is that `git status` never scans hundreds of gigabytes and that
-  repointing at a real scratch filesystem is one variable.
-- **Reap after each tier's evals land** (`scripts/91_reap_adapters.py`, dry run by default). It
-  never touches an unevaluated adapter, an `sft` adapter in a mechanism domain, or an arm that
-  another arm initialises from.
+**The scratch path is `/scratch/juno/<user>`, namespaced by cluster, and `~/scratch` points at
+it. The cluster's own `$SCRATCH` variable points at `/scratch/<user>`, which does not exist.**
+That stale value made `mkdir` fail and produced a confident, wrong conclusion that this account
+had no scratch at all. Look one level up before deciding a filesystem is unavailable.
 
-**`/scratch` is mounted (401 TB) and this account has no directory there** — `mkdir` is denied.
-Provisioning it is an admin request, and it is worth making: it would move the whole campaign off
-the quota.
+Two rules survive independent of space:
+
+- **`save_strategy: "no"`.** Nothing here loads an intermediate checkpoint — no checkpoint
+  selection, no resume, only `final/` — so writing three per adapter is waste wherever it lands.
+- **`trials.jsonl` is what the paper is built from.** Scratch filesystems are usually purged and
+  no retention policy for this one has been established; ask. Copy trials to `/work` before the
+  writing phase. Everything else is reproducible from the run manifests, at the cost of its
+  GPU-hours.
+
+`scripts/91_reap_adapters.py` (dry run by default) is housekeeping rather than necessity now.
 
 ## 7. Provenance
 

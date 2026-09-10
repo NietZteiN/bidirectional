@@ -10,9 +10,14 @@ export BIDIR_ROOT="${BIDIR_ROOT:-/work/jvl210002/migration/bidirectional}"
 export BIDIR_ENV="${BIDIR_ENV:-/work/jvl210002/migration/envs/bidir-cu129}"
 export BIDIR_SCORE_ENV="${BIDIR_SCORE_ENV:-/work/jvl210002/migration/envs/bidir-score}"
 export BIDIR_SCRATCH="${BIDIR_SCRATCH:-/work/jvl210002/migration}"
-# Large, disposable outputs: adapters and trial files. Outside the repo so the git working tree
-# stays small, and one variable to repoint if /scratch is ever provisioned for this account.
-export BIDIR_OUT="${BIDIR_OUT:-/work/jvl210002/migration/bidir_out}"
+# Large, disposable outputs: adapters and trial files. On SCRATCH -- 29 TB free and no MooseFS
+# quota -- not on /work, which is at 69 % of a 1 TB quota.
+#
+# The path is /scratch/juno/<user>, namespaced by cluster. Note that the cluster's own $SCRATCH
+# variable points at /scratch/<user>, which does NOT exist -- that stale value is what made
+# `mkdir` fail and led to a day's work being planned around a quota problem that does not exist.
+# `~/scratch` symlinks to the real path.
+export BIDIR_OUT="${BIDIR_OUT:-/scratch/juno/jvl210002/bidir}"
 export OBTUNE_ROOT="${OBTUNE_ROOT:-/work/jvl210002/migration/obtune}"
 
 # $BIDIR_ENV/bin on PATH, not just the interpreter by absolute path: vLLM's engine core

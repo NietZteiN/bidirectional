@@ -93,15 +93,21 @@ def main() -> int:
             n = sum(f.stat().st_size for f in path.rglob("*") if f.is_file())
             print(f"  {label:<10} {n / 1e9:8.1f} GB   {path}")
     try:
+        out = _sp.run(["df", "-B1", "--output=avail", str(RUNS_DIR)],
+                      capture_output=True, text=True, timeout=20).stdout.splitlines()
+        avail = int(out[-1].strip()) / 1e9
+        warn = "   <-- the grid needs ~455 GB" if avail < 1000 else ""
+        print(f"  free on the outputs volume {avail:8.0f} GB{warn}")
+    except Exception:
+        pass
+    try:
         q = _sp.run(["mfsgetquota", "/work/jvl210002"], capture_output=True, text=True, timeout=20).stdout
         for line in q.splitlines():
             parts = [p_.strip() for p_ in line.split("|")]
             if len(parts) > 3 and parts[0] == "size" and parts[2].isdigit():
                 used, soft = int(parts[1]), int(parts[2])
-                head = (soft - used) / 1e9
-                warn = "   <-- the grid needs ~455 GB final-only; reap as tiers finish" if head < 500 else ""
-                print(f"  quota      {used / 1e9:8.1f} GB of {soft / 1e9:.0f} GB soft, "
-                      f"{head:.0f} GB headroom{warn}")
+                print(f"  /work quota{used / 1e9:8.1f} GB of {soft / 1e9:.0f} GB soft "
+                      f"({(soft - used) / 1e9:.0f} GB headroom; outputs do not land here)")
     except Exception:
         pass
 

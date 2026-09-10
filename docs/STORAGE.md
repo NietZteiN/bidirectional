@@ -1,26 +1,31 @@
 # Storage: what the campaign produces, and where it goes
 
-*Measured 2026-09-10, before any adapter was trained.*
+*Measured 2026-09-10.*
 
-## The situation
+## Where things live
 
-`/work/jvl210002` holds **694 GB against a 1,000 GB soft quota** (1,100 GB hard), so there is
-about **306 GB of headroom**. MooseFS keeps two replicas, so `realsize` is 1,387 GB, but the
-quota counts logical size.
+| what | where | why |
+|---|---|---|
+| adapters, trials, results | **`/scratch/juno/jvl210002/bidir`** (`$BIDIR_OUT`) | 29 TB free, no MooseFS quota |
+| models and datasets | `/work/jvl210002/migration/hf_home` (`$HF_HOME`) | 304 GB, shared with obtune |
+| the repo, incl. `data/` | `/work/jvl210002/migration/bidirectional` | 145 MB; build reports are provenance |
 
-**`/scratch` exists on this cluster and this account cannot use it.** The filesystem is mounted
-(401 TB, 72 % full, from `172.20.239.231`), the cluster exports `SCRATCH=/scratch/jvl210002`, and
-that directory **does not exist and cannot be created** -- `mkdir` returns permission denied on
-`/scratch`. Provisioning it is an administrator action.
+### The scratch path is namespaced, and the cluster's own variable is stale
 
-> **Worth asking for.** A scratch directory would move every number in the table below off the
-> quota entirely. It is the single change that would most simplify this campaign's storage, and
-> it costs nothing but an email.
+The real path is **`/scratch/juno/<user>`** — namespaced by cluster — and `~/scratch` symlinks to
+it. The cluster exports `SCRATCH=/scratch/<user>`, which **does not exist**.
+
+That stale variable cost real time on 2026-09-10: `mkdir /scratch/jvl210002` returns permission
+denied, which reads as "this account has no scratch", and a whole storage plan was built around a
+quota problem that does not exist. **Look one level up before concluding a filesystem is
+unavailable.** `scripts/env.sh` sets `BIDIR_OUT` to the correct path and never reads `$SCRATCH`
+— which it already avoided for a different reason, since an unprefixed `SCRATCH` also collides
+with the cluster's value (see `CLAUDE.md` §2).
 
 ## What the grid produces
 
 A LoRA adapter is bigger than it looks: **96 MB measured** for `olmo2-1b` at r=32 over seven
-target modules in bf16, scaling with layers x hidden.
+target modules in bf16, scaling with layers × hidden.
 
 | model | per adapter |
 |---|---|
@@ -33,47 +38,38 @@ target modules in bf16, scaling with layers x hidden.
 | | GB |
 |---|---|
 | LoRA adapters, `final/` only | 275 |
-| **...with three epoch checkpoints kept** | **1,099** |
 | full fine-tune checkpoints, final only | 180 |
-| ...with epoch checkpoints | 720 |
 | `trials.jsonl` across ~120 cells | 11 |
-| **total, as originally configured** | **1,819** |
-| **total, final-only** | **455** |
-| available | **306** |
+| **total** | **~455** |
+| scratch headroom | **~29,000** |
 
-## What was changed
+It fits with room to spare. On `/work` it would not have: that volume is at 694 GB of a 1,000 GB
+soft quota, about 306 GB of headroom.
 
-**1. `save_strategy: "no"`.** TRL's default kept a checkpoint per epoch with
-`save_total_limit=None`, quadrupling the footprint. Nothing in this project loads an
-intermediate checkpoint: there is no checkpoint selection and no resume, only `final/`. This
-alone takes 1,819 GB to 455 GB.
+## One setting still matters
 
-**2. Adapters and results left the git working tree.** `BIDIR_OUT` (default
-`/work/jvl210002/migration/bidir_out`) holds `runs/` and `results/`. Same filesystem, so it saves
-no quota -- what it buys is that `git status` never scans hundreds of gigabytes, the disposable
-material is obviously disposable, and repointing at a real scratch filesystem later is one
-environment variable rather than a rewrite. `data/` stays in the repo: it is 131 MB and its build
-reports are provenance.
+**`save_strategy: "no"`.** TRL's default kept a checkpoint per epoch with
+`save_total_limit=None`, which would put the campaign at **1,819 GB**. That is now comfortable on
+scratch, but the setting stays for a reason that has nothing to do with space: **nothing in this
+project ever loads an intermediate checkpoint.** There is no checkpoint selection and no resume,
+only `final/`. Writing three copies of every adapter for nobody to read is waste wherever it
+lands, and it slows every job by the time it takes to serialise them.
 
-**3. `scripts/91_reap_adapters.py`.** 455 GB still exceeds 306 GB, so adapters are deleted once
-their evaluation has landed. **Dry run by default**, per `CLAUDE.md` §5. It never touches an
-adapter whose eval has not completed, an `sft` adapter in a mechanism domain (experiments 1, 2,
-4, 5, 6 and 7 all start from `sft`, and experiment 7 needs the weights themselves), or any arm
-another arm initialises from. It keeps `run_manifest.json` and `training_summary.json` -- the
-provenance record is kilobytes -- and leaves a `REAPED` marker.
+## Reaping is now optional
 
-What that costs: re-scoring an arm means retraining it. The manifest records the git sha, the
-resolved config and the seed, so it is reproducible, but reproducibility is not free.
+`scripts/91_reap_adapters.py` deletes adapters once their evaluation has landed. On `/work` it
+was necessary; on scratch it is **housekeeping**, worth running if scratch fills or a tier is
+finished with. It stays dry-run by default (`CLAUDE.md` §5) and never touches an unevaluated
+adapter, an `sft` adapter in a mechanism domain, or an arm another arm initialises from.
 
-## Running order
+## The risk that replaces the quota risk
 
-Reap after each tier's evaluations finish, not at the end:
+**Scratch filesystems are usually purged.** This one has no stated policy that has been found,
+and 868 GB of other work is currently sitting on it — but "no purge policy found" is not "no
+purge policy". Two consequences:
 
-```bash
-python scripts/slurm/pipeline_grid.py --tier small
-# ... evals land ...
-python scripts/91_reap_adapters.py           # read the blast radius
-python scripts/91_reap_adapters.py --yes     # then delete
-```
-
-`scripts/00_status.py` reports the current footprint so this does not have to be remembered.
+- **Ask what the retention window is.** If it is 30 days, a campaign spanning October and
+  November needs adapters copied somewhere durable before the writing phase, or regenerated.
+- **`trials.jsonl` is what the paper is built from, not the adapters.** It is ~11 GB and belongs
+  on `/work` at the point where tables are generated. Everything else is reproducible from the
+  run manifests, at the cost of the GPU-hours.

@@ -21,10 +21,10 @@ DATA_DIR = PROJECT_ROOT / "data"
 #: default OUTSIDE the working tree so `git status` never scans hundreds of gigabytes and so a
 #: future move to a real scratch filesystem is one variable, not a rewrite.
 #:
-#: NOTE: /scratch exists on this cluster (401 TB) but the account has no directory there and
-#: cannot create one -- that needs an admin. Until then these live beside the repo on /work,
-#: which is quota-bound. See docs/STORAGE.md.
-_OUT = Path(os.environ.get("BIDIR_OUT", str(PROJECT_ROOT.parent / "bidir_out")))
+#: Default is SCRATCH: /scratch/juno/<user>, which has 29 TB free and no MooseFS quota. The
+#: cluster's own $SCRATCH variable points at /scratch/<user>, which does not exist -- do not use
+#: it. See docs/STORAGE.md.
+_OUT = Path(os.environ.get("BIDIR_OUT", "/scratch/juno/jvl210002/bidir"))
 RUNS_DIR = Path(os.environ.get("BIDIR_RUNS", str(_OUT / "runs")))
 RESULTS_DIR = Path(os.environ.get("BIDIR_RESULTS", str(_OUT / "results")))
 THIRD_PARTY = PROJECT_ROOT / "third_party"
