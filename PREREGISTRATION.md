@@ -373,3 +373,66 @@ across the ladder, but the prediction is downgraded from "sensitivity falls mono
 **sensitivity at the recommended dose is within the seed band of `sft`**, with any fall
 concentrated at 50 % and above. A fall at 5 % would be the surprising result, and is the one
 worth having registered.
+
+### Amendment 7 — 2026-09-10, before any adapter was trained
+
+From reading the remaining papers in [`papers/`](papers/) (notes in
+[`papers/REFERENCES.md`](papers/REFERENCES.md)). One prediction sharpened, one experiment
+proposed, one framing claim added.
+
+**1. The MT prediction becomes direction-specific, and is now falsifiable per cell.**
+
+§4's RQ2 prediction said only that "the MT asymmetry replicates". Zhu et al. (2024) are more
+specific than that: single-direction fine-tuning *elicits* other directions, because pretrained
+models already hold multilingual capability — **except** that "it is crucial to pick the right
+direction — we recommend not placing English on the target side" (p. 2), where English-on-target
+causes task misinterpretation.
+
+Mapping that onto our cells:
+
+| cell | forward direction | English on target? | prediction |
+|---|---|---|---|
+| `mt_de-en` | de→en | **yes** | **collapse** in the reverse direction |
+| `mt_zh-en` | zh→en | **yes** | **collapse** |
+| `mt_en-de` | en→de | no | **little or no collapse** |
+| `mt_en-zh` | en→zh | no | **little or no collapse** |
+
+This is a real risk to take: it predicts that **half our MT cells will show no effect**, and if
+all four collapse equally, Zhu et al.'s moderator does not survive at our scale and the MT
+section becomes a non-replication rather than an extension. Registering it now means that
+outcome is a finding rather than an embarrassment. It also tempers the RQ1 prediction: MT may
+show *less* collapse than code, because there the base capability is elicited rather than
+overwritten.
+
+**2. Mechanism experiment 7 is proposed: spectral repair of the adapter.**
+
+"Spectral Unforgetting" (arXiv:2605.20296) introduces **DG-Hard**: treat the fine-tuning update
+Δ = W_ft − W_base as low-rank task signal embedded in an IID-like noise residual, apply the
+Donoho–Gavish hard singular-value threshold to each weight-delta matrix, keep the structured
+high-energy part and discard the spectral bulk. It is **checkpoint-only, closed-form, and needs
+no data and no retraining**, and it restores capabilities that fine-tuning damaged — including
+safety alignment, using no alignment data.
+
+That is a sharper instrument for RQ5 than anything we have. α-scaling (experiment 2) shrinks the
+*whole* delta uniformly, so a recovery under it is ambiguous between "the collapse is a cheap
+direction" and "less fine-tuning is less damage". DG-Hard removes a *spectral component* while
+keeping the task signal, so **reverse capability returning while forward accuracy is preserved
+would be strong, direct evidence for suppression** — the capability is not gone, it is masked by
+a removable residue of the update.
+
+**Registered prediction: applying DG-Hard to an `sft` adapter raises reverse strict success above
+the `sft` baseline while leaving forward strict success within the seed band.** If reverse does
+not move, that is evidence against the suppression reading and should be reported as such.
+
+Not yet implemented; it is a new module, not a change to an existing one, and no adapter exists
+to apply it to. Recorded here so the prediction precedes the experiment rather than following it.
+
+**3. A framing claim about our own budget matching, now checkable against the literature.**
+
+Golovneva et al. (2024) distinguish **data-matched** from **compute-matched** reverse training,
+and their scheme *adds* tokens — all words used twice. Our `mix*` arms **replace** forward pairs
+with their own reversal, so they are matched on instances, sequence tokens and optimizer steps
+*simultaneously*. That is a third and strictly tighter regime than either of theirs, and it is
+the cleanest one-line justification for why "reverse data is free" is literal here rather than
+rhetorical. No prediction attaches; it is a claim about the design that the paper should state
+and that this file records as pre-existing rather than retrofitted.

@@ -248,8 +248,12 @@ confound rather than only as a citation.
    RQ3's information-theoretic axis instead.
 5. **Run mechanism experiment 6 on the `mix*` arms**, and pre-register the prediction that
    instruction sensitivity falls as the reverse share rises.
-6. **Still unread past the abstract**: `spectral2026unforgetting.pdf`. Everything else in
-   `papers/` has been read and is cited by page.
+6. **All ten papers in `papers/` are now read**, with per-paper notes in
+   [`papers/REFERENCES.md`](papers/REFERENCES.md). Three findings from that pass are registered
+   in Amendments 6 and 7: the withdrawn LoRA rank sweep, the direction-specific MT prediction,
+   and DG-Hard as mechanism experiment 7.
+7. **Implement mechanism experiment 7** (spectral repair of the `sft` adapter) — it is the
+   sharpest available test of suppressed-versus-erased and needs no training, only a checkpoint.
 
 ---
 
