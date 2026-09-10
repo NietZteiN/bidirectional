@@ -1,0 +1,6 @@
+# The `mixedtask` arm: this cell's forward pairs are `share` of a five-task SFT set, the rest
+# filled equally from the other four domains' forward pairs. Answers "does collapse survive a
+# realistic mixture where the paired task is a minority?" (plan RQ2).
+share: 0.2
+n_others: 4
+domains: [code, mt_en-de, sql, d2t, fmt]

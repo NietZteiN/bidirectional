@@ -1,0 +1,126 @@
+# Model panel for the directional-collapse paper. Same schema as obtune/configs/models.yaml so
+# obtune's prompt/template machinery resolves these entries unchanged.
+# Scope rule (obtune/docs/MODEL_AND_DATA_SELECTION.md, 2026-09-09): no Chinese-origin model.
+# n_layers / hidden_size were READ FROM THE DOWNLOADED config.json on 2026-09-09, not from model
+# cards; render_mode was measured with obtune.prompts.template_mode on the real tokenizer.
+# Batch shapes are starting points for one H200 (141 GB) and get re-gated on the first pack.
+
+default_model: llama32-3b
+
+models:
+  # ---- small tier: full arm set, seeds {17, 42, 1234} ---------------------------------
+  llama32-3b:
+    hf_id: meta-llama/Llama-3.2-3B-Instruct
+    family: instruct
+    origin: Meta
+    n_layers: 28
+    hidden_size: 3072
+    max_seq_len: 2048
+    per_device_batch: 16
+    grad_accum: 4
+    role: small_main
+    render_mode: system
+    pad_token: eos          # tokenizer ships no pad token; train.py sets pad = eos as obtune does
+  gemma3-4b:
+    hf_id: google/gemma-3-4b-it
+    family: instruct
+    origin: Google
+    n_layers: 34            # text_config; checkpoint is Gemma3ForConditionalGeneration
+    hidden_size: 2560
+    max_seq_len: 2048
+    per_device_batch: 16
+    grad_accum: 4
+    role: small_main
+    render_mode: system     # its template folds the system turn into the first user turn itself
+    peft_exclude_modules: [vision_tower, multi_modal_projector]
+    note: multimodal checkpoint used text-only; PEFT matches target_modules by suffix, hence the exclusions.
+  olmo2-1b:
+    hf_id: allenai/OLMo-2-0425-1B-Instruct
+    family: instruct
+    origin: AI2 (fully open pretraining data)
+    n_layers: 16
+    hidden_size: 2048
+    max_seq_len: 2048
+    per_device_batch: 32
+    grad_accum: 2
+    role: small_main
+    render_mode: system
+    note: the contamination-audit model; may fail the base gate on hard domains -> phi35-mini is the swap.
+
+  # ---- large tier: core arms, seeds {17, 42} ------------------------------------------
+  llama31-8b:
+    hf_id: meta-llama/Llama-3.1-8B-Instruct
+    family: instruct
+    origin: Meta
+    n_layers: 32
+    hidden_size: 4096
+    max_seq_len: 2048
+    per_device_batch: 16
+    grad_accum: 4
+    role: large_main
+    render_mode: system
+    pad_token: eos
+  gemma3-12b:
+    hf_id: google/gemma-3-12b-it
+    family: instruct
+    origin: Google
+    n_layers: 48
+    hidden_size: 3840
+    max_seq_len: 2048
+    per_device_batch: 8
+    grad_accum: 8
+    role: large_main
+    render_mode: system
+    peft_exclude_modules: [vision_tower, multi_modal_projector]
+
+  # ---- replicates and spares ----------------------------------------------------------
+  llama31-8b-base:
+    hf_id: meta-llama/Llama-3.1-8B
+    family: pretrained
+    origin: Meta
+    n_layers: 32
+    hidden_size: 4096
+    max_seq_len: 2048
+    per_device_batch: 16
+    grad_accum: 4
+    role: base_replicate    # one domain, instruct-vs-base moderator (RQ2)
+    render_mode: plain      # no chat template; obtune.prompts.render_plain (plain_v1)
+  olmo2-7b:
+    hf_id: allenai/OLMo-2-1124-7B-Instruct
+    family: instruct
+    origin: AI2 (fully open pretraining data)
+    n_layers: 32
+    hidden_size: 4096
+    max_seq_len: 2048
+    per_device_batch: 16
+    grad_accum: 4
+    role: spare             # contamination audit at the large tier if the paper leans on it
+    render_mode: system
+  phi35-mini:
+    hf_id: microsoft/Phi-3.5-mini-instruct
+    family: instruct
+    origin: Microsoft
+    n_layers: 32
+    hidden_size: 3072
+    max_seq_len: 2048
+    per_device_batch: 16
+    grad_accum: 4
+    role: spare             # swap-in for olmo2-1b if it fails a base gate
+    render_mode: system     # UNVERIFIED: re-run the template audit before first use
+  codellama-7b:
+    hf_id: codellama/CodeLlama-7b-Instruct-hf
+    family: coder
+    origin: Meta
+    n_layers: 32
+    hidden_size: 4096
+    max_seq_len: 2048
+    per_device_batch: 16
+    grad_accum: 4
+    role: code_continuity   # optional tie to the FSE paper's panel
+    render_mode: system
+
+# Frozen round-trip scorer for SQL->NL and RDF->text. Deliberately NOT in the panel above.
+frozen_scorers:
+  nl2sql_parser: ibm-granite/granite-3.1-8b-instruct   # on disk; its own dev accuracy is reported as the criterion ceiling
+  triple_extractor: ibm-granite/granite-3.1-8b-instruct
+  comet: Unbabel/wmt22-comet-da

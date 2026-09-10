@@ -1,0 +1,42 @@
+# Shared MT settings. Every cell inherits this; only the cell name (which fixes the forward
+# direction, via domains.CELLS) differs.
+
+train_hf_id: Helsinki-NLP/news_commentary   # WMT's own training corpus, ungated
+train_pairs:
+  en-de: de-en          # news_commentary's config names are alphabetical
+  en-zh: en-zh
+# FLORES-200 devtest, 1,012 sentences. The ALMA mirror is used because the canonical
+# openlanguagedata/flores_plus is gated (auto-approve on request); the mirror needs no
+# access request and carries the same devtest split.
+eval_hf_id: haoranxu/FLORES-200
+
+# 6,500 train + 500 val = 7,000 pairs per domain, identical across every domain so a
+# budget is comparable between them. The number is set by Spider: its official
+# database-disjoint train split is exactly 7,000 rows and the val slice comes out of it,
+# so every other domain matches Spider rather than Spider being the odd one out.
+n_train: 6500
+n_val: 500
+n_test: 500             # of the 1,012 devtest sentences; identical across every arm
+min_chars: 20           # a 5-character sentence pair scores as noise in both directions
+max_chars: 400
+seed: 17
+n_shots: 2
+
+comet_model: Unbabel/wmt22-comet-da
+comet_batch_size: 64
+
+sampling:
+  temperature: 0.0      # greedy: the comparison must be reproducible, not sampled
+  top_p: 1.0
+  max_tokens: 512
+  seed: 17
+
+engine:
+  max_model_len: 4096
+  max_loras: 8
+  gpu_memory_utilization: 0.85
+  seed: 17
+
+# thresholds: written by scripts/15_base_gate.py from the BASE model's own score
+# distribution, before any fine-tuned model is scored. Absent here on purpose — the scorer
+# raises rather than defaulting, so no run can score against a number nobody chose.

@@ -1,0 +1,14 @@
+# Synthetic format conversion. Lossless by construction at lossy_share: 0.0.
+# The RQ3 ladder is the same generator at lossy_share {0.1, 0.5, 1.0}, written to sibling
+# domains fmt_lossy10 / fmt_lossy50 / fmt_lossy100 by 10_build_domain.py --lossy.
+
+subtasks: [json-yaml, json-xml, mdtable-csv]
+lossy_share: 0.0
+n_train: 6500
+n_val: 500
+n_test: 500
+seed: 17
+n_shots: 2
+
+sampling: {temperature: 0.0, top_p: 1.0, max_tokens: 1024, seed: 17}
+engine: {max_model_len: 4096, max_loras: 8, gpu_memory_utilization: 0.85, seed: 17}

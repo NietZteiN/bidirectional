@@ -1,0 +1,14 @@
+# large artifacts stay out of git (obtune convention): manifests, resolved configs and
+# run_manifest.json files ARE committed; adapters, corpora, trials and caches are not.
+data/
+# runs/ is entirely generated. The sbatch scripts are provenance ONLY for jobs that really
+# ran, and `--dry-run` writes one too — committing those would be a record of runs that never
+# happened. Real provenance lives in each adapter's run_manifest.json and each result's
+# summary.json, which carry the git sha, the resolved config and the script hashes.
+runs/
+results/
+third_party/
+__pycache__/
+*.pyc
+.pytest_cache/
+*.log

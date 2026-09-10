@@ -1,0 +1,38 @@
+# The ONE recipe every arm trains under. Copied from obtune's _base_lora/_base_cft so the two
+# projects sit on the same footing, and so no arm-vs-arm gap can be a recipe difference.
+# Per-model batch shape and max_seq_len come from configs/models.yaml when null here.
+
+peft:
+  r: 32
+  alpha: 64
+  dropout: 0.05
+  target_modules: [q_proj, k_proj, v_proj, o_proj, gate_proj, up_proj, down_proj]
+  task_type: CAUSAL_LM
+
+train:
+  dtype: bfloat16
+  attn_implementation: sdpa   # flash-attn 2.x has no wheel for torch 2.11; SDPA-flash is enough here
+  gradient_checkpointing: true
+  max_seq_len: null           # null => models.yaml
+  per_device_batch: null
+  grad_accum: null            # effective batch = per_device_batch * grad_accum = 64
+  lr: 1.0e-4
+  full_ft_lr: 1.0e-5          # full fine-tuning only; 1e-4 diverges without LoRA's implicit regularization
+  lr_scheduler_type: cosine
+  warmup_ratio: 0.03
+  epochs: 3
+  weight_decay: 0.0
+  max_grad_norm: 1.0
+  seed: 17
+  val_size: 500
+  save_strategy: epoch
+  eval_steps: 200
+  logging_steps: 20
+
+# Attribution arms (RQ6). Each objective is run against SFT on the same directional mixture at
+# matched sequence tokens; `direction_exposure` in the run summary is what "matched" means.
+attribution:
+  unlikelihood_lambda: 1.0      # Zan et al. 2024's instruction-conflicting unlikelihood term
+  roundtrip_lambda: 1.0
+  roundtrip_every: 4            # generation is the cost; the realised fraction is recorded
+  roundtrip_max_new_tokens: 256

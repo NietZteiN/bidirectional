@@ -1,0 +1,7 @@
+# Generic instruction data for the `replay` arm. Single-turn rows only, rendered under this
+# project's shared system prompt, so replay differs from a reversed pair in CONTENT and not in
+# format. Length-capped so a replay row costs roughly what a pair row costs, which is what
+# keeps `replay` budget-matched to `mix50`.
+hf_id: allenai/tulu-3-sft-mixture
+hf_split: train[:20000]     # 17,536 of these are single-turn; mix50 needs at most ~3.5k
+max_chars: 1500

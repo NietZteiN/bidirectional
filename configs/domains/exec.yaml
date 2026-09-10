@@ -1,0 +1,19 @@
+# Execution prediction on CRUXEval — output prediction <-> input prediction.
+# CRUXEval is 800 problems in one split, so train/val/test are carved from it by PROGRAM with
+# a fixed seed. This cell is deliberately smaller than the 6,500 every other domain gets; it
+# is counted as the small cell it is rather than resampled up to look uniform.
+
+hf_id: cruxeval-org/cruxeval
+hf_split: test
+
+n_train: 0        # 0 = whatever remains after test and val (~500)
+n_val: 100
+n_test: 200
+seed: 17
+n_shots: 2
+
+exec_timeout_s: 2.0
+exec_workers: 32
+
+sampling: {temperature: 0.0, top_p: 1.0, max_tokens: 256, seed: 17}
+engine: {max_model_len: 4096, max_loras: 8, gpu_memory_utilization: 0.85, seed: 17}

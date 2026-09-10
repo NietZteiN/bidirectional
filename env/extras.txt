@@ -1,0 +1,8 @@
+lm-eval
+sacrebleu
+sqlglot
+evaluate
+nltk
+langdetect
+# unbabel-comet is NOT here: it pins transformers<5 against the lock's 5.14.1. It lives in
+# the second env built by env/setup_score_env.sh (COMET-22 scoring only).

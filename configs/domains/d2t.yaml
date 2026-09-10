@@ -1,0 +1,20 @@
+# Data-to-text on WebNLG 2020 v3.0 (English). Loaded from the parquet branch: the dataset
+# ships as a loading script, which datasets>=4 refuses to execute.
+
+hf_id: webnlg-challenge/web_nlg
+config: release_v3.0_en
+
+n_train: 6500
+n_val: 500
+n_test: 500
+seed: 17
+n_shots: 2
+
+# Granite-3.1-8B: US-origin, Apache 2.0, on disk, and in no cell of the grid. Same choice as
+# the SQL round-trip parser and for the same reason — an extractor sharing a lineage with the
+# model under test would read its own phrasing favourably.
+roundtrip_extractor: ibm-granite/granite-3.1-8b-instruct
+roundtrip_max_tokens: 256
+
+sampling: {temperature: 0.0, top_p: 1.0, max_tokens: 512, seed: 17}
+engine: {max_model_len: 4096, max_loras: 8, gpu_memory_utilization: 0.85, seed: 17}

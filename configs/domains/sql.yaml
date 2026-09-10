@@ -1,0 +1,24 @@
+# Text-to-SQL on Spider. Forward is execution-scored; reverse is round-tripped through a
+# frozen parser that is deliberately NOT in the model panel.
+
+questions_hf_id: xlangai/spider   # the official, database-disjoint split
+# databases come from the prem-research mirror (the only Hub copy with the sqlite files)
+
+# 6,500 train + 500 val = 7,000 pairs per domain, identical across every domain so a
+# budget is comparable between them. The number is set by Spider: its official
+# database-disjoint train split is exactly 7,000 rows and the val slice comes out of it,
+# so every other domain matches Spider rather than Spider being the odd one out.
+n_train: 6500
+n_val: 500
+n_test: 500             # of Spider dev's 1,034
+seed: 17
+n_shots: 2
+
+# Granite-3.1-8B: US-origin, Apache 2.0, already on disk, and in no cell of the grid. Its own
+# accuracy on the REFERENCE questions is measured by 15_base_gate.py and reported as the
+# criterion's ceiling, so a reverse rate is read against what the criterion can award.
+roundtrip_parser: ibm-granite/granite-3.1-8b-instruct
+roundtrip_max_tokens: 256
+
+sampling: {temperature: 0.0, top_p: 1.0, max_tokens: 512, seed: 17}
+engine: {max_model_len: 4096, max_loras: 8, gpu_memory_utilization: 0.85, seed: 17}
