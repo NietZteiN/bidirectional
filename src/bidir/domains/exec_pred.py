@@ -117,9 +117,12 @@ def score_batch(direction: str, outputs: Sequence[str], insts: Sequence[Mapping[
         # Forward: run the function on the STORED input and compare to the model's answer.
         # Reverse: run it on the MODEL's argument and compare to the required output.
         args_repr = inst["side_a"] if direction == "forward" else out
-        items.append(BatchItem(code=meta["code"], language="python",
-                               entry_point=meta.get("entry_point", "f"),
-                               cases=[{"args_repr": args_repr}]))
+        # `BatchItem` takes `program_id` and `args_reprs` — NOT a `cases` list. Passing `cases`
+        # raised TypeError on every single trial, so this scorer could never have run; caught
+        # 2026-09-10 by feeding it oracle inputs.
+        items.append(BatchItem(program_id=str(inst["pair_id"]), language="python",
+                               code=meta["code"], entry_point=meta.get("entry_point", "f"),
+                               args_reprs=[args_repr]))
         slots.append(i)
 
     verdicts = run_batch(items, timeout_s=float(cfg.get("exec_timeout_s", 2.0)),
@@ -128,8 +131,8 @@ def score_batch(direction: str, outputs: Sequence[str], insts: Sequence[Mapping[
     for i, verdict in zip(slots, verdicts):
         row, out, inst = rows[i], cleaned[i], insts[i]
         case = (verdict.cases or [None])[0]
-        got = getattr(case, "output_canon", None) if case else None
-        row["exec_status"] = verdict.status
+        got = case.output if (case is not None and case.ok) else None
+        row["exec_status"] = getattr(verdict, "status", "ok")
         if direction == "forward":
             row["strict"] = int(got is not None and canon_or_none(_literal(out)) == got)
             row["criterion"] = "canonicalized return value matches execution"

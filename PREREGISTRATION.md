@@ -237,3 +237,60 @@ rather than always against `base`.
 This changes no contrast, threshold or prediction in §1–§6. §4's RQ5 prediction — that
 relearning from `sft` outruns the never-had control — is now testable rather than
 predetermined.
+
+### Amendment 4 — 2026-09-10, before any adapter was trained
+
+Three domains added, one criterion changed, and three scorer defects fixed. All before any
+model in this project has been fine-tuned; none of it is a response to a result.
+
+**1. Three domains are added, and declared here with their predictions.**
+
+Chosen from `docs/TASK_CATALOGUE.md` on the argument in `docs/CANDIDATE_DOMAINS.md`: each closes
+a hole in the paper's argument rather than adding breadth.
+
+| cell | catalogue | criterion | prediction |
+|---|---|---|---|
+| `algebra` | #56 expansion ↔ factorization | symbolic equivalence, and the reverse output must genuinely be factored | collapse in the reverse (factoring) direction; the paper's generality claim needs a formal domain and had none |
+| `diacritics` | #66 diacritic restoration | exact match after NFC, reverse must not echo | collapse in the reverse (restoring) direction. Because stripping is a deterministic character map with **nothing to learn**, a collapse here cannot be explained by the forward task consuming capacity — the confound every other domain leaves open |
+| `automata` | #30 Game of Life | forward: simulated next state; reverse: **any** grid that steps to the target | collapse in the reverse (predecessor) direction, with a ceiling set by search difficulty rather than by missing information |
+
+**`automata` splits an axis §4's RQ3 prediction ran together.** "Invertibility" is two properties:
+whether the inverse is *determined by the input*, and whether it is *findable*. The `fmt_det*`
+ladder varies the first — where the answer is no, no reverse dose can help. In `automata` every
+instance has a predecessor by construction, so the inverse is fully determined and only the
+search is hard (NP-hard in general). The refined prediction: **a reverse dose buys recovery
+against computational hardness but not against missing information.** That is a sharper claim
+than the original and can fail.
+
+**2. `code`'s primary reverse criterion changes from the published one to execution.**
+
+Measured by feeding the gold source back through the scorer: obtune's published criterion
+rejects **about 60 % of perfect answers**, because it requires low CodeBLEU similarity to the
+obfuscated program and the identifier-preserving transforms (`S1`, `S2`) leave the original
+genuinely similar to its variant. A criterion whose ceiling on correct answers is 0.4 cannot
+support a claim of the form "the base scored X and training collapsed it" — the base could never
+have reached X.
+
+Primary is now **execution equivalence ∧ not-echo**, which has a measured ceiling of 1.00. The
+published criterion is retained and reported as `strict_paper_criterion`, which is what it is
+for: comparability with the workshop paper. This is a change to a pre-registered criterion and
+is therefore recorded here in full; it was made because the criterion demonstrably cannot award
+a correct answer, not because its numbers were inconvenient — no model has produced any.
+
+**3. Three scorer defects, found by the oracle audit and fixed.**
+
+- `code` read `output_canon` from obtune's eval items, where the field is `output_repr`. Every
+  case therefore compared the real output against `None` and returned `mismatch`: **the
+  known-positive control could not have scored above zero in either direction.**
+- `exec` constructed `BatchItem(..., cases=[...])`, but that dataclass takes `program_id` and
+  `args_reprs`. It raised `TypeError` on every trial, so the domain could never have run.
+- `sql`'s forward criterion needs `sqlparse`, a dependency of the Spider test-suite evaluator
+  that was not installed. Added to `env/extras.txt`.
+
+None of these would have crashed the campaign. Each would have produced a clean, plausible
+table of zeros or a silently skipped cell.
+
+**4. Budget and grid.** The three domains raise the small tier from 54 to 81 cells and the
+training total from ~330 to ~391 GPU-h, within the plan's envelope. `mixedtask`'s five-task
+roster is deliberately **not** extended, because changing it would change what `mixedtask − sft`
+means between the two halves of the grid.

@@ -82,3 +82,66 @@ def test_the_invertibility_ladder_spreads_determinability_evenly():
     assert ordered == sorted(ordered, reverse=True)
     # and the rungs must be separable, not merely ordered
     assert min(a - b for a, b in zip(ordered, ordered[1:])) > 0.15, ordered
+
+
+NEW_CELLS = ["algebra", "automata", "diacritics"]
+
+
+@pytest.mark.parametrize("cell", NEW_CELLS)
+def test_new_domain_criteria_award_gold_and_refuse_non_answers(cell):
+    """The oracle test every criterion must pass: a correct answer scores, an echo and an empty
+    string do not.
+
+    This is the check that caught, in one pass on 2026-09-10: `code` reading `output_canon`
+    where the field is `output_repr` (the known-positive control could not score above zero);
+    `exec` calling `BatchItem(cases=...)` when the dataclass takes `args_reprs` (it raised on
+    every trial); and this domain's own "is genuinely factored" test rejecting 19 of 40 gold
+    factorizations by demanding SymPy's canonical form.
+    """
+    from bidir import prompts
+    from bidir.config import DATA_DIR, load_config
+
+    if not (DATA_DIR / cell / "test.jsonl").exists():
+        pytest.skip(f"{cell} not built")
+    mod = domains.get(cell)
+    cfg = load_config(f"domains/{cell}.yaml")
+    rows = [p.model_dump() for p in read_pairs(DATA_DIR / cell / "test.jsonl")[:30]]
+
+    for direction in ("forward", "reverse"):
+        gold = mod.score_batch(direction, [prompts.completion_for(r, direction) for r in rows], rows, cfg)
+        echo = mod.score_batch(direction, [prompts.input_for(r, direction) for r in rows], rows, cfg)
+        empty = mod.score_batch(direction, [""] * len(rows), rows, cfg)
+        g = sum(x["strict"] for x in gold) / len(gold)
+        assert g >= 0.95, f"{cell}/{direction}: the criterion awards only {g:.2f} to correct answers"
+        assert sum(x["strict"] for x in echo) == 0, f"{cell}/{direction}: an echo scores as success"
+        assert sum(x["strict"] for x in empty) == 0, f"{cell}/{direction}: an empty string scores"
+
+
+def test_automata_reverse_accepts_any_valid_predecessor():
+    """The inverse is set-valued: many grids step to one successor. Scoring against the stored
+    predecessor would punish exactly the behaviour the task asks for."""
+    from bidir.domains import automata as au
+
+    board = [[0, 1, 0], [0, 1, 0], [0, 1, 0]]      # blinker
+    nxt = au.step(board)
+    inst = {"pair_id": "t", "domain": "automata", "subtask": "3x3", "side_a": au.render(board),
+            "side_b": au.render(nxt), "split": "test",
+            "meta": {"height": 3, "width": 3, "determinable": True}}
+    # The blinker's successor is itself a blinker, whose own predecessor set includes the
+    # successor state — a DIFFERENT grid from the stored one that is still correct.
+    other = au.render(nxt)
+    r = au.score_batch("reverse", [other], [inst], {})[0]
+    if au.render(au.step(nxt)) == au.render(nxt):
+        assert r["found_valid_predecessor"] == 1
+        assert r["is_stored_predecessor"] == int(other == inst["side_a"])
+
+
+def test_diacritics_forward_is_deterministic_and_total():
+    """The premise of the whole cell: stripping is a character map with nothing to learn."""
+    from bidir.domains.diacritics import n_diacritics, strip_diacritics
+
+    for t in ("Ça déjà coûté très cher", "élève naïve", "no marks here"):
+        assert strip_diacritics(strip_diacritics(t)) == strip_diacritics(t)
+        assert n_diacritics(strip_diacritics(t)) == 0
+        assert len(strip_diacritics(t)) == len(strip_diacritics(t))
+    assert n_diacritics("déjà") > 0

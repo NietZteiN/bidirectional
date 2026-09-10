@@ -86,8 +86,14 @@ def _eval_pairs(conditions: Sequence[str], limit: int, rng: random.Random) -> li
             pid = r["program_id"]
             d.setdefault(pid, r)
             if cond == "L0" and r.get("args_repr") is not None:
+                # The eval item's field is `output_repr`, and it already holds the CANONICAL
+                # output (obtune's data.py canonicalizes on write); `exec_equivalence` wants it
+                # under the key `output_canon`. Reading a non-existent `output_canon` here
+                # silently gave every case an expected value of None, so execution always
+                # returned `mismatch` and the criterion could not award a correct answer —
+                # caught 2026-09-10 by feeding the gold source to the scorer.
                 cases.setdefault(pid, []).append({"args_repr": r["args_repr"],
-                                                  "output_canon": r.get("output_canon")})
+                                                  "output_canon": r["output_repr"]})
         per_cond[cond] = d
 
     common = set(per_cond["L0"])
@@ -172,8 +178,19 @@ def score_batch(direction: str, outputs: Sequence[str], insts: Sequence[Mapping[
             sim_to_obfuscated=cb["codebleu"], readability_deobf=read_pred,
             readability_original=read_orig, parses=bool(row["parse_ok"]),
             sim_threshold=sim_threshold, readability_tolerance=read_tol))
-        row["strict"] = int(verdict.all_match and row["criterion_paper"] == 1 and not row["echo"])
-        row["criterion"] = "published criterion & execution & not-echo"
+        # PRIMARY is execution, not the published criterion. Measured 2026-09-10 by feeding the
+        # gold source back in: the published criterion rejects ~60 % of PERFECT answers, because
+        # it requires low CodeBLEU similarity to the obfuscated program and the identifier-
+        # preserving transforms (S1, S2) leave the original genuinely similar to its variant. A
+        # criterion with a 0.4 ceiling on correct answers cannot support "base scored X and
+        # collapsed to 0" — the base could never reach X.
+        #
+        # The published criterion is kept and reported as `criterion_paper` for comparability
+        # with the workshop paper, which is what it is for.
+        row["strict"] = int(verdict.all_match and not row["echo"])
+        row["strict_paper_criterion"] = int(verdict.all_match and row["criterion_paper"] == 1
+                                            and not row["echo"])
+        row["criterion"] = "execution equivalence & not-echo (published criterion reported separately)"
     return rows
 
 

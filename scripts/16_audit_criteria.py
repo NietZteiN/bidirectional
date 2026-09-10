@@ -86,7 +86,12 @@ def audit_criterion(cell: str, n: int = 40) -> dict:
                     "echo_flag": sum(r.get("echo", 0) for r in scored) / len(scored),
                     "off_target": sum(r.get("off_target", 0) for r in scored) / len(scored),
                 }
-            except Exception as e:  # a scorer that raises on an oracle input is also a bug
+            except KeyError as e:
+                # A threshold that is not frozen yet is the base gate's job, not a defect.
+                msg = str(e)
+                res[name] = ({"pending": "thresholds not frozen; run scripts/15_base_gate.py"}
+                             if "not frozen" in msg else {"error": f"KeyError: {msg}"})
+            except Exception as e:  # a scorer that raises on an oracle input IS a bug
                 res[name] = {"error": f"{type(e).__name__}: {e}"}
         out["directions"][direction] = res
     return out
@@ -97,6 +102,8 @@ def verdict(a: dict) -> list[str]:
     bad = []
     for direction, r in a["directions"].items():
         for name in ("gold", "echo", "empty", "garbage"):
+            if "pending" in r.get(name, {}):
+                continue
             if "error" in r.get(name, {}):
                 bad.append(f"{a['cell']}/{direction}: {name} raised — {r[name]['error'][:90]}")
         g = r.get("gold", {})
@@ -190,6 +197,9 @@ def main() -> int:
             if direction in r["skipped"]:
                 return f"{direction[:3]} SKIPPED (needs GPU)"
             d = r["directions"][direction]
+            if any("pending" in d.get(k, {}) for k in ("gold", "echo")):
+                return f"{direction[:3]} PENDING (thresholds not frozen)"
+
             def g(k):
                 return f"{d.get(k, {}).get('strict', float('nan')):.2f}"
             return f"{direction[:3]} gold={g('gold')} echo={g('echo')} garb={g('garbage')}"

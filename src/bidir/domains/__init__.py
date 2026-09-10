@@ -51,6 +51,10 @@ CELLS: dict[str, tuple[str, dict]] = {
     # transform, so a base model is at floor in both directions by construction.
     "fmt_novel":    ("bidir.domains.fmt_novel", {}),
     "exec":     ("bidir.domains.exec_pred", {}),
+    # Added 2026-09-10 from docs/CANDIDATE_DOMAINS.md, each closing a specific hole:
+    "algebra":    ("bidir.domains.algebra", {}),      # the formal-reasoning domain the paper lacked
+    "diacritics": ("bidir.domains.diacritics", {}),   # forward is trivial, so collapse cannot be capacity-spend
+    "automata":   ("bidir.domains.automata", {}),     # a DETERMINED but computationally hard inverse
 }
 
 

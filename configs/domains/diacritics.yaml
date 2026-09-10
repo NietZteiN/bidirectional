@@ -1,0 +1,23 @@
+# Diacritic restoration (catalogue #66). The forward direction is a deterministic character map,
+# so a reverse collapse here cannot be explained by the forward task consuming the model — the
+# confound every other domain leaves open.
+#
+# French from News Commentary: already cached, high-resource, densely accented. Sentences with
+# fewer than `min_diacritics` marks are dropped, because there the reverse direction is
+# satisfied by copying the input and an echo would score as success.
+
+hf_id: Helsinki-NLP/news_commentary
+hf_config: en-fr
+lang: fr
+
+n_train: 6500
+n_val: 500
+n_test: 500
+min_chars: 40
+max_chars: 300
+min_diacritics: 3
+seed: 17
+n_shots: 2
+
+sampling: {temperature: 0.0, top_p: 1.0, max_tokens: 384, seed: 17}
+engine: {max_model_len: 4096, max_loras: 8, gpu_memory_utilization: 0.85, seed: 17}

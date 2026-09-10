@@ -32,7 +32,10 @@ from bidir.config import SEEDS_LARGE, SEEDS_SMALL, resolve_model  # noqa: E402
 TIERS = {
     "small": {
         "models": ["llama32-3b", "gemma3-4b", "olmo2-1b"],
-        "domains": ["code", "mt_en-de", "mt_de-en", "sql", "d2t", "fmt"],
+        "domains": ["code", "mt_en-de", "mt_de-en", "sql", "d2t", "fmt",
+                    # Added 2026-09-10 (docs/CANDIDATE_DOMAINS.md): a formal domain, a domain
+                    # whose forward direction is trivial, and a determined-but-hard inverse.
+                    "algebra", "diacritics", "automata"],
         "seeds": list(SEEDS_SMALL), "arms": "full", "train_time": "10:00:00",
     },
     "small_zh": {
@@ -42,7 +45,10 @@ TIERS = {
     },
     "ladder": {   # RQ3: the synthetic invertibility ladder
         "models": ["llama32-3b", "gemma3-4b", "olmo2-1b"],
-        "domains": ["fmt_det75", "fmt_det50", "fmt_det25", "fmt_det00"],
+        # `fmt_det*` varies whether the inverse is DETERMINED; `automata` is determined but
+        # computationally hard. Running them together is what separates the two kinds of
+        # hardness RQ3 otherwise conflates.
+        "domains": ["fmt_det75", "fmt_det50", "fmt_det25", "fmt_det00", "automata"],
         "seeds": [17], "arms": "sft,mix50", "train_time": "04:00:00",
     },
     "exec": {
@@ -51,12 +57,12 @@ TIERS = {
     },
     "large": {
         "models": ["llama31-8b", "gemma3-12b"],
-        "domains": ["code", "mt_en-de", "sql", "d2t", "fmt"],
+        "domains": ["code", "mt_en-de", "sql", "d2t", "fmt", "algebra", "diacritics"],
         "seeds": list(SEEDS_LARGE), "arms": "core", "train_time": "12:00:00",
     },
     "relearn": {
         "models": ["llama32-3b", "llama31-8b"],
-        "domains": ["code", "mt_en-de", "sql", "d2t", "fmt"],
+        "domains": ["code", "mt_en-de", "sql", "d2t", "fmt", "algebra"],
         "seeds": [17], "arms": "relearn", "train_time": "04:00:00",
     },
     "fullft": {

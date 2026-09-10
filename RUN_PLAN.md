@@ -265,7 +265,38 @@ the tests plus every pipeline dry-run), `CLAUDE.md` (operating rules), `README.m
   Its realised mixture is 6,500 forward + 7,384 `pos` + 5,612 `neg` at **reverse_share 0.0** —
   the attribution point in one number: instances added, no reverse exposure added.
 
-## 9. Extending the domain set
+## 9. The domain set
+
+**17 cells.** The six original domains, the `fmt_det*` ladder and `fmt_novel`, plus three added
+2026-09-10 on the argument in [`docs/CANDIDATE_DOMAINS.md`](docs/CANDIDATE_DOMAINS.md):
+
+| cell | what it closes |
+|---|---|
+| `algebra` (#56) | the paper claimed generality across paired tasks with **no formal domain** |
+| `diacritics` (#66) | the only domain whose forward direction is trivial, so a reverse collapse cannot be capacity-spend |
+| `automata` (#30) | a **determined but computationally hard** inverse — the axis `fmt_det*` cannot reach |
+
+`automata` is the one that changes a prediction rather than adding a data point. RQ3's
+"invertibility" was two properties run together: whether the inverse is *determined*, and
+whether it is *findable*. `fmt_det*` varies the first; `automata` holds it fixed at "determined"
+and varies only the second. The sharpened prediction — a reverse dose buys recovery against
+computational hardness but not against missing information — is in
+[`PREREGISTRATION.md`](PREREGISTRATION.md) Amendment 4.
+
+**Two catalogue entries were already in the grid and cost nothing.** obtune's `L2` condition is
+#4 minification, and the structural (`S1`, `S2`) versus renaming (`L1b`, `L1r`, `L2`) contrast is
+a within-domain invertibility test already being run. Both should be named in the paper.
+
+Budget with the additions: small tier 81 cells, **~391 GPU-h** of training across all tiers.
+
+### Still on the menu, not in the plan
+
+[`docs/TASK_CATALOGUE.md`](docs/TASK_CATALOGUE.md) holds the other 77.
+[`docs/CANDIDATE_DOMAINS.md`](docs/CANDIDATE_DOMAINS.md) says what to leave out and why —
+weak verifiers blur the effect, and per-language build-and-test harnesses (#1 compilation,
+#13 cross-language translation) are the right *next* paper rather than this one.
+
+## 9b. Extending it further
 
 [`docs/TASK_CATALOGUE.md`](docs/TASK_CATALOGUE.md) holds 80 candidate paired tasks.
 [`docs/CANDIDATE_DOMAINS.md`](docs/CANDIDATE_DOMAINS.md) picks the three that close a hole this

@@ -1,0 +1,17 @@
+# Expansion <-> factorization (catalogue #56). The paper's formal-reasoning domain.
+# Chosen over #55 (differentiation <-> integration) because integration entangles "the model
+# failed" with "no elementary antiderivative exists"; every instance here has an answer.
+
+n_train: 6500
+n_val: 500
+n_test: 500
+seed: 17
+n_shots: 2
+
+# Weighted toward degree 3-4: the distinct-primitive-quadratic space is finite
+# (~2,145 in one variable) and a corpus of 7,500 cannot be drawn mostly from it.
+degrees: [2, 3, 3, 4, 4]
+max_root: 15               # roots in [-15, 15]; widened so 7,500 distinct polynomials exist
+
+sampling: {temperature: 0.0, top_p: 1.0, max_tokens: 256, seed: 17}
+engine: {max_model_len: 4096, max_loras: 8, gpu_memory_utilization: 0.85, seed: 17}
