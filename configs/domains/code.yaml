@@ -5,7 +5,7 @@
 conditions: [L1b, L1r, L2, S1, S2]   # S1/S2 structural (well-posed inverse), L* renaming (not)
 n_train: 6500
 n_val: 500
-n_test: 60              # programs; x5 conditions = 300 pairs, matching the workshop paper
+n_test: 500              # programs; x5 conditions = 2,500 pairs (power analysis, 2026-09-10)
 seed: 17
 n_shots: 2
 

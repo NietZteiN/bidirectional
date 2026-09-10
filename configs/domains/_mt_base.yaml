@@ -16,7 +16,7 @@ eval_hf_id: haoranxu/FLORES-200
 # so every other domain matches Spider rather than Spider being the odd one out.
 n_train: 6500
 n_val: 500
-n_test: 500             # of the 1,012 devtest sentences; identical across every arm
+n_test: 1012   # all of FLORES-200 devtest; below 2,500, so MT equivalence claims are wider
 min_chars: 20           # a 5-character sentence pair scores as noise in both directions
 max_chars: 400
 seed: 17
@@ -40,3 +40,9 @@ engine:
 # thresholds: written by scripts/15_base_gate.py from the BASE model's own score
 # distribution, before any fine-tuned model is scored. Absent here on purpose — the scorer
 # raises rather than defaulting, so no run can score against a number nobody chose.
+
+# Eval size set 2026-09-10 from the power analysis (scripts/17_power.py, results/power/).
+# At n=500 the three headline detections are certain (power 1.00) but every EQUIVALENCE claim --
+# "replacing is as good as doubling", "the dose is free on general ability", "the ladder has
+# saturated" -- carries an interval of +/-4.1 pp, which cannot support a claim of no difference.
+# The interval reaches the +/-2.0 pp margin at n ~ 2,500.

@@ -12,7 +12,7 @@ lang: fr
 
 n_train: 6500
 n_val: 500
-n_test: 500
+n_test: 2500
 min_chars: 40
 max_chars: 300
 min_diacritics: 3
@@ -21,3 +21,9 @@ n_shots: 2
 
 sampling: {temperature: 0.0, top_p: 1.0, max_tokens: 384, seed: 17}
 engine: {max_model_len: 4096, max_loras: 8, gpu_memory_utilization: 0.85, seed: 17}
+
+# Eval size set 2026-09-10 from the power analysis (scripts/17_power.py, results/power/).
+# At n=500 the three headline detections are certain (power 1.00) but every EQUIVALENCE claim --
+# "replacing is as good as doubling", "the dose is free on general ability", "the ladder has
+# saturated" -- carries an interval of +/-4.1 pp, which cannot support a claim of no difference.
+# The interval reaches the +/-2.0 pp margin at n ~ 2,500.

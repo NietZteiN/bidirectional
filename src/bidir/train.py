@@ -139,6 +139,8 @@ def build_parser() -> argparse.ArgumentParser:
     ap.add_argument("--out", default=None, help="override the adapter output directory")
     ap.add_argument("--init-adapter", default=None, help="override the adapter to continue from (relearn-k)")
     ap.add_argument("--max-steps", type=int, default=None, help="cap optimizer steps (smoke tests)")
+    ap.add_argument("--per-device-batch", type=int, default=None,
+                    help="override the model's batch shape (smoke tests; CPU has no gradient checkpointing)")
     ap.add_argument("--dry-run", action="store_true", help="build everything, run every check, no optimizer step")
     ap.add_argument("--cpu", action="store_true")
     return ap
@@ -159,6 +161,8 @@ def main(argv: Optional[list[str]] = None) -> int:
     if spec.epochs is not None:
         cfg["train"]["epochs"] = float(spec.epochs)
     mcfg = resolve_model(args.model)
+    if args.per_device_batch:
+        cfg.setdefault("train", {})["per_device_batch"] = int(args.per_device_batch)
     tcfg = _effective_train_knobs(cfg, mcfg)
     seed = int(tcfg["seed"])
     domain = domains.get(args.domain)
@@ -309,6 +313,10 @@ def main(argv: Optional[list[str]] = None) -> int:
         packing=False,
         completion_only_loss=True,
         bf16=use_cuda and dtype is torch.bfloat16,
+        # Checkpointing is a CUDA-path optimisation in HF's implementation, so it is disabled on
+        # CPU -- which means a CPU smoke run retains every activation and needs far more memory
+        # than the same batch shape does on a GPU. A batch sized for an H200 OOM-killed a 64 GB
+        # CPU node on 2026-09-10. Use --per-device-batch to shrink it for smoke runs.
         gradient_checkpointing=bool(tcfg.get("gradient_checkpointing", True)) and use_cuda,
         save_strategy=tcfg.get("save_strategy", "epoch"),
         save_total_limit=None,

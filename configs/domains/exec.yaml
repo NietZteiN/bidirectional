@@ -8,6 +8,11 @@ hf_split: test
 
 n_train: 0        # 0 = whatever remains after test and val (~500)
 n_val: 100
+# 200, not 400. Raising it to 400 for the power analysis took the increase straight out of
+# TRAIN -- CRUXEval is 800 problems in total -- leaving 299 training pairs against 6,500 in every
+# other cell, where the dose ladder's low rungs would reverse three pairs. This cell's job is
+# RQ1, does collapse happen at all, which is a 20-30 pp effect that n=200 detects with certainty.
+# It was never going to carry an equivalence claim: those need ~2,500 and this corpus holds 800.
 n_test: 200
 seed: 17
 n_shots: 2

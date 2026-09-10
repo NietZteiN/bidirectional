@@ -62,6 +62,24 @@ def main() -> int:
             return 0
 
     splits = mod.build_pairs(cfg)
+
+    # Remove, rather than redefine away, any training instance whose content matches an eval one.
+    # Spider's official split is database-disjoint yet still contains one identical (question,
+    # query) pair across train and dev -- "Count the number of documents." asked of two different
+    # databases that both happen to have a Documents table. A legitimate coincidence, but a model
+    # trained on it would still be scored correct on the eval twin, so it is dropped. The count is
+    # reported rather than silently applied: a build that suddenly drops hundreds means the source
+    # changed, and that should be visible.
+    key_fn_early = getattr(mod, "content_key", default_content_key)
+    test_keys = {key_fn_early(p_) for p_ in splits.get("test", [])}
+    dropped_for_leakage = {}
+    for split in ("train", "val"):
+        if split not in splits:
+            continue
+        before = len(splits[split])
+        splits[split] = [p_ for p_ in splits[split] if key_fn_early(p_) not in test_keys]
+        dropped_for_leakage[split] = before - len(splits[split])
+
     counts = {}
     for split, rows in splits.items():
         counts[split] = write_jsonl(out_dir / f"{split}.jsonl", rows)
@@ -72,12 +90,14 @@ def main() -> int:
     report = {
         "domain": a.domain, "name": name, "built_utc": datetime.now(timezone.utc).isoformat(),
         "counts": counts, "overlaps": overlaps,
+        "dropped_for_leakage": dropped_for_leakage,
         "subtasks": {split: dict(sorted({r.subtask: sum(1 for x in rows if x.subtask == r.subtask)
                                          for r in rows}.items())) for split, rows in splits.items()},
         "config": {k: v for k, v in cfg.items() if not k.startswith("_")},
     }
     (out_dir / "build_report.json").write_text(json.dumps(report, indent=2))
-    print(json.dumps({"name": name, "counts": counts, "overlaps": overlaps}, indent=2))
+    print(json.dumps({"name": name, "counts": counts, "overlaps": overlaps,
+                      "dropped_for_leakage": dropped_for_leakage}, indent=2))
     if leaks:
         raise SystemExit(f"EVAL LEAKAGE: {leaks} — the eval set must never appear in a training split")
     print(f"[build] wrote {out_dir}")

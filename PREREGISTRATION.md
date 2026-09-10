@@ -448,3 +448,86 @@ with their own reversal, so they are matched on instances, sequence tokens and o
 the cleanest one-line justification for why "reverse data is free" is literal here rather than
 rhetorical. No prediction attaches; it is a claim about the design that the paper should state
 and that this file records as pre-existing rather than retrofitted.
+
+### Amendment 8 — 2026-09-10, before any adapter was trained
+
+**A power analysis says one pre-registered claim cannot be made at any feasible evaluation size,
+and that the evaluation sets were too small for three others.**
+
+`scripts/17_power.py` simulates each primary contrast as a paired difference of proportions with
+the same cluster bootstrap `50_contrasts.py` uses, at the rates §4 predicts. Results in
+`results/power/`.
+
+**1. Detection versus equivalence had been run together, and they are different questions.**
+For a contrast predicted non-zero the question is power. For one predicted **zero** —
+"replacing is as good as doubling", "the dose is free on general ability", "the ladder has
+saturated" — power is the wrong statistic entirely, because failing to reject zero is the
+predicted outcome. What matters there is whether the interval is tight enough to support the
+claim. Registering an equivalence margin: **±2.0 pp**.
+
+**2. Evaluation sets rise from 500 to 2,500 where the corpus allows.**
+
+| n | collapse ± | cure ± | equivalence ± | `mix10 − mix5` power |
+|---|---|---|---|---|
+| 500 | 2.9 | 2.7 | 4.1 | 0.20 |
+| 1,000 | 2.0 | 1.9 | 2.9 | 0.34 |
+| 1,500 | 1.7 | 1.5 | 2.3 | 0.47 |
+| **2,500** | 1.3 | 1.2 | **1.8** | 0.73 |
+
+The three headline detections are certain at every size — they are 22–30 pp effects. Every
+equivalence claim needs ~2,500. Raised there for the synthetic domains, `diacritics` and `d2t`.
+**Two cells cannot reach it and their weaker intervals are stated rather than hidden:** MT caps
+at **1,012** (all of FLORES-200 devtest) and `exec` at **400** (CRUXEval is 800 problems in
+total, shared with train and val).
+
+**3. The knee becomes a bound, not a point.** Distinguishing adjacent rungs — `mix10` from
+`mix5`, a predicted 2 pp difference — reaches only **0.73 power at n = 2,500** and would need
+roughly 4,000 instances for 0.8. That is beyond what these corpora hold. **The prediction in
+Amendment 1 is therefore weakened from "the knee is at `mix5` or lower" to "the knee is at or
+below `mix10`"**, and the paper will report the dose ladder as a bound on where the knee lies
+rather than as a point estimate. Claiming 5 % specifically would be claiming a resolution the
+design does not have.
+
+This is the amendment most likely to have been discovered *after* the fact, when a reviewer asked
+for a confidence interval on the difference between two adjacent rungs. Cost of finding it now:
+about an hour of CPU. Cost of the evaluation-set increase: eval passes scale linearly, roughly
+30 → 100 GPU-hours, taking the campaign from ~391 to ~460.
+
+### Amendment 9 — 2026-09-10, before any adapter was trained
+
+Two consequences of Amendment 8's evaluation-set increase, both found by carrying it out.
+
+**1. `exec`'s eval set stays at 200, because raising it starved the training set.**
+
+Amendment 8 raised eval sets to 2,500 where the corpus allows. For `exec` I raised it to 400 —
+and CRUXEval holds 800 problems in total, so the increase came straight out of TRAIN, leaving
+**299** training pairs against 6,500 in every other cell. At that size the dose ladder is not a
+ladder: `mix1` would reverse three pairs. Reverted to 200 test / 499 train.
+
+The reasoning that should have preceded the change: this cell's job is RQ1 — *does collapse
+happen here at all* — which is a 20–30 pp effect that n=200 detects with certainty. It was never
+going to carry an equivalence claim, because those need ~2,500 and this corpus holds 800. Eval
+size and train size trade against each other only where the corpus is fixed, and `exec` is the
+one cell where that bites.
+
+**2. Spider's official split contains one content collision, and it is removed rather than
+redefined away.**
+
+Raising SQL's eval set to the full 1,034 Spider dev instances surfaced a leak invisible at 500:
+the question *"Count the number of documents."* with the query `SELECT count(*) FROM Documents`
+appears in **both** train and dev, asked of two different databases that each happen to have a
+`Documents` table. The databases are disjoint — the split is not broken — so this is a
+coincidence rather than an error. But a model trained on it would still be scored correct on its
+eval twin, so it is genuine memorization advantage.
+
+It could have been made to disappear by giving `sql` a `content_key` including the database, the
+way `exec`'s key includes its program. That would have been rationalising: `exec`'s case was two
+genuinely *different* programs sharing an input/output pair, whereas here the question and query
+are identical strings. **So the instance is dropped from training instead**, and
+`scripts/10_build_domain.py` now removes any train or val instance colliding with an eval one
+across every domain, reporting the count in the build report rather than applying it silently —
+a build that suddenly drops hundreds means the source changed, and that must be visible.
+
+Realised sizes after both corrections: 17 cells, 144,940 pairs. `code` reaches 2,060 rather than
+2,500 because only 412 test programs carry a variant under all five conditions and the common
+subset is what keeps the per-condition cells comparable.
