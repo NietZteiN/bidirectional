@@ -1,0 +1,29 @@
+# Code coverage (DexBench, Hasanov et al., ACL 2026).
+#   forward   program + input       -> the set of executed line numbers
+#   reverse   program + target line -> an input whose execution reaches it
+#
+# The only cell whose EVAL SET is an external published benchmark on a task someone else defined,
+# which is what makes its result checkable against their own table of 13 models. Everything else
+# in this project is our own construction.
+#
+# Ground truth is MEASURED by execution, not taken from DexBench's candidate coverage sets: those
+# come from CFG path enumeration and their own pipeline validates them in a later stage. For
+# CRUXEval/97 the true coverage is [1,3,4,5,9,12] and none of the three generated candidates
+# contains it -- they miss a `for ... else` clause.
+#
+# Splits are disjoint by PROGRAM: eval is DexBench's 298 selected CRUXEval programs, training is
+# drawn from the CRUXEval programs it did not select.
+
+hf_id: cruxeval-org/cruxeval
+
+n_train: 400              # CRUXEval holds 800 programs and DexBench took 298 of them, so this
+n_val: 60                 # cell is small by construction -- stated, not resampled to look big
+n_test: 298
+seed: 17
+n_shots: 2
+
+exec_timeout_s: 5.0
+exec_workers: 16
+
+sampling: {temperature: 0.0, top_p: 1.0, max_tokens: 512, seed: 17}
+engine: {max_model_len: 4096, max_loras: 8, gpu_memory_utilization: 0.85, seed: 17}

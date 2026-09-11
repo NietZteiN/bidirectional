@@ -53,7 +53,11 @@ TIERS = {
     },
     "exec": {
         "models": ["llama32-3b", "gemma3-4b", "olmo2-1b"],
-        "domains": ["exec"], "seeds": list(SEEDS_SMALL), "arms": "full", "train_time": "04:00:00",
+        # `coverage` joins `exec` here: both are small cells bounded by CRUXEval's 800 programs,
+        # and both are execution-verified. `coverage`'s eval set is DexBench's, which is the one
+        # external benchmark in the grid.
+        "domains": ["exec", "coverage"], "seeds": list(SEEDS_SMALL), "arms": "full",
+        "train_time": "04:00:00",
     },
     "large": {
         "models": ["llama31-8b", "gemma3-12b"],

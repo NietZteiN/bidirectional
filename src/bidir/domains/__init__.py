@@ -55,6 +55,9 @@ CELLS: dict[str, tuple[str, dict]] = {
     "algebra":    ("bidir.domains.algebra", {}),      # the formal-reasoning domain the paper lacked
     "diacritics": ("bidir.domains.diacritics", {}),   # forward is trivial, so collapse cannot be capacity-spend
     "automata":   ("bidir.domains.automata", {}),     # a DETERMINED but computationally hard inverse
+    # The one cell whose EVAL SET is somebody else's published benchmark, on a task they defined
+    # (DexBench, ACL 2026). Everything else here is our own construction.
+    "coverage":   ("bidir.domains.coverage", {}),
 }
 
 

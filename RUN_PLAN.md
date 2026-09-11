@@ -267,7 +267,7 @@ the tests plus every pipeline dry-run), `CLAUDE.md` (operating rules), `README.m
 
 ## 9. The domain set
 
-**17 cells.** The six original domains, the `fmt_det*` ladder and `fmt_novel`, plus three added
+**18 cells.** The six original domains, the `fmt_det*` ladder and `fmt_novel`, plus three added
 2026-09-10 on the argument in [`docs/CANDIDATE_DOMAINS.md`](docs/CANDIDATE_DOMAINS.md):
 
 | cell | what it closes |

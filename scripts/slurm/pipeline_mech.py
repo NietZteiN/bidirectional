@@ -27,7 +27,7 @@ SUBMIT = ROOT / "scripts" / "slurm" / "submit.py"
 #: Domains the mechanism section runs on. One per criterion family: execution (code), a
 #: continuous metric (mt), a round-trip criterion (sql), and the exact synthetic (fmt) whose
 #: never-had twin gives experiment 3 its control.
-MECH_DOMAINS = ["code", "mt_en-de", "sql", "fmt", "algebra"]
+MECH_DOMAINS = ["code", "mt_en-de", "sql", "fmt", "algebra", "coverage"]
 
 
 def sub(name, argv, *, partition="h200", time="03:00:00", dep=None, mem="64G", extra=None, dry=False):

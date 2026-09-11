@@ -145,3 +145,56 @@ def test_diacritics_forward_is_deterministic_and_total():
         assert n_diacritics(strip_diacritics(t)) == 0
         assert len(strip_diacritics(t)) == len(strip_diacritics(t))
     assert n_diacritics("déjà") > 0
+
+
+@pytest.mark.skipif("coverage" not in BUILT, reason="coverage not built")
+def test_coverage_splits_are_disjoint_by_program_and_source():
+    """The eval set is DexBench's 298 CRUXEval-derived programs; training comes from the CRUXEval
+    programs DexBench did NOT select. If those pools ever intersect, the one external-benchmark
+    result in the paper is contaminated."""
+    from bidir.config import DATA_DIR
+
+    tr = read_pairs(DATA_DIR / "coverage" / "train.jsonl")
+    te = read_pairs(DATA_DIR / "coverage" / "test.jsonl")
+    assert not ({p.pair_id for p in tr} & {p.pair_id for p in te})
+    assert {(p.meta or {}).get("source") for p in te} == {"dexbench"}
+    assert {(p.meta or {}).get("source") for p in tr} == {"cruxeval_remainder"}
+
+
+@pytest.mark.skipif("coverage" not in BUILT, reason="coverage not built")
+def test_coverage_reverse_targets_are_deep_branches():
+    """A target line at the top level of a function is reached by almost any argument. Measured
+    before targets were chosen by depth, a constant `None` answer scored 0.17 on reverse purely
+    by reaching shallow targets; choosing the deepest branch took that floor to 0.02."""
+    from bidir.config import DATA_DIR
+
+    rows = read_pairs(DATA_DIR / "coverage" / "test.jsonl")[:100]
+    indents = []
+    for r in rows:
+        meta = r.meta or {}
+        lines = meta["program"].splitlines()
+        ln = meta["target_line"]
+        assert 1 <= ln <= len(lines)
+        src = lines[ln - 1]
+        indents.append(len(src) - len(src.lstrip()))
+    assert sum(1 for i in indents if i > 0) / len(indents) > 0.8, \
+        "most reverse targets should be indented, i.e. inside a conditional or loop"
+
+
+def test_coverage_ground_truth_is_measured_not_inherited():
+    """DexBench's candidate FOCC sets come from CFG path enumeration and are validated by a later
+    stage of their pipeline. For CRUXEval/97 -- `lst.clear()` before a `for ... else` -- the true
+    coverage is [1,3,4,5,9,12] and none of the three candidates contains it. We execute instead.
+    """
+    from pathlib import Path
+
+    from bidir.coverage_runner import run_coverage
+
+    prog = (Path(__file__).resolve().parents[1] / "third_party" / "dexbench" / "data" /
+            "CRUXEval" / "formatted_cruxeval_programs" / "sample_97.py")
+    if not prog.exists():
+        pytest.skip("dexbench not cloned")
+    v = run_coverage(prog.read_text())
+    assert v["status"] == "ok"
+    assert v["lines"] == [1, 3, 4, 5, 9, 12]
+    assert 9 in v["lines"], "the for-else clause executes and must be in the ground truth"

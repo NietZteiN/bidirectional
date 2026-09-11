@@ -531,3 +531,39 @@ a build that suddenly drops hundreds means the source changed, and that must be 
 Realised sizes after both corrections: 17 cells, 144,940 pairs. `code` reaches 2,060 rather than
 2,500 because only 412 test programs carry a variant under all five conditions and the common
 subset is what keeps the per-condition cells comparable.
+
+### Amendment 10 — 2026-09-10, before any adapter was trained
+
+**A domain whose evaluation set is somebody else's benchmark.**
+
+Every other cell in this grid is our own construction, so a reader may reasonably ask whether the
+phenomenon is a property of our corpora. `coverage` is the answer to that question: the task is
+DexBench's (Hasanov et al., ACL 2026), and so is the evaluation set.
+
+  * **forward** — program + input → the set of executed line numbers
+  * **reverse** — program + target line → an input whose execution reaches it
+
+Both directions are verified by running the program, so neither needs a threshold, and the
+reverse direction is set-valued: any input reaching the target line is correct.
+
+**Splits are disjoint by program.** Eval is DexBench's 298 selected CRUXEval-derived programs;
+training is drawn from the 400 CRUXEval programs it did *not* select. Asserted in tests, because
+this is the one result in the paper that can be checked against an external table and a
+contaminated version of it would be worse than not running it.
+
+**Ground truth is measured, not inherited.** DexBench ships candidate coverage sets from CFG path
+enumeration, validated against real coverage by a later stage of their pipeline. Those candidates
+are not reliable alone: for `CRUXEval/97`, where `lst.clear()` empties a list before a
+`for ... else`, the true coverage is `[1,3,4,5,9,12]` and **none of the three generated candidates
+contains it** — they miss the `else` clause. Every instance here is labelled by execution.
+
+**Prediction.** Collapse in the reverse direction, as elsewhere. The interest is not the direction
+of the effect but that it can be read against their published table of 13 models on the same
+instances.
+
+**Two limits, stated now.** The cell is small — CRUXEval holds 800 programs and DexBench took 298
+— so it carries RQ1 and not the equivalence claims, exactly as `exec` does. And the reverse
+direction has a floor: a constant, meaningless argument reaches the target line about **2 %** of
+the time, because some targets are reachable by almost anything. Choosing the deepest branch in
+each program rather than a random one took that floor down from **17 %**. The residual 2 % is
+reported alongside the base rate rather than subtracted.

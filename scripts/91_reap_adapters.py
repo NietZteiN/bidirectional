@@ -39,7 +39,7 @@ from bidir.config import RESULTS_DIR, RUNS_DIR  # noqa: E402
 
 #: Domains whose `sft` adapter the mechanism experiments still need. Mirrors
 #: scripts/slurm/pipeline_mech.py::MECH_DOMAINS -- if that list grows, this one must too.
-MECH_DOMAINS = {"code", "mt_en-de", "sql", "fmt", "algebra"}
+MECH_DOMAINS = {"code", "mt_en-de", "sql", "fmt", "algebra", "coverage"}
 
 
 def evaluated() -> set[tuple[str, str, str, int]]:

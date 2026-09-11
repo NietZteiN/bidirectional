@@ -25,6 +25,7 @@ configs/     models.yaml (the panel) · domains/ (one per cell, incl. frozen thr
              train/_base_lora.yaml (the ONE recipe every arm trains under)
 src/bidir/   schema · arms · mixture · prompts · train · losses · engine · evaluate
              domains/  mt · sql · code · d2t · fmt · fmt_novel · exec_pred
+                       algebra · automata · diacritics · coverage (DexBench)
              mech/     elicitation · alpha_scale · layer_ablate · direction_probe · sensitivity
 scripts/     00_status · 10_build_domain · 15_base_gate · 20_train_pack · 30_determinism_floor
              40_probes · 50_contrasts · 51_tables · 52_figs · 53_mech_report
