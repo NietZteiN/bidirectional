@@ -75,7 +75,25 @@ def main() -> int:
     names = list(arm_registry.TIERS.get(a.arms, ())) or [x.strip() for x in a.arms.split(",") if x.strip()]
     names = [n for n in names if arm_registry.resolve(n).trains]
     # relearn-k continues from `sft`, so `sft` must be trained first if it is in the pack.
-    names.sort(key=lambda n: (arm_registry.resolve(n).init_from is not None, names.index(n)))
+    #
+    # THE POSITION IS SNAPSHOT FIRST. `names.sort(key=lambda n: (..., names.index(n)))` raises
+    #     ValueError: 'sft' is not in list
+    # because CPython EMPTIES the list for the duration of the sort -- deliberately, so that
+    # mutating it from inside the key function is detected -- and a key that reads the list
+    # being sorted therefore reads an empty one. This killed every train job in the gate
+    # (391357 and siblings, 2026-09-12) two seconds in.
+    order = {n: i for i, n in enumerate(names)}
+    names.sort(key=lambda n: (arm_registry.resolve(n).init_from is not None, order[n]))
+
+    # relearn-k needs `sft` on disk. If the pack does not contain it, say so here rather than
+    # failing per-arm several minutes into a job.
+    need_sft = [n for n in names if arm_registry.resolve(n).init_from == "sft"]
+    if need_sft and "sft" not in names:
+        sft_dir = adapter_dir(a.domain, a.model, "sft", a.rank, a.seed) / "final"
+        if not sft_dir.exists():
+            print(f"[pack] {', '.join(need_sft)} continue from `sft`, which is neither in this "
+                  f"pack nor on disk at {sft_dir}", file=sys.stderr)
+            return 1
 
     results: list[dict] = []
     t0 = time.time()

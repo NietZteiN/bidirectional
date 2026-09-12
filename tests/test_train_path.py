@@ -193,3 +193,45 @@ def test_eval_and_pack_agree_on_rank():
     assert "rank" in inspect.signature(E.resolve_systems).parameters
     src = inspect.getsource(E.main)
     assert "rank=args.rank" in src, "the eval resolves adapters at a hardcoded rank"
+
+
+def test_pack_arm_ordering_does_not_read_the_list_it_is_sorting():
+    """`names.sort(key=lambda n: ... names.index(n))` raises ValueError.
+
+    CPython EMPTIES the list for the duration of a sort -- deliberately, so that mutating it
+    from inside the key function is detected -- so a key that reads the list being sorted
+    reads an empty one:
+
+        ValueError: 'sft' is not in list
+
+    This killed every train job in the decision gate two seconds in (391357 and siblings,
+    2026-09-12). The position has to be snapshot before the sort.
+    """
+    from bidir import arms as A
+
+    # The bug, reproduced on a plain list, so the test documents the mechanism.
+    xs = ["a", "b", "c"]
+    with pytest.raises(ValueError):
+        xs.sort(key=lambda n: xs.index(n))
+
+    # The fix: an order snapshot, and relearn-* still lands after sft.
+    for tier in ("gate", "full", "relearn"):
+        names = [n for n in A.TIERS[tier] if A.resolve(n).trains]
+        order = {n: i for i, n in enumerate(names)}
+        names.sort(key=lambda n: (A.resolve(n).init_from is not None, order[n]))
+        assert names, tier
+
+    names = ["relearn10", "sft", "mix5", "relearn200"]
+    order = {n: i for i, n in enumerate(names)}
+    names.sort(key=lambda n: (A.resolve(n).init_from is not None, order[n]))
+    assert names.index("sft") < names.index("relearn10"), (
+        "relearn-k continues from sft's adapter, so sft must be trained first")
+
+
+def test_pack_source_does_not_index_into_the_sorting_list():
+    from pathlib import Path
+
+    src = (Path(__file__).resolve().parents[1] / "scripts" / "20_train_pack.py").read_text()
+    assert "names.index(n)" not in src, (
+        "reading names inside its own sort key raises ValueError at runtime")
+    assert "order = {n: i for i, n in enumerate(names)}" in src
