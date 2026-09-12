@@ -789,3 +789,58 @@ either way.
 
 Sixth and seventh instances of **a nominal parameter standing in for the quantity that matters**:
 a worker count ≠ the available parallelism; a subprocess timeout ≠ time allowed for the program.
+
+### Amendment 16 — 2026-09-12, before any adapter was trained
+
+**Amendment 13 was right to demand a falsifiable clause and wrong about which quantity to
+measure. Measured, both ways, before either was used to fail a cell.**
+
+Amendment 13 required τ to clear the echo baseline's raw-metric 90th percentile by 0.05. On the
+first run under that rule `mt_en-de` **failed**, with margins of +0.0081 forward and +0.0147
+reverse. That prompted the measurement below rather than a change of threshold.
+
+**What copying the input scores under COMET-22** (llama32-3b, n=200, τ frozen):
+
+| direction | echo p50 | echo p90 | echo max | τ | echoes clearing τ *on COMET alone* |
+|---|---|---|---|---|---|
+| en→de | 0.6316 | 0.7563 | 0.8956 | 0.7649 | **7.5 %** |
+| de→en | 0.7647 | 0.8461 | 0.9313 | 0.8609/0.8619 | **4.5 %** |
+
+**What copying the input scores under the criterion the paper actually uses:**
+
+| | ECHO strict | `off_target` | `echo_flag` |
+|---|---|---|---|
+| every cell, every direction | **0.0000** | 1.0000 | 1.0000 |
+
+So the criterion is sound and Amendment 13's clause was measuring something else. COMET-22 is
+reference-based *and sees the source*, so it rewards semantic relatedness irrespective of
+language: a German sentence offered as an English translation scores 0.7647 at the median and
+0.9313 at best. τ alone would admit 4.5–7.5 % of pure source copies. What excludes them is the
+**target-language detector and the not-echo conjunct**, each of which fires on 100 % of echoes.
+
+**What is registered.** The gate's falsifiable clause becomes: for metric domains, **the echo
+probe's strict rate under the FULL criterion must be ≤ 0.02** (`--max-echo-probe-strict`),
+scored with τ already frozen so it is the same conjunction the paper reports. The raw-metric
+quantities are retained as **reported diagnostics, not gate clauses**:
+`echo_baseline_p90`, `tau_margin_over_echo`, `echo_clears_tau_on_metric_alone`.
+
+**And a limitation that now has a number.** τ on COMET carries much less discriminative power
+than its position in the criterion suggests; the strict rate for MT is mostly *"right language,
+not a copy, and not obviously worse than the base's 25th percentile"*. Two consequences,
+both binding on the write-up:
+
+1. **MT magnitudes are reported with `comet_mean` beside every strict rate**, because a change
+   in strict rate under a narrow-range metric understates or overstates the change in quality
+   depending on where the mass sits relative to τ.
+2. **A collapse in MT that shows up only as off-target or echo is reported as such**, not folded
+   into a single "reverse accuracy fell" number — the workshop paper saw both rise under
+   forward-only training, and on this panel those two conjuncts are what the criterion is made
+   of. `format_fail` and `echo` are already columns in every table; §7 must read them.
+
+`mt_en-de` and `mt_de-en` pass the amended gate. Their base rates and τ are unchanged — this
+amendment changes which clause decides, not any measurement.
+
+**A third cross-validation.** `mt_en-de` forward and `mt_de-en` reverse are the same measurement
+(en→de) and agree to four decimals on every echo quantity (p50 0.6316, p90 0.7563, 7.5 %); the
+de→en pair likewise (0.7647, 0.8461, 4.5 %). The harness reaches the same numbers from two
+independent cell definitions for the third time today.

@@ -366,9 +366,16 @@ def test_base_gate_has_a_clause_that_can_actually_fail():
     from pathlib import Path
 
     src = (Path(__file__).resolve().parents[1] / "scripts" / "15_base_gate.py").read_text()
-    assert "tau_margin_over_echo" in src and "min_tau_margin" in src, (
-        "the gate has no absolute competence clause; its rate check restates tau_quantile")
-    assert "echo_baseline_p90" in src, "the echo floor is not reported, so it cannot be audited"
+    # Amendment 16: the falsifiable clause is the ECHO PROBE's strict rate under the full
+    # criterion, not the raw-metric margin -- COMET-22 sees the source and scores a copy of it
+    # at 0.757 against tau 0.765, so the margin measured the metric's weakness rather than the
+    # criterion's validity. The margin is still reported, as a diagnostic.
+    assert "echo_probe_strict" in src and "max_echo_probe_strict" in src, (
+        "the gate has no falsifiable competence clause; its rate check restates tau_quantile")
+    assert '"thresholds": thresholds' in src, (
+        "the echo probe must be scored with tau FROZEN, or it is not the criterion the paper uses")
+    assert "echo_baseline_p90" in src and "echo_clears_tau_on_metric_alone" in src, (
+        "the metric diagnostics are not reported, so how much tau contributes cannot be audited")
     # The echo baseline has to be the INPUT side, per direction -- the project's convention is
     # that forward reads side_a -> side_b, so echoing forward means emitting side_a.
     assert 'i["side_a"] if direction == "forward" else i["side_b"]' in src
