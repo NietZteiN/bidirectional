@@ -1014,3 +1014,49 @@ equivalence claim on its own.
 
 Eighth instance of **a nominal parameter standing in for the quantity that matters**: a row ≠ an
 independent observation.
+
+### Amendment 21 — 2026-09-12, before any adapter was trained
+
+**Mechanism experiment 7's threshold grid was centred on a value that deletes the update.**
+
+The DG-Hard threshold is τ = ω(β) · median(σ), and ω(1) = 2.86 — so at the published
+`tau_scale = 1.0` the cut sits at roughly **2.9× the median surviving singular value**. That is
+the right scale when the median is taken over a full spectrum whose bulk *is* noise. A LoRA
+delta is rank-r by construction with no bulk (the caveat the module already carried), so the
+median is taken over r signal values and the threshold routinely exceeds the largest of them.
+Measured on rank-8 deltas:
+
+| spectrum | components kept | energy kept |
+|---|---|---|
+| flat (random rank-8) | **0 / 8** | **0.000** |
+| gentle decay 10→1 | **0 / 8** | **0.000** |
+| steep decay | 2 / 8 | 0.880 |
+| one dominant | 1 / 8 | 0.995 |
+
+**A zeroed delta is the base model, and the base model has the reverse capability intact.** The
+registered reading of this experiment is "if reverse success rises while forward stays inside
+the seed band, the capability was never gone — it was masked by a removable residue". A zeroing
+threshold satisfies the first half trivially. Either the forward check would have caught it —
+leaving a null that reads as evidence about the *mechanism* rather than about the threshold — or
+it would not, and the headline would have been manufactured by deleting the thing under study.
+
+**Registered.**
+
+1. `dg_hard` **raises** when the threshold keeps zero components, naming σ_max, σ_median and r.
+   A repair that keeps nothing is a deletion and is not a data point.
+2. The default grid moves from `0.5, 0.75, 1.0, 1.5, 2.0` to **`0.15, 0.25, 0.4, 0.6, 0.8`**,
+   which spans 98 % of the update's energy down to 64 % on a representative spectrum. A rung
+   that still zeroes is **skipped and named** in the log rather than aborting the sweep; if
+   every rung zeroes, the script exits saying so.
+3. Each result records `sigma_max`, `sigma_median`, `sigma_top`, `median_over` and
+   `tau_is_dg_optimal`. The last is **false** on every LoRA arm: with the rank cap the median
+   is over signal, so τ is a median-relative heuristic in DG's spirit and not DG's optimal
+   threshold. The field is named after DG, so the file has to say that.
+
+**No prediction changes.** The registered prediction for experiment 7 stands, but its
+instrument is now calibrated: the sweep reports reverse and forward success against *energy
+kept*, and a rung that retains under ~50 % of the update's energy is reported as an ablation
+rather than a repair.
+
+Ninth instance of **a nominal parameter standing in for the quantity that matters**: a published
+threshold multiplier ≠ a threshold, once the spectrum it was derived for is gone.

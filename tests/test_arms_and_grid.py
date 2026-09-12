@@ -688,3 +688,49 @@ def test_dose_figure_marks_a_ladder_it_could_not_measure():
                      if (p / "train.jsonl").exists()])
     assert marks.count(",") + 1 >= min(n_domains, 12), (
         "fewer marks than plottable domains, so the legend can become ambiguous")
+
+
+def test_spectral_repair_refuses_to_zero_the_update():
+    """A repair that keeps nothing is the base model, and the base has the reverse capability.
+
+    omega(1.0) = 2.86, so at tau_scale 1.0 the threshold is ~2.9x the median surviving singular
+    value -- and a rank-r LoRA delta has no noise bulk, so that routinely exceeds the LARGEST
+    of them. Measured on rank-8 deltas: a flat spectrum and a gentle 10..1 decay both keep 0 of
+    8 components, energy 0.000.
+
+    A zeroed delta would have been reported either as "spectral repair restores the reverse
+    direction" -- RQ5's headline, produced by deleting the update -- or, once the forward check
+    noticed forward had reverted too, as a null attributed to the mechanism instead of to the
+    threshold.
+    """
+    import torch
+
+    from bidir.mech.spectral import dg_hard, omega
+
+    assert abs(omega(1.0) - 2.86) < 1e-6
+
+    torch.manual_seed(0)
+    q1, _ = torch.linalg.qr(torch.randn(256, 8))
+    q2, _ = torch.linalg.qr(torch.randn(256, 8))
+    gentle = (q1 @ torch.diag(torch.tensor([10.0, 8, 6, 5, 4, 3, 2, 1])) @ q2.T).to(torch.bfloat16)
+
+    with pytest.raises(ValueError, match="zero the update entirely"):
+        dg_hard(gentle, 1.0, max_rank=8)
+
+    # ...and the shipped grid keeps something at every rung.
+    for ts in (0.15, 0.25, 0.4, 0.6):
+        _, rep = dg_hard(gentle, ts, max_rank=8)
+        assert rep["rank_kept"] > 0, f"tau_scale={ts} kept nothing"
+        assert rep["energy_kept"] > 0.0
+    # The report must say what tau was computed over, since the field is named after DG.
+    _, rep = dg_hard(gentle, 0.25, max_rank=8)
+    assert rep["tau_is_dg_optimal"] is False and "signal only" in rep["median_over"]
+
+
+def test_spectral_default_tau_grid_is_not_centred_on_one():
+    from pathlib import Path
+
+    src = (Path(__file__).resolve().parents[1] / "src" / "bidir" / "mech" / "spectral.py").read_text()
+    assert 'default="0.15,0.25,0.4,0.6,0.8"' in src, (
+        "the default grid still sits in the range that zeroes a rank-r delta")
+    assert "SKIPPED" in src, "a zeroing rung must be skipped and named, not fatal to the sweep"

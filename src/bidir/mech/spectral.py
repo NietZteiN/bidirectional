@@ -1,7 +1,7 @@
 """Mechanism experiment 7: spectral repair of the fine-tuning update.
 
     python -m bidir.mech.spectral --domain mt_en-de --model llama32-3b --arm sft \
-        --taus 0.5,0.75,1.0,1.5,2.0
+        --taus 0.15,0.25,0.4,0.6
 
 Following "Spectral Unforgetting" (arXiv:2605.20296, `papers/spectral2026unforgetting.pdf`):
 treat the fine-tuning update as low-rank task signal embedded in an IID-like noise residual,
@@ -65,6 +65,16 @@ def dg_hard(delta, tau_scale: float = 1.0, max_rank: Optional[int] = None):
     out at HIGHER rank than the original with the numerical noise materialized as real
     components. Measured on a synthetic rank-8 adapter before the cap was added: rank 8 in,
     rank 64 out.
+
+    AND THE CAP CHANGES WHAT tau MEANS, which the report has to say. Donoho-Gavish takes the
+    median over the FULL spectrum, where the noise bulk dominates -- that is what makes
+    median(sigma) an estimate of the noise scale, and what makes omega(beta) * median optimal.
+    A LoRA delta has no bulk, so with the cap the median is taken over the r SIGNAL values and
+    tau becomes "about 1.4-1.8x the median surviving component" -- a median-relative heuristic
+    in the spirit of DG, not DG's optimal threshold. That is why `--taus` sweeps it rather than
+    trusting a single closed form, and why the report records `median_over` and
+    `tau_is_dg_optimal`. Naming the field after DG while computing something else would be the
+    kind of borrowed authority this project exists to avoid.
     """
     import torch
 
@@ -77,11 +87,44 @@ def dg_hard(delta, tau_scale: float = 1.0, max_rank: Optional[int] = None):
         U, Vh = U[:, :max_rank], Vh[:max_rank, :]
     tau = omega(beta) * float(S.median()) * float(tau_scale)
     keep = int((S > tau).sum())
+
+    # A REPAIR THAT KEEPS NOTHING IS A DELETION, AND IT MUST NOT BE SCORED AS A REPAIR.
+    # omega(1.0) = 2.86, so at tau_scale = 1.0 the threshold is ~2.9x the median surviving
+    # singular value -- and with only r values and no noise bulk, that routinely exceeds the
+    # LARGEST of them. Measured on rank-8 deltas (2026-09-12):
+    #
+    #     spectrum                     kept   energy kept
+    #     flat (random rank-8)          0/8      0.000
+    #     gentle decay 10..1            0/8      0.000
+    #     steep decay                   2/8      0.880
+    #     one dominant                  1/8      0.995
+    #
+    # A zeroed delta IS the base model, and the base model has the reverse capability intact.
+    # So this would have been reported either as "spectral repair restores the reverse
+    # direction" -- the RQ5 headline, manufactured by deleting the update -- or, once the
+    # forward check noticed forward had also reverted, as a null attributed to the mechanism
+    # rather than to the threshold. Raising here makes the tau sweep's own failure legible.
+    if keep == 0:
+        raise ValueError(
+            f"tau={tau:.4g} exceeds every singular value (max {float(S.max()):.4g}, median "
+            f"{float(S.median()):.4g}, r={int(S.numel())}): the repair would zero the update "
+            f"entirely, which is the base model and not a repair. omega(beta)*median is too "
+            f"aggressive for a rank-r delta with no noise bulk -- lower --taus (the useful "
+            f"range is well below 1.0; see the module docstring)."
+        )
+
     S_cut = S.clone()
     S_cut[keep:] = 0.0
     repaired = (U @ torch.diag(S_cut) @ Vh).to(delta.dtype)
     return repaired, {"rank_considered": int(S.numel()), "rank_kept": keep,
                       "tau": tau, "beta": beta,
+                      "median_over": "signal only (capped at the adapter rank)" if max_rank
+                      else "full spectrum",
+                      # The spectrum itself, so a sweep's aggressiveness is readable from the
+                      # result file rather than inferred from rank_kept alone.
+                      "sigma_max": float(S.max()), "sigma_median": float(S.median()),
+                      "sigma_top": [float(x) for x in S[:8]],
+                      "tau_is_dg_optimal": max_rank is None,
                       "energy_kept": float((S_cut ** 2).sum() / max(1e-12, (S ** 2).sum()))}
 
 
@@ -168,8 +211,11 @@ def main(argv: Optional[list[str]] = None) -> int:
     ap.add_argument("--arm", default="sft", help="LoRA arms only; see the module docstring on full fine-tuning")
     ap.add_argument("--seed", type=int, default=GLOBAL_SEED)
     ap.add_argument("--rank", type=int, default=32)
-    ap.add_argument("--taus", default="0.5,0.75,1.0,1.5,2.0",
-                    help="multipliers on the Donoho-Gavish threshold; 1.0 is the published value")
+    ap.add_argument("--taus", default="0.15,0.25,0.4,0.6,0.8",
+                    help="multipliers on omega(beta)*median. NOT centred on 1.0: on a rank-r "
+                         "LoRA delta with no noise bulk, 1.0 discards every component for a "
+                         "typical spectrum (measured 2026-09-12) and dg_hard now refuses it. "
+                         "This grid spans 98%% of the update's energy down to 64%%.")
     ap.add_argument("--limit", type=int, default=200)
     a = ap.parse_args(argv)
 
@@ -194,12 +240,29 @@ def main(argv: Optional[list[str]] = None) -> int:
     scratch = Path(os.environ.get("TMPDIR", "/tmp")) / f"spectral_{a.domain}_{a.model}_{a.arm}"
 
     variants: list[tuple[str, Optional[str], dict]] = [("base", None, {}), ("unrepaired", str(src), {})]
+    destroyed: list[str] = []
     for t in [float(x) for x in a.taus.split(",")]:
         d = scratch / f"tau{t:g}"
-        rep = repair_lora_adapter(src, d, t)
+        try:
+            rep = repair_lora_adapter(src, d, t)
+        except ValueError as e:
+            # A rung whose threshold zeroes the update is not a data point: it is the base
+            # model wearing an adapter's name. Skipped and NAMED, so the sweep's own range
+            # failing is visible instead of arriving as a null about the mechanism.
+            destroyed.append(f"{t:g}")
+            print(f"  tau x{t:g}: SKIPPED — {e}", flush=True)
+            continue
         variants.append((f"dghard_tau{t:g}", str(d), rep))
         print(f"  tau x{t:g}: rank {rep['total_rank_before']} -> {rep['total_rank_kept']} "
               f"across {rep['n_modules']} modules, energy kept {rep['mean_energy_kept']:.3f}", flush=True)
+
+    if len(variants) <= 2:
+        raise SystemExit(
+            f"every tau in {a.taus} zeroed the update, so there is nothing to score. "
+            f"omega(beta)*median is too aggressive for a rank-r delta; lower --taus.")
+    if destroyed:
+        print(f"  [spectral] {len(destroyed)} rung(s) skipped as zeroing: {', '.join(destroyed)}",
+              flush=True)
 
     e = eng.get_engine(a.model, {**dcfg.get("engine", {}), "max_loras": max(2, len(variants)),
                                  "max_lora_rank": 128})
