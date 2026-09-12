@@ -149,25 +149,79 @@ makes experimental rather than rhetorical.
 
 ---
 
-## Cited but not yet read
+## The eight carried over from the plan's bibliography — now read
 
-`paper/main.tex` §9 cites eight works carried over from the plan's bibliography that are **not**
-in this directory and have not been read past a search snippet. Each is flagged `NOT YET READ` in
-`references.bib`. They are cited for claims that are standard in their fields, but standard is
-not the same as checked, and this list is the outstanding debt:
+Pulled and read 2026-09-11. Three of them change how the paper positions itself; the rest are
+background and are cited as such.
 
-| key | why it is cited | risk if unread |
-|---|---|---|
-| `scialom2022rehearsal` | ~1 % rehearsal prevents forgetting | **highest** — this is the closest analogue to our dose result, and §5 leans on the resemblance |
-| `biderman2024lora` | LoRA forgets less than full fine-tuning | qualifies every LoRA-based claim; the `fullft_*` arms exist because of it |
-| `kotha2024forgetting` | forgetting as a shift in implicit task inference | adjacent to the suppression reading |
-| `jain2024wrapper` | fine-tuning as a thin wrapper | ditto |
-| `lee2024dpo` | DPO suppresses rather than removes toxicity | the precedent for suppression-not-erasure |
-| `luo2023forgetting` | forgetting during continual fine-tuning | background |
-| `longpre2023flan` | data mixture drives gains | background for §8 |
-| `lipton2018troubling` | mis-attribution in ML scholarship | background for §8 |
+### `scialom2022rehearsal.pdf` — the closest antecedent to the dose result, and not a threat
+Continual-T0 learns 8 new tasks "while maintaining almost 100 % of the initial performance on
+all the previous datasets ... obtained by using only **1 % of data for memory buffer**" (p. 2).
+A small fraction of the right data does prevent forgetting, and that shape is not ours to claim.
 
-**Read `scialom2022rehearsal` first.** If their ~1 % rehearsal result is closer to our dose
-finding than §5 currently allows, the framing of the contribution changes: a knee below 10 %
-would be a replication of a known effect in a new setting rather than a new prescription. That is
-still worth reporting, but it is a different sentence.
+But the regimes differ in a way that **sharpens RQ1 rather than weakening RQ4**. Their buffer
+replays *actual examples of the earlier task*; our reverse dose is the *same pairs read the
+other way*, constructed for free. Theirs preserves a capability the model was **trained** on;
+ours preserves one it had from **pretraining** and was never trained on. Theirs **adds** the
+buffer; ours **replaces**, holding budget fixed.
+
+And the sharpening: **our `replay` arm is essentially their rehearsal.** If directional collapse
+were ordinary forgetting, Scialom predicts that generic replay at the same share should prevent
+it. The registered prediction is that it does not, while an equal share of reversed pairs does.
+That contrast is a much better use of this citation than treating it as prior art for "small
+doses work".
+
+### `kotha2024forgetting.pdf` — far closer to H1 than "background"
+"Language models implicitly infer the task of the prompt and fine-tuning skews this inference
+towards tasks in the fine-tuning distribution" (p. 1). They propose **Conjugate Prompting** —
+make the task look farther from the fine-tuning distribution while requiring the same capability
+— and recover some pretraining capability.
+
+That is our H1 stated in their vocabulary: forward-only training skews task inference so that
+the model applies the trained mapping whatever direction is requested. Mechanism experiment 6
+(instruction sensitivity) measures exactly their quantity, and experiment 1 (the elicitation
+ladder) is a close relative of conjugate prompting. **This should be cited as a precedent for
+the hypothesis, not filed under forgetting.** Directional collapse may be the special case where
+the skewed "task" is the direction itself.
+
+### `lee2024dpo.pdf` — suppression, mechanistically, in another domain
+"Capabilities learned from pre-training are **not removed, but rather bypassed**" — DPO learns
+an offset "distributed amongst its layers" to bypass the regions that elicit toxicity (pp. 1–2).
+The distributed-across-layers finding bears directly on mechanism experiment 4 (layer ablation):
+if the collapse is likewise spread rather than localised, a single-layer-group ablation should
+find nothing, and that would be a result rather than a null.
+
+Together with `jain2024wrapper` below, this means **the suppression hypothesis is already
+well-supported in adjacent settings**, and §7 should say so. Our contribution there is the
+*directional* case, the never-had control that makes erased-versus-suppressed experimental, and
+four instruments rather than one.
+
+### `jain2024wrapper.pdf`
+In controlled synthetic settings with pruning and probing: "(i) fine-tuning rarely alters the
+underlying model capabilities; (ii) a minimal transformation, which we call a **wrapper**, is
+typically learned on top" (p. 1). The precedent for reading fine-tuning as modulation rather
+than replacement.
+
+### `biderman2024lora.pdf`
+LoRA substantially underperforms full fine-tuning on target domains (code, maths) but "better
+maintains the base model's performance on tasks outside the target domain", more so than weight
+decay or dropout (p. 1). **A live qualification on this project**, which is LoRA throughout: if
+LoRA forgets less, our collapse magnitudes are if anything *conservative*, and the `fullft_*`
+arms exist to say by how much.
+
+### `luo2023forgetting.pdf`
+Catastrophic forgetting observed across 1b–7b during continual instruction tuning, and
+**worsening with scale** in that range. Relevant to the large tier: if collapse also grows with
+scale, that is consistent rather than surprising.
+
+### `longpre2023flan.pdf`
+Ablations across the Flan Collection find "task balancing and enrichment techniques are
+overlooked but critical" (p. 1) — gains attributed to methods often belong to the data mixture.
+Background for §8, and the general form of our specific claim.
+
+### `lipton2018troubling.pdf`
+Names the pattern directly: "**Failure to identify the sources of empirical gains**, e.g.
+emphasizing unnecessary modifications to neural architectures when gains actually stem from
+hyper-parameter tuning" (p. 1). Our §8 is an instance with direction in place of
+hyper-parameters. Their guidance on tone — keep examples short and specific, since criticising
+individual papers is sensitive — is the rule the attribution section already follows.

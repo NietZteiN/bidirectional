@@ -608,3 +608,40 @@ ours is that the reversal was free all along.
 `roundtrip` stays implemented and available, demoted to a fallback if RevThink's augmentation
 proves too expensive to reproduce — it needs a teacher model over the whole training set, which
 our budget has not costed.
+
+### Amendment 12 — 2026-09-11, before any adapter was trained
+
+The eight works cited in §9 from the plan's bibliography have now been read
+(`papers/REFERENCES.md`). Three change something registered here.
+
+**1. `replay`'s prediction is now derived from a published result rather than asserted.**
+Scialom et al. (2022) preserve almost all earlier-task performance across eight sequential tasks
+with a memory buffer of **1 %** of prior data. If directional collapse were ordinary forgetting,
+that result predicts generic rehearsal at our replaced share should prevent it. **Registered:
+`replay − sft` on reverse spans zero while `mix5 − sft` does not.** Previously this was "replay
+separates directional loss from ordinary forgetting"; it is now a prediction with a source, and
+a failure of it is interpretable rather than merely disappointing.
+
+We also record what we are **not** claiming: that a small dose preventing a loss is a new shape.
+It is not. Two things are ours — the dose is *free*, because a reversed pair is the forward pair
+read the other way rather than a stored buffer that adds to the budget; and the capability being
+preserved was never trained, where rehearsal preserves one that was.
+
+**2. H1 has a name in the literature, and §7 will use it.** Kotha et al. (2024) argue that models
+implicitly infer a prompt's task and that fine-tuning **skews that inference** toward the
+fine-tuning distribution, with conjugate prompting recovering capability by moving the prompt
+away from it. That is H1 with direction as the inferred task. Mechanism experiment 6 measures
+their quantity and experiment 1 is a relative of their intervention. No prediction changes; the
+framing stops being ours alone, which is more defensible, and the elicitation ladder gains a
+reason to expect partial recovery rather than merely hoping for it.
+
+**3. A prediction for layer ablation.** Lee et al. (2024) find DPO bypasses toxicity with an
+offset **distributed amongst layers** rather than localised. **Registered: mechanism experiment 4
+finds the collapse distributed rather than concentrated in one layer group** — i.e. no single
+band's ablation restores most of the reverse direction. A null there was previously going to read
+as an inconclusive upside experiment; it now reads as a replication.
+
+**And one qualification on our own magnitudes.** Biderman et al. (2024) find LoRA maintains
+out-of-domain performance better than full fine-tuning. Since this project is LoRA throughout,
+any collapse we measure is, if anything, **conservative** — the `fullft_*` arms say by how much,
+and §7 should present them that way rather than only as an artifact check.

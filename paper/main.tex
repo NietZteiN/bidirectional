@@ -224,20 +224,37 @@ doubles the token count, while replacing forward pairs with their own reversal h
 sequence tokens and optimizer steps fixed at once.
 
 \paragraph{Forgetting: diffuse loss, versus targeted and total.}
-Fine-tuning degrades capabilities its data never threatened
-\citep{luo2023forgetting,kotha2024forgetting}, LoRA forgets less than full fine-tuning
-\citep{biderman2024lora}, and roughly 1\,\% rehearsal of prior data prevents much of it
-\citep{scialom2022rehearsal} --- the closest analogue to our dose result, and a reason to expect
-a small one to work. The difference is shape. Forgetting is measured as a spread-out decline
-across unrelated benchmarks; here the inverse direction goes to near zero while general probes
-move a few points, and the \textsc{replay} arm exists to tell the two apart by substituting
-generic instruction data for the reversed pairs at identical budget.
+Fine-tuning degrades capabilities its data never threatened, across model scales
+\citep{luo2023forgetting}, and LoRA forgets less than full fine-tuning
+\citep{biderman2024lora} --- which makes the magnitudes we report on LoRA conservative, and is
+why \S\ref{sec:setup} includes full fine-tuning arms. The difference from directional collapse
+is shape: forgetting is measured as a spread-out decline across unrelated benchmarks, where here
+the inverse direction goes to near zero while general probes move a few points.
+% Scialom is the closest antecedent to the dose result and the honest way to use it is as the
+% source of a prediction our own control tests, not as prior art to be distinguished away.
+\citet{scialom2022rehearsal} show that a memory buffer of roughly 1\,\% of prior data preserves
+almost all earlier-task performance across eight sequential tasks. That is the same shape as our
+dose result and we do not claim the shape as new. Two things differ, and the second is testable:
+their buffer replays genuine earlier-task examples and \emph{adds} to the training budget, where
+a reversed pair is constructed for free and \emph{replaces}; and if directional collapse were
+ordinary forgetting, their result predicts that generic rehearsal at the same share should
+prevent it. \textsc{replay} is that arm.
 
-\paragraph{Suppression rather than removal.}
-Fine-tuning has been characterised as a thin wrapper over pretrained capability
-\citep{jain2024wrapper} and as suppressing rather than removing behaviour
-\citep{lee2024dpo}, and damaged capabilities can be recovered post hoc by filtering the weight
-update itself \citep{spectral2026unforgetting}. \citet{latentgen2026illusion} add a caution we
+\paragraph{Suppression rather than removal, and skewed task inference.}
+That fine-tuning modulates rather than replaces is already well supported outside this setting,
+and \S\ref{sec:mechanism} does not claim it as new. Fine-tuning rarely alters underlying
+capabilities and learns a minimal ``wrapper'' over them \citep{jain2024wrapper}; DPO does not
+remove the ability to produce toxic text but bypasses it with an offset distributed across
+layers \citep{lee2024dpo} --- a distribution that is itself a prediction for our layer
+ablation; and damaged capabilities can be recovered post hoc by filtering the weight update
+\citep{spectral2026unforgetting}. Closest of all is \citet{kotha2024forgetting}, who argue that
+models implicitly infer the task of a prompt and that fine-tuning \emph{skews that inference}
+toward the fine-tuning distribution, recovering capability by making the prompt look farther
+from it. Our hypothesis is their mechanism with direction as the inferred task: forward-only
+training leaves the model applying the trained mapping whichever direction is asked for.
+What \S\ref{sec:mechanism} adds is the directional case, a never-had control that makes
+erased-versus-suppressed a measurement rather than an inference, and four instruments that can
+disagree. \citet{latentgen2026illusion} add a caution we
 take seriously: objectives that repair reversal behaviour need not build a single
 direction-agnostic representation, and their probes are consistent with forward and reverse
 stored as distinct entries. That is why \S\ref{sec:mechanism} uses four instruments rather than
