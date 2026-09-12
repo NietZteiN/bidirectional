@@ -238,3 +238,50 @@ def test_pack_source_does_not_index_into_the_sorting_list():
     assert "names.index(n)" not in code, (
         "reading names inside its own sort key raises ValueError at runtime")
     assert "order = {n: i for i, n in enumerate(names)}" in code
+
+
+def test_device_refit_holds_the_effective_batch():
+    """A smaller card may change the micro-batch, never the budget.
+
+    configs/models.yaml sizes per_device_batch for an H200 (141 GB); the same job OOMs on an
+    A30 (24 GB). a30 and h100 are the only partitions here with no QoS cap, so refusing to run
+    on them is what makes the grid 21 days instead of 3.
+
+    But steps = rows / (per_device_batch x grad_accum), and every mix* arm claims to be matched
+    to sft on optimizer steps. Shrinking the micro-batch without raising grad_accum in exact
+    proportion would change the step count for whichever arms happened to land on a small card
+    -- an arm-by-partition confound that would look like a dose effect.
+    """
+    import torch
+
+    from bidir.train import fit_batch_to_device
+
+    class _Props:
+        def __init__(self, gb):
+            self.total_memory = gb * 1e9
+
+    real_avail, real_props = torch.cuda.is_available, torch.cuda.get_device_properties
+    try:
+        torch.cuda.is_available = lambda: True
+        for gb, expect_change in ((141.0, False), (80.0, False), (24.0, True)):
+            torch.cuda.get_device_properties = lambda i, g=gb: _Props(g)
+            t = fit_batch_to_device({"per_device_batch": 16, "grad_accum": 4}, "llama32-3b")
+            assert t["per_device_batch"] * t["grad_accum"] == 64, (
+                f"{gb} GB card changed the effective batch to "
+                f"{t['per_device_batch'] * t['grad_accum']}")
+            changed = t["per_device_batch"] != 16
+            assert changed is expect_change, f"{gb} GB: refit={changed}, expected {expect_change}"
+            if changed:
+                assert t["batch_refit_from"] == 16, "the refit is not recorded for the manifest"
+    finally:
+        torch.cuda.is_available, torch.cuda.get_device_properties = real_avail, real_props
+
+
+def test_explicit_per_device_batch_is_not_second_guessed():
+    """--per-device-batch is a deliberate choice (the CPU smoke path uses it)."""
+    from pathlib import Path
+
+    src = (Path(__file__).resolve().parents[1] / "src" / "bidir" / "train.py").read_text()
+    assert "if not args.per_device_batch:" in src
+    assert "the device refit changed the effective batch" in src, (
+        "nothing asserts the invariant after the refit")

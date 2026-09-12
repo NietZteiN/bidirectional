@@ -52,11 +52,19 @@ SUBMIT = ROOT / "scripts" / "slurm" / "submit.py"
 #: (cell, partition, extra sbatch args). h100's g-06-01 is MIG-sliced; exclude it.
 #: `sql` is the one h200 cell -- see PLACEMENT above; everything else avoids the juno pool.
 NO_MIG = ["--exclude", "g-06-01"]
+#: MULTI-PARTITION where the model allows it: SLURM starts the job on whichever of the listed
+#: partitions frees first. h100 and a30 carry no QoS cap, so they are the only capacity this
+#: project can expand into -- the juno pool is 4 concurrent jobs shared across four projects on
+#: this account, and on 2026-09-12 it sat at 4/4 while h100 held 47 queued jobs and all three
+#: remaining gate cells were stuck on (Priority). A 3B LoRA fits an a30's 24 GB because
+#: `bidir.train.fit_batch_to_device` reshapes the micro-batch and holds the effective batch at
+#: 64, so the arms stay matched on optimizer steps wherever they land.
+SMALL = "h100,a30"
 CELLS = [
-    ("mt_en-de", "h100", NO_MIG),
-    ("mt_de-en", "h100", NO_MIG),
+    ("mt_en-de", SMALL, NO_MIG),
+    ("mt_de-en", SMALL, NO_MIG),
     ("sql",      "h200", []),      # two resident models: needs the 141 GB card
-    ("code",     "h100", NO_MIG),
+    ("code",     SMALL, NO_MIG),
 ]
 
 #: Partitions drawing on the shared juno QoS pool. Kept in step with scripts/slurm/submit.py.
@@ -145,7 +153,7 @@ def main() -> int:
     sub(f"probe_gate_{a.model}", ["scripts/40_probes.py", "--model", a.model, "--seed", str(a.seed),
                                   "--cells", ",".join(c for c, _, _ in CELLS),
                                   "--arms", "base,sft,mix5", "--tasks", "ifeval,gsm8k"],
-        partition="h100", time="03:00:00", extra=NO_MIG,
+        partition=SMALL, time="03:00:00", extra=NO_MIG,
         dep=":".join(train_ids) if train_ids and not a.dry_run else None, dry=a.dry_run)
 
     if skipped:

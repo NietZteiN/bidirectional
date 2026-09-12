@@ -41,6 +41,54 @@ def run_id_for(domain: str, model: str, arm: str, seed: int) -> str:
     return f"bidir__{domain}__{model}__{arm}__s{seed}"
 
 
+
+def fit_batch_to_device(tcfg: dict, model_key: str) -> dict:
+    """Reshape the micro-batch to the card actually allocated, holding EFFECTIVE batch fixed.
+
+    configs/models.yaml sizes `per_device_batch` for an H200 (141 GB). The same job on an A30
+    (24 GB) OOMs -- and A30 and h100 are the only partitions on this cluster with no QoS cap,
+    so refusing to run there is what makes the grid 21 days instead of 3 (the juno pool is 4
+    concurrent jobs shared across four projects, and h100 had 47 jobs queued on 2026-09-12).
+
+    THE EFFECTIVE BATCH IS AN INVARIANT, NOT A PREFERENCE. Every `mix*` arm claims to be matched
+    to `sft` on optimizer steps, and steps = rows / (per_device_batch x grad_accum). Shrinking
+    the micro-batch without raising grad_accum in exact proportion would change the step count
+    for whichever arms happened to land on a small card -- an arm-by-partition confound, and one
+    that would look like a dose effect. So this only ever trades the two against each other, and
+    raises rather than lowers grad_accum when the division is not exact; the caller asserts the
+    product afterwards.
+
+    Returns tcfg unchanged when the device is large enough or when there is no GPU to ask.
+    """
+    import torch
+
+    want_micro = int(tcfg["per_device_batch"])
+    effective = want_micro * int(tcfg["grad_accum"])
+    if not torch.cuda.is_available():
+        return tcfg
+
+    gb = torch.cuda.get_device_properties(0).total_memory / 1e9
+    # Measured headroom: a 3B bf16 LoRA at seq 2048 runs comfortably at micro-batch 16 on an
+    # H200 and needs ~4 on a 24 GB card. Scale by capacity rather than by model name, so a new
+    # model or a new partition needs no table entry.
+    budget = max(1, int(want_micro * min(1.0, (gb - 10.0) / 60.0)))
+    micro = 1 << (max(0, budget.bit_length() - 1))          # a power of two <= budget
+    micro = max(1, min(want_micro, micro))
+    if micro == want_micro:
+        return tcfg
+
+    accum = max(1, effective // micro)
+    if micro * accum != effective:                           # never silently change the budget
+        raise SystemExit(
+            f"cannot hold effective batch {effective} on a {gb:.0f} GB card: "
+            f"{micro} x {accum} = {micro * accum}. Pick a per_device_batch that divides it.")
+    tcfg = {**tcfg, "per_device_batch": micro, "grad_accum": accum,
+            "batch_refit_from": want_micro, "device_total_gb": round(gb, 1)}
+    print(f"[bidir.train] {gb:.0f} GB card: micro-batch {want_micro} -> {micro}, "
+          f"grad_accum -> {accum}; effective batch held at {effective}", flush=True)
+    return tcfg
+
+
 def _effective_train_knobs(cfg: Mapping[str, Any], mcfg: Mapping[str, Any]) -> dict[str, Any]:
     t = dict(cfg.get("train", {}))
     for key in ("per_device_batch", "grad_accum", "max_seq_len"):
@@ -168,6 +216,13 @@ def main(argv: Optional[list[str]] = None) -> int:
     if args.per_device_batch:
         cfg.setdefault("train", {})["per_device_batch"] = int(args.per_device_batch)
     tcfg = _effective_train_knobs(cfg, mcfg)
+    # Only when the caller did not pin it: an explicit --per-device-batch is a deliberate
+    # choice (the CPU smoke path uses it) and must not be second-guessed.
+    if not args.per_device_batch:
+        _before = int(tcfg["per_device_batch"]) * int(tcfg["grad_accum"])
+        tcfg = fit_batch_to_device(tcfg, args.model)
+        assert int(tcfg["per_device_batch"]) * int(tcfg["grad_accum"]) == _before, \
+            "the device refit changed the effective batch, which every mix* arm is matched on"
     seed = int(tcfg["seed"])
     domain = domains.get(args.domain)
 
