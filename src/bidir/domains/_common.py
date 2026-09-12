@@ -121,3 +121,28 @@ def exec_workers(cfg: Mapping[str, Any], reserve: int = 1) -> int:
             f"and let it be derived from the allocation."
         )
     return pinned
+
+
+def cluster_key(pair) -> str:
+    """The INDEPENDENT unit, for the direction partition and for the bootstrap.
+
+    Usually a pair is its own unit and this is just `pair_id`. `code` is not: its rows are
+    (program, obfuscation condition) and five conditions share one source program, so the
+    program is the unit and the row is not. Getting this wrong costs two different things, and
+    `code` is the known-positive control, so it costs them where it matters most:
+
+      * THE DIRECTION PARTITION. `split_directions` keeps a unit wholly forward or wholly
+        reversed, because a unit seen both ways makes a low dose into a small `flip`
+        (CLAUDE.md §3.2). Partitioned by row, program P's condition L1b goes forward while its
+        L2 goes reverse -- and both sides are derived from P's own code, so the model sees that
+        code as input AND as output. At mix50, with ~4.2 conditions per program in the training
+        split, that happens for essentially every program.
+      * THE CLUSTER BOOTSTRAP. Five correlated rows resampled as five independent observations
+        DEFLATES the interval. `code`'s 2,060 test rows are 412 programs, so its effective n is
+        a fifth of what the row count suggests, and an equivalence claim read off the row count
+        would be roughly twice as confident as the data supports.
+
+    A domain overrides this when its rows are not independent. `code` does.
+    """
+    d = pair if isinstance(pair, dict) else pair.model_dump()
+    return str(d["pair_id"])

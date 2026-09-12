@@ -33,19 +33,45 @@ def load_pairs(domain: str, split: str) -> list[PairInstance]:
 
 
 def split_directions(
-    pairs: Sequence[PairInstance], reverse_fraction: float, seed: int
+    pairs: Sequence[PairInstance], reverse_fraction: float, seed: int,
+    domain: Optional[str] = None,
 ) -> tuple[list[PairInstance], list[PairInstance]]:
-    """(forward_pairs, reversed_pairs), disjoint by pair_id, |reversed| = round(f * n)."""
+    """(forward_pairs, reversed_pairs), disjoint by CLUSTER, |reversed| ~= round(f * n).
+
+    Partitioned by the domain's `cluster_key`, which is `pair_id` everywhere except `code`,
+    where five obfuscation conditions share one source program. Partitioning `code` by row --
+    which is what this did -- put program P's condition L1b in the forward half and its L2 in
+    the reverse half, and both sides of both rows derive from P's own code. The model then sees
+    that code as input AND as output, which is the thing partitioning exists to prevent: a unit
+    seen both ways makes a low dose into a small `flip` (CLAUDE.md §3.2). With ~4.2 conditions
+    per program in `code`'s training split, at mix50 that happened for essentially every
+    program -- in the domain the paper uses as its known-positive control.
+
+    `domain` is optional only so the old call signature keeps working in tests; every real
+    caller passes it, and without it the split falls back to pair_id.
+    """
     if not 0.0 <= reverse_fraction <= 1.0:
         raise ValueError(f"reverse_fraction must be in [0, 1], got {reverse_fraction}")
-    ids = sorted({p.pair_id for p in pairs})
+    key = _cluster_fn(domain)
+    ids = sorted({key(p) for p in pairs})
     rng = random.Random(seed)
     rng.shuffle(ids)
     n_rev = int(round(reverse_fraction * len(ids)))
     rev_ids = set(ids[:n_rev])
-    fwd = [p for p in pairs if p.pair_id not in rev_ids]
-    rev = [p for p in pairs if p.pair_id in rev_ids]
+    fwd = [p for p in pairs if key(p) not in rev_ids]
+    rev = [p for p in pairs if key(p) in rev_ids]
     return fwd, rev
+
+
+def _cluster_fn(domain: Optional[str]):
+    """The domain's cluster_key, or pair_id when there is no domain to ask."""
+    from bidir.domains._common import cluster_key as default_key
+
+    if not domain:
+        return default_key
+    from bidir import domains as _domains
+
+    return getattr(_domains.get(domain), "cluster_key", default_key)
 
 
 def assert_direction_disjoint(rows: Sequence[TrainRow]) -> None:
@@ -205,10 +231,10 @@ def build_mixture(arm: ArmSpec, domain: str, split: str, seed: int = GLOBAL_SEED
         rng.shuffle(pool)
         rows = [TrainRow.from_pair(p, "rev") for p in pool[:k]]
     elif arm.reverse_fraction is not None:
-        fwd, rev = split_directions(pairs, arm.reverse_fraction, seed)
+        fwd, rev = split_directions(pairs, arm.reverse_fraction, seed, domain)
         rows = [TrainRow.from_pair(p, "fwd") for p in fwd] + [TrainRow.from_pair(p, "rev") for p in rev]
     elif arm.replay_share is not None:
-        keep, replaced = split_directions(pairs, arm.replay_share, seed)
+        keep, replaced = split_directions(pairs, arm.replay_share, seed, domain)
         # Match on the RENDERED example, not the raw pair. The domain's own instruction wrapper
         # is most of the sequence for some cells — SQL prepends a whole schema, so its pairs are
         # 185 raw characters and 988 rendered ones. Targeting the raw length matched replay to a

@@ -60,6 +60,9 @@ def resolve_systems(domain: str, model: str, arm_names: Sequence[str], seed: int
 def build_requests(insts: Sequence[Mapping[str, Any]], systems: Mapping[str, Optional[str]],
                    directions: Sequence[str], strategies: Sequence[str], domain_mod: Any,
                    shots: Optional[Sequence[Mapping[str, Any]]] = None) -> list[dict[str, Any]]:
+    from bidir.domains._common import cluster_key as _default_cluster
+
+    cluster_of = getattr(domain_mod, "cluster_key", _default_cluster)
     reqs: list[dict[str, Any]] = []
     for sys_name, adapter in systems.items():
         for direction in directions:
@@ -73,6 +76,11 @@ def build_requests(insts: Sequence[Mapping[str, Any]], systems: Mapping[str, Opt
                         "trial_id": f"{sys_name}::{direction}::{strategy}::{inst['pair_id']}",
                         "system": sys_name, "direction": direction, "strategy": strategy,
                         "pair_id": inst["pair_id"], "subtask": inst["subtask"],
+                        # The INDEPENDENT unit the bootstrap must resample. Equals pair_id
+                        # everywhere except `code`, whose five obfuscation conditions share one
+                        # source program -- 2,060 rows are 412 programs. Written per trial so a
+                        # contrast never has to re-derive it from a domain module.
+                        "cluster_id": cluster_of(inst),
                         "adapter": adapter, "inst": inst,
                         "messages": prompts.build_messages(inst, direction, domain_mod,
                                                            strategy=strategy, shots=shots),

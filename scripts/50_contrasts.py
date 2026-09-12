@@ -44,12 +44,19 @@ MARGIN_PP = 2.0
 def paired_delta(trials: Sequence[dict], a: str, b: str, metric: str, direction: str,
                  strategy: str = "simple", n_boot: int = 2000, seed: int = GLOBAL_SEED,
                  margin_pp: float = MARGIN_PP):
+    # RESAMPLE THE INDEPENDENT UNIT, WHICH IS NOT ALWAYS THE ROW. `cluster_id` equals pair_id
+    # everywhere except `code`, whose five obfuscation conditions share one source program:
+    # 2,060 test rows are 412 programs. Resampling rows there treats five correlated
+    # observations as five independent ones, which DEFLATES the interval -- the mirror of the
+    # error in the docstring above, and it would make `code`'s equivalence claims about twice
+    # as confident as the data supports. Falls back to pair_id for trials written before
+    # cluster_id existed.
     by_pair: dict[str, dict[str, list[float]]] = defaultdict(lambda: defaultdict(list))
     for t in trials:
         if t["direction"] != direction or t["strategy"] != strategy or metric not in t:
             continue
         if t["system"] in (a, b):
-            by_pair[t["pair_id"]][t["system"]].append(float(t[metric]))
+            by_pair[t.get("cluster_id") or t["pair_id"]][t["system"]].append(float(t[metric]))
     pairs = [p for p, v in by_pair.items() if a in v and b in v]
     if not pairs:
         return None
@@ -86,7 +93,7 @@ def paired_delta(trials: Sequence[dict], a: str, b: str, metric: str, direction:
     else:
         verdict = "inconclusive"
 
-    return {"a": a, "b": b, "metric": metric, "direction": direction, "n_pairs": len(pairs),
+    return {"a": a, "b": b, "metric": metric, "direction": direction, "n_clusters": len(pairs),
             "mean_a": mean_a * 100, "mean_b": mean_b * 100, "delta_pp": point,
             "ci_lo": lo, "ci_hi": hi, "spans_zero": lo <= 0 <= hi,
             "margin_pp": margin_pp, "verdict": verdict,
@@ -118,7 +125,7 @@ _MARK = {"different": " *", "equivalent": " =", "inconclusive": " ?"}
 def fmt(d: dict) -> str:
     return (f"  {d['direction']:<8s} {d['a']}-{d['b']:<8s} "
             f"{d['delta_pp']:+7.2f} pp [{d['ci_lo']:+6.2f}, {d['ci_hi']:+6.2f}]"
-            f"  ({d['mean_a']:.2f} vs {d['mean_b']:.2f}, n={d['n_pairs']})"
+            f"  ({d['mean_a']:.2f} vs {d['mean_b']:.2f}, n={d['n_clusters']})"
             f"{_MARK[d['verdict']]}")
 
 

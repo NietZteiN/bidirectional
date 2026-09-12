@@ -960,3 +960,57 @@ so **that contrast is reported with both arms' supervised ratios attached**, and
 the gap exceeds 10 % does not carry the claim on its own. On the panel that decides the gate
 (`mt_en-de`, `mt_de-en`, `sql`, `code`) the two sides of a pair are comparable and the issue is
 minor; `coverage` is where it bites, and `coverage` is an RQ1 cell.
+
+### Amendment 20 — 2026-09-12, before any adapter was trained
+
+**The direction partition and the bootstrap were both operating on rows where the independent
+unit is the program — in `code`, the known-positive control.**
+
+`code`'s rows are (program, obfuscation condition): five conditions per source program, 6,500
+training rows over **1,563 programs**, 2,060 test rows over **412**. The comment in
+`build_pairs` says, verbatim, that `pair_id` "keeps a program's variants together under the
+bootstrap and under the direction partition". The line beneath it writes
+`pair_id = f"{program_id}::{condition}"`, which does neither.
+
+**1. The direction partition let the same program be seen both ways, and the contamination grew
+with the dose.** `split_directions` keeps a unit wholly forward or wholly reversed, because a
+unit seen both ways turns a low dose into a small `flip` (`CLAUDE.md` §3.2). Partitioned by row,
+program P's condition `L1b` lands in the forward half and its `L2` in the reverse half — and
+both sides of both rows derive from P's own code, so the model saw that code as input *and* as
+output. Measured on the built corpus:
+
+| arm | programs seen both ways | share of the 1,563 |
+|---|---|---|
+| `mix1` | 64 | 4.1 % |
+| `mix5` | 300 | 19.2 % |
+| `mix10` | 548 | 35.1 % |
+| `mix25` | 1,082 | 69.2 % |
+| `mix50` | 1,368 | **87.5 %** |
+
+The shape is what makes this serious: **the confound rises monotonically with the dose**, and
+the dose ladder exists to measure how reverse accuracy responds to dose. A contaminant that
+grows smoothly with the independent variable is not separable from the effect. It would have
+inflated the apparent cure, moved the knee, and made `mix50` behave partly like `flip` — in the
+domain whose job is to be the control that tells us the harness still works.
+
+**2. The bootstrap resampled rows, which deflates every `code` interval.** Five conditions of
+one program are correlated; resampled as five independent observations they understate the
+variance. `code`'s effective n is 412, not 2,060, so an equivalence interval read off the row
+count is roughly twice as confident as the data supports — the mirror of the error
+`50_contrasts.py`'s own docstring warns about, running the other way.
+
+**Registered.** A domain now declares `cluster_key`, the independent unit, defaulting to
+`pair_id`; `code` overrides it to the program. `split_directions` partitions by it (verified: 0
+programs seen both ways at `mix5` and `mix50`, with the realised reverse share of rows preserved
+at 0.0502 and 0.5028), `bidir.evaluate` writes `cluster_id` onto every trial, and
+`paired_delta` resamples that. Interval widths for `code` are therefore computed on 412 clusters
+and the contrast records report `n_clusters`, not `n_pairs`.
+
+**`code` is the only clustered domain** — every other built domain has exactly 1.00 rows per
+cluster, checked across all 18 — so nothing else changes. **No prediction changes**, but the
+`code` cell's equivalence claims are now bounded by n=412, which the power table places at
+roughly ±4.5 pp: `code` carries RQ1 and the collapse detection, and does not carry an
+equivalence claim on its own.
+
+Eighth instance of **a nominal parameter standing in for the quantity that matters**: a row ≠ an
+independent observation.

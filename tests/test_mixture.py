@@ -94,3 +94,70 @@ def test_matched_arms_really_are_budget_matched(cell):
     for arm_name in ("mix5", "mix50", "rev", "replay"):
         ratio = mean_len(arm_name) / base
         assert 0.90 <= ratio <= 1.10, f"{cell}/{arm_name} is {ratio:.2f}x sft; it claims to be matched"
+
+
+# --------------------------------------------------------------------------------------
+# The independent unit is not always the row. `code`'s rows are (program, obfuscation
+# condition) and five conditions share one source program. Getting this wrong cost two
+# things at once, in the known-positive control -- see PREREGISTRATION Amendment 20.
+# --------------------------------------------------------------------------------------
+
+def test_code_is_the_only_clustered_domain_and_declares_it():
+    """If another domain becomes clustered, it needs a cluster_key too."""
+    import os
+
+    from bidir import domains
+    from bidir.config import DATA_DIR
+    from bidir.domains._common import cluster_key as default_key
+    from bidir.schema import read_pairs
+
+    for d in sorted(os.listdir(DATA_DIR)):
+        train = DATA_DIR / d / "train.jsonl"
+        if not train.exists():
+            continue
+        mod = domains.get(d)
+        key = getattr(mod, "cluster_key", default_key)
+        pairs = read_pairs(train)
+        ratio = len(pairs) / len({key(p) for p in pairs})
+        if d == "code":
+            assert ratio > 1.5, "code's conditions no longer share a program; check cluster_key"
+            assert hasattr(mod, "cluster_key"), "code must override cluster_key"
+        else:
+            assert ratio == 1.0, (
+                f"{d} has {ratio:.2f} rows per cluster but declares no cluster_key, so its "
+                f"direction partition and its bootstrap are both operating on rows")
+
+
+def test_direction_partition_never_shows_one_program_both_ways():
+    """A unit seen both ways makes a low dose into a small flip (CLAUDE.md 3.2).
+
+    Partitioned by ROW, this happened for 4.1 % of code's programs at mix1 rising to 87.5 % at
+    mix50 -- monotonically with the dose, which is the one shape that cannot be separated from
+    a dose effect.
+    """
+    from bidir import domains
+    from bidir.config import DATA_DIR
+    from bidir.mixture import split_directions
+    from bidir.schema import read_pairs
+
+    mod = domains.get("code")
+    pairs = read_pairs(DATA_DIR / "code" / "train.jsonl")
+    for frac in (0.01, 0.05, 0.25, 0.5):
+        fwd, rev = split_directions(pairs, frac, 17, "code")
+        both = {mod.cluster_key(p) for p in fwd} & {mod.cluster_key(p) for p in rev}
+        assert not both, f"{len(both)} program(s) seen both ways at reverse_fraction={frac}"
+        # ...and the dose must survive being expressed in clusters.
+        share = len(rev) / max(1, len(fwd) + len(rev))
+        assert abs(share - frac) < 0.02, f"realised row share {share:.4f} != {frac}"
+
+
+def test_contrasts_resample_clusters_and_report_them():
+    from pathlib import Path
+
+    root = Path(__file__).resolve().parents[1]
+    src = (root / "scripts" / "50_contrasts.py").read_text()
+    assert 't.get("cluster_id") or t["pair_id"]' in src, (
+        "the bootstrap resamples rows, which deflates every interval in a clustered domain")
+    assert '"n_clusters": len(pairs)' in src, "the record still calls clusters pairs"
+    ev = (root / "src" / "bidir" / "evaluate.py").read_text()
+    assert '"cluster_id": cluster_of(inst)' in ev, "trials carry no cluster_id to resample"

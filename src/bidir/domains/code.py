@@ -48,8 +48,12 @@ def build_pairs(cfg: Mapping[str, Any]) -> dict[str, list[PairInstance]]:
     rows = [r for r in iter_jsonl(pool) if r["condition"] in conditions]
     by_split: dict[str, list[PairInstance]] = {"train": [], "val": [], "test": []}
     for r in rows:
-        # `program_group_id` is obtune's split unit; using it as pair_id keeps a program's
-        # variants together under the bootstrap and under the direction partition.
+        # pair_id carries the CONDITION, because an arm has to name a single variant. It is
+        # therefore NOT the independent unit: five conditions share one source program. That is
+        # what `cluster_key` below is for, and both the direction partition and the bootstrap
+        # use it. This comment used to claim pair_id "keeps a program's variants together under
+        # the bootstrap and under the direction partition" -- it does not, and believing it cost
+        # 87.5 % of programs being seen both ways at mix50 (Amendment 20).
         inst = PairInstance(
             pair_id=f"{r['program_id']}::{r['condition']}", domain=NAME, subtask=r["condition"],
             side_a=r["code_a"], side_b=r["code_b"],
@@ -247,3 +251,18 @@ def aux_example(task: str, row: Mapping[str, Any]) -> dict[str, Any]:
     user = (f"{EQUIV_SYSTEM_HINT}\n\nProgram A:\n{row['side_a']}\n\nProgram B:\n{row['side_b']}")
     return {"prompt": [{"role": "system", "content": SYSTEM}, {"role": "user", "content": user}],
             "completion": [{"role": "assistant", "content": str(label)}]}
+
+
+def cluster_key(pair) -> str:
+    """The program, not the (program, condition) row.
+
+    Five obfuscation conditions share one source program, so the program is the independent
+    unit -- for the direction partition and for the bootstrap alike. `pair_id` carries the
+    condition (`{program_id}::{cond}`) because an arm has to name a single variant, and the
+    comment in `build_pairs` claiming pair_id "keeps a program's variants together under the
+    bootstrap and under the direction partition" was describing an intent the code did not
+    implement: it partitioned and resampled by ROW. See bidir.domains._common.cluster_key.
+    """
+    d = pair if isinstance(pair, dict) else pair.model_dump()
+    pid = (d.get("meta") or {}).get("program_id")
+    return str(pid) if pid else str(d["pair_id"])
