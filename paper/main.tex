@@ -1,34 +1,44 @@
-% Directional collapse -- ACL 2027 draft skeleton.
+% Directional collapse -- ACL/ARR draft skeleton.
 %
 % NO EXPERIMENT HAS BEEN RUN. Every quantity is a \NUM{} placeholder that renders in red as
-% <<name>> so an unfilled number cannot reach a PDF unnoticed, and \tabinput{} pulls generated
+% <<name>>, so an unfilled number cannot reach a PDF unnoticed, and \tabinput{} pulls generated
 % tables rather than pasting them. The prose here is the part of the paper that does not depend
-% on results: framing, definitions, the budget argument, related-work positioning, limitations.
-% The argument and its ordering are in ARGUMENT.md.
+% on results: framing, definitions, the budget argument, related work, limitations. The argument
+% and its ordering are in ARGUMENT.md.
 %
-% Build (no LaTeX toolchain on juno as of 2026-09-10; see paper/README.md):
-%   tectonic -X compile main.tex
+% Build:  make paper        (see README.md; tectonic is at envs/tex/bin/tectonic)
 
 \documentclass[11pt]{article}
-\usepackage[margin=1in]{geometry}
-\usepackage{booktabs}
-\usepackage{natbib}
+
+% "review" = anonymous with line numbers, which is what ARR wants at submission.
+% Switch to "final" for camera-ready, or "preprint" for a named version with page numbers.
+\usepackage[review]{acl}
+
+\usepackage{times}
+\usepackage{latexsym}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{microtype}
+\usepackage{inconsolata}
 \usepackage{graphicx}
+\usepackage{booktabs}
 \usepackage{amsmath}
 \usepackage{xcolor}
-\usepackage{hyperref}
 
 % ---------------------------------------------------------------------------
 % An unfilled number must be impossible to miss. \NUM{key} renders <<key>> in red;
 % scripts/51_tables.py writes \newcommand definitions into numbers.tex as results land, and any
-% key still undefined at compile time shows up in the PDF and in a grep.
-\providecommand{\NUM}[1]{\textcolor{red}{$\langle\langle$\texttt{#1}$\rangle\rangle$}} % grep-skip
+% key still undefined at compile time shows up in the PDF and in a grep.  % grep-skip
+\providecommand{\NUM}[1]{\textcolor{red}{$\langle\langle$\texttt{#1}$\rangle\rangle$}}
 \providecommand{\tabinput}[1]{\textcolor{red}{[table \texttt{#1} not generated yet]}}
 \IfFileExists{numbers.tex}{\input{numbers.tex}}{}
 
 \title{Directional Collapse: One-Way Fine-Tuning Erases the Way Back}
-\author{Anonymous}
-\date{}
+
+% Anonymous under [review]; acl.sty suppresses this block. Filled for camera-ready.
+\author{
+  Anonymous ACL submission \\
+}
 
 \begin{document}
 \maketitle
@@ -277,15 +287,40 @@ mixture are not separable by any experiment the paper contains. That is the gene
 being structural rather than accidental, and it is why the test in \S\ref{sec:intro} is worth
 stating rather than assuming.
 
-\section{Limitations}
-\label{sec:limitations}
-\NUM{limitations-section}
-
 \section{Conclusion}
 For any method that adds instances to paired training data, train the arm that supplies the same
 directional content and none of the method.
 
-\bibliographystyle{plainnat}
+% ---------------------------------------------------------------------------
+% ARR requires a Limitations section. It is unnumbered and does not count against the page
+% limit, which is not a reason to make it short.
+\section*{Limitations}
+\label{sec:limitations}
+
+\paragraph{Where the repair does not reach.} \NUM{lim-invertibility}
+
+\paragraph{Scale.} The full arm set runs at 1--4B with three seeds; only core arms run at
+8--12B with two. \NUM{lim-scale}
+
+\paragraph{LoRA.} Every arm is trained with LoRA, which maintains out-of-domain performance
+better than full fine-tuning \citep{biderman2024lora}; the collapse magnitudes we report are
+therefore conservative, and the full fine-tuning arms in \S\ref{sec:setup} bound the difference.
+\NUM{lim-lora}
+
+\paragraph{Resolution of the dose ladder.} Adjacent rungs differ by a couple of points, which
+our evaluation sets cannot separate reliably. We therefore report the knee as a bound rather
+than a point estimate. \NUM{lim-knee}
+
+\paragraph{Criteria with a model in them.} Two directions are scored by round-tripping through a
+frozen model rather than by execution. Each reports that model's own accuracy on the references
+as the criterion's ceiling. \NUM{lim-frozen-scorers}
+
+\paragraph{Languages and domains.} The code cell is Python only; the translation cells cover two
+language pairs, both with English on one side. \NUM{lim-coverage}
+
+\section*{Acknowledgments}
+\NUM{acknowledgments}
+
 \bibliography{../papers/references}
 
 \end{document}

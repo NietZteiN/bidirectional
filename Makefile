@@ -49,5 +49,4 @@ paper:
 	@TECTONIC_CACHE_DIR=/work/jvl210002/migration/cache/tectonic \
 	 TMPDIR=/work/jvl210002/migration/tmp \
 	 $(TECTONIC) -X compile $(CURDIR)/paper/main.tex
-	@echo "--- unfilled placeholders ---"
-	@sed 's/%.*//' paper/main.tex | grep -o '\\NUM{[^}]*}' | sort -u | wc -l
+	@$(PY) scripts/92_page_budget.py
