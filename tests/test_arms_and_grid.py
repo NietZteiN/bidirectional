@@ -524,3 +524,37 @@ def test_grid_drops_dose_rungs_a_corpus_cannot_express():
         # Arms without a dose are never touched.
         for arm in ("sft", "rev", "flip", "replay", "mixedtask", "fwd2x"):
             assert arm in keep, f"{arm} has no dose to under-resolve but was dropped"
+
+
+def test_contrasts_separate_equivalence_from_failing_to_reject():
+    """A wide interval containing zero supports nothing, and must not read as "no difference".
+
+    PREREGISTRATION Amendment 8 registers a +/-2.0 pp equivalence margin precisely because
+    several contrasts PREDICT zero -- "replacing is as good as doubling", "the dose is free on
+    general ability", "the ladder has saturated". For those, failing to reject zero is the
+    predicted outcome, so `spans_zero` alone cannot distinguish a tight null from an
+    uninformative one.
+    """
+    import importlib.util
+    from pathlib import Path
+
+    spec = importlib.util.spec_from_file_location(
+        "contrasts", Path(__file__).resolve().parents[1] / "scripts" / "50_contrasts.py")
+    m = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(m)
+
+    assert m.MARGIN_PP == 2.0, "the registered equivalence margin is +/-2.0 pp (Amendment 8)"
+
+    def verdict(lo, hi):
+        if not (lo <= 0 <= hi):
+            return "different"
+        return "equivalent" if lo > -m.MARGIN_PP and hi < m.MARGIN_PP else "inconclusive"
+
+    assert verdict(-6.0, -2.0) == "different"
+    assert verdict(-1.2, 1.5) == "equivalent"
+    # The case the whole verdict exists for: contains zero, but far too wide to support it.
+    assert verdict(-4.0, 3.5) == "inconclusive"
+
+    src = (Path(__file__).resolve().parents[1] / "scripts" / "50_contrasts.py").read_text()
+    assert '"verdict": verdict' in src, "the verdict is not written into the contrast record"
+    assert '"inconclusive"' in src and '"equivalent"' in src

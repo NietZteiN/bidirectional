@@ -35,8 +35,15 @@ DEFAULT_CONTRASTS = [("sft", "base"), ("mix5", "sft"), ("mix50", "sft"),
                      ("replay", "sft"), ("mix50", "replay"), ("mix50", "flip"), ("rev", "base")]
 
 
+#: Registered equivalence margin (PREREGISTRATION Amendment 8). A contrast whose interval sits
+#: inside +/-2.0 pp supports a claim of no difference; one that contains zero and reaches past
+#: it supports nothing, and must not be written up as "no difference".
+MARGIN_PP = 2.0
+
+
 def paired_delta(trials: Sequence[dict], a: str, b: str, metric: str, direction: str,
-                 strategy: str = "simple", n_boot: int = 2000, seed: int = GLOBAL_SEED):
+                 strategy: str = "simple", n_boot: int = 2000, seed: int = GLOBAL_SEED,
+                 margin_pp: float = MARGIN_PP):
     by_pair: dict[str, dict[str, list[float]]] = defaultdict(lambda: defaultdict(list))
     for t in trials:
         if t["direction"] != direction or t["strategy"] != strategy or metric not in t:
@@ -59,29 +66,60 @@ def paired_delta(trials: Sequence[dict], a: str, b: str, metric: str, direction:
     lo, hi = boots[int(0.025 * n_boot)], boots[min(n_boot - 1, int(0.975 * n_boot))]
     mean_a = sum(x for p in pairs for x in by_pair[p][a]) / sum(len(by_pair[p][a]) for p in pairs)
     mean_b = sum(x for p in pairs for x in by_pair[p][b]) / sum(len(by_pair[p][b]) for p in pairs)
+    # THREE OUTCOMES, NOT TWO. `spans_zero` is a null test, and Amendment 8 registers that
+    # failing to reject zero is the PREDICTED outcome for several contrasts -- "replacing is as
+    # good as doubling", "the dose is free on general ability", "the ladder has saturated". For
+    # those, a wide interval containing zero is not evidence of equivalence; it is evidence of
+    # nothing. So the verdict is stated against the registered +/-2.0 pp margin:
+    #
+    #   different      the interval excludes zero
+    #   equivalent     the interval lies entirely inside +/-margin
+    #   inconclusive   it contains zero AND reaches past the margin -- the case that must never
+    #                  be written up as "no difference"
+    #
+    # This is the CI form of a TOST and it is reported for every contrast, whatever was
+    # predicted, so the distinction cannot be lost between the table and the prose.
+    if not (lo <= 0 <= hi):
+        verdict = "different"
+    elif lo > -margin_pp and hi < margin_pp:
+        verdict = "equivalent"
+    else:
+        verdict = "inconclusive"
+
     return {"a": a, "b": b, "metric": metric, "direction": direction, "n_pairs": len(pairs),
             "mean_a": mean_a * 100, "mean_b": mean_b * 100, "delta_pp": point,
-            "ci_lo": lo, "ci_hi": hi, "spans_zero": lo <= 0 <= hi}
+            "ci_lo": lo, "ci_hi": hi, "spans_zero": lo <= 0 <= hi,
+            "margin_pp": margin_pp, "verdict": verdict,
+            "ci_halfwidth_pp": (hi - lo) / 2.0}
 
 
-def analyse_run(run_dir: Path, metric: str = "strict", n_boot: int = 2000) -> dict:
+def analyse_run(run_dir: Path, metric: str = "strict", n_boot: int = 2000,
+                margin_pp: float = MARGIN_PP) -> dict:
     trials = list(iter_jsonl(run_dir / "trials.jsonl"))
     systems = {t["system"] for t in trials}
-    out: dict[str, Any] = {"run": str(run_dir), "systems": sorted(systems), "contrasts": []}
+    out: dict[str, Any] = {"run": str(run_dir), "systems": sorted(systems),
+                           "margin_pp": margin_pp, "contrasts": []}
     for direction in ("reverse", "forward"):
         for a, b in DEFAULT_CONTRASTS:
             if a in systems and b in systems:
-                d = paired_delta(trials, a, b, metric, direction, n_boot=n_boot)
+                d = paired_delta(trials, a, b, metric, direction, n_boot=n_boot,
+                                 margin_pp=margin_pp)
                 if d:
                     out["contrasts"].append(d)
+    out["verdicts"] = {v: sum(1 for c in out["contrasts"] if c["verdict"] == v)
+                       for v in ("different", "equivalent", "inconclusive")}
     return out
 
 
+#: How each verdict prints. "?" is deliberately loud: it is the one that cannot be written up.
+_MARK = {"different": " *", "equivalent": " =", "inconclusive": " ?"}
+
+
 def fmt(d: dict) -> str:
-    star = "" if d["spans_zero"] else " *"
     return (f"  {d['direction']:<8s} {d['a']}-{d['b']:<8s} "
             f"{d['delta_pp']:+7.2f} pp [{d['ci_lo']:+6.2f}, {d['ci_hi']:+6.2f}]"
-            f"  ({d['mean_a']:.2f} vs {d['mean_b']:.2f}, n={d['n_pairs']}){star}")
+            f"  ({d['mean_a']:.2f} vs {d['mean_b']:.2f}, n={d['n_pairs']})"
+            f"{_MARK[d['verdict']]}")
 
 
 def learnable_floor(base_rev: float) -> float:
