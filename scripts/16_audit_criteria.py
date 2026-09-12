@@ -77,22 +77,41 @@ def audit_criterion(cell: str, n: int = 40) -> dict:
         echo = [prompts.input_for(i, direction) for i in insts]
         probes = {"gold": gold, "echo": echo, "empty": [""] * len(insts),
                   "garbage": [GARBAGE] * len(insts)}
-        res = {}
-        for name, outs in probes.items():
-            try:
-                scored = mod.score_batch(direction, outs, insts, cfg)
-                res[name] = {
-                    "strict": sum(r["strict"] for r in scored) / len(scored),
-                    "echo_flag": sum(r.get("echo", 0) for r in scored) / len(scored),
-                    "off_target": sum(r.get("off_target", 0) for r in scored) / len(scored),
-                }
-            except KeyError as e:
-                # A threshold that is not frozen yet is the base gate's job, not a defect.
-                msg = str(e)
-                res[name] = ({"pending": "thresholds not frozen; run scripts/15_base_gate.py"}
-                             if "not frozen" in msg else {"error": f"KeyError: {msg}"})
-            except Exception as e:  # a scorer that raises on an oracle input IS a bug
-                res[name] = {"error": f"{type(e).__name__}: {e}"}
+
+        # ALL FOUR PROBES IN ONE score_batch CALL. `_comet` is a subprocess that reloads
+        # wmt22-comet-da every time it is invoked, so scoring the probes separately paid four
+        # model loads per direction -- sixteen for a two-cell MT audit, which took 55+ minutes
+        # on CPU and blocked `dev`'s single QoS slot the whole time. Concatenating is safe
+        # because every domain's scorer is per-row: chrF, BLEU, language detection and
+        # execution all act on one (output, instance) pair, and COMET is already a batch call.
+        # For the execution domains it is strictly better -- 4n programs run under one worker
+        # pool instead of four pools of n.
+        names = list(probes)
+        outs_all = [o for n in names for o in probes[n]]
+        insts_all = list(insts) * len(names)
+        res: dict = {}
+        try:
+            scored_all = mod.score_batch(direction, outs_all, insts_all, cfg)
+        except KeyError as e:
+            # A threshold that is not frozen yet is the base gate's job, not a defect.
+            msg = str(e)
+            fail = ({"pending": "thresholds not frozen; run scripts/15_base_gate.py"}
+                    if "not frozen" in msg else {"error": f"KeyError: {msg}"})
+            out["directions"][direction] = {n: dict(fail) for n in names}
+            continue
+        except Exception as e:  # a scorer that raises on an oracle input IS a bug
+            fail = {"error": f"{type(e).__name__}: {e}"}
+            out["directions"][direction] = {n: dict(fail) for n in names}
+            continue
+
+        n_i = len(insts)
+        for k, name in enumerate(names):
+            block = scored_all[k * n_i:(k + 1) * n_i]
+            res[name] = {
+                "strict": sum(r["strict"] for r in block) / len(block),
+                "echo_flag": sum(r.get("echo", 0) for r in block) / len(block),
+                "off_target": sum(r.get("off_target", 0) for r in block) / len(block),
+            }
         out["directions"][direction] = res
     return out
 
