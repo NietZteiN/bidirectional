@@ -10,7 +10,12 @@ seed: 17
 n_shots: 2
 
 exec_timeout_s: 2.0
-exec_workers: 32
+# exec_workers is deliberately ABSENT. It is derived from len(os.sched_getaffinity(0)) --
+# the CPUs SLURM actually granted this job -- because a hardcoded count oversubscribes the
+# allocation and obtune's executor then kills children on wall clock and reports the timeout
+# as status="error", which the criterion reads as a WRONG ANSWER. Measured 2026-09-12 on a node
+# with 8 of 64 CPUs allocated: 32 workers scored 40 known-correct answers at 0.375; 4 workers
+# scored the same 40 at 1.000. See bidir.domains._common.exec_workers.
 reverse_sim_threshold: 0.4          # obtune's published-criterion thresholds, carried over
 reverse_readability_tolerance: 0.1
 

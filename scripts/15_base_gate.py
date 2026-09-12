@@ -212,4 +212,7 @@ def main() -> int:
 
 
 if __name__ == "__main__":
-    sys.exit(main())
+    # shutdown_and_exit, not sys.exit: vLLM's engine-core child does not always come back, and
+    # job 391263 sat RUNNING for 6m14s on an H200 after printing its last line. Results are
+    # already on disk by here; the exit code still reaches the sbatch template's trap.
+    eng.shutdown_and_exit(main())

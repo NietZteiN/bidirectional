@@ -27,7 +27,7 @@ import random
 from typing import Any, Mapping, Sequence
 
 from bidir.config import OBTUNE_ROOT, ensure_obtune
-from bidir.domains._common import base_row, normalize
+from bidir.domains._common import base_row, exec_workers, normalize
 from bidir.schema import PairInstance
 
 NAME = "code"
@@ -155,7 +155,7 @@ def score_batch(direction: str, outputs: Sequence[str], insts: Sequence[Mapping[
             "cases": meta.get("cases", []),
         })
     verdicts = metrics.exec_equivalence(candidates, timeout_s=float(cfg.get("exec_timeout_s", 2.0)),
-                                        workers=int(cfg.get("exec_workers", 32)))
+                                        workers=exec_workers(cfg))
 
     sim_threshold = float(cfg.get("reverse_sim_threshold", 0.4))
     read_tol = float(cfg.get("reverse_readability_tolerance", 0.1))

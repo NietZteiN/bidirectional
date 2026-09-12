@@ -733,3 +733,59 @@ is not itself biased toward the result we want.
 This is the fifth instance of **a nominal parameter standing in for the quantity that matters**:
 drop share ≠ determinability; row count ≠ token budget; raw length ≠ rendered length; rows ≠
 optimizer steps; and now *a multiple of the base ≠ "above zero"*.
+
+### Amendment 15 — 2026-09-12, before any adapter was trained
+
+**Two harness defects made the code-executing domains' accuracy a function of the SLURM
+allocation, in the direction that lowers every rate.**
+
+`scripts/16_audit_criteria.py` was run on a compute node for the first time and reported that
+the GOLD answer could not pass in `code` (0.33 forward / 0.40 reverse), `exec` (0.28 / 0.30) and
+`coverage` reverse (0.00). The same 40 gold answers score 1.000 on the login node. Diagnosed to
+two independent causes, both measured rather than inferred:
+
+**1. Oversubscription (`code`, `exec`).** The configs pinned `exec_workers: 32` irrespective of
+the CPUs SLURM granted. On a node where 8 of 64 CPUs were ours:
+
+| `exec_workers` | gold strict | `exec_status` |
+|---|---|---|
+| 32 | 0.375 | 15 `match`, **25 `error`** |
+| 4 | 1.000 | 40 `match` |
+| 1 | 1.000 | 40 `match` |
+
+obtune's executor gives each child a wall-clock budget of `timeout_s × n_cases + 10`. At 4×
+oversubscription a child spends most of that descheduled, is killed, and `exec_equivalence`
+folds the timeout into `status="error"` — which `forward_success_exec` reads as *not a match*,
+i.e. as a **wrong answer**. `exec_workers` is now derived from `len(os.sched_getaffinity(0))`,
+and a pinned value above the allocation **raises**.
+
+**2. Interpreter startup inside the timeout (`coverage`).** `run_coverage` passed `timeout_s` to
+`subprocess.run`, so the budget covered interpreter startup and imports as well as the program.
+`coverage` reverse timed out on **all 40 gold answers at every worker count including one** — so
+not contention — while passing on the login node, where the interpreter is warm in page cache.
+This tree is on MooseFS at ~1,289 MB/s. The startup cost is now **measured once per process** and
+added with 3× headroom, so `timeout_s` bounds the program, and a timeout is retried once serially
+at double the budget before being recorded.
+
+**Why this needed an amendment rather than a silent fix.** The error was **one-directional**: it
+could only lower a rate, never raise one. `code` is the known-positive control, and a control
+capped at 0.375 would have read as *"the phenomenon is weaker on this panel"* — support for the
+null, manufactured by a scheduler flag. Every number from a code-executing domain must therefore
+come from a run made after this commit, and `exec_workers` is recorded in each run manifest.
+
+**No prediction changes.** The affected domains are `code`, `exec` and `coverage`; `code`'s base
+gate (36.5 % / 28.5 %) was run on a GPU node with 8 CPUs and **is being re-run**, since it is
+exactly the configuration that triggers defect 1.
+
+**One genuine criterion defect remains, and is not node-dependent.** `exec` flags 7.5 % of gold
+answers as echoes, because for a handful of CRUXEval instances the program's output legitimately
+equals its input — so "echo" and "correct" are the same string and the not-echo conjunct rejects
+a correct answer. Its ceiling is therefore 0.925 rather than 1.0. Registered: **those instances
+are removed from `exec`'s eval set at build time**, so that echo is never the correct answer in
+any scored instance, and the removed count is reported. A separate single gold row fails with
+`exact_match=1, exec_status="ok"` forward and `is_stored_input=1, found_valid_preimage=0` reverse;
+that is tracked as a criterion bug, and `exec` is reported with its measured ceiling beside it
+either way.
+
+Sixth and seventh instances of **a nominal parameter standing in for the quantity that matters**:
+a worker count ≠ the available parallelism; a subprocess timeout ≠ time allowed for the program.

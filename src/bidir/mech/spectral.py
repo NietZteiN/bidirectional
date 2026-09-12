@@ -233,4 +233,5 @@ def main(argv: Optional[list[str]] = None) -> int:
 
 
 if __name__ == "__main__":
-    sys.exit(main())
+    # See bidir.engine.shutdown_and_exit: vLLM's engine-core child can outlive the interpreter.
+    eng.shutdown_and_exit(main())

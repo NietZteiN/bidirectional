@@ -21,7 +21,7 @@ import re
 from typing import Any, Mapping, Sequence
 
 from bidir.config import ensure_obtune
-from bidir.domains._common import base_row, normalize
+from bidir.domains._common import base_row, exec_workers, normalize
 from bidir.schema import PairInstance
 
 NAME = "exec"
@@ -126,7 +126,7 @@ def score_batch(direction: str, outputs: Sequence[str], insts: Sequence[Mapping[
         slots.append(i)
 
     verdicts = run_batch(items, timeout_s=float(cfg.get("exec_timeout_s", 2.0)),
-                         workers=int(cfg.get("exec_workers", 32))) if items else []
+                         workers=exec_workers(cfg)) if items else []
 
     for i, verdict in zip(slots, verdicts):
         row, out, inst = rows[i], cleaned[i], insts[i]

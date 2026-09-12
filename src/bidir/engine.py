@@ -13,6 +13,7 @@ pass, never quote a cross-pass difference finer than 0.5 pp.
 """
 from __future__ import annotations
 
+import sys
 from typing import Any, Mapping, Optional, Sequence
 
 from bidir.config import GLOBAL_SEED, ensure_obtune, resolve_model
@@ -112,3 +113,35 @@ def generate_with(model_key_or_hf_id: str, prompts_: Sequence[str], max_tokens: 
             for p in prompts_]
     out, _ = generate(engine, msgs, [None] * len(msgs), {"max_tokens": max_tokens})
     return out
+
+
+def shutdown_and_exit(rc: int = 0) -> None:
+    """Flush, release every engine, and leave -- without waiting on vLLM's teardown.
+
+    MEASURED, NOT PRECAUTIONARY. Job 391263 printed its final gate summary and then sat
+    RUNNING for another 6m14s on an H200 without writing its status file, i.e. the python
+    process had not exited. With VLLM_WORKER_MULTIPROC_METHOD=spawn the engine core is a
+    child process, and interpreter shutdown waits on it; it does not always come back.
+
+    Two reasons that is worth a hard exit rather than a longer walltime:
+      * this project's share of the juno QoS pool is ONE running job, so a hung teardown
+        blocks the next cell for as long as it lasts;
+      * a job killed at the walltime is recorded as a failure, so a teardown hang can turn a
+        completed eval into a failed one and lose the run's provenance.
+
+    Every script that calls this has already written its results to disk. The exit code is what
+    the caller would have returned, so the `finish` trap in the sbatch template still records
+    the outcome -- os._exit ends the process, it does not skip the shell's trap.
+
+    Best effort is attempted first: dropping our references and collecting gives vLLM's own
+    atexit path a chance to run cleanly on the engines it can close.
+    """
+    import gc
+    import os
+
+    sys.stdout.flush()
+    sys.stderr.flush()
+    _ENGINES.clear()
+    _ENGINE_UTIL.clear()
+    gc.collect()
+    os._exit(rc)

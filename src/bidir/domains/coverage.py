@@ -36,7 +36,7 @@ from typing import Any, Mapping, Optional, Sequence
 
 from bidir.config import THIRD_PARTY
 from bidir.coverage_runner import run_many
-from bidir.domains._common import base_row, normalize
+from bidir.domains._common import base_row, exec_workers, normalize
 from bidir.schema import PairInstance
 
 NAME = "coverage"
@@ -121,7 +121,7 @@ def _instances(programs: Sequence[tuple[str, str]], split: str, rng: random.Rand
     # One execution per program to label it. This is the whole cost of building the domain.
     verdicts = run_many([render_program(b, a) for _, b, a in prepared],
                         timeout_s=float(cfg.get("exec_timeout_s", 5.0)),
-                        workers=int(cfg.get("exec_workers", 16)))
+                        workers=exec_workers(cfg))
 
     rows: list[PairInstance] = []
     for (pid, body, args), v in zip(prepared, verdicts):
@@ -244,7 +244,7 @@ def score_batch(direction: str, outputs: Sequence[str], insts: Sequence[Mapping[
         progs.append(render_program(meta["program"], out, meta.get("entry_point", "f")))
         slots.append(i)
     verdicts = run_many(progs, timeout_s=float(cfg.get("exec_timeout_s", 5.0)),
-                        workers=int(cfg.get("exec_workers", 16))) if progs else []
+                        workers=exec_workers(cfg)) if progs else []
 
     for row in rows:
         row["parse_ok"] = 0

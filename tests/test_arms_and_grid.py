@@ -396,3 +396,74 @@ def test_kill_gate_floor_is_always_satisfiable(base_rev):
     assert floor >= min(base_rev, 0.95), (
         f"floor {floor} lets rev count as learnable while scoring below base {base_rev}")
     assert floor >= 0.05, "the prereg's 'well above zero' needs an absolute floor too"
+
+
+def test_every_engine_entry_point_hard_exits():
+    """vLLM's engine-core child can outlive the interpreter, and the share is one job.
+
+    Job 391263 printed its final gate summary and then held an H200 for another 6m14s without
+    writing its status file -- the python process had not exited. A teardown hang costs the
+    next cell its slot, and a job killed at the walltime is recorded as a failure, which turns
+    a completed eval into a lost one.
+    """
+    from pathlib import Path
+
+    root = Path(__file__).resolve().parents[1]
+    entry_points = [
+        "scripts/15_base_gate.py", "scripts/30_determinism_floor.py", "src/bidir/evaluate.py",
+        "src/bidir/mech/alpha_scale.py", "src/bidir/mech/layer_ablate.py",
+        "src/bidir/mech/sensitivity.py", "src/bidir/mech/spectral.py",
+    ]
+    for rel in entry_points:
+        src = (root / rel).read_text()
+        assert "get_engine" in src or "generate_with" in src or "engine as eng" in src, rel
+        assert "shutdown_and_exit(main())" in src, (
+            f"{rel} builds a vLLM engine but exits with sys.exit, so a hung engine-core child "
+            f"holds the GPU until the walltime kills the job")
+        assert "sys.exit(main())" not in src, f"{rel} still has the plain exit path"
+
+
+# --------------------------------------------------------------------------------------
+# Execution parallelism. A hardcoded worker count oversubscribes whatever CPU allocation
+# SLURM gave the job; obtune's executor then kills children on wall clock and
+# `exec_equivalence` folds the timeout into status="error", which the criterion reads as a
+# WRONG ANSWER. Measured 2026-09-12 with 8 of 64 CPUs allocated: 40 known-correct `code`
+# answers scored 0.375 at 32 workers and 1.000 at 4. One-directional, silent, and it would
+# have capped the known-positive control.
+# --------------------------------------------------------------------------------------
+
+def test_code_executing_domains_do_not_pin_a_worker_count():
+    from bidir.config import load_config
+
+    for domain in ("code", "exec", "coverage"):
+        cfg = load_config(f"domains/{domain}.yaml")
+        assert cfg.get("exec_workers") is None, (
+            f"{domain} pins exec_workers={cfg['exec_workers']}, which ignores the job's actual "
+            f"CPU allocation; drop it and let _common.exec_workers derive it")
+
+
+def test_exec_workers_is_derived_and_refuses_to_oversubscribe():
+    import os
+
+    from bidir.domains._common import exec_workers
+
+    available = len(os.sched_getaffinity(0))
+    assert exec_workers({}) == max(1, available - 1), "the default must come from the allocation"
+    assert exec_workers({"exec_workers": 2}) == 2, "an explicit pin within the allocation stands"
+
+    with pytest.raises(RuntimeError, match="exceeds the .* CPU"):
+        exec_workers({"exec_workers": available + 64})
+    # The mech experiments may need a deliberate override, but it has to be said out loud.
+    assert exec_workers({"exec_workers": available + 64,
+                         "allow_exec_oversubscribe": True}) == available + 64
+
+
+def test_no_domain_module_hardcodes_a_worker_count():
+    import re
+    from pathlib import Path
+
+    dom = Path(__file__).resolve().parents[1] / "src" / "bidir" / "domains"
+    for f in sorted(dom.glob("*.py")):
+        src = f.read_text()
+        bad = re.findall(r'cfg\.get\(\s*["\']exec_workers["\']\s*,\s*\d+', src)
+        assert not bad, f"{f.name} still carries a hardcoded worker fallback: {bad}"
