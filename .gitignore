@@ -6,9 +6,12 @@ data/
 # committed: the grid produces ~455 GB and none of it belongs in git. Real provenance lives in
 # each adapter's run_manifest.json and each result's summary.json, which carry the git sha, the
 # resolved config and the script hashes.
-runs/
-bidir_out/
-results/
+# ANCHORED with a leading slash: a bare `runs/` matches at EVERY level, so it also swallowed
+# log/runs/, and a commit that said it was adding a run log added nothing. git reported success
+# because `git add -A` on an ignored path is not an error.
+/runs/
+/bidir_out/
+/results/
 third_party/
 __pycache__/
 *.pyc
