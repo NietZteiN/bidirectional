@@ -297,3 +297,23 @@ def test_get_engine_refuses_to_oversubscribe_the_card(monkeypatch):
     E.get_engine("model-under-test", {"gpu_memory_utilization": 0.45})
     E.get_engine("frozen-parser", {"gpu_memory_utilization": 0.45})
     assert built == ["model-under-test", "frozen-parser"]
+
+
+def test_determinism_floor_separates_its_passes_by_process():
+    """A floor measured inside one process is ~0.00 pp and licenses any claim.
+
+    vLLM schedules a byte-identical batch identically, so looping N times over one engine
+    measures within-engine repeatability rather than the cross-pass movement the paper's
+    "one pass per table" rule is built on. The script must therefore re-exec itself per pass
+    and must refuse a single pass.
+    """
+    from pathlib import Path
+
+    src = (Path(__file__).resolve().parents[1] / "scripts" / "30_determinism_floor.py").read_text()
+    assert "--pass-index" in src and "subprocess.run(cmd)" in src, (
+        "passes are no longer separated by process — the floor this reports would be a "
+        "measurement of one engine repeating itself")
+    assert "--passes must be >= 2" in src, "a single pass cannot yield a difference"
+    assert "companion_load" in src, (
+        "the batch is no longer padded, so batch composition is identical across passes and "
+        "the dominant source of cross-pass movement is not exercised")
