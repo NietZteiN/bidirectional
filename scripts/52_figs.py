@@ -26,7 +26,10 @@ from bidir.config import RESULTS_DIR  # noqa: E402
 from bidir.schema import iter_jsonl  # noqa: E402
 
 DOSE_X = {"sft": 0.0, "mix1": 1.0, "mix5": 5.0, "mix10": 10.0, "mix25": 25.0, "mix50": 50.0}
-MARKS = ["*", "square*", "triangle*", "diamond*", "pentagon*", "o"]
+#: One mark per series. Longer than the number of domains that can appear in a dose figure,
+#: because a repeated mark makes two curves indistinguishable in the legend.
+MARKS = ["*", "square*", "triangle*", "diamond*", "pentagon*", "o",
+         "square", "triangle", "diamond", "pentagon", "x", "+", "asterisk", "star"]
 
 
 def preamble(xlabel: str, ylabel: str, extra: str = "") -> list[str]:
@@ -54,8 +57,20 @@ def dose_figure(runs: list[Path], metric: str) -> str:
                    "  xmin=-1, xmax=52, ymin=0,")
     for i, (domain, pts) in enumerate(sorted(series.items())):
         coords = " ".join(f"({x:g},{y:.2f})" for x, y in sorted(pts.items()))
-        out += [f"\\addplot+[mark={MARKS[i % len(MARKS)]}, thick] coordinates {{{coords}}};",
-                f"\\addlegendentry{{{domain.replace('_', chr(92) + '_')}}}"]
+
+        # A MISSING RUNG MUST NOT LOOK LIKE A MEASURED ONE. An arm that was never trained is
+        # simply absent from `pts`, and pgfplots then draws a straight segment across the gap --
+        # so `exec` and `coverage`, whose low rungs their corpora cannot express (Amendment 17),
+        # would show a line crossing x=5 and x=10 where nothing was measured. Those series are
+        # drawn dashed and labelled, so the interpolation is visible as interpolation.
+        xs = sorted(pts)
+        interior = [x for x in DOSE_X.values() if xs[0] < x < xs[-1]]
+        partial = any(x not in pts for x in interior)
+        style = "dashed, " if partial else ""
+        label = domain.replace("_", chr(92) + "_") + (" (partial ladder)" if partial else "")
+        out += [f"\\addplot+[{style}mark={MARKS[i % len(MARKS)]}, thick] "
+                f"coordinates {{{coords}}};",
+                f"\\addlegendentry{{{label}}}"]
     out += ["\\end{axis}", "\\end{tikzpicture}"]
     return "\n".join(out)
 

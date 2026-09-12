@@ -666,3 +666,25 @@ def test_every_paper_placeholder_is_prose_or_has_a_plan():
             ("abstract-", "general-", "mech-", "invertibility-", "dose-", "intro-", "setup-")), (
             f"{key!r} is neither prose nor registered nor in a section whose resolvers are "
             f"pending the gate — it is a number nobody has arranged to compute")
+
+
+def test_dose_figure_marks_a_ladder_it_could_not_measure():
+    """An untrained rung must not be drawn as a straight line through where it would have been.
+
+    A missing arm is simply absent from the series, and pgfplots then interpolates across the
+    gap -- so `exec` and `coverage`, whose low rungs their corpora cannot express (Amendment
+    17), would show a curve crossing x=5 and x=10 with nothing measured there. The knee of the
+    ladder is read off these figures.
+    """
+    from pathlib import Path
+
+    src = (Path(__file__).resolve().parents[1] / "scripts" / "52_figs.py").read_text()
+    assert "partial ladder" in src, "a series with missing interior rungs is not labelled"
+    assert "dashed" in src, "a partial ladder is drawn like a fully measured one"
+    # Enough marks that two curves cannot share one.
+    import re
+    marks = re.search(r"MARKS = \[(.*?)\]", src, re.S).group(1)
+    n_domains = len([p for p in (Path(__file__).resolve().parents[1] / "data").iterdir()
+                     if (p / "train.jsonl").exists()])
+    assert marks.count(",") + 1 >= min(n_domains, 12), (
+        "fewer marks than plottable domains, so the legend can become ambiguous")
