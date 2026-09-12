@@ -317,3 +317,39 @@ def test_determinism_floor_separates_its_passes_by_process():
     assert "companion_load" in src, (
         "the batch is no longer padded, so batch composition is identical across passes and "
         "the dominant source of cross-pass movement is not exercised")
+
+
+def test_gate_pipeline_respects_the_juno_share():
+    """The gate must not run deeper in the juno pool than this project's share.
+
+    submit.py's guard counts RUNNING jobs, and a pipeline submits all its cells within
+    seconds -- before any of them is running -- so the guard cannot catch a placement that
+    puts three cells on h200. The placement itself has to be right.
+    """
+    import re
+    from pathlib import Path
+
+    src = (Path(__file__).resolve().parents[1] / "scripts" / "slurm" / "pipeline_gate.py").read_text()
+    cells = re.search(r"CELLS = \[(.*?)\n\]", src, re.S).group(1)
+    contested = re.findall(r'\(\s*"([\w-]+)",\s*"(h200|normal)"', cells)
+    assert len(contested) <= 1, (
+        f"{len(contested)} gate cells are placed on the contested juno partitions "
+        f"({[c for c, _ in contested]}); each cell submits a train AND an eval job, so the "
+        f"pool would carry more than this project's share")
+    # The one cell that may sit there is the one that cannot go anywhere else: sql keeps a
+    # second 8B model resident, which does not fit on an a30.
+    if contested:
+        assert contested[0][0] == "sql", (
+            f"{contested[0][0]} is on h200; only sql needs the 141 GB card (two resident models)")
+
+    assert 'partition="h200"' not in src, "the probe job is back on a contested partition"
+
+
+def test_gate_pipeline_never_submits_an_eval_without_its_dependency():
+    """A refused training submission must skip its eval, not produce an undepended one."""
+    from pathlib import Path
+
+    src = (Path(__file__).resolve().parents[1] / "scripts" / "slurm" / "pipeline_gate.py").read_text()
+    assert "if not jid and not a.dry_run:" in src and "skipped.append(cell)" in src, (
+        "an eval submitted with dep=None starts immediately and scores adapters that do not "
+        "exist yet")
