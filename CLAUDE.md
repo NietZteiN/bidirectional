@@ -43,6 +43,18 @@ Same cluster as obtune: `juno-l-02` login, SLURM 24.11.5, **no GPU on the login 
 and works fine in a job. **Verify environments and run tokenizer/model tests under `sbatch`**
 (`-p dev -t 00:30:00 --mem=32G` is enough; `dev` is CPU-only, 2 h limit).
 
+### The login node is also the WRONG place to validate anything
+It differs from a compute node in three ways that have each produced a wrong conclusion:
+
+| | login | compute node |
+|---|---|---|
+| `sched_getaffinity` | 16 (unrestricted) | whatever `--cpus` gave you (8 of 64) |
+| interpreter startup | warm in page cache | cold from MooseFS, seconds |
+| GPU | none, so `vllm.platforms` never resolves `CudaPlatform` | resolves, and a CUDA-13 wheel dies |
+
+So: a package that imports here is not verified, a criterion that passes here is not verified,
+and a timeout that never fires here will fire there. `-p dev` is the cheap way to find out.
+
 ---
 
 ## 2. Environment
@@ -110,6 +122,20 @@ wrong table.
 9. **Eval sets never appear in any training split**, checked on CONTENT with a domain-supplied
    `content_key` — and the check is a build-time failure, not a warning. It has already caught
    one real leak (Spider) and one false positive (CRUXEval).
+10. **Nothing that executes a program may size its own parallelism.** `exec_workers` comes from
+    `len(os.sched_getaffinity(0))`, and a pinned value above the allocation raises. A hardcoded
+    32 on an 8-CPU allocation scored 40 known-correct `code` answers at **0.375**; the same 40
+    at 4 workers scored **1.000**. obtune's executor kills an oversubscribed child on wall clock
+    and `exec_equivalence` folds that timeout into `status="error"`, which the criterion reads as
+    a wrong answer — so the failure is silent, one-directional, and would have capped the
+    known-positive control.
+11. **A timeout is a measurement failure, not a wrong answer.** `coverage`'s budget used to
+    cover interpreter startup, so it timed out on all 40 gold answers on a compute node (cold
+    MooseFS) and on none on the login node. Startup is now measured per process and added; a
+    timeout is retried once, serially.
+12. **A criterion is only trusted after its oracle test runs ON A COMPUTE NODE.**
+    `scripts/16_audit_criteria.py` passes gold/echo/empty/garbage through every scorer. All
+    three code-executing domains passed on the login node and failed on a compute node.
 
 ---
 
@@ -152,6 +178,11 @@ Two rules survive independent of space:
 
 - **`save_strategy: "no"`.** Nothing here loads an intermediate checkpoint — no checkpoint
   selection, no resume, only `final/` — so writing three per adapter is waste wherever it lands.
+- **A vLLM script must hard-exit.** `bidir.engine.shutdown_and_exit(main())`, not
+  `sys.exit(main())`. With `spawn`, the engine-core child does not reliably come back: job
+  391263 printed its final gate summary and then held an H200 for another **6m14s** without
+  writing its status file. The share is one running job, and a job killed at the walltime is
+  recorded as a failure — so a teardown hang turns a completed eval into a lost one.
 - **`trials.jsonl` is what the paper is built from.** Scratch filesystems are usually purged and
   no retention policy for this one has been established; ask. Copy trials to `/work` before the
   writing phase. Everything else is reproducible from the run manifests, at the cost of its
