@@ -232,6 +232,9 @@ def test_pack_source_does_not_index_into_the_sorting_list():
     from pathlib import Path
 
     src = (Path(__file__).resolve().parents[1] / "scripts" / "20_train_pack.py").read_text()
-    assert "names.index(n)" not in src, (
+    # CODE only: the comment above the fix quotes the broken expression on purpose, so that the
+    # next reader knows why the snapshot is there. Grepping the raw text would match it.
+    code = "\n".join(ln for ln in src.splitlines() if not ln.lstrip().startswith("#"))
+    assert "names.index(n)" not in code, (
         "reading names inside its own sort key raises ValueError at runtime")
-    assert "order = {n: i for i, n in enumerate(names)}" in src
+    assert "order = {n: i for i, n in enumerate(names)}" in code
