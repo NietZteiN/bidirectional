@@ -85,3 +85,73 @@ def test_attribution_arms_attach_their_auxiliary_text(tok):
     rt = _attach_auxiliary(ex, rows, arms.resolve("roundtrip"), mod, tok, oprompts)
     assert all(e["roundtrip_prompt"] and e["roundtrip_target"] for e in rt)
     assert rt[0]["roundtrip_target"] == rows[0].side_a
+
+
+# --------------------------------------------------------------------------------------
+# The pack's resume story: a job killed at the 2-day walltime costs only the arm it was
+# inside. That only holds if "already trained" means COMPLETE rather than "final/ exists".
+# --------------------------------------------------------------------------------------
+
+def _pack():
+    import importlib.util
+    from pathlib import Path
+
+    spec = importlib.util.spec_from_file_location(
+        "pack", Path(__file__).resolve().parents[1] / "scripts" / "20_train_pack.py")
+    m = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(m)
+    return m
+
+
+def test_pack_does_not_treat_a_half_written_adapter_as_trained(tmp_path):
+    """An interrupted save must be retrained, not skipped forever.
+
+    bidir.train writes weights, then the tokenizer, then run_manifest.json carrying
+    adapter.sha256 -- so the sha256 is the last thing written and the only honest marker. If
+    mere existence of final/ counted, the arm would be skipped on every resubmission and the
+    damage would land in the EVAL: an adapter with no weights reads exactly like the base, so
+    every arm's row is identical and the adapter-effectiveness assertion fires in a job that
+    cannot say which arm was never trained.
+    """
+    import json
+
+    m = _pack()
+    out = tmp_path / "adapter"
+    assert m.adapter_is_complete(out) == (False, "no final/")
+
+    (out / "final").mkdir(parents=True)
+    ok, why = m.adapter_is_complete(out)
+    assert not ok and "no safetensors" in why
+
+    (out / "final" / "adapter_model.safetensors").write_bytes(b"x")
+    ok, why = m.adapter_is_complete(out)
+    assert not ok and "run_manifest" in why
+
+    (out / "run_manifest.json").write_text(json.dumps({"adapter": {}}))
+    ok, why = m.adapter_is_complete(out)
+    assert not ok and "sha256" in why
+
+    (out / "run_manifest.json").write_text(json.dumps({"adapter": {"sha256": "abc"}}))
+    assert m.adapter_is_complete(out) == (True, "complete")
+
+
+def test_pack_passes_rank_through_to_the_trainer():
+    """The pack computes the adapter PATH from --rank, so the trainer must get the same rank.
+
+    bidir.train read rank only from the train config, so `--rank 64` checked an r64 path that
+    never existed (retraining every time) and wrote the result to the r32 path, overwriting the
+    r32 adapters. A rank sweep would have produced r32 adapters throughout and shown no effect
+    of rank -- a clean, plausible, wrong null.
+    """
+    from pathlib import Path
+
+    root = Path(__file__).resolve().parents[1]
+    pack = (root / "scripts" / "20_train_pack.py").read_text()
+    train = (root / "src" / "bidir" / "train.py").read_text()
+
+    assert '"--rank", str(a.rank)' in pack, "the pack does not pass --rank to bidir.train"
+    assert '"--rank"' in train, "bidir.train has no --rank, so the pack's value is ignored"
+    assert "args.rank if args.rank is not None else" in train, "the CLI rank must win over the config"
+    # A rank change with alpha fixed also changes alpha/r, which would confound a rank
+    # comparison with an effective-learning-rate comparison.
+    assert 'alpha/r held at' in train or 'ratio' in train, "alpha must follow rank"

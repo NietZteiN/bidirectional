@@ -33,6 +33,34 @@ from bidir.config import GLOBAL_SEED, RUNS_DIR  # noqa: E402
 from bidir.train import adapter_dir  # noqa: E402
 
 
+
+def adapter_is_complete(out: Path) -> tuple[bool, str]:
+    """Is this adapter finished, or was it interrupted mid-save?
+
+    `bidir.train` writes, in order: the weights and config into `final/`, the tokenizer, then
+    `run_manifest.json` carrying `adapter.sha256` over `final/`. The sha256 is therefore the
+    LAST thing written and the only marker that means "everything before this succeeded".
+    Checked here because the pack's whole resume story is that a job killed at the 2-day
+    walltime costs only the arm it was inside.
+    """
+    final = out / "final"
+    if not final.exists():
+        return False, "no final/"
+    weights = list(final.glob("adapter_model.safetensors")) + list(final.glob("model*.safetensors"))
+    if not weights:
+        return False, "final/ exists but holds no safetensors"
+    manifest = out / "run_manifest.json"
+    if not manifest.exists():
+        return False, "final/ has weights but no run_manifest.json (interrupted before provenance)"
+    try:
+        sha = (json.loads(manifest.read_text()).get("adapter") or {}).get("sha256")
+    except Exception as e:
+        return False, f"run_manifest.json is unreadable ({type(e).__name__})"
+    if not sha:
+        return False, "run_manifest.json has no adapter.sha256 (interrupted during save)"
+    return True, "complete"
+
+
 def main() -> int:
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--domain", required=True)
@@ -54,12 +82,25 @@ def main() -> int:
     for name in names:
         out = adapter_dir(a.domain, a.model, name, a.rank, a.seed,
                           root="adapters_fullft" if arm_registry.resolve(name).full_ft else "adapters")
-        if (out / "final").exists() and not a.force:
-            print(f"[pack] skip {name}: {out / 'final'} exists", flush=True)
+        done, why = adapter_is_complete(out)
+        if done and not a.force:
+            print(f"[pack] skip {name}: {out / 'final'} is complete", flush=True)
             results.append({"arm": name, "status": "skipped"})
             continue
+        if (out / "final").exists() and not done:
+            # The resume design is "kill at walltime, resubmit" -- so a half-written adapter is
+            # an expected state, not a corner case. Treating `final/` merely EXISTING as done
+            # would skip it forever, and the damage lands later: the eval loads an adapter with
+            # no weights, every arm reads exactly like the base, and the adapter-effectiveness
+            # assertion fires in a job that has no idea which arm was never trained.
+            print(f"[pack] retraining {name}: {why}", flush=True)
+        # --rank MUST be passed through. The pack computes `out` from a.rank, but bidir.train
+        # used to read rank only from the train config -- so `--rank 64` checked an r64 path that
+        # never existed (retraining every time) and wrote the result to the r32 path, silently
+        # overwriting the r32 adapters. A rank sweep would have produced r32 adapters throughout
+        # and shown no effect of rank: a clean, plausible, wrong null.
         cmd = [sys.executable, "-m", "bidir.train", "--domain", a.domain, "--arm", name,
-               "--model", a.model, "--seed", str(a.seed)]
+               "--model", a.model, "--seed", str(a.seed), "--rank", str(a.rank)]
         if a.dry_run:
             cmd.append("--dry-run")
         print(f"[pack] === {name} === {' '.join(cmd)}", flush=True)

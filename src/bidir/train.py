@@ -136,6 +136,10 @@ def build_parser() -> argparse.ArgumentParser:
     ap.add_argument("--model", required=True, help="key in configs/models.yaml")
     ap.add_argument("--seed", type=int, default=GLOBAL_SEED)
     ap.add_argument("--train-config", default="train/_base_lora.yaml")
+    ap.add_argument("--rank", type=int, default=None,
+                    help="LoRA r, overriding the train config. The adapter's OUTPUT PATH encodes "
+                         "the rank, so a caller that varies rank without this writes every rank "
+                         "to the r32 path -- see scripts/20_train_pack.py.")
     ap.add_argument("--out", default=None, help="override the adapter output directory")
     ap.add_argument("--init-adapter", default=None, help="override the adapter to continue from (relearn-k)")
     ap.add_argument("--max-steps", type=int, default=None, help="cap optimizer steps (smoke tests)")
@@ -205,7 +209,15 @@ def main(argv: Optional[list[str]] = None) -> int:
 
     from obtune.provenance import RunManifest, sha256_dir
 
-    rank = int(cfg["peft"]["r"])
+    # The CLI wins over the config, and alpha follows rank at the recipe's 2:1 ratio rather
+    # than staying at 64 -- a rank change with a fixed alpha changes the effective scaling
+    # (alpha/r) too, which would confound a rank comparison with a learning-rate comparison.
+    rank = int(args.rank if args.rank is not None else cfg["peft"]["r"])
+    if args.rank is not None and args.rank != int(cfg["peft"]["r"]):
+        ratio = int(cfg["peft"]["alpha"]) / int(cfg["peft"]["r"])
+        cfg["peft"] = {**cfg["peft"], "r": rank, "alpha": int(round(rank * ratio))}
+        print(f"[train] rank override: r={rank}, alpha={cfg['peft']['alpha']} "
+              f"(alpha/r held at {ratio:g})", flush=True)
     out_dir = Path(args.out) if args.out else adapter_dir(args.domain, args.model, spec.name, rank, seed,
                                                           root="adapters_fullft" if spec.full_ft else "adapters")
     out_dir.mkdir(parents=True, exist_ok=True)
