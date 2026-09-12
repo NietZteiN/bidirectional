@@ -196,10 +196,16 @@ Two rules survive independent of space:
   391263 printed its final gate summary and then held an H200 for another **6m14s** without
   writing its status file. The share is one running job, and a job killed at the walltime is
   recorded as a failure — so a teardown hang turns a completed eval into a lost one.
-- **`trials.jsonl` is what the paper is built from.** Scratch filesystems are usually purged and
-  no retention policy for this one has been established; ask. Copy trials to `/work` before the
-  writing phase. Everything else is reproducible from the run manifests, at the cost of its
-  GPU-hours.
+- **`trials.jsonl` is what the paper is built from**, and it is the one output that cannot be
+  regenerated exactly — greedy decoding is only approximately repeatable across passes. Scratch
+  filesystems are usually purged and **no retention policy for this one has been established;
+  ask.** Until it is, `scripts/94_archive_trials.py` mirrors the small irreplaceable set —
+  trials, summaries, contrasts, base gates, determinism, audits, probes, and every adapter's
+  `run_manifest.json` — onto `/work/.../bidir/archive` (0.1 MB so far, hundreds of MB for the
+  full grid, against 99 TB free). `bidir.evaluate` runs it after writing, best-effort, so a
+  failed mirror can never fail a good eval. **Adapter weights are deliberately not copied**:
+  they are what makes the grid 455 GB, and they are reproducible from the manifests at the cost
+  of their GPU-hours.
 
 `scripts/91_reap_adapters.py` (dry run by default) is housekeeping rather than necessity now.
 

@@ -26,3 +26,10 @@ __pycache__/
 # The draft PDF IS committed (56 KB): a collaborator should be able to read it without
 # installing a TeX toolchain, and its unfilled numbers are visible on the page.
 !paper/main.pdf
+
+# scripts/94_archive_trials.py mirrors the small, irreplaceable results here as insurance
+# against a /scratch purge (no retention policy has been confirmed for it). NOT committed:
+# one gate eval's trials.jsonl is ~10k rows of generated text, and the full grid's would be
+# hundreds of MB. /work is the durable copy; git holds the code that regenerates everything
+# except the trials themselves.
+/archive/

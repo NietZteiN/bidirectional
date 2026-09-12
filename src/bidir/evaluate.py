@@ -257,6 +257,18 @@ def main(argv: Optional[list[str]] = None) -> int:
             print(f"  {c['system']:<12s} {c['direction']:<8s} strict={c.get('strict', float('nan')):.4f} "
                   f"echo={c.get('echo', float('nan')):.3f} n={c['n']}", flush=True)
     print(f"[bidir.eval] wrote {out_dir}", flush=True)
+
+    # Mirror the small irreplaceable artifacts onto /work straight away. $BIDIR_OUT is scratch,
+    # no retention policy for it has been confirmed, and trials.jsonl is the one output that
+    # cannot be regenerated exactly -- greedy decoding is only approximately repeatable across
+    # passes. Best effort: a failed mirror must never fail an eval that succeeded.
+    try:
+        import subprocess
+
+        subprocess.run([sys.executable, str(Path(__file__).resolve().parents[2] / "scripts" / "94_archive_trials.py")],
+                       capture_output=True, timeout=300)
+    except Exception as exc:                            # noqa: BLE001
+        print(f"[bidir.eval] archive step skipped: {type(exc).__name__}: {exc}", flush=True)
     return 0
 
 

@@ -734,3 +734,36 @@ def test_spectral_default_tau_grid_is_not_centred_on_one():
     assert 'default="0.15,0.25,0.4,0.6,0.8"' in src, (
         "the default grid still sits in the range that zeroes a rank-r delta")
     assert "SKIPPED" in src, "a zeroing rung must be skipped and named, not fatal to the sweep"
+
+
+def test_irreplaceable_results_are_mirrored_off_scratch():
+    """trials.jsonl is the one output that cannot be regenerated exactly.
+
+    $BIDIR_OUT is /scratch/juno/$USER/bidir, which is right for the grid's ~455 GB of
+    adapters, and scratch filesystems are normally purged -- no retention policy for this one
+    has been confirmed (CLAUDE.md §6 says to ask). Adapters are reproducible from their
+    manifests at the cost of GPU-hours; trials are not, because greedy decoding is only
+    approximately repeatable across passes.
+    """
+    import importlib.util
+    from pathlib import Path
+
+    root = Path(__file__).resolve().parents[1]
+    spec = importlib.util.spec_from_file_location(
+        "archive", root / "scripts" / "94_archive_trials.py")
+    m = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(m)
+
+    tracked = {pat for _, pat in m.PATTERNS}
+    for needed in ("*/*/*/*/trials.jsonl", "*/*/*/*/summary.json",
+                   "base_gates/*/*.json", "determinism/*.json",
+                   "*/*/*/*/run_manifest.json"):
+        assert needed in tracked, f"the archive does not mirror {needed}"
+    # Adapter weights must NOT be copied: that is what makes the grid 455 GB.
+    assert not any("safetensors" in p for p in tracked)
+
+    # And the eval must trigger it, best-effort, without being able to fail a good eval.
+    ev = (root / "src" / "bidir" / "evaluate.py").read_text()
+    assert "94_archive_trials.py" in ev, "nothing copies trials off scratch after an eval"
+    tail = ev.split("94_archive_trials.py")[1]
+    assert "except Exception" in tail, "a failed mirror must not fail an eval that succeeded"
