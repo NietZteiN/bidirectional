@@ -75,10 +75,12 @@ def test_env_sh_namespaces_every_variable_it_exports():
 
     env_sh = (Path(__file__).resolve().parents[1] / "scripts" / "env.sh").read_text()
     exported = set(re.findall(r"^export\s+([A-Z_][A-Z0-9_]*)=", env_sh, flags=re.M))
-    # Names that are standard and intentionally shared with the wider environment.
+    # Names that are standard and intentionally shared with the wider environment. Every VLLM_*
+    # name here is read by vLLM itself and has no prefixed alternative -- vLLM would ignore a
+    # BIDIR_-prefixed copy -- so they are exempt by necessity rather than by convenience.
     allowed = {"PATH", "PYTHONPATH", "HF_HOME", "TMPDIR", "TORCHINDUCTOR_CACHE_DIR",
                "TRITON_CACHE_DIR", "VLLM_LOGGING_LEVEL", "VLLM_USE_FLASHINFER_SAMPLER",
-               "TOKENIZERS_PARALLELISM"}
+               "VLLM_WORKER_MULTIPROC_METHOD", "TOKENIZERS_PARALLELISM"}
     unprefixed = {v for v in exported - allowed if not v.startswith(("BIDIR_", "OBTUNE_"))}
     assert not unprefixed, f"env.sh exports unprefixed names that may collide: {unprefixed}"
 
@@ -235,3 +237,63 @@ def test_heavy_outputs_live_outside_the_git_tree():
     for p in (RUNS_DIR, RESULTS_DIR):
         assert PROJECT_ROOT not in p.parents and p != PROJECT_ROOT, \
             f"{p} is inside the repo; adapters and trials belong under BIDIR_OUT"
+
+
+# --------------------------------------------------------------------------------------
+# GPU utilisation budget. Two vLLM engines on one card each RESERVE their share of total
+# device memory; they do not negotiate. `sql` and `d2t` both keep a frozen round-trip model
+# resident alongside the model under test, so before the guard below existed those domains
+# asked for 1.30 of the card and died inside vLLM's memory profiler, several frames from
+# anything naming the first engine.
+# --------------------------------------------------------------------------------------
+
+def test_two_model_domains_budget_for_both_engines():
+    """Any domain with a frozen round-trip model must fit both engines on one card."""
+    from bidir.config import load_config
+    from bidir.engine import _UTILISATION_CEILING
+
+    for domain, key in (("sql", "roundtrip_parser"), ("d2t", "roundtrip_extractor")):
+        cfg = load_config(f"domains/{domain}.yaml")
+        assert cfg.get(key), f"{domain} lost its frozen round-trip model"
+        second = cfg.get("roundtrip_gpu_memory_utilization")
+        assert second is not None, (
+            f"{domain} keeps {cfg[key]} resident beside the model under test but declares no "
+            f"roundtrip_gpu_memory_utilization, so the parser falls back to 0.45 on top of the "
+            f"domain engine's share")
+        total = float(cfg["engine"]["gpu_memory_utilization"]) + float(second)
+        assert total <= _UTILISATION_CEILING, (
+            f"{domain} budgets {total:.2f} of the card across two engines "
+            f"(ceiling {_UTILISATION_CEILING})")
+
+
+def test_get_engine_refuses_to_oversubscribe_the_card(monkeypatch):
+    """The guard must raise naming both models, rather than letting vLLM OOM."""
+    import bidir.engine as E
+
+    monkeypatch.setattr(E, "ensure_obtune", lambda: None)
+    monkeypatch.setattr(E, "_ENGINES", {})
+    monkeypatch.setattr(E, "_ENGINE_UTIL", {})
+
+    built = []
+
+    class FakeEngine:
+        def __init__(self, hf_id, cfg):
+            built.append(hf_id)
+
+    import sys, types
+    mod = types.ModuleType("obtune.eval_vllm")
+    mod.Engine = FakeEngine
+    monkeypatch.setitem(sys.modules, "obtune.eval_vllm", mod)
+
+    E.get_engine("model-under-test", {"gpu_memory_utilization": 0.85})
+    with pytest.raises(RuntimeError, match="utilisation budget exceeded"):
+        E.get_engine("frozen-parser", {"gpu_memory_utilization": 0.45})
+    assert built == ["model-under-test"], "the second engine must not be constructed"
+
+    # ...and the split both domains actually use does fit.
+    monkeypatch.setattr(E, "_ENGINES", {})
+    monkeypatch.setattr(E, "_ENGINE_UTIL", {})
+    built.clear()
+    E.get_engine("model-under-test", {"gpu_memory_utilization": 0.45})
+    E.get_engine("frozen-parser", {"gpu_memory_utilization": 0.45})
+    assert built == ["model-under-test", "frozen-parser"]

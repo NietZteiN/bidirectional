@@ -21,7 +21,14 @@ roundtrip_parser: ibm-granite/granite-3.1-8b-instruct
 roundtrip_max_tokens: 256
 
 sampling: {temperature: 0.0, top_p: 1.0, max_tokens: 512, seed: 17}
-engine: {max_model_len: 4096, max_loras: 8, gpu_memory_utilization: 0.85, seed: 17}
+# THIS DOMAIN NEEDS TWO MODELS RESIDENT AT ONCE. The reverse criterion round-trips through a frozen
+# NL->SQL parser (granite-3.1-8b), so the card carries the model under test AND the parser.
+# vLLM's gpu_memory_utilization is a share of TOTAL device memory reserved outright per engine
+# -- two engines do not negotiate -- so the budget is split explicitly here instead of both
+# defaulting to 0.85 and asking for 1.70 of the card. On an H200 (141 GB) this is 63 GB each:
+# ample for a 3B under test and an 8B parser. `bidir.engine.get_engine` asserts the sum < 0.95.
+engine: {max_model_len: 4096, max_loras: 8, gpu_memory_utilization: 0.45, seed: 17}
+roundtrip_gpu_memory_utilization: 0.45
 
 # Eval size set 2026-09-10 from the power analysis (scripts/17_power.py, results/power/).
 # At n=500 the three headline detections are certain (power 1.00) but every EQUIVALENCE claim --

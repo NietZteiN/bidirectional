@@ -152,6 +152,13 @@ def _comet(srcs: Sequence[str], hyps: Sequence[str], refs: Sequence[str],
 
     A subprocess, not an import: one process boundary is the whole cost of keeping two
     incompatible transformers versions in one pipeline.
+
+    THE CARD IS ALREADY BUSY. COMET is scored inside the same job that generated, while vLLM
+    still holds `gpu_memory_utilization` of the device -- 0.85 here, so wmt22-comet-da (XLM-R
+    large) and its batch have to fit in the remaining 15%. That is ~21 GB on an H200 and ~3.6 GB
+    on an a30, where batch 64 does not fit. A CUDA OOM here would kill the job *after* all the
+    generation work was done, so it falls back: halve the batch, then move to CPU. Slower is
+    the right trade for a step that runs once per gate.
     """
     if not srcs:
         return []
@@ -162,16 +169,35 @@ def _comet(srcs: Sequence[str], hyps: Sequence[str], refs: Sequence[str],
         inp, outp = Path(td) / "in.json", Path(td) / "out.json"
         inp.write_text(json.dumps(payload))
         script = f'''
-import json, sys
+import json, sys, torch
 from comet import download_model, load_from_checkpoint
 data = json.load(open({str(inp)!r}))
 m = load_from_checkpoint(download_model({model!r}))
-out = m.predict(data, batch_size={batch_size}, gpus=1 if __import__("torch").cuda.is_available() else 0, progress_bar=False)
-json.dump(list(out["scores"]), open({str(outp)!r}, "w"))
+
+# (batch, gpus) attempts, in order. vLLM holds most of the card, so OOM here is expected
+# rather than exceptional, and the CPU attempt is the one that cannot fail for memory.
+plans = [({batch_size}, 1), (max(1, {batch_size} // 4), 1), (16, 0)] if torch.cuda.is_available() else [(16, 0)]
+last = None
+for bs, gpus in plans:
+    try:
+        out = m.predict(data, batch_size=bs, gpus=gpus, progress_bar=False)
+        print(f"[comet] scored with batch_size={{bs}} gpus={{gpus}}", file=sys.stderr)
+        json.dump(list(out["scores"]), open({str(outp)!r}, "w"))
+        break
+    except torch.cuda.OutOfMemoryError as exc:
+        last = exc
+        print(f"[comet] OOM at batch_size={{bs}} gpus={{gpus}}, retrying smaller", file=sys.stderr)
+        torch.cuda.empty_cache()
+else:
+    raise SystemExit(f"COMET could not fit anywhere, last OOM: {{last}}")
 '''
         r = subprocess.run([str(SCORE_ENV_PY), "-c", script], capture_output=True, text=True)
         if r.returncode != 0:
             raise RuntimeError(f"COMET scoring failed:\n{r.stderr[-2000:]}")
+        # stderr carries which plan won; surface it so a silent fall to CPU is visible in the log.
+        for line in r.stderr.splitlines():
+            if line.startswith("[comet]"):
+                print(line, flush=True)
         return json.loads(outp.read_text())
 
 

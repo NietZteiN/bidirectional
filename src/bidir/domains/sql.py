@@ -199,7 +199,13 @@ def roundtrip_sql(questions: Sequence[str], insts: Sequence[Mapping[str, Any]],
     """Frozen NL->SQL parser. Not in the model panel, by design: a parser that shares a
     lineage with the model under test would score its own dialect favourably. Its accuracy on
     the REFERENCE questions is measured by scripts/15_base_gate.py and reported as the
-    criterion ceiling."""
+    criterion ceiling.
+
+    IT IS RESIDENT AT THE SAME TIME AS THE MODEL UNDER TEST, so this domain's engine budget is
+    split two ways (`gpu_memory_utilization` + `roundtrip_gpu_memory_utilization` in
+    configs/domains/sql.yaml) rather than left at the 0.85 default. `bidir.engine.get_engine`
+    checks the sum and raises naming both models; before that guard existed the second load
+    died inside vLLM's memory profiler."""
     from bidir.engine import generate_with
 
     prompts_ = [
@@ -207,5 +213,7 @@ def roundtrip_sql(questions: Sequence[str], insts: Sequence[Mapping[str, Any]],
         f"Write one SQLite query that answers this question.\n\nQuestion:\n{q}"
         for q, i in zip(questions, insts)
     ]
-    outs = generate_with(cfg["roundtrip_parser"], prompts_, max_tokens=int(cfg.get("roundtrip_max_tokens", 256)))
+    outs = generate_with(cfg["roundtrip_parser"], prompts_,
+                         max_tokens=int(cfg.get("roundtrip_max_tokens", 256)),
+                         util_override=cfg.get("roundtrip_gpu_memory_utilization"))
     return [re.sub(r"^```\w*\n?|```$", "", o.strip(), flags=re.M).strip() for o in outs]

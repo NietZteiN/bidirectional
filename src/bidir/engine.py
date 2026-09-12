@@ -30,9 +30,32 @@ DEFAULT_ENGINE: dict[str, Any] = {
 }
 
 
+#: Fraction of the card the resident engines may claim between them. vLLM's
+#: `gpu_memory_utilization` is a share of TOTAL device memory that each engine reserves for
+#: itself, so two engines at 0.85 and 0.45 do not negotiate -- the second simply cannot get
+#: what it asked for. 0.95 rather than 1.0 leaves room for the CUDA context and cuBLAS
+#: workspaces, which are outside every engine's budget.
+_UTILISATION_CEILING = 0.95
+
+
+def _claimed_utilisation() -> float:
+    return sum(e_cfg for _, e_cfg in _ENGINE_UTIL.items())
+
+
+#: (hf_id, key) -> the utilisation that engine claimed. Read by the budget check below.
+_ENGINE_UTIL: dict[tuple, float] = {}
+
+
 def get_engine(model_key_or_hf_id: str, ecfg: Optional[Mapping[str, Any]] = None):
-    """One engine per (model, config) in a process. Two engines on one GPU would each claim
-    `gpu_memory_utilization` of the card and the second would OOM."""
+    """One engine per (model, config) in a process.
+
+    THE BUDGET IS CHECKED, NOT ASSUMED. `gpu_memory_utilization` is a share of the whole
+    device that each engine reserves outright, so engines do not share gracefully: a model
+    under test at 0.85 plus a frozen round-trip parser at 0.45 asks for 1.30 of the card and
+    the second load dies inside vLLM's memory profiler, several frames from anything naming
+    the first model. SQL and D2T both need a second resident model to score at all, so this
+    is a normal path rather than an exotic one. Raising here names both engines and the sum.
+    """
     ensure_obtune()
     from obtune.eval_vllm import Engine
 
@@ -43,7 +66,20 @@ def get_engine(model_key_or_hf_id: str, ecfg: Optional[Mapping[str, Any]] = None
     cfg = {**DEFAULT_ENGINE, **dict(ecfg or {})}
     key = (hf_id, tuple(sorted(cfg.items())))
     if key not in _ENGINES:
+        want = float(cfg.get("gpu_memory_utilization", 0.85))
+        held = _claimed_utilisation()
+        if held + want > _UTILISATION_CEILING:
+            resident = ", ".join(f"{k[0]}@{v:.2f}" for k, v in _ENGINE_UTIL.items())
+            raise RuntimeError(
+                f"GPU utilisation budget exceeded: {resident} already claim {held:.2f} of the "
+                f"card and {hf_id} wants {want:.2f} (ceiling {_UTILISATION_CEILING}).\n"
+                f"  Two engines each reserve their share of TOTAL device memory; they do not "
+                f"negotiate.\n"
+                f"  Fix the domain config, not this ceiling: a domain whose criterion needs a "
+                f"second resident model must budget for both (see configs/domains/sql.yaml)."
+            )
         _ENGINES[key] = Engine(hf_id, cfg)
+        _ENGINE_UTIL[key] = want
     return _ENGINES[key]
 
 
@@ -62,12 +98,16 @@ def generate(engine, messages_list, adapters: Sequence[Optional[str]],
 
 
 def generate_with(model_key_or_hf_id: str, prompts_: Sequence[str], max_tokens: int = 256,
-                  system: Optional[str] = None) -> list[str]:
+                  system: Optional[str] = None, util_override: Optional[float] = None) -> list[str]:
     """Plain single-turn generation from a model that is not the one under test — the frozen
     round-trip parsers and extractors. Loads its own engine; call it once per batch."""
     from bidir.prompts import SYSTEM
 
-    engine = get_engine(model_key_or_hf_id, {"max_loras": 1, "gpu_memory_utilization": 0.45})
+    # The utilisation comes from the caller's config, because what is left of the card depends
+    # on what the model under test claimed. Hardcoding 0.45 here asked for 1.30 of the device
+    # whenever the domain engine was at its 0.85 default.
+    util = float(util_override) if util_override is not None else 0.45
+    engine = get_engine(model_key_or_hf_id, {"max_loras": 1, "gpu_memory_utilization": util})
     msgs = [[{"role": "system", "content": system or SYSTEM}, {"role": "user", "content": p}]
             for p in prompts_]
     out, _ = generate(engine, msgs, [None] * len(msgs), {"max_tokens": max_tokens})

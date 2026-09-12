@@ -166,11 +166,16 @@ def score_batch(direction: str, outputs: Sequence[str], insts: Sequence[Mapping[
 
 def roundtrip_triples(texts: Sequence[str], cfg: Mapping[str, Any]) -> list[set[tuple[str, str, str]]]:
     """Frozen triple extractor, not in the model panel. Its accuracy on the reference texts is
-    the forward criterion's ceiling and is measured before any tuned model is scored."""
+    the forward criterion's ceiling and is measured before any tuned model is scored.
+
+    IT IS RESIDENT ALONGSIDE THE MODEL UNDER TEST, so this domain splits its engine budget two
+    ways in configs/domains/d2t.yaml rather than leaving both at the 0.85 default; see the note
+    in `bidir.engine.get_engine`."""
     from bidir.engine import generate_with
 
     prompts_ = [("Extract the RDF triples this text expresses. Write one triple per line in "
                  "the form `subject | predicate | object`.\n\nText:\n" + t) for t in texts]
     outs = generate_with(cfg["roundtrip_extractor"], prompts_,
-                         max_tokens=int(cfg.get("roundtrip_max_tokens", 256)))
+                         max_tokens=int(cfg.get("roundtrip_max_tokens", 256)),
+                         util_override=cfg.get("roundtrip_gpu_memory_utilization"))
     return [parse_triples(o) for o in outs]
