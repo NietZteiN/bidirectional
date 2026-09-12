@@ -235,8 +235,19 @@ def main() -> int:
         out = RESULTS_DIR / "gate_verdict.json"
         out.write_text(json.dumps(v, indent=2))
         print(f"  wrote {out}")
+
+    # contrasts.json and gate_verdict.json are written AFTER the eval, so the eval's own
+    # archive step could not have caught them. Same reasoning as there: scratch has no
+    # confirmed retention policy, these are kilobytes, and a failed mirror must not fail an
+    # analysis that succeeded.
+    try:
+        import subprocess
+
+        subprocess.run([sys.executable, str(ROOT / "scripts" / "94_archive_trials.py")],
+                       capture_output=True, timeout=300)
+    except Exception as exc:                            # noqa: BLE001
+        print(f"[contrasts] archive step skipped: {type(exc).__name__}: {exc}", file=sys.stderr)
+
     return 0
-
-
 if __name__ == "__main__":
     sys.exit(main())

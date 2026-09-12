@@ -112,3 +112,57 @@ than an assertion.
 One consistency note: the floor's rates (0.7533 / 0.7433) sit slightly off the gate's
 (0.7450 / 0.7500) because the floor takes the first 300 test instances and the gate the first
 200. Both are subsets of the same 1,012.
+
+
+## The decision gate's first cell: `sql` collapses
+
+llama32-3b, seed 17, n=1034, one eval pass. The reverse criterion's ceiling is the frozen
+granite-3.1-8b parser's 0.6450, so every reverse number below is read against that, not 1.0.
+
+| arm | forward | reverse | echo (reverse) |
+|---|---|---|---|
+| `base` | 0.4894 | 0.5019 | 0.000 |
+| **`sft`** | **0.6267** | **0.2263** | **0.461** |
+| `mix5` | 0.6093 | 0.5561 | 0.000 |
+| `mix50` | 0.5890 | 0.5793 | 0.000 |
+| `rev` | 0.4207 | 0.5822 | 0.000 |
+
+Paired cluster bootstrap, 2,000 resamples, within one pass:
+
+| direction | contrast | Δ | 95 % CI |
+|---|---|---|---|
+| reverse | `sft − base` | **−27.56 pp** | [−30.66, −24.27] |
+| reverse | `mix5 − sft` | **+32.98 pp** | [+29.79, +36.07] |
+| reverse | `mix50 − sft` | +35.30 pp | [+32.01, +38.59] |
+| reverse | `rev − base` | +8.03 pp | [+5.51, +10.54] |
+| forward | `sft − base` | +13.73 pp | [+10.93, +16.63] |
+| forward | `mix5 − sft` | **−1.74 pp** | [−3.29, −0.29] |
+| forward | `mix50 − sft` | −3.77 pp | [−5.71, −1.93] |
+| forward | `rev − base` | −6.87 pp | [−9.96, −3.97] |
+
+**Verdict: PASS.** `sft − base` on reverse is −54.9 % relative, past the pre-registered −50 %,
+and `rev` at 0.5822 clears the learnability floor of 0.5519.
+
+Four things worth saying about this beyond "it worked".
+
+**1. The collapse is not a failure to learn — the model got BETTER at the trained direction.**
+Forward rose 13.7 pp while reverse fell 27.6 pp. That disproportion is the paper's subject, and
+it is visible in a single cell.
+
+**2. Almost half of `sft`'s reverse output is echo: 0.461, from a base rate of 0.000.** The
+collapse has a mechanism and it is legible: asked to go backwards, the forward-only model copies
+its input. `CLAUDE.md` §3.4 requires that echo never count as success, and this is where that
+rule earns its place — without the not-echo conjunct, `sft`'s reverse would score far higher and
+the collapse would look milder than it is.
+
+**3. The cure is cheap but NOT free, and the interval says so.** `mix5` restores reverse to
+0.5561 — above the untouched base's 0.5019 — for **−1.74 pp of forward, CI [−3.29, −0.29]**. That
+interval excludes zero, so the honest statement is "1.7 pp of forward buys 33 pp of reverse", not
+"free". Whether it is free on *general* ability is a different question and the IFEval/GSM8K
+probe answers it.
+
+**4. Amendment 14 was load-bearing on the first cell.** The kill-gate's old floor was
+`max(0.05, 2 × base_reverse)` = **1.0039** — a strict rate that cannot exist. `verdict["passes"]`
+requires a collapsing NLP cell to clear the kill-gate, so **this run would have returned FAIL on
+a textbook collapse**, and the printed reason would have been `[KILL-GATE: rev ~ 0]` with `rev`
+sitting at 0.5822. The additive floor (0.5519) passes it correctly.
