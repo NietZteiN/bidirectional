@@ -64,10 +64,18 @@ CONTESTED = {"h200", "normal"}
 ARMS = "gate"          # sft, mix5, mix50, rev — see bidir.arms.GATE
 
 
+#: CPUs per job. 16 of a node's 64, which is modest for scheduling and matters for the
+#: EXECUTION-SCORED domains: `exec_workers` is derived from the allocation (never hardcoded --
+#: see bidir.domains._common.exec_workers), so 8 CPUs would cap `code`'s eval at 7 concurrent
+#: programs for ~5,000 executions. Training does not execute anything; the eval does, and the
+#: two share this setting because a cell is one pipeline.
+CPUS = 16
+
+
 def sub(name, argv, *, partition, time, dep=None, mem="64G", extra=None, dry=False,
-        dep_kind="afterok") -> str | None:
+        dep_kind="afterok", cpus=None) -> str | None:
     cmd = [sys.executable, str(SUBMIT), "--name", name, "--partition", partition,
-           "--time", time, "--mem", mem]
+           "--time", time, "--mem", mem, "--cpus", str(cpus or CPUS)]
     if dep:
         cmd += ["--dependency", f"{dep_kind}:{dep}"]
     cmd += list(extra or [])
