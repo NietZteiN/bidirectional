@@ -71,6 +71,30 @@ echo
 
 DEFAULTS = {"partition": "h200", "gres": "gpu:1", "cpus": 8, "mem": "64G", "time": "08:00:00"}
 
+#: Partitions that draw on the shared juno QoS pool. `h200` and `normal` are ONE budget of four
+#: running jobs across the whole account, not two -- so a CPU analysis on `normal` blocks a GPU
+#: training job. `dev` is QoS=juno-dev and `h100`/`a30` carry no QoS, so none of them count.
+CONTESTED = {"h200", "normal"}
+
+
+def juno_jobs_held() -> int:
+    """Running jobs this account holds in the contested pool.
+
+    Counted rather than trusted, because a share agreed with a neighbouring project on this
+    account is only worth what something enforces. Pending jobs are not counted: a job pending
+    on Priority or Resources holds nothing, and counting them made obtune's equivalent guard
+    refuse everything the moment a queue backed up.
+    """
+    import getpass
+
+    try:
+        out = subprocess.run(
+            ["squeue", "-u", getpass.getuser(), "-h", "-t", "RUNNING", "-o", "%P"],
+            capture_output=True, text=True, timeout=20).stdout
+    except Exception:
+        return 0          # never block a submission because squeue was slow
+    return sum(1 for line in out.split() if line.strip() in CONTESTED)
+
 
 def build_script(argv, *, job_name, partition, gres, cpus, mem, time, dependency=None,
                  qos=None, nodelist=None, exclude=None) -> str:
@@ -135,6 +159,17 @@ def main() -> int:
     if not a.argv:
         print("nothing to run", file=sys.stderr)
         return 1
+
+    share = int(os.environ.get("BIDIR_JUNO_SHARE", "1"))
+    if share and a.partition in CONTESTED and not a.dry_run:
+        held = juno_jobs_held()
+        if held >= share:
+            print(f"REFUSED: this project may hold {share} running job(s) in the juno pool "
+                  f"(h200 + normal are one budget) and already holds {held}.\n"
+                  f"  Wait, or submit to a30/h100/dev, which carry no QoS.\n"
+                  f"  Override with BIDIR_JUNO_SHARE=<n> if the share has been renegotiated.",
+                  file=sys.stderr)
+            return 2
     dep = a.dependency
     if dep and not dep.startswith(("afterok:", "afterany:", "after:")):
         dep = f"afterok:{dep}"

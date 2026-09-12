@@ -1,6 +1,6 @@
 # Operating rules — `bidirectional/`
 
-*Last updated: 2026-09-10.*
+*Last updated: 2026-09-12.*
 
 This project measures **directional collapse**: whether fine-tuning on one direction of a
 paired task destroys the model's pre-existing ability in the other. The science is
@@ -29,9 +29,14 @@ Same cluster as obtune: `juno-l-02` login, SLURM 24.11.5, **no GPU on the login 
   resumes by resubmission and costs only the arm it was inside.
 - Measured on H200: **~18 min per 7B LoRA adapter**; ~12 min at 3-4B, ~30 min at 8B. Ask for
   roughly twice the estimate — over-asking costs queue position, under-asking costs the run.
-- Spread across partitions: the per-user cap is enforced **per partition**, so `a30` (24 GB,
-  <= 3B) and `h100` carry small-model packs. Exclude `g-06-01` on `h100` for anything large: it
-  advertises 3g.47gb MIG slices and obtune measured a 2.8x slowdown there.
+- Spread across partitions, but know which ones share a pool. **`h200` and `normal` are both
+  QoS `juno` — ONE budget of 4, not two**, so moving a CPU analysis to `normal` frees no GPU
+  slot. `dev` is QoS `juno-dev`, a separate pool; `a30` (24 GB, <= 3B) and `h100` carry no QoS
+  at all, which is where small-model packs go. Exclude `g-06-01` on `h100` for anything large:
+  it advertises 3g.47gb MIG slices and obtune measured a 2.8x slowdown there.
+- **The account is shared with obtune, which holds 2 of the 4 juno slots.** `$BIDIR_JUNO_SHARE`
+  (default 1) is this project's share and `scripts/slurm/submit.py` refuses to exceed it,
+  counting *running* jobs only — a job pending on Resources holds nothing.
 
 ### The login node caps virtual memory at 8 GB
 `ulimit -v 8388608`. Loading a model, or even importing scipy under transformers, dies there
@@ -45,6 +50,16 @@ and works fine in a job. **Verify environments and run tokenizer/model tests und
 - Training: `/work/jvl210002/migration/envs/bidir-cu129` — obtune's 222-package lock replayed,
   torch overlaid to `2.11.0+cu129` (juno's driver is r550/CUDA 12.4, and the lock's cu130 build
   reports `cuda.is_available() == False` on every GPU node while `nvidia-smi` works).
+
+### The lock does not capture the vLLM wheel
+`vllm==0.26.0` resolves from PyPI to a **CUDA 13** build (`NEEDED libcudart.so.13`), which dies
+on a GPU node with `ImportError: libcudart.so.13` the moment `vllm.platforms` resolves
+`CudaPlatform`. It imports **fine on the login node**, where there is no GPU and that branch is
+never taken — so it survived every check until the first GPU job (2026-09-12). obtune's working
+env has `vllm-0.26.0+cu129` from the project's GitHub release asset; `+cu129` satisfies
+`==0.26.0`, so nothing in the lock records the difference. `env/setup_env.sh` now installs that
+wheel by URL and asserts the `+cu129` suffix. **A package that imports on the login node has not
+been verified.**
 - Scoring: `/work/jvl210002/migration/envs/bidir-score` — COMET only. `unbabel-comet` pins
   `transformers<5` against the training stack's 5.14.1, so it lives behind a subprocess
   boundary. Do not try to merge them.

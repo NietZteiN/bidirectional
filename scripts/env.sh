@@ -25,12 +25,45 @@ export OBTUNE_ROOT="${OBTUNE_ROOT:-/work/jvl210002/migration/obtune}"
 # dies as a bare FileNotFoundError nine frames down (obtune log/setup/2026-08-30).
 export PATH="$BIDIR_ENV/bin:$PATH"
 export PYTHONPATH="$BIDIR_ROOT/src:$OBTUNE_ROOT/src${PYTHONPATH:+:$PYTHONPATH}"
-export HF_HOME="${HF_HOME:-$BIDIR_SCRATCH/hf_home}"
+# HF_HOME is on SCRATCH, not /work, for three reasons obtune paid for first
+# (obtune/scripts/env.sh, 2026-09-10):
+#   * OWNERSHIP. The /work cache is shared by every project on this account, and on 2026-09-10 a
+#     neighbour deleted 87 GB of CodeLlama weights from it to make room. A cache we do not own
+#     can be reclaimed by someone else mid-campaign.
+#   * SPEED. Measured on a compute node: /scratch reads at 14,186 MB/s against /work's 1,289
+#     (11x), WekaFS with 32 MB readahead against MooseFS.
+#   * SPACE. /work is a 1.1 TB per-user quota shared across projects; /scratch is a separate
+#     30 TB one.
+# THE TOKEN MUST TRAVEL WITH THE CACHE: it lives at $HF_HOME/token, and moving HF_HOME without
+# it fails every gated repo (both Llamas, both Gemmas) with a 401 at the first hub call -- even
+# when the weights are already on disk. Verified present before this was switched.
+export HF_HOME="${HF_HOME:-/scratch/juno/$USER/hf_home}"
 export TMPDIR="${TMPDIR:-$BIDIR_SCRATCH/tmp}"
 export TORCHINDUCTOR_CACHE_DIR="${TORCHINDUCTOR_CACHE_DIR:-$BIDIR_SCRATCH/cache/inductor}"
 export TRITON_CACHE_DIR="${TRITON_CACHE_DIR:-$BIDIR_SCRATCH/cache/triton}"
 export VLLM_LOGGING_LEVEL="${VLLM_LOGGING_LEVEL:-WARNING}"
 export VLLM_USE_FLASHINFER_SAMPLER="${VLLM_USE_FLASHINFER_SAMPLER:-0}"  # needs nvcc; not present
+
+# vLLM's engine core is spawned rather than forked. Without this, a job on the h100 partition's
+# MIG node (g-06-01) dies with "Cannot re-initialize CUDA in forked subprocess", because several
+# jobs share one physical card and a CUDA context already exists when the engine forks.
+#
+# CONSEQUENCE FOR EVERY SCRIPT THAT BUILDS AN ENGINE: spawn makes the engine-core subprocess
+# RE-IMPORT the entry module, so engine construction at module level builds another engine in
+# every child, recursively. The tell is the script's own first print appearing twice, and the
+# symptom -- a job that starts, reports a healthy GPU and then never finishes -- reads as a
+# broken node. `bidir.evaluate`, `bidir.mech.*` and every script here guard with
+# `if __name__ == "__main__":`; keep it that way.
+export VLLM_WORKER_MULTIPROC_METHOD="${VLLM_WORKER_MULTIPROC_METHOD:-spawn}"
+
+# Share of the juno QoS pool this project may hold. The account is shared: obtune has claimed 2
+# of the 4 running jobs the juno QoS allows, so taking more than 1 here squeezes a neighbour out.
+#
+# THE POOL IS NOT ONE PARTITION. `h200` and `normal` are both QoS=juno, so they are ONE budget of
+# four -- a CPU analysis on `normal` blocks a GPU training job, and moving work there frees
+# nothing. `dev` is QoS=juno-dev, a separate pool, which is why the CPU jobs in this project run
+# there. `h100` and `a30` carry no QoS at all and are unaffected.
+export BIDIR_JUNO_SHARE="${BIDIR_JUNO_SHARE:-1}"
 export TOKENIZERS_PARALLELISM=false
 
 # Fail loudly rather than three frames into a download. A cached model tree that is suddenly
