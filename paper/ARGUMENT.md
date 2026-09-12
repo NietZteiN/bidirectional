@@ -164,7 +164,11 @@ erasure.
 
 ### §8 Consequences for attribution
 Half a page. Three objectives, each against SFT on the same directional mixture at matched
-sequence tokens. **Tone is diagnostic, not prosecutorial** — the workshop paper's rule, and the
+sequence tokens. The strongest case is **RevThink** (Chen et al., NAACL 2025): its loss is a sum
+of three cross-entropy terms over a union of formats, which *is* SFT on that union, and none of
+its baselines holds data direction fixed. That is not an error on their part --- it is what the
+general problem looks like when it is structural rather than accidental, which is exactly why
+the test belongs in §1. **Tone is diagnostic, not prosecutorial** — the workshop paper's rule, and the
 authors of the method may review this. The precise claim about Nikiema et al. is that they
 *declare* a bidirectional baseline and report no number for it, which is verifiable in their §6
 and is not the same as "they never ran it".

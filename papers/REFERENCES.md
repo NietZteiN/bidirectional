@@ -56,6 +56,19 @@ Fine-Tuning (SFT) ... and Bidirectional Fine-Tuning (BFT)" — and the string `B
 **exactly once in the paper, never in a results table**. So "they name the baseline and report no
 number for it" is exact; "they never ran it" would be false.
 
+### `chen2025revthink.pdf` — NAACL 2025, the mirror image
+RevThink: a teacher generates (question, forward reasoning, backward question, backward
+reasoning); the student trains on three tasks. +13.53 % over zero-shot across 12 datasets, and
+10 % of the forward reasoning beats 10x more under standard fine-tuning. **Measures FORWARD
+accuracy** — adding backward data to improve forward reasoning — where we measure the reverse
+direction being destroyed. Their backward data is teacher-generated and costs inference; ours is
+a field swap and costs nothing.
+
+The reason it matters for §8: their loss (p. 4) is `L = (1/3n) Σ [ℓ(fwd) + ℓ(bwd question) +
+ℓ(bwd reasoning)]` with `ℓ` token cross-entropy — joint next-token CE over a union of three
+pools, which is what SFT on the union is. The baselines (SKD, AnsAug) differ in data direction
+too, so nothing holds direction fixed. Same structure as CFT, bigger venue, 12 datasets.
+
 ### `hasanov2026pathnottaken.pdf` — DexBench, ACL 2026
 Evaluation only, no fine-tuning. Forward = predict execution behaviour for an input; backward =
 **counterfactual input mutation** toward a target execution path (p.3) — narrower than

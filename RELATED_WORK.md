@@ -99,6 +99,57 @@ is the axis their design does not cover.
 
 ---
 
+## 2b. RevThink — the mirror image, and the best attribution case available
+
+**Chen, Wang, Palangi, Han, Ebrahimi, Le, Perot, Mishra, Bansal, Lee, Pfister (2025). "Reverse
+Thinking Makes LLMs Stronger Reasoners." NAACL 2025.**
+[arXiv:2411.19865](https://arxiv.org/abs/2411.19865) · `papers/chen2025revthink.pdf`
+
+A teacher model augments each example into (question, forward reasoning, backward question,
+backward reasoning); a student is then trained on three tasks. Across 12 datasets this gives
+**+13.53 %** over the student's zero-shot performance and **+6.84 %** over the strongest
+distillation baseline, and it is sample-efficient: 10 % of the forward reasoning beats standard
+fine-tuning on 10× more.
+
+**It is not this paper's idea, and the difference is the dependent variable.**
+
+| | RevThink | this paper |
+|---|---|---|
+| what is measured | **forward** accuracy | **reverse** accuracy |
+| the claim | adding backward data makes forward reasoning better | training forward-only destroys reverse ability |
+| the phenomenon | a gain to be obtained | a loss to be prevented |
+| is degradation measured? | no | it is the headline |
+| where backward data comes from | **a teacher model generates a new backward question** | swapping which half of an existing pair is the input |
+
+That last row matters more than it looks. RevThink's backward data costs teacher inference over
+the whole training set; ours costs nothing, because the reverse example is the forward example
+read the other way. Their sample-efficiency result and our dose result look similar and are
+different claims: theirs is that augmented data is worth more per token, ours is that the
+reversal was free all along.
+
+### Why it is nonetheless the strongest case for §8
+
+Their loss (p. 4) is
+
+> `L = (1/3n) Σ [ℓ(forward reasoning) + ℓ(backward question) + ℓ(backward reasoning)]`
+
+with `ℓ` the token-level cross-entropy. **That is joint next-token cross-entropy over the union
+of three equally weighted pools — which is what supervised fine-tuning on the union *is*.** The
+"novel learning objectives" are three input→output formats, not a new objective.
+
+This is exactly the structure the workshop paper found in CFT, in a more prominent venue and
+across 12 datasets. And the comparison that would separate the two never appears: the baselines
+(SKD, Answer Augmentation) differ from RevThink in *data direction* as well as in method —
+Answer Augmentation samples more **forward** reasoning — so no arm holds direction fixed. The
+ablations that exist are teacher verification (Table 5) and composition with AnsAug (Table 4);
+neither isolates direction.
+
+**Stated carefully, because it is a claim about someone else's paper.** Their gains are real and
+we are not disputing them. The point is that when the objective is a sum of cross-entropy terms
+over a union of formats, "the objective" and "the data mixture" are *the same thing*, so the
+credit cannot be assigned between them by any experiment in the paper. That is not a mistake
+they made; it is the general problem, and it is why the test in §1 is worth stating.
+
 ## 3. Direction in machine translation
 
 **Zhu, Chen, Zhang, Haddow, Shen, Klakow (2024). "Fine-Tuning Large Language Models to Translate:
