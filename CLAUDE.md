@@ -29,14 +29,27 @@ Same cluster as obtune: `juno-l-02` login, SLURM 24.11.5, **no GPU on the login 
   resumes by resubmission and costs only the arm it was inside.
 - Measured on H200: **~18 min per 7B LoRA adapter**; ~12 min at 3-4B, ~30 min at 8B. Ask for
   roughly twice the estimate — over-asking costs queue position, under-asking costs the run.
-- Spread across partitions, but know which ones share a pool. **`h200` and `normal` are both
-  QoS `juno` — ONE budget of 4, not two**, so moving a CPU analysis to `normal` frees no GPU
-  slot. `dev` is QoS `juno-dev`, a separate pool; `a30` (24 GB, <= 3B) and `h100` carry no QoS
-  at all, which is where small-model packs go. Exclude `g-06-01` on `h100` for anything large:
-  it advertises 3g.47gb MIG slices and obtune measured a 2.8x slowdown there.
-- **The account is shared with obtune, which holds 2 of the 4 juno slots.** `$BIDIR_JUNO_SHARE`
-  (default 1) is this project's share and `scripts/slurm/submit.py` refuses to exceed it,
-  counting *running* jobs only — a job pending on Resources holds nothing.
+- Spread across partitions, but know which ones share a pool. Read from `sacctmgr` on
+  2026-09-12, not from the docs:
+
+  | QoS | `MaxJobsPU` | partitions |
+  |---|---|---|
+  | `juno` | **4** | `h200`, **`normal`** |
+  | `juno-dev` | **1** | `dev` |
+  | `juno-pri` | 8 (priority 200000) | — |
+  | none | uncapped | `h100`, `a30` |
+
+  Three consequences. **`h200` and `normal` are ONE budget of 4, not two** — a CPU analysis on
+  `normal` costs a GPU slot. **`dev` is one job wide**, so CPU verification serialises and a
+  neighbouring project's dev job blocks yours (`QOSMaxJobsPerUserLimit`). **`h100`/`a30` carry
+  no cap at all**, which is where small-model packs belong. Exclude `g-06-01` on `h100` for
+  anything large: it advertises 3g.47gb MIG slices and obtune measured a 2.8x slowdown there.
+- **FOUR projects share this account's budget**, all seen running together on 2026-09-12:
+  `bidirectional`, `obtune`, `probing`, `transcoders`. `$BIDIR_JUNO_SHARE` (default 1) is this
+  project's share and `scripts/slurm/submit.py` refuses to exceed it, counting *running* jobs
+  only — a job pending on Resources holds nothing. To queue work without exceeding the share,
+  chain it: `--dependency afterany:<neighbour job id>`. A dependent job cannot run concurrently
+  with what it waits on, so the guard exempts it.
 
 ### The login node caps virtual memory at 8 GB
 `ulimit -v 8388608`. Loading a model, or even importing scipy under transformers, dies there
