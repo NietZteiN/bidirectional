@@ -27,6 +27,7 @@ import subprocess
 import sys
 from datetime import datetime, timezone
 from pathlib import Path
+from typing import Optional
 
 ROOT = Path(__file__).resolve().parents[2]
 SLURM_DIR = ROOT / "runs" / "slurm"
@@ -94,6 +95,37 @@ def juno_jobs_held() -> int:
     except Exception:
         return 0          # never block a submission because squeue was slow
     return sum(1 for line in out.split() if line.strip() in CONTESTED)
+
+
+def queues_behind_pool(dependency: Optional[str]) -> bool:
+    """True when this job cannot be concurrent with what already holds the pool.
+
+    A job whose dependency names something already in the contested pool queues BEHIND it, so
+    it adds nothing to concurrency and the share check must not refuse it. Without this, a
+    correctly-chained pipeline is rejected the moment its first job reaches RUNNING -- which is
+    exactly what happened to the sql gate on 2026-09-12, one second after the packed gate
+    started.
+
+    Deliberately narrow: the dependency must name a job that is itself in a contested
+    partition. Depending on a `dev` job says nothing about the pool, and letting that through
+    would be a way to bypass the share by accident.
+    """
+    if not dependency:
+        return False
+    ids = {tok for part in dependency.split(",") for tok in part.split(":")[1:] if tok.isdigit()}
+    if not ids:
+        return False
+    try:
+        out = subprocess.run(
+            ["squeue", "-h", "-j", ",".join(sorted(ids)), "-o", "%i %P"],
+            capture_output=True, text=True, timeout=20).stdout
+    except Exception:
+        return False
+    for line in out.splitlines():
+        bits = line.split()
+        if len(bits) == 2 and bits[1].strip() in CONTESTED:
+            return True
+    return False
 
 
 def build_script(argv, *, job_name, partition, gres, cpus, mem, time, dependency=None,
@@ -166,7 +198,7 @@ def main() -> int:
         return 1
 
     share = int(os.environ.get("BIDIR_JUNO_SHARE", "1"))
-    if share and a.partition in CONTESTED and not a.dry_run:
+    if share and a.partition in CONTESTED and not a.dry_run and not queues_behind_pool(a.dependency):
         held = juno_jobs_held()
         if held >= share:
             print(f"REFUSED: this project may hold {share} running job(s) in the juno pool "

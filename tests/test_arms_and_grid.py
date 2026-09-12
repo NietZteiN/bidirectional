@@ -467,3 +467,22 @@ def test_no_domain_module_hardcodes_a_worker_count():
         src = f.read_text()
         bad = re.findall(r'cfg\.get\(\s*["\']exec_workers["\']\s*,\s*\d+', src)
         assert not bad, f"{f.name} still carries a hardcoded worker fallback: {bad}"
+
+
+def test_share_guard_allows_a_job_chained_behind_the_pool():
+    """A dependent job queues behind its predecessor, so it adds nothing to concurrency.
+
+    Without this, the guard refuses a correctly-chained pipeline the moment its first job
+    reaches RUNNING -- which is what happened to the sql gate on 2026-09-12, one second after
+    the packed gate started. The check stays narrow: the dependency must name a job that is
+    itself in a contested partition, or depending on a `dev` job would become a way to bypass
+    the share by accident.
+    """
+    from pathlib import Path
+
+    src = (Path(__file__).resolve().parents[1] / "scripts" / "slurm" / "submit.py").read_text()
+    assert "def queues_behind_pool" in src
+    assert "not queues_behind_pool(a.dependency)" in src, (
+        "the share check does not consult the dependency, so chained jobs are refused")
+    assert "bits[1].strip() in CONTESTED" in src, (
+        "the dependency's own partition is not checked, so any dependency would bypass the share")
