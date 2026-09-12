@@ -558,3 +558,35 @@ def test_contrasts_separate_equivalence_from_failing_to_reject():
     src = (Path(__file__).resolve().parents[1] / "scripts" / "50_contrasts.py").read_text()
     assert '"verdict": verdict' in src, "the verdict is not written into the contrast record"
     assert '"inconclusive"' in src and '"equivalent"' in src
+
+
+def test_probes_run_one_lm_eval_call_per_task():
+    """--num_fewshot is GLOBAL to an lm_eval invocation, so tasks cannot share one.
+
+    ifeval wants 0-shot and gsm8k wants 5. Batched into a single call, the old loop picked the
+    first task with a truthy value -- ifeval's 0 is falsy -- so gsm8k's 5 won and IFEVAL RAN
+    5-SHOT. IFEval scores adherence to verifiable instructions IN THE PROMPT; five unrelated
+    instruction/response pairs in front of it invite the model to follow the wrong one, and
+    make the score incomparable to every published IFEval number. It is also the control RQ1
+    rests on.
+    """
+    from pathlib import Path
+
+    src = (Path(__file__).resolve().parents[1] / "scripts" / "40_probes.py").read_text()
+    assert '"--tasks", TASKS[t]' in src, "tasks are still batched into one lm_eval call"
+    assert '","join' not in src.replace(" ", "")  # no re-joined task list
+    assert '"--num_fewshot", str(FEWSHOT.get(t, 0))' in src, (
+        "num_fewshot must be set per task, from that task's own value")
+    assert "break" not in src.split("for t in tasks:")[-1].split("results[")[0], (
+        "the first-truthy-then-break pattern is what made ifeval 5-shot")
+    # And the shot counts actually used have to reach the provenance record.
+    assert '"num_fewshot": {t: FEWSHOT.get(t, 0) for t in tasks}' in src
+
+
+def test_probes_record_arms_they_could_not_probe():
+    """A missing adapter must be named, not skipped into a gap in the control table."""
+    from pathlib import Path
+
+    src = (Path(__file__).resolve().parents[1] / "scripts" / "40_probes.py").read_text()
+    assert '"missing_adapters": missing' in src, (
+        "index.json lists the arms ASKED for, so an unprobed arm has to be recorded")

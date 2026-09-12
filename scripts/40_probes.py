@@ -81,6 +81,7 @@ def main() -> int:
         {t: overlap_check(cells, t) for t in tasks}, indent=2))
 
     jobs: list[tuple[str, str | None]] = []
+    missing: list[dict] = []
     for cell in cells:
         for name in arm_names:
             spec = arm_registry.resolve(name)
@@ -90,6 +91,11 @@ def main() -> int:
                             root="adapters_fullft" if spec.full_ft else "adapters") / "final"
             if p.exists():
                 jobs.append((f"{cell}__{name}", str(p)))
+            else:
+                # Recorded, not silently dropped: index.json lists the arms that were ASKED
+                # for, so a missing adapter would otherwise leave a reader thinking every arm
+                # was probed and the control table simply had gaps.
+                missing.append({"cell": cell, "arm": name, "expected": str(p)})
     if "base" in arm_names:
         jobs.insert(0, ("base", None))   # the untouched model is probed once, not once per cell
 
@@ -99,23 +105,43 @@ def main() -> int:
                       "max_model_len=4096"]
         if adapter:
             model_args += [f"lora_local_path={adapter}", "enable_lora=True", "max_lora_rank=64"]
-        out_path = out_root / f"{label}.json"
-        cmd = ["lm_eval", "--model", "vllm", "--model_args", ",".join(model_args),
-               "--tasks", ",".join(TASKS[t] for t in tasks), "--batch_size", "auto",
-               "--seed", str(a.seed), "--output_path", str(out_path)]
+
+        # ONE lm_eval CALL PER TASK, because --num_fewshot is GLOBAL to an invocation.
+        #
+        # Running ifeval and gsm8k together meant a single --num_fewshot for both, and the old
+        # loop picked the first task with a truthy value -- ifeval's 0 is falsy, so gsm8k's 5
+        # won and IFEVAL RAN 5-SHOT. IFEval is a zero-shot benchmark whose entire design is
+        # adherence to verifiable instructions IN THE PROMPT; prepending five unrelated
+        # instruction/response pairs invites the model to follow the wrong instruction, and
+        # makes the number incomparable to every published IFEval score.
+        #
+        # It is also the control the RQ1 claim rests on -- "reverse capability falls to near
+        # zero while general ability falls a few points" -- so a distorted IFEval would have
+        # been a distorted control, in a direction nobody could predict.
         for t in tasks:
-            if FEWSHOT.get(t):
-                cmd += ["--num_fewshot", str(FEWSHOT[t])]
-                break
-        if a.limit:
-            cmd += ["--limit", str(a.limit)]
-        print(f"[probes] === {label} === {' '.join(cmd)}", flush=True)
-        rc = subprocess.run(cmd, cwd=ROOT).returncode
-        results[label] = {"rc": rc, "output": str(out_path), "adapter": adapter}
+            out_path = out_root / f"{label}__{t}.json"
+            cmd = ["lm_eval", "--model", "vllm", "--model_args", ",".join(model_args),
+                   "--tasks", TASKS[t], "--batch_size", "auto",
+                   "--num_fewshot", str(FEWSHOT.get(t, 0)),
+                   "--seed", str(a.seed), "--output_path", str(out_path)]
+            if a.limit:
+                cmd += ["--limit", str(a.limit)]
+            print(f"[probes] === {label} / {t} ({FEWSHOT.get(t, 0)}-shot) === "
+                  f"{' '.join(cmd)}", flush=True)
+            rc = subprocess.run(cmd, cwd=ROOT).returncode
+            results[f"{label}__{t}"] = {"rc": rc, "output": str(out_path), "adapter": adapter,
+                                        "task": t, "num_fewshot": FEWSHOT.get(t, 0)}
 
     (out_root / "index.json").write_text(json.dumps(
         {"model": a.model, "cells": cells, "arms": arm_names, "tasks": tasks,
+         "num_fewshot": {t: FEWSHOT.get(t, 0) for t in tasks},
+         "missing_adapters": missing,
          "finished_utc": datetime.now(timezone.utc).isoformat(), "results": results}, indent=2))
+    if missing:
+        print(f"[probes] {len(missing)} requested arm(s) had no adapter and were NOT probed:",
+              file=sys.stderr)
+        for mm in missing:
+            print(f"    {mm['cell']}/{mm['arm']}: {mm['expected']}", file=sys.stderr)
     failed = [k for k, v in results.items() if v["rc"] != 0]
     print(f"[probes] wrote {out_root}; {len(results) - len(failed)} ok, {len(failed)} failed", flush=True)
     return 1 if failed else 0
