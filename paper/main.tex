@@ -193,7 +193,72 @@ untested, and anything stronger than that is unsupported.
 
 \section{Related work}
 \label{sec:related}
-\NUM{related-work-section}
+
+Four lines of work meet here. Each has a sentence saying what separates it from directional
+collapse, because in three of the four the distinction is the contribution.
+
+\paragraph{The phenomenon, in single domains.}
+\citet{nikiema2025contrastive} name \emph{cognitive specialization}: fine-tuning on a forward
+code transformation not only fails to produce the reverse but degrades the bidirectional
+reasoning a base model already had. \citet{zhu2024finetuning} report the same shape in machine
+translation, where fine-tuning on a single direction generalizes to others \emph{except} when
+English is on the target side, which causes task misinterpretation. We take the phenomenon as
+established in those settings. What is open is whether it is general, what predicts the size of
+the loss, how little reversed data prevents it, and whether what is lost is gone.
+% The paper's own premise needs base models to be able to do both directions. DexBench is
+% independent, contemporaneous evidence for that in the execution domain, and its benchmark is
+% the eval set of one of our cells.
+\citet{hasanov2026pathnottaken} evaluate 13 models on the duality of program-execution reasoning
+and find backward performance far below forward throughout, which is the premise this paper
+depends on: the capability is there to be destroyed.
+
+\paragraph{The reversal curse: a capability never acquired.}
+\citet{berglund2024reversal} fine-tune on ``$A$ is $B$'' and find the reverse is not learned;
+\citet{golovneva2024reversetraining} cure it at the data level with reverse training, evaluated
+both data-matched and compute-matched. \textbf{The distinction is not rhetorical here, it is an
+experiment.} That literature describes a capability the model never had. Ours had it, and lost
+it. \S\ref{sec:mechanism} measures relearning cost from a collapsed model against a
+\emph{never-had control} --- an invented transformation no pretraining corpus contains --- and
+the two curves are what separate the cases. A second difference is budget: reverse training
+doubles the token count, while replacing forward pairs with their own reversal holds instances,
+sequence tokens and optimizer steps fixed at once.
+
+\paragraph{Forgetting: diffuse loss, versus targeted and total.}
+Fine-tuning degrades capabilities its data never threatened
+\citep{luo2023forgetting,kotha2024forgetting}, LoRA forgets less than full fine-tuning
+\citep{biderman2024lora}, and roughly 1\,\% rehearsal of prior data prevents much of it
+\citep{scialom2022rehearsal} --- the closest analogue to our dose result, and a reason to expect
+a small one to work. The difference is shape. Forgetting is measured as a spread-out decline
+across unrelated benchmarks; here the inverse direction goes to near zero while general probes
+move a few points, and the \textsc{replay} arm exists to tell the two apart by substituting
+generic instruction data for the reversed pairs at identical budget.
+
+\paragraph{Suppression rather than removal.}
+Fine-tuning has been characterised as a thin wrapper over pretrained capability
+\citep{jain2024wrapper} and as suppressing rather than removing behaviour
+\citep{lee2024dpo}, and damaged capabilities can be recovered post hoc by filtering the weight
+update itself \citep{spectral2026unforgetting}. \citet{latentgen2026illusion} add a caution we
+take seriously: objectives that repair reversal behaviour need not build a single
+direction-agnostic representation, and their probes are consistent with forward and reverse
+stored as distinct entries. That is why \S\ref{sec:mechanism} uses four instruments rather than
+one, and why both directions share a single system prompt --- if directions can be stored
+separately while behaviour looks bidirectional, two personas would let disjoint circuits
+masquerade as a unified one.
+
+\paragraph{Direction as a confound in attribution.}
+The methodological consequence has a literature of its own: gains attributed to an objective
+often belong to the data mixture \citep{longpre2023flan}, and reporting practice makes such
+claims hard to check \citep{lipton2018troubling}. \citet{chen2025revthink} is the sharpest
+current instance, and a useful one because nothing about it is careless. RevThink augments each
+example with a teacher-generated backward question and backward reasoning and improves
+\emph{forward} accuracy by 13.53\,\% across 12 datasets. Its objective is
+$\mathcal{L} = \frac{1}{3n}\sum_i [\ell(\text{forward}) + \ell(\text{backward question}) +
+\ell(\text{backward reasoning})]$, a sum of cross-entropy terms over a union of three formats
+--- which is what supervised fine-tuning on that union is. Its baselines differ from it in data
+direction as well as in method. When an objective has that form, the objective and the data
+mixture are not separable by any experiment the paper contains. That is the general problem
+being structural rather than accidental, and it is why the test in \S\ref{sec:intro} is worth
+stating rather than assuming.
 
 \section{Limitations}
 \label{sec:limitations}

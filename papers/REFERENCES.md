@@ -145,3 +145,29 @@ of ..."), then query both orders. Models answer the trained order and fail the r
 alleviated by data augmentation. Also tested on real celebrities with ChatGPT. The capability was
 **never acquired** — which is exactly the contrast our `relearn-k` versus `fmt_novel` comparison
 makes experimental rather than rhetorical.
+
+
+---
+
+## Cited but not yet read
+
+`paper/main.tex` §9 cites eight works carried over from the plan's bibliography that are **not**
+in this directory and have not been read past a search snippet. Each is flagged `NOT YET READ` in
+`references.bib`. They are cited for claims that are standard in their fields, but standard is
+not the same as checked, and this list is the outstanding debt:
+
+| key | why it is cited | risk if unread |
+|---|---|---|
+| `scialom2022rehearsal` | ~1 % rehearsal prevents forgetting | **highest** — this is the closest analogue to our dose result, and §5 leans on the resemblance |
+| `biderman2024lora` | LoRA forgets less than full fine-tuning | qualifies every LoRA-based claim; the `fullft_*` arms exist because of it |
+| `kotha2024forgetting` | forgetting as a shift in implicit task inference | adjacent to the suppression reading |
+| `jain2024wrapper` | fine-tuning as a thin wrapper | ditto |
+| `lee2024dpo` | DPO suppresses rather than removes toxicity | the precedent for suppression-not-erasure |
+| `luo2023forgetting` | forgetting during continual fine-tuning | background |
+| `longpre2023flan` | data mixture drives gains | background for §8 |
+| `lipton2018troubling` | mis-attribution in ML scholarship | background for §8 |
+
+**Read `scialom2022rehearsal` first.** If their ~1 % rehearsal result is closer to our dose
+finding than §5 currently allows, the framing of the contribution changes: a knee below 10 %
+would be a replication of a known effect in a new setting rather than a new prescription. That is
+still worth reporting, but it is a different sentence.
