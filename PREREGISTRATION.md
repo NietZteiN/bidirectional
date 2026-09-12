@@ -645,3 +645,47 @@ as an inconclusive upside experiment; it now reads as a replication.
 out-of-domain performance better than full fine-tuning. Since this project is LoRA throughout,
 any collapse we measure is, if anything, **conservative** — the `fullft_*` arms say by how much,
 and §7 should present them that way rather than only as an artifact check.
+### Amendment 13 — 2026-09-12, before any adapter was trained
+
+**The base-competence precondition was unfalsifiable, and the first gate run proves it.**
+
+Amendment 4 registered that "a cell counts toward the gate only if the untouched model's reverse
+strict rate is at least 10 %", and said the precondition "already exists in the code". It does
+exist, and for every domain with a metric-based τ it cannot fail.
+
+τ is the `tau_quantile` (0.25) of the **base model's own** score distribution. The base's strict
+rate is therefore `1 − tau_quantile ≈ 0.75` by construction — in both directions, for every
+model, however good or bad it actually is. The first gate run on `mt_en-de` (llama32-3b, seed 17,
+n=200, 2026-09-12) returned forward 0.7450 and reverse 0.7500. Those are not measurements of
+competence; they are restatements of the quantile. A model that translated German badly would
+report the same 0.75 and pass the same gate, and the `sft − base ≤ −50 %` contrast would then be
+computed against a criterion that never distinguished translation from noise.
+
+This is the fourth instance of the pattern this project keeps finding — **a nominal parameter
+standing in for the quantity that matters** (drop share ≠ determinability; row count ≠ token
+budget; raw length ≠ rendered length; rows ≠ optimizer steps). Here: *rate under a base-relative
+τ ≠ base competence*.
+
+**What is registered instead.** For every domain whose criterion is metric-based, the gate now
+also requires that **τ clear the echo baseline's 90th percentile by at least 0.05**. The echo
+baseline is the model's own input copied to the output, scored through the identical metric and
+the identical direction. It is reported as `echo_baseline_p90` and `tau_margin_over_echo` in
+every base-gate JSON.
+
+Why the echo baseline and not an absolute number: τ's entire job is to separate "did the task"
+from "did not", so the floor it must clear is the score a degenerate answer already earns. That
+floor is measured on this data, with this metric, for this language pair — no constant is
+invented, and the same rule transfers to chrF₂ on `d2t` without recalibration. An absolute COMET
+cut-off would have required a threshold from the metric literature that does not transfer across
+metrics, and would have been a number nobody in this project chose.
+
+`--min-base-rate` is kept at 0.10 because it is a real check for the exact-criterion domains
+(`fmt`, `fmt_novel`, `code` forward, `sql` forward, `exec`), where the rate is a measurement
+rather than a definition. For metric domains it is retained and reported, but the gate's
+falsifiable clause is the τ margin, and `gate_rule` in each report now says so.
+
+**No prediction changes.** `mt_en-de` passes on the new clause too: τ is 0.7649 forward and
+0.8619 reverse, and the observed asymmetry (this model is better at de→en than en→de) is the
+direction Zhu et al. (2024) would predict and is the RQ2 moderator, not a defect. The gate is
+being re-run under the amended rule so that the frozen τ and the gate that licensed it come from
+the same pass.

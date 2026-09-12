@@ -83,6 +83,30 @@ def gate_one(a, domain: str, e) -> dict:
             rescored = mod.score_batch(direction, outs, insts, {**cfg, "thresholds": thresholds})
             row.update({"tau": float(tau), "rate": sum(r["strict"] for r in rescored) / max(1, len(rescored)),
                         f"{metric}_mean": sum(vals) / len(vals)})
+
+            # THE RATE CANNOT FAIL THIS GATE, SO SOMETHING ELSE HAS TO.
+            # tau is the `tau_quantile` of the base's OWN distribution, so the base's rate is
+            # 1 - tau_quantile ~= 0.75 by construction, in every direction, for every model.
+            # The >= min_base_rate check is therefore unfalsifiable wherever tau is metric-based,
+            # which is exactly where PREREGISTRATION Amendment 4 claims it is enforced. A model
+            # that translated German badly would still report 0.75 and pass.
+            #
+            # What the precondition actually needs is that tau sit clearly above the score a
+            # DEGENERATE answer earns, because tau's whole job is to separate "did the task"
+            # from "did not". So the echo baseline -- the model's own input, copied -- is scored
+            # through the same metric, and tau must beat its 90th percentile. No invented
+            # constant: the floor is measured on this data, with this metric, for this pair of
+            # languages, which is the only floor that transfers across the panel.
+            echo_src = [i["side_a"] if direction == "forward" else i["side_b"] for i in insts]
+            echo_scored = mod.score_batch(
+                direction, echo_src, insts,
+                {**cfg, "thresholds": {direction: {metric: -1e9}}})
+            echo_vals = sorted(r[metric] for r in echo_scored if r.get(metric) is not None)
+            echo_p90 = statistics.quantiles(echo_vals, n=10)[8] if len(echo_vals) >= 10 else max(echo_vals)
+            row.update({"echo_baseline_p90": float(echo_p90),
+                        "tau_margin_over_echo": float(tau - echo_p90)})
+            print(f"           echo baseline p90={echo_p90:.4f}  tau margin={tau - echo_p90:+.4f}",
+                  flush=True)
         else:
             row["rate"] = row["rate_uncapped"]
         report["directions"][direction] = row
@@ -97,10 +121,20 @@ def gate_one(a, domain: str, e) -> dict:
         report["roundtrip_ceiling"] = ceiling
         print(f"  round-trip parser on REFERENCE questions: {ceiling:.4f} (the reverse criterion's ceiling)")
 
-    ok = all(r["rate"] >= a.min_base_rate for r in report["directions"].values()) and \
-         all(r["format_fail"] <= a.max_format_fail for r in report["directions"].values())
+    dirs = report["directions"].values()
+    ok = (all(r["rate"] >= a.min_base_rate for r in dirs)
+          and all(r["format_fail"] <= a.max_format_fail for r in dirs)
+          # Only metric domains carry this; exact-criterion domains have no tau to check and
+          # their rate is a real measurement, so the rate check is not vacuous there.
+          and all(r["tau_margin_over_echo"] >= a.min_tau_margin
+                  for r in dirs if "tau_margin_over_echo" in r))
     report["passes_gate"] = ok
-    report["gate_rule"] = (f"both directions rate >= {a.min_base_rate} and format_fail <= {a.max_format_fail}")
+    report["min_tau_margin"] = a.min_tau_margin
+    report["gate_rule"] = (
+        f"both directions rate >= {a.min_base_rate}, format_fail <= {a.max_format_fail}, and "
+        f"(metric domains) tau at least {a.min_tau_margin} above the echo baseline's p90 -- the "
+        f"last clause is the one that can actually fail, since a base-relative tau puts the base "
+        f"at 1 - tau_quantile by construction")
 
     out_dir = RESULTS_DIR / "base_gates" / domain
     out_dir.mkdir(parents=True, exist_ok=True)
@@ -132,7 +166,13 @@ def main() -> int:
                     help="tau = this quantile of the base model's scores on the instances it "
                          "did not fail. 0.25 keeps the criterion at 'clearly worse than the "
                          "base typically manages' rather than at the base's median.")
-    ap.add_argument("--min-base-rate", type=float, default=0.10)
+    ap.add_argument("--min-base-rate", type=float, default=0.10,
+                    help="vacuous for metric domains (see --min-tau-margin); kept because it is "
+                         "a real check where the criterion is exact")
+    ap.add_argument("--min-tau-margin", type=float, default=0.05,
+                    help="tau must clear the echo baseline's 90th percentile by this much. "
+                         "Metric domains only. This is the clause that can fail: a base-relative "
+                         "tau puts the base's rate at 1 - tau_quantile whatever the model can do.")
     ap.add_argument("--max-format-fail", type=float, default=0.15)
     ap.add_argument("--write", action="store_true", help="write tau into the domain config")
     a = ap.parse_args()

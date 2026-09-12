@@ -353,3 +353,22 @@ def test_gate_pipeline_never_submits_an_eval_without_its_dependency():
     assert "if not jid and not a.dry_run:" in src and "skipped.append(cell)" in src, (
         "an eval submitted with dep=None starts immediately and scores adapters that do not "
         "exist yet")
+
+
+def test_base_gate_has_a_clause_that_can_actually_fail():
+    """A base-relative tau puts the base's rate at 1 - tau_quantile by construction.
+
+    So `rate >= min_base_rate` is unfalsifiable for every metric domain -- which is exactly
+    where PREREGISTRATION Amendment 4 claimed the precondition was enforced. The gate needs a
+    clause measured against something other than the base's own quantile; Amendment 13 makes
+    that the margin between tau and the echo baseline.
+    """
+    from pathlib import Path
+
+    src = (Path(__file__).resolve().parents[1] / "scripts" / "15_base_gate.py").read_text()
+    assert "tau_margin_over_echo" in src and "min_tau_margin" in src, (
+        "the gate has no absolute competence clause; its rate check restates tau_quantile")
+    assert "echo_baseline_p90" in src, "the echo floor is not reported, so it cannot be audited"
+    # The echo baseline has to be the INPUT side, per direction -- the project's convention is
+    # that forward reads side_a -> side_b, so echoing forward means emitting side_a.
+    assert 'i["side_a"] if direction == "forward" else i["side_b"]' in src
