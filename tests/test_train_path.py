@@ -155,3 +155,41 @@ def test_pack_passes_rank_through_to_the_trainer():
     # A rank change with alpha fixed also changes alpha/r, which would confound a rank
     # comparison with an effective-learning-rate comparison.
     assert 'alpha/r held at' in train or 'ratio' in train, "alpha must follow rank"
+
+
+def test_adapter_effectiveness_guard_catches_near_identical_not_only_identical():
+    """A failed adapter can land at 0.9995, not 1.0, and slip an exact-equality guard.
+
+    An adapter that fails to load runs on base weights and SHOULD produce byte-identical text
+    -- but greedy decoding is not bitwise reproducible even for identical requests: two passes
+    over the same 200 prompts on one engine moved tau by 0.0010 COMET (2026-09-12). Demanding
+    exact equality therefore admits the worst kind of table -- a perfect copy of the base, row
+    for row, with nothing raised.
+
+    The band stays narrow because some arms are legitimately near-identical to their reference:
+    relearn10 continues from sft and takes 40 steps on 10 examples.
+    """
+    from pathlib import Path
+
+    import bidir.evaluate as E
+
+    assert 0.99 < E.ADAPTER_IDENTICAL_MAX < 1.0, (
+        f"ADAPTER_IDENTICAL_MAX={E.ADAPTER_IDENTICAL_MAX}: 1.0 misses a failed adapter, and "
+        f"anything below ~0.99 false-positives on relearn10 and the deterministic domains")
+
+    src = (Path(__file__).resolve().parents[1] / "src" / "bidir" / "evaluate.py").read_text()
+    assert 'rep["identical_rate"] >= ADAPTER_IDENTICAL_MAX' in src
+    assert 'f"  [effect]' in src, "the rate must be printed for every arm, not only when fatal"
+    # The rows must already be on disk when the guard fires; the evidence has to survive it.
+    assert src.index('trials.jsonl", "w"') < src.index("ADAPTER_IDENTICAL_MAX:")
+
+
+def test_eval_and_pack_agree_on_rank():
+    """Both sides encode rank into the adapter path, so a mismatch finds no adapters at all."""
+    import inspect
+
+    import bidir.evaluate as E
+
+    assert "rank" in inspect.signature(E.resolve_systems).parameters
+    src = inspect.getsource(E.main)
+    assert "rank=args.rank" in src, "the eval resolves adapters at a hardcoded rank"

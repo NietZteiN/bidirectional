@@ -28,6 +28,11 @@ from bidir.train import adapter_dir
 DIRECTIONS = ("forward", "reverse")
 
 
+#: An arm whose outputs match its reference at or above this rate did not take effect.
+#: 0.999 rather than 1.0 -- see the guard in main() for why exact equality is not safe.
+ADAPTER_IDENTICAL_MAX = 0.999
+
+
 def resolve_systems(domain: str, model: str, arm_names: Sequence[str], seed: int,
                     rank: int = 32) -> dict[str, Optional[str]]:
     """arm -> adapter path (None = the untouched base model).
@@ -129,6 +134,10 @@ def build_parser() -> argparse.ArgumentParser:
     ap.add_argument("--model", required=True)
     ap.add_argument("--seed", type=int, default=GLOBAL_SEED)
     ap.add_argument("--arms", default="base,sft,mix5,mix50,rev", help="comma-separated, or a tier name")
+    ap.add_argument("--rank", type=int, default=32,
+                    help="LoRA r of the adapters to score. The adapter PATH encodes the rank, so "
+                         "this must match what 20_train_pack.py trained or the adapters are not "
+                         "found at all.")
     ap.add_argument("--strategies", default="simple", help="reverse-direction elicitation ladder")
     ap.add_argument("--limit", type=int, default=None, help="cap eval instances (default: the domain config's n_test)")
     ap.add_argument("--split", default="test")
@@ -145,7 +154,7 @@ def main(argv: Optional[list[str]] = None) -> int:
         arm_names = ["base"] + arm_names
     dcfg = load_config(f"domains/{args.domain}.yaml")
     domain_mod = domains.get(args.domain)
-    systems = resolve_systems(args.domain, args.model, arm_names, args.seed)
+    systems = resolve_systems(args.domain, args.model, arm_names, args.seed, rank=args.rank)
 
     insts = [p.model_dump() for p in load_pairs(args.domain, args.split)]
     if args.limit:
@@ -209,11 +218,30 @@ def main(argv: Optional[list[str]] = None) -> int:
         "finished_utc": datetime.now(timezone.utc).isoformat(),
         **prompts.provenance_block(), **summary}, indent=2))
 
+    # ALWAYS PRINTED, so a 0.95 is visible even where it is not fatal.
     for name, rep in sorted(effect.items()):
-        if rep["identical_rate"] == 1.0:
+        print(f"  [effect] {name:<12s} vs {rep['reference']:<8s} "
+              f"identical={rep['identical_rate']:.4f} ({rep['identical_to_reference']}/"
+              f"{rep['n_compared']})", flush=True)
+
+    # The threshold is 0.999, not 1.0. An adapter that failed to load runs on base weights and
+    # SHOULD give byte-identical text, but greedy decoding is not bitwise reproducible even for
+    # identical requests -- two passes over the same 200 prompts on one engine moved tau by
+    # 0.0010 COMET on 2026-09-12. Demanding EXACT equality therefore lets a failed adapter
+    # through at 0.9995, and the result is the worst kind of table: a perfect copy of the base,
+    # row for row, with nothing raised.
+    #
+    # Not lower than 0.999, because some arms are legitimately near-identical to their
+    # reference: `relearn10` continues from `sft` and takes 40 steps on 10 examples, and a
+    # deterministic format domain can have base and `sft` emit the same canonical string. Those
+    # are real measurements, so the band is deliberately narrow and the rate is printed above.
+    for name, rep in sorted(effect.items()):
+        if rep["identical_rate"] >= ADAPTER_IDENTICAL_MAX:
             raise RuntimeError(
-                f"system {name!r} produced output identical to {rep['reference']!r} on all "
-                f"{rep['n_compared']} trials — it did not take effect. Rows are in "
+                f"system {name!r} produced output identical to {rep['reference']!r} on "
+                f"{rep['identical_to_reference']}/{rep['n_compared']} trials "
+                f"({rep['identical_rate']:.4f} >= {ADAPTER_IDENTICAL_MAX}) — it did not take "
+                f"effect. Adapter was {systems.get(name)!r}. Rows are in "
                 f"{out_dir}/trials.jsonl")
 
     for c in summary["cells"]:
