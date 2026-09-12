@@ -44,7 +44,45 @@ def cell_means(run: Path, metric: str = "strict") -> dict:
     return {k: sum(v) / len(v) for k, v in acc.items()}
 
 
+def tex(s: object) -> str:
+    """A bare identifier, made safe for LaTeX text mode.
+
+    Domain names are the reason: `mt_en-de`, `fmt_det75`, `fullft_sft`. An unescaped `_` starts
+    a subscript in text mode, so tectonic stops with `Missing $ inserted` and points at the
+    generated table rather than at whatever put the name there. Escaping was previously done
+    with `.replace("_", "\\_")` at five separate call sites, which works only for as long as
+    nobody adds an underscored name to a HEADER -- `ARM_ORDER` has none today and
+    `fullft_sft` would break the build.
+    """
+    out = str(s)
+    for ch in ("\\", "&", "%", "$", "#", "_", "{", "}"):
+        out = out.replace(ch, "\\" + ch) if ch != "\\" else out
+    return out
+
+
+def _check_escaped(cells: list[str], where: str) -> None:
+    """Raise on an unescaped LaTeX special, at generation time.
+
+    A cell may legitimately contain markup -- `$_\\rightarrow$`, `\\textsc{sft}`, `12.3\\%` --
+    so this cannot escape blindly. What it can do is refuse a `_` that is not already preceded
+    by a backslash and not inside math mode, which is the one that actually reaches the build.
+    """
+    import re
+
+    for c in cells:
+        stripped = re.sub(r"\$[^$]*\$", "", str(c))       # math mode may contain _
+        if re.search(r"(?<!\\)_", stripped):
+            raise ValueError(
+                f"unescaped underscore in {where}: {c!r}. Pass it through tex() -- otherwise "
+                f"tectonic fails with 'Missing $ inserted' pointing at the generated table "
+                f"instead of at the name that caused it.")
+
+
 def latex_table(rows: list[list[str]], header: list[str], caption: str, label: str) -> str:
+    _check_escaped(header, f"the header of tab:{label}")
+    for r in rows:
+        _check_escaped(r, f"a row of tab:{label}")
+    _check_escaped([caption], f"the caption of tab:{label}")
     spec = "l" + "r" * (len(header) - 1)
     out = ["\\begin{table}[t]", "\\centering", "\\small", f"\\begin{{tabular}}{{{spec}}}",
            "\\toprule", " & ".join(header) + " \\\\", "\\midrule"]
@@ -82,13 +120,13 @@ def main() -> int:
 
     arms_present = [x for x in ARM_ORDER
                     if any(any(s == x for s, _ in m) for d in by_domain.values() for m in d.values())]
-    header = ["Domain", "Model"] + [f"{x}$_\\rightarrow$" for x in arms_present] + \
-             [f"{x}$_\\leftarrow$" for x in arms_present]
+    header = ["Domain", "Model"] + [f"{tex(x)}$_\\rightarrow$" for x in arms_present] + \
+             [f"{tex(x)}$_\\leftarrow$" for x in arms_present]
     rows = []
     for domain in sorted(by_domain):
         for model in sorted(by_domain[domain]):
             m = by_domain[domain][model]
-            rows.append([domain.replace("_", "\\_"), model.replace("_", "\\_")]
+            rows.append([tex(domain), tex(model)]
                         + [f"{100 * m[(x, 'forward')]:.1f}" if (x, "forward") in m else "--" for x in arms_present]
                         + [f"{100 * m[(x, 'reverse')]:.1f}" if (x, "reverse") in m else "--" for x in arms_present])
     (a.out / "main.tex").write_text(latex_table(
@@ -105,11 +143,11 @@ def main() -> int:
             m = by_domain[domain][model]
             if not any((d, "reverse") in m for d in doses):
                 continue
-            drows.append([domain.replace("_", "\\_"), model.replace("_", "\\_")]
+            drows.append([tex(domain), tex(model)]
                          + [f"{100 * m[(d, 'reverse')]:.1f}" if (d, "reverse") in m else "--" for d in doses])
     if drows:
         (a.out / "dose.tex").write_text(latex_table(
-            drows, ["Domain", "Model"] + doses,
+            drows, ["Domain", "Model"] + [tex(d) for d in doses],
             "Reverse-direction strict success along the dose ladder. Every rung replaces forward "
             "pairs with their own reversal, so instances, sequence tokens and steps are matched to "
             "\\textsc{sft} at every dose.", "dose"))
@@ -125,7 +163,7 @@ def main() -> int:
         for domain in sorted(ladder, key=lambda x: -keep.get(x, 0)):
             for model in sorted(ladder[domain]):
                 m = ladder[domain][model]
-                lrows.append([f"{keep.get(domain, '?')}\\%", model.replace("_", "\\_"),
+                lrows.append([f"{keep.get(domain, '?')}\\%", tex(model),
                               f"{100 * m[('sft', 'reverse')]:.1f}" if ("sft", "reverse") in m else "--",
                               f"{100 * m[('mix50', 'reverse')]:.1f}" if ("mix50", "reverse") in m else "--"])
         lrows.sort(key=lambda r: -int(r[0].rstrip("\\%")))

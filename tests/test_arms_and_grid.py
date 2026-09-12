@@ -590,3 +590,31 @@ def test_probes_record_arms_they_could_not_probe():
     src = (Path(__file__).resolve().parents[1] / "scripts" / "40_probes.py").read_text()
     assert '"missing_adapters": missing' in src, (
         "index.json lists the arms ASKED for, so an unprobed arm has to be recorded")
+
+
+def test_latex_tables_refuse_an_unescaped_underscore():
+    """Every domain name has one, and in text mode it starts a subscript.
+
+    tectonic then stops with `Missing $ inserted` pointing at the generated table rather than
+    at the name that caused it. Escaping used to be `.replace("_", "\\_")` at five separate
+    call sites, which holds only while no underscored name reaches a HEADER -- ARM_ORDER has
+    none today and `fullft_sft` would break the build.
+    """
+    import importlib.util
+    from pathlib import Path
+
+    spec = importlib.util.spec_from_file_location(
+        "tables", Path(__file__).resolve().parents[1] / "scripts" / "51_tables.py")
+    m = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(m)
+
+    assert m.tex("mt_en-de") == "mt\\_en-de"
+    assert m.tex("fullft_sft") == "fullft\\_sft"
+
+    # Cells legitimately carry markup, so the guard must not reject these.
+    m._check_escaped(["Domain", "sft$_\\rightarrow$", "12.3\\%", "\\textsc{sft}"], "ok")
+
+    with pytest.raises(ValueError, match="unescaped underscore"):
+        m._check_escaped(["fullft_sft"], "a header")
+    with pytest.raises(ValueError, match="unescaped underscore"):
+        m.latex_table([["mt_en-de", "1.0"]], ["Domain", "Value"], "cap", "lbl")
