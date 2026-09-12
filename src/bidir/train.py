@@ -232,8 +232,12 @@ def main(argv: Optional[list[str]] = None) -> int:
                          f"{render_mode}; fix the config before training")
 
     # ---- data ------------------------------------------------------------------------
-    train_rows = build_mixture(spec, args.domain, "train", seed)
-    val_rows = build_mixture(spec, args.domain, "val", seed)
+    # `tokenizer` is passed so `replay` is length-matched in TOKENS rather than characters:
+    # characters-per-token differs by an order of magnitude between tulu-3's English prose and
+    # the strings some domains are made of, which left fmt_novel's replay arm at 0.84x sft's
+    # sequence tokens and 0.64x its supervised tokens (measured 2026-09-12).
+    train_rows = build_mixture(spec, args.domain, "train", seed, tokenizer=tokenizer)
+    val_rows = build_mixture(spec, args.domain, "val", seed, tokenizer=tokenizer)
     if tcfg.get("val_size"):
         val_rows = val_rows[: int(tcfg["val_size"])]
     balance = direction_balance(train_rows)

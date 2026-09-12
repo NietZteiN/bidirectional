@@ -906,3 +906,57 @@ few-shot elicitation look **more** effective for exactly the arms that already h
 reverse data, i.e. it would have flattened the ladder's contrast between `sft` and the mix arms —
 pushing the elicitation result toward "prompting recovers it anyway", which is one of §6's
 falsifiers for the headline claim.
+
+### Amendment 19 — 2026-09-12, before any adapter was trained
+
+**Two budget findings: one defect, and one thing that was never possible and should not have
+been claimed.**
+
+The budget audit, run exactly (no sampling) on 2026-09-12, gave:
+
+| cell | arm | rows | sequence tokens | **supervised tokens** |
+|---|---|---|---|---|
+| `fmt_novel` | `replay` | 1.000 | 0.843× | **0.638×** |
+| `automata` | `replay` | 1.000 | 0.882× | 1.126× |
+| `coverage` | `rev` | 1.000 | 0.883× | **0.658×** |
+
+**1. `replay` was matched in the wrong unit — a defect, now fixed.** `replay` replaces a share
+of forward pairs with generic tulu-3 instruction rows, drawn to match the *rendered character*
+length of the pairs they replace. Characters are not what the optimizer sees, and
+characters-per-token differs by close to an order of magnitude between English prose and the
+strings these domains are built from — `fmt_novel`'s reversed, digit-suffixed keys (`0lennahc`)
+and `automata`'s formal alphabets fragment far more. **Matching is now done in tokens**, using
+the same tokenizer the trainer uses, threaded through `build_mixture`. This is the third
+revision of this single quantity (raw pair length → rendered characters → rendered tokens) and
+the first one measured in the unit the loss is computed in.
+
+**2. A reversing arm cannot match supervised tokens, and `matched_to="sft"` overclaimed it.**
+For a pair (a, b) forward supervises b and reverse supervises a, and the loss is computed on the
+completion alone (`completion_only_loss=True`). So a reversing arm's supervised-token count
+moves with |a| − |b|. In `mt_en-de` the two sides are near-equal and the ratio is ~1.00; in
+`coverage`, forward emits a set of executed lines and reverse a single branch target, and the
+ratio is 0.658. **The only way to hold supervised tokens fixed while reversing is for both sides
+of every pair to be the same length.** That is a property of the manipulation, not a bug.
+
+**Registered.** Each arm now declares `matched_on` — the dimensions its match actually holds:
+
+| arms | `matched_on` |
+|---|---|
+| `mix*`, `rev`, `mixedtask`, `cft`, `unlikelihood`, `roundtrip`, `fullft_*` | instances, steps |
+| `replay` | instances, steps, **tokens** |
+| `relearn*` | **steps only** — instance count varies 10→1000 by design |
+| `flip`, `fwd2x` | none — the doubled references |
+
+`scripts/16_audit_criteria.py` holds each arm to its own claim, treats a rows mismatch above 1 %
+as exact-match failure, and **reports every realised seq/sup ratio regardless**. The paper
+states the realised supervised ratio per domain beside any budget claim, and the headline
+"reverse data is free" is stated as *free in instances, sequence tokens and optimizer steps* —
+the three that are actually held — with the supervised-token ratio given per domain.
+
+**Why this matters for the primary contrast.** `mix50 − replay` is the contrast that isolates
+what direction specifically buys, and it compares a reversing arm against a substituting one. In
+a domain where |a| ≉ |b| those two arms differ in supervised tokens for an unavoidable reason,
+so **that contrast is reported with both arms' supervised ratios attached**, and a domain where
+the gap exceeds 10 % does not carry the claim on its own. On the panel that decides the gate
+(`mt_en-de`, `mt_de-en`, `sql`, `code`) the two sides of a pair are comparable and the issue is
+minor; `coverage` is where it bites, and `coverage` is an RQ1 cell.

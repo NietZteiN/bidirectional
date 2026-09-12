@@ -61,11 +61,13 @@ def assert_direction_disjoint(rows: Sequence[TrainRow]) -> None:
 
 # --------------------------------------------------------------------------- replay rows
 
+_REPLAY_LEN_CACHE: dict = {}
 _REPLAY_POOL_CACHE: dict[tuple, list] = {}
 
 
 def replay_rows(n: int, seed: int, split: str = "train",
-                target_lengths: Optional[Sequence[int]] = None) -> list[TrainRow]:
+                target_lengths: Optional[Sequence[int]] = None,
+                length_of: Optional[Any] = None) -> list[TrainRow]:
     """Generic single-turn instruction rows from the tulu-3 SFT mixture (cached in HF_HOME).
 
     LENGTH-MATCHED, not merely count-matched. `replay` exists to be an equal-sized substitution
@@ -78,6 +80,19 @@ def replay_rows(n: int, seed: int, split: str = "train",
     So when `target_lengths` is given (the lengths of the pairs being replaced), each replay row
     is drawn to be the closest unused match to one of them. The realised ratio is reported by
     `scripts/16_audit_criteria.py` and lands in every run manifest via `direction_balance`.
+
+    AND THE UNIT IS TOKENS WHERE THE CALLER CAN SUPPLY A TOKENIZER (`length_of`). Matching on
+    rendered CHARACTERS is the third version of this fix and still not the quantity that
+    matters: characters-per-token varies by an order of magnitude between English replay prose
+    and the strings these domains are made of. Measured exactly on 2026-09-12, with
+    character-matched replay:
+
+        fmt_novel   sequence tokens 0.843x sft,  supervised tokens 0.638x
+        automata    sequence tokens 0.882x sft,  supervised tokens 1.126x
+
+    `fmt_novel`'s keys are reversed and digit-suffixed (`0lennahc`) and `automata`'s strings are
+    formal alphabets, so both fragment into far more tokens per character than the tulu-3 prose
+    they were matched against. The optimizer sees tokens, so tokens are what must match.
     """
     from datasets import load_dataset
 
@@ -113,8 +128,19 @@ def replay_rows(n: int, seed: int, split: str = "train",
         # Greedy nearest-length matching. Sorting both sides and walking them together would be
         # faster, but it correlates the choice with the pool's own ordering; matching each
         # target against the remaining pool keeps the draw independent of that.
-        by_len = sorted(range(len(pool)), key=lambda i: len(pool[i][1]) + len(pool[i][2]))
-        lens = [len(pool[i][1]) + len(pool[i][2]) for i in by_len]
+        measure = length_of or (lambda u, a: len(u) + len(a))
+        # Measuring the pool means tokenizing ~40k rows, which is seconds -- but it happens once
+        # per (cell, arm) and the budget audit walks 11 arms, so it is cached by (pool identity,
+        # unit). Keyed on the measure's identity rather than the tokenizer's, because the caller
+        # builds the closure; a different tokenizer produces a different closure.
+        ck = (key, id(measure) if length_of is not None else "chars", len(pool))
+        if ck in _REPLAY_LEN_CACHE:
+            lens_by_row = _REPLAY_LEN_CACHE[ck]
+        else:
+            lens_by_row = {rid: measure(u, a) for rid, u, a in pool}
+            _REPLAY_LEN_CACHE[ck] = lens_by_row
+        by_len = sorted(range(len(pool)), key=lambda i: lens_by_row[pool[i][0]])
+        lens = [lens_by_row[pool[i][0]] for i in by_len]
         used: set[int] = set()
         chosen = []
         import bisect
@@ -164,7 +190,11 @@ def mixed_task_rows(domain: str, split: str, n_total: int, seed: int, share: flo
 # --------------------------------------------------------------------------- entry point
 
 def build_mixture(arm: ArmSpec, domain: str, split: str, seed: int = GLOBAL_SEED,
-                  mixed_task_others: Optional[Sequence[str]] = None) -> list[TrainRow]:
+                  mixed_task_others: Optional[Sequence[str]] = None,
+                  tokenizer: Optional[Any] = None) -> list[TrainRow]:
+    """Rows for one arm. Pass `tokenizer` so `replay` is length-matched in TOKENS, which is the
+    unit the optimizer sees; without it the matching falls back to rendered characters and the
+    realised ratio is whatever the domain's characters-per-token happens to be."""
     pairs = load_pairs(domain, split)
     rows: list[TrainRow] = []
 
@@ -187,17 +217,27 @@ def build_mixture(arm: ArmSpec, domain: str, split: str, seed: int = GLOBAL_SEED
         from bidir import prompts as _prompts
         _mod = _domains.get(domain)
 
+        # ...and in TOKENS where a tokenizer is available, because characters-per-token differs
+        # by domain: fmt_novel's reversed digit-suffixed keys and automata's formal strings
+        # fragment far more than tulu-3's English prose, leaving those two arms at 0.84x and
+        # 0.88x of sft's sequence tokens (0.64x and 1.13x supervised) under character matching.
+        # `tokenizer` is threaded in by bidir.train; when absent -- the build-time smoke paths
+        # have no model -- this falls back to characters and says so in the manifest.
+        _tok = tokenizer
+        _n = (lambda text: len(_tok(text, add_special_tokens=False)["input_ids"])) if _tok else len
+
         def _rendered_len(pair) -> int:
             ex = _prompts.build_example({**pair.model_dump(), "task": "fwd"}, _mod)
-            return (sum(len(m["content"]) for m in ex["prompt"])
-                    + sum(len(m["content"]) for m in ex["completion"]))
+            return (sum(_n(m["content"]) for m in ex["prompt"])
+                    + sum(_n(m["content"]) for m in ex["completion"]))
 
         # A replay row is rendered under the same system prompt but WITHOUT the domain
         # instruction, so subtract that fixed overhead from the target it has to hit.
-        _wrapper = len(_prompts.SYSTEM)
+        _wrapper = _n(_prompts.SYSTEM)
         target = [max(1, _rendered_len(p) - _wrapper) for p in replaced]
         rows = ([TrainRow.from_pair(p, "fwd") for p in keep]
-                + replay_rows(len(replaced), seed, split, target_lengths=target))
+                + replay_rows(len(replaced), seed, split, target_lengths=target,
+                              length_of=(lambda u, a: _n(u) + _n(a))))
     elif arm.mixed_task:
         cfg = load_config("domains/mixedtask.yaml")
         others = list(mixed_task_others or [d for d in cfg["domains"] if d != domain])

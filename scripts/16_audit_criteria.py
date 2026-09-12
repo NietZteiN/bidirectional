@@ -135,7 +135,9 @@ def audit_budget(cell: str, model: str, arms_: list[str], n: int = 400) -> dict:
     out: dict = {"cell": cell, "model": model, "arms": {}}
     for name in arms_:
         spec = arm_registry.resolve(name)
-        rows = build_mixture(spec, cell, "train", seed=17)
+        # The SAME tokenizer the trainer uses, or the audit measures a different mixture than
+        # the one that will be trained -- replay's matching depends on it.
+        rows = build_mixture(spec, cell, "train", seed=17, tokenizer=tok)
         scale = len(rows) / max(1, min(n, len(rows)))   # extrapolate from a sample
         sample = rows[:n]
         ex = [oprompts.to_trl_example(prompts.build_example(r.model_dump(), mod), tok) for r in sample]
@@ -156,15 +158,43 @@ def audit_budget(cell: str, model: str, arms_: list[str], n: int = 400) -> dict:
 
 
 def budget_verdict(b: dict, tol: float = 0.10) -> list[str]:
+    """Check each arm against WHAT IT CLAIMS, not against a blanket 1.00x.
+
+    Every arm declares `matched_on` (bidir.arms). The dimensions mean different things:
+
+      instances  exact for every mix* arm -- they replace pairs, never add them
+      steps      exact wherever instances are, and held constant by design for relearn-k
+      tokens     SUPERVISED tokens, which only `replay` is constructed to hit
+
+    A reversing arm cannot promise supervised tokens: forward supervises b, reverse supervises
+    a, so the count moves with |a| - |b| and matching it would require both sides of every pair
+    to be the same length. Flagging `rev` for that (coverage: 0.66x) was the audit holding the
+    arm to a claim the design never made -- while the real defect next to it, character-matched
+    `replay` at 0.64x, was reported in the same words and so read as the same kind of thing.
+
+    Sequence tokens are still checked for every matched arm, because both sides of a pair are
+    present in the sequence whichever way it is read, so a sequence-token gap means something
+    else went wrong. Every realised ratio is REPORTED regardless; the paper quotes them.
+    """
     bad = []
     for name, v in b["arms"].items():
         spec = arm_registry.resolve(name)
-        if spec.cost_units >= 2.0 or name == "sft":
-            continue      # flip and fwd2x are the doubled references; they are meant to differ
+        if name == "sft" or not spec.matched_on:
+            continue      # sft is the reference; flip and fwd2x match nothing by design
+        rows = v.get("rows_vs_sft")
+        if "instances" in spec.matched_on and rows is not None and abs(rows - 1.0) > 0.01:
+            bad.append(f"{b['cell']}/{name}: {rows:.3f}x sft in ROWS — this arm claims matched "
+                       f"instances, which is meant to be exact")
         r = v.get("seq_tokens_vs_sft")
         if r is not None and abs(r - 1.0) > tol:
             bad.append(f"{b['cell']}/{name}: sequence tokens are {r:.2f}x sft "
-                       f"(rows {v['rows_vs_sft']:.2f}x) — this arm claims to be budget-matched")
+                       f"(rows {rows:.2f}x) — both sides of a pair are in the sequence either "
+                       f"way, so this is not the direction swap")
+        sup = v.get("sup_tokens_vs_sft")
+        if "tokens" in spec.matched_on and sup is not None and abs(sup - 1.0) > tol:
+            bad.append(f"{b['cell']}/{name}: SUPERVISED tokens are {sup:.2f}x sft — this arm is "
+                       f"constructed to match them (length-matched replay), so this is a defect "
+                       f"and not a property of reversing")
     return bad
 
 
@@ -207,7 +237,10 @@ def main() -> int:
               + ("   <-- PROBLEM" if bad else ""))
 
     if not a.skip_budget:
-        print("\n=== budget audit: every matched arm must be ~1.00x sft in sequence tokens ===")
+        print("\n=== budget audit: seq/sup tokens as a ratio to sft ===")
+        print("    A reversing arm cannot match SUPERVISED tokens -- forward supervises b,")
+        print("    reverse supervises a -- so only arms declaring matched_on=(...,'tokens')")
+        print("    are held to that. Every ratio is reported; the paper quotes them.")
         arms_ = [x.strip() for x in a.budget_arms.split(",")]
         for cell in cells:
             if cell not in built:
@@ -220,7 +253,10 @@ def main() -> int:
             report["budget"].append(b)
             bad = budget_verdict(b)
             report["problems"] += bad
-            cols = "  ".join(f"{n}={b['arms'][n]['seq_tokens_vs_sft']:.2f}x"
+            # Both columns, because the supervised ratio is the one a reversing arm cannot
+            # hold and the paper has to quote it: seq/sup.
+            cols = "  ".join(f"{n}={b['arms'][n]['seq_tokens_vs_sft']:.2f}/"
+                             f"{b['arms'][n]['sup_tokens_vs_sft']:.2f}"
                              for n in arms_ if n in b["arms"] and n != "sft")
             print(f"  {cell:<12s} {cols}" + ("   <-- PROBLEM" if bad else ""))
 

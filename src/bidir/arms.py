@@ -4,12 +4,27 @@ Kept as data (obtune/src/obtune/srh/arms.py's pattern) because the design rests 
 differing in exactly one thing at a time, and that is auditable in a table and not across
 thirteen YAML files. Cell configs name an arm and a cell; everything else comes from here.
 
-Budget matching. Every `mix*` arm REPLACES forward pairs with their own reversal, partitioned
-by pair_id, so instance count, sequence tokens and optimizer steps stay matched to `sft` and
-the only thing varying along the dose ladder is the share of pairs seen backwards. `replay`
-replaces the same share with generic instruction rows, so `replay - sft` is ordinary
-forgetting and `mix - replay` is what direction specifically buys. `flip` and `fwd2x` are the
-doubled-budget references and are the only arms that cost 2x.
+Budget matching, and what it can and cannot promise. Every `mix*` arm REPLACES forward pairs
+with their own reversal, partitioned by pair_id, so instance count and optimizer steps stay
+matched to `sft` EXACTLY and the only thing varying along the dose ladder is the share of pairs
+seen backwards. `replay` replaces the same share with generic instruction rows, so
+`replay - sft` is ordinary forgetting and `mix - replay` is what direction specifically buys.
+`flip` and `fwd2x` are the doubled-budget references and are the only arms that cost 2x.
+
+SUPERVISED TOKENS CANNOT BE MATCHED BY A REVERSING ARM, and saying otherwise was an overclaim.
+For a pair (a, b), forward supervises b and reverse supervises a, so a reversing arm's
+supervised-token count moves with |a| - |b|. Sequence tokens are nearly unaffected -- both
+sides appear in the sequence either way, only the instruction differs -- but the loss is
+computed on the completion alone (`completion_only_loss=True`). Measured 2026-09-12:
+
+    mt_en-de   rev   sequence 1.00x sft   supervised ~1.00x   (the two sides are near-equal)
+    coverage   rev   sequence 0.88x sft   supervised 0.66x    (a line set vs a branch target)
+
+This is a property of reversing, not a defect: the only way to hold supervised tokens fixed
+while reversing is for both sides of every pair to be the same length. So each arm declares
+`matched_on` -- the dimensions it actually holds -- and `scripts/16_audit_criteria.py` checks
+each claim against its own standard while REPORTING every realised ratio. The paper states the
+realised supervised ratio per domain beside any budget claim.
 """
 from __future__ import annotations
 
@@ -40,6 +55,10 @@ class ArmSpec:
     role: str = ""
     #: for provenance: which arm this one is compared against by construction
     matched_to: Optional[str] = None
+    #: WHICH dimensions the match actually holds. "instances" and "steps" are exact for every
+    #: matched arm; "tokens" means supervised tokens too, which a reversing arm cannot promise
+    #: (see the module docstring). Empty for the doubled references, which match nothing.
+    matched_on: tuple[str, ...] = ("instances", "steps")
 
     @property
     def trains(self) -> bool:
@@ -67,12 +86,14 @@ class ArmSpec:
 ARMS: dict[str, ArmSpec] = {
     "base": ArmSpec("base", tasks=(), role="untouched control"),
     "sft": ArmSpec("sft", ("fwd",), role="forward only: the collapse"),
-    "fwd2x": ArmSpec("fwd2x", ("fwd",), epochs=6.0, matched_to="flip",
+    "fwd2x": ArmSpec("fwd2x", ("fwd",), epochs=6.0, matched_to="flip", matched_on=(),
                      role="forward only, twice the epochs: not a matter of training longer"),
     "rev": ArmSpec("rev", ("rev",), matched_to="sft",
                    role="reverse only: the reverse ceiling and the kill-gate"),
-    "flip": ArmSpec("flip", ("fwd", "rev"), role="forward plus every pair reversed: doubled-data reference"),
+    "flip": ArmSpec("flip", ("fwd", "rev"), matched_on=(),
+                    role="forward plus every pair reversed: doubled-data reference"),
     "replay": ArmSpec("replay", ("fwd",), replay_share=0.5, matched_to="mix50",
+                      matched_on=("instances", "steps", "tokens"),
                       role="forward plus generic instruction data at mix50's replaced share: directional loss vs ordinary forgetting"),
     "mixedtask": ArmSpec("mixedtask", ("fwd",), mixed_task=True, matched_to="sft",
                          role="forward pairs as 20 % of a five-task SFT set: does collapse survive realistic mixtures"),
@@ -100,6 +121,11 @@ del _pct
 for _k in (10, 50, 200, 1000):
     ARMS[f"relearn{_k}"] = ArmSpec(
         f"relearn{_k}", ("rev",), init_from="sft", relearn_k=_k, matched_to="sft",
+        # STEPS ONLY. The point of relearn-k is that the instance count varies (10 -> 1000)
+        # while the optimizer-step count is held at 40, so the ladder measures how much reverse
+        # data is needed rather than how much compute. Claiming matched instances here would
+        # invert the arm's meaning.
+        matched_on=("steps",),
         role=f"from sft, train on {_k} reversed pairs: erased vs suppressed",
     )
 del _k
