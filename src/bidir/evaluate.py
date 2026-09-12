@@ -153,8 +153,21 @@ def main(argv: Optional[list[str]] = None) -> int:
     strategies = [s.strip() for s in args.strategies.split(",") if s.strip()]
     shots = None
     if "few_shot" in strategies:
-        # Demonstrations come from the TRAIN split, never the eval set.
-        shots = [p.model_dump() for p in load_pairs(args.domain, "train")[: int(dcfg.get("n_shots", 2))]]
+        # DEMONSTRATIONS COME FROM `val`, NOT `train`.
+        #
+        # Never the eval set, obviously. But `train` is wrong too, and wrong in a way that
+        # biases the elicitation ladder specifically. Every `mix*` arm reverses a share of the
+        # train pairs PARTITIONED BY pair_id, so at mix50 each demo has roughly a coin-flip
+        # chance of being a pair that arm saw in reverse during training, while for `sft` it
+        # never was. The ladder asks "does prompting rescue what tuning removed?" -- and the
+        # answer would have been read off prompts whose demonstrations were memorised reverse
+        # examples for the high-dose arms and unseen ones for `sft`. That is an arm-dependent
+        # difference in the PROMPT, which is precisely what CLAUDE.md §3.3 exists to forbid.
+        #
+        # `val` is clean for this: it reaches the trainer only as `eval_dataset`, so no gradient
+        # ever sees it, and `10_build_domain.py` asserts it disjoint from `test`. Deterministic
+        # slice, so every arm and every instance gets byte-identical demonstrations.
+        shots = [p.model_dump() for p in load_pairs(args.domain, "val")[: int(dcfg.get("n_shots", 2))]]
 
     reqs = build_requests(insts, systems, DIRECTIONS, strategies, domain_mod, shots)
     print(f"[bidir.eval] {len(insts)} instances x {len(systems)} systems -> {len(reqs)} generations", flush=True)

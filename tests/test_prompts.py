@@ -71,3 +71,23 @@ def test_replay_rows_use_the_same_system_prompt():
     ex = prompts.build_example({**inst, "task": "replay"}, mod)
     assert ex["prompt"][0]["content"] == prompts.SYSTEM, \
         "replay must differ from a reversed pair in CONTENT, not in format"
+
+
+def test_few_shot_demonstrations_come_from_val_not_train():
+    """A demo drawn from `train` is arm-dependent, which biases the elicitation ladder.
+
+    Every `mix*` arm reverses a share of the train pairs partitioned by pair_id, so at mix50
+    each demonstration has ~50 % chance of being a pair that arm saw in REVERSE, while for
+    `sft` it never was. The ladder asks whether prompting rescues what tuning removed; reading
+    that off prompts whose demonstrations are memorised for some arms and unseen for others
+    makes the prompt itself an arm-dependent variable (CLAUDE.md §3.3).
+
+    `val` reaches the trainer only as eval_dataset -- no gradient sees it -- and the build
+    asserts it disjoint from `test`.
+    """
+    from pathlib import Path
+
+    src = (Path(__file__).resolve().parents[1] / "src" / "bidir" / "evaluate.py").read_text()
+    assert 'load_pairs(args.domain, "val")' in src, "few-shot demos are not drawn from val"
+    assert 'load_pairs(args.domain, "train")' not in src, (
+        "a train-split demonstration may have been reversed for the arm under test")

@@ -876,3 +876,33 @@ right rungs without anyone remembering to edit a list. Second, the **RQ3 dose-la
 therefore rests on the 6,500-pair domains**, where every rung resolves; `exec` and `coverage`
 contribute to RQ1 (does collapse happen at all), which is what their configs already said they
 were for. The knee of the ladder is not estimated from a cell that cannot express its low rungs.
+
+### Amendment 18 — 2026-09-12, before any adapter was trained
+
+**Few-shot demonstrations move from `train` to `val`, because a `train` demonstration is
+arm-dependent.**
+
+The elicitation ladder asks whether prompting can recover what forward-only tuning removed. Its
+`few_shot` rung drew its demonstrations from the **train** split — the split every arm trains on.
+Every `mix*` arm reverses a share of the train pairs *partitioned by `pair_id`*, so at `mix50`
+each demonstration has roughly a coin-flip chance of being a pair that arm saw **in reverse**
+during training, while for `sft` it never was. The probability rises monotonically with the dose:
+~1 % of pairs at `mix1`, ~50 % at `mix50`.
+
+So the prompt itself would have varied by arm — memorised reverse examples for the high-dose
+arms, unseen ones for `sft` — in the one comparison the ladder exists to make. That is the
+failure §3.3 of `CLAUDE.md` was written to forbid ("the reverse training prompt is byte-identical
+to the reverse eval prompt", because a prompt difference becomes a measurement of the
+difference), arriving through the demonstrations rather than the template.
+
+**Registered: `few_shot` demonstrations are the first `n_shots` pairs of the `val` split.** `val`
+reaches the trainer only as `eval_dataset`, so no gradient ever sees it, and
+`scripts/10_build_domain.py` already asserts it disjoint from `test`. The slice is deterministic,
+so every arm and every instance receives byte-identical demonstrations. Sizes are ample: 500 val
+pairs in the large domains, 100 in `exec`, 60 in `coverage`, against `n_shots = 2`.
+
+**No prediction changes**, and the direction of the bias is worth recording: it would have made
+few-shot elicitation look **more** effective for exactly the arms that already have the most
+reverse data, i.e. it would have flattened the ladder's contrast between `sft` and the mix arms —
+pushing the elicitation result toward "prompting recovers it anyway", which is one of §6's
+falsifiers for the headline claim.
