@@ -1,0 +1,58 @@
+{
+  "generated_utc": "2026-09-12T15:55:08.853923+00:00",
+  "resolved": {
+    "n-attrib-methods": {
+      "value": "3",
+      "sources": [
+        "/work/jvl210002/migration/bidirectional/src/bidir/arms.py"
+      ]
+    },
+    "n-domains": {
+      "value": "18",
+      "sources": [
+        "/work/jvl210002/migration/bidirectional/data"
+      ]
+    },
+    "n-families": {
+      "value": "3",
+      "sources": [
+        "/work/jvl210002/migration/bidirectional/configs/models.yaml"
+      ]
+    }
+  },
+  "unresolved": {
+    "abstract-general-cost": "no resolver written",
+    "abstract-knee": "no resolver written",
+    "abstract-restored": "no resolver written",
+    "abstract-reverse-after": "no resolver written",
+    "general-ifeval-contrast": "no resolver written",
+    "general-moderators": "no resolver written",
+    "general-replay-contrast": "no resolver written",
+    "invertibility-two-kinds": "no resolver written",
+    "mech-alpha": "no resolver written",
+    "mech-elicitation": "no resolver written",
+    "mech-relearn": "no resolver written",
+    "mech-spectral": "no resolver written"
+  },
+  "prose": [
+    "acknowledgments",
+    "attrib-headline-sentence",
+    "dose-cost-sentence",
+    "dose-headline-sentence",
+    "dose-knee-sentence",
+    "general-headline-sentence",
+    "intro-disproportion-sentence",
+    "intro-dose-sentence",
+    "intro-mechanism-sentence",
+    "invertibility-headline-sentence",
+    "key",
+    "lim-coverage",
+    "lim-frozen-scorers",
+    "lim-invertibility",
+    "lim-knee",
+    "lim-lora",
+    "lim-scale",
+    "setup-domains-sentence",
+    "setup-models-sentence"
+  ]
+}

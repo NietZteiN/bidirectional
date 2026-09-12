@@ -26,10 +26,16 @@
 \usepackage{xcolor}
 
 % ---------------------------------------------------------------------------
-% An unfilled number must be impossible to miss. \NUM{key} renders <<key>> in red;
-% scripts/51_tables.py writes \newcommand definitions into numbers.tex as results land, and any
-% key still undefined at compile time shows up in the PDF and in a grep.  % grep-skip
-\providecommand{\NUM}[1]{\textcolor{red}{$\langle\langle$\texttt{#1}$\rangle\rangle$}}
+% An unfilled number must be impossible to miss. \NUM{key} resolves to the value that
+% scripts/93_numbers.py computed from a recorded run, and renders <<key>> IN RED when no such
+% value exists -- so a key that has not been measured yet is visible in the PDF and in a grep,
+% and can never quietly become a blank.  % grep-skip
+% numbers.tex is generated; paper/numbers_provenance.json maps each key to the files it came
+% from. Prose placeholders (*-sentence, lim-*) have no resolver by design: a sentence is a
+% claim a human writes, and a generator that emitted one would be worse than a red placeholder.
+\providecommand{\NUM}[1]{%
+  \ifcsname bidirnum@#1\endcsname\csname bidirnum@#1\endcsname
+  \else\textcolor{red}{$\langle\langle$\texttt{#1}$\rangle\rangle$}\fi}
 \providecommand{\tabinput}[1]{\textcolor{red}{[table \texttt{#1} not generated yet]}}
 \IfFileExists{numbers.tex}{\input{numbers.tex}}{}
 

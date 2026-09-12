@@ -618,3 +618,51 @@ def test_latex_tables_refuse_an_unescaped_underscore():
         m._check_escaped(["fullft_sft"], "a header")
     with pytest.raises(ValueError, match="unescaped underscore"):
         m.latex_table([["mt_en-de", "1.0"]], ["Domain", "Value"], "cap", "lbl")
+
+
+def test_paper_numbers_resolve_from_disk_and_fall_back_to_red():
+    """The prose numbers were the last hand-typed path in the paper.
+
+    Tables and figures were generated, but the abstract's headline figures and the mechanism
+    section's magnitudes had no generator, so they would have been copied by hand out of the
+    generated tables. paper/NUMBERS.md records what that cost in the workshop paper: three
+    numbers that had drifted from their source.
+    """
+    from pathlib import Path
+
+    root = Path(__file__).resolve().parents[1]
+    tex = (root / "paper" / "main.tex").read_text()
+
+    # The macro must LOOK UP the generated value, not merely always print red.
+    assert "\\ifcsname bidirnum@#1\\endcsname" in tex, (
+        "\\NUM does not consult numbers.tex, so a generated value would never appear")
+    # ...and it must still render red when the key is absent, or a missing number becomes blank.
+    assert "\\textcolor{red}" in tex.split("\\providecommand{\\NUM}")[1][:400]
+    assert "\\IfFileExists{numbers.tex}" in tex
+
+    gen = (root / "scripts" / "93_numbers.py").read_text()
+    assert "bidirnum@" in gen, "the generator does not emit the macro the paper looks up"
+    # A sentence is a claim a human writes; a generator that emitted one would be worse than a
+    # red placeholder, so prose keys are reported as prose rather than as failures.
+    assert 'r"-sentence$"' in gen and 'r"^lim-"' in gen
+
+
+def test_every_paper_placeholder_is_prose_or_has_a_plan():
+    """A key that is neither prose nor resolvable is a number nobody has arranged to compute."""
+    import importlib.util
+    import re
+    from pathlib import Path
+
+    root = Path(__file__).resolve().parents[1]
+    spec = importlib.util.spec_from_file_location(
+        "numbers", root / "scripts" / "93_numbers.py")
+    m = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(m)
+
+    keys = set(re.findall(r"\\NUM\{([a-z0-9-]+)\}", (root / "paper" / "main.tex").read_text()))
+    assert keys, "main.tex has no placeholders, which cannot be right yet"
+    for key in sorted(keys):
+        assert m.is_prose(key) or key in m.RESOLVERS or key.startswith(
+            ("abstract-", "general-", "mech-", "invertibility-", "dose-", "intro-", "setup-")), (
+            f"{key!r} is neither prose nor registered nor in a section whose resolvers are "
+            f"pending the gate — it is a number nobody has arranged to compute")
