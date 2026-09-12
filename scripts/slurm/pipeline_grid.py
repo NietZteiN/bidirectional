@@ -90,6 +90,51 @@ def size_gb(model: str) -> float:
             "llama31-8b": 8.0, "gemma3-12b": 12.0}.get(model, float(m["hidden_size"]) / 512)
 
 
+
+def resolvable_arms(arm_names: list[str], domain: str, model: str) -> tuple[list[str], list[str]]:
+    """Drop dose rungs this domain's corpus is too small to express, and say which.
+
+    A `mixN` arm reverses N % of the training pairs. For the rung to be a DOSE rather than
+    noise, those reversed pairs have to survive contact with the optimizer: below one effective
+    batch they can all land in a single step, and the arm becomes an expensive way to rerun
+    `sft`. Measured against llama32-3b's effective batch of 64 (16 x 4):
+
+        domain      train   1%    5%    10%   25%   50%
+        mt_en-de     6500     65   325   650  1625  3250
+        exec          302      3    15    30    76   151
+        coverage      400      4    20    40   100   200
+
+    `exec` and `coverage` are bounded by CRUXEval's 800 programs and `exec` lost a further 198
+    to the execution audit (Amendment 15), so their bottom three rungs reverse 3-40 pairs. This
+    is checked rather than hand-maintained: a domain whose corpus changes gets the right rungs
+    without anyone remembering to edit a list, which is how `exec` came to be requesting a
+    3-pair dose in the first place.
+
+    Returns (kept, dropped). Non-dose arms are never dropped -- `sft`, `rev`, `flip`, `replay`
+    and the rest do not have a dose to under-resolve.
+    """
+    import re
+
+    import yaml
+
+    cfg = yaml.safe_load((ROOT / "configs" / "models.yaml").read_text())["models"][model]
+    eff_batch = int(cfg["per_device_batch"]) * int(cfg["grad_accum"])
+    try:
+        n_train = sum(1 for _ in open(ROOT / "data" / domain / "train.jsonl"))
+    except OSError:
+        return arm_names, []                      # not built yet; the pack will say so
+
+    kept, dropped = [], []
+    for arm in arm_names:
+        m = re.fullmatch(r"mix(\d+)", arm)
+        if not m:
+            kept.append(arm)
+            continue
+        reversed_pairs = round(n_train * int(m.group(1)) / 100)
+        (kept if reversed_pairs >= eff_batch else dropped).append(arm)
+    return kept, dropped
+
+
 def sub(name, argv, *, partition, time, dep=None, mem="64G", extra=None, dry=False) -> str | None:
     cmd = [sys.executable, str(SUBMIT), "--name", name, "--partition", partition,
            "--time", time, "--mem", mem]
@@ -132,9 +177,24 @@ def main() -> int:
     arm_names = list(arm_registry.TIERS.get(arms_spec, ())) or [x for x in arms_spec.split(",")]
     units = arm_registry.units(arm_names)
 
+    # Rungs this corpus cannot express are dropped per (domain, model), so a small cell
+    # contributes the rungs it can resolve instead of four arms that all re-run `sft`.
+    resolved: dict[tuple[str, str], list[str]] = {}
+    for m in models:
+        for d in domains_:
+            keep, drop = resolvable_arms(arm_names, d, m)
+            resolved[(d, m)] = keep
+            if drop:
+                print(f"  {d}/{m}: dropping {','.join(drop)} — fewer reversed pairs than one "
+                      f"effective batch, so the rung cannot carry a dose")
+
     cells = [(d, m, s) for m in models for d in domains_ for s in seeds]
-    print(f"tier {a.tier}: {len(cells)} cells x {len(arm_names)} arms "
-          f"({units:.1f} adapter-units each) = {len(cells) * units:.0f} adapter-units\n")
+    # Budget from the arms each cell will ACTUALLY train, not from the tier's nominal list --
+    # otherwise the estimate counts rungs the rung filter just dropped.
+    total_units = sum(arm_registry.units(resolved[(d, m)]) for d, m, _ in cells)
+    print(f"tier {a.tier}: {len(cells)} cells, "
+          f"{min(len(v) for v in resolved.values())}-{max(len(v) for v in resolved.values())} "
+          f"arms per cell = {total_units:.0f} adapter-units\n")
     if a.max_submit:
         cells = cells[: a.max_submit]
 
@@ -147,9 +207,10 @@ def main() -> int:
         tag = f"{a.tier}"
         jid = None
         if not a.eval_only:
+            cell_arms = ",".join(resolved[(domain, model)])
             jid = sub(f"tr_{domain}_{model}_s{seed}",
                       ["scripts/20_train_pack.py", "--domain", domain, "--model", model,
-                       "--seed", str(seed), "--arms", arms_spec],
+                       "--seed", str(seed), "--arms", cell_arms],
                       partition=partition, time=t["train_time"], extra=extra, dry=a.dry_run)
         ev_part = "h200" if not small else partition
         sub(f"ev_{domain}_{model}_s{seed}",

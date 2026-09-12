@@ -493,3 +493,34 @@ def test_share_guard_allows_a_job_chained_behind_the_pool():
         "the share check does not consult the dependency, so chained jobs are refused")
     assert "bits[1].strip() in CONTESTED" in src, (
         "the dependency's own partition is not checked, so any dependency would bypass the share")
+
+
+def test_grid_drops_dose_rungs_a_corpus_cannot_express():
+    """A mixN arm that reverses fewer pairs than one effective batch is an expensive `sft`.
+
+    `exec` is bounded by CRUXEval's 800 programs and lost 198 more to the execution audit, so
+    its train split is 302 pairs: mix1 reverses THREE. Those can all land in a single optimizer
+    step, and the rung stops being a dose. Checked rather than hand-maintained, because `exec`
+    came to be requesting a 3-pair dose precisely by a list not being updated.
+    """
+    import importlib.util
+    from pathlib import Path
+
+    root = Path(__file__).resolve().parents[1]
+    spec = importlib.util.spec_from_file_location(
+        "pgrid", root / "scripts" / "slurm" / "pipeline_grid.py")
+    m = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(m)
+
+    full = list(m.arm_registry.TIERS["full"])
+    keep_big, drop_big = m.resolvable_arms(full, "mt_en-de", "llama32-3b")
+    assert drop_big == [], f"a 6,500-pair domain resolves every rung, but dropped {drop_big}"
+    assert keep_big == full
+
+    if (root / "data" / "exec" / "train.jsonl").exists():
+        keep, drop = m.resolvable_arms(full, "exec", "llama32-3b")
+        assert "mix1" in drop, f"exec's 3-pair mix1 survived: dropped only {drop}"
+        assert "mix50" in keep, "mix50 reverses 151 pairs and must survive"
+        # Arms without a dose are never touched.
+        for arm in ("sft", "rev", "flip", "replay", "mixedtask", "fwd2x"):
+            assert arm in keep, f"{arm} has no dose to under-resolve but was dropped"

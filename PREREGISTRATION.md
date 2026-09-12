@@ -844,3 +844,35 @@ amendment changes which clause decides, not any measurement.
 (en→de) and agree to four decimals on every echo quantity (p50 0.6316, p90 0.7563, 7.5 %); the
 de→en pair likewise (0.7647, 0.8461, 4.5 %). The harness reaches the same numbers from two
 independent cell definitions for the third time today.
+
+### Amendment 17 — 2026-09-12, before any adapter was trained
+
+**A dose rung is only reported where the corpus can express it.**
+
+`exec`'s execution audit (Amendment 15) cut its training split from 499 pairs to 302. Against
+llama32-3b's effective batch of 64 (16 × 4), the dose ladder then resolves like this:
+
+| domain | train | 1 % | 5 % | 10 % | 25 % | 50 % |
+|---|---|---|---|---|---|---|
+| `mt_en-de`, `sql`, `code`, `algebra`, `automata` | ~6,500 | 65 | 325 | 650 | 1,625 | 3,250 |
+| `exec` | 302 | **3** | **15** | **30** | 76 | 151 |
+| `coverage` | 400 | **4** | **20** | **40** | 100 | 200 |
+
+A `mixN` arm reverses N % of the training pairs, and for the rung to be a *dose* rather than
+noise those pairs must survive contact with the optimizer. Below one effective batch they can
+all land in a single step, and the arm becomes an expensive way to re-run `sft` — which would
+then be reported as "a low dose does not help", i.e. as evidence about doses rather than about
+the corpus. `exec`'s own config had anticipated this ("the dose ladder's low rungs would reverse
+three pairs"); the audit made it true.
+
+**Registered: a `mixN` arm is trained and reported for a (domain, model) cell only if it
+reverses at least one effective batch of pairs.** On `exec` and `coverage` that drops `mix1`,
+`mix5` and `mix10`, leaving `mix25` and `mix50`; no rung is dropped anywhere else. The exec tier
+goes from 234 to 180 adapter-units, and each dropped rung is named in the submission log.
+
+Two notes on scope. First, this is **computed, not listed** — `scripts/slurm/pipeline_grid.py`
+derives it from the built corpus and the model's batch shape, so a corpus that changes gets the
+right rungs without anyone remembering to edit a list. Second, the **RQ3 dose-ladder claim
+therefore rests on the 6,500-pair domains**, where every rung resolves; `exec` and `coverage`
+contribute to RQ1 (does collapse happen at all), which is what their configs already said they
+were for. The knee of the ladder is not estimated from a cell that cannot express its low rungs.
