@@ -84,6 +84,31 @@ def fmt(d: dict) -> str:
             f"  ({d['mean_a']:.2f} vs {d['mean_b']:.2f}, n={d['n_pairs']}){star}")
 
 
+def learnable_floor(base_rev: float) -> float:
+    """The bar `rev` must clear for the reverse direction to count as learnable.
+
+    ADDITIVE, NOT MULTIPLICATIVE. This was `max(0.05, 2 * base_rev)`, which is unsatisfiable
+    whenever the base already exceeds 0.5 -- and a metric-based tau puts the base at
+    `1 - tau_quantile` (0.75) BY CONSTRUCTION, so for every MT cell the bar was 1.50 and no
+    rate can reach it. `verdict["passes"]` requires a collapsing NLP cell to also clear this
+    bar, so the gate could not have passed on MT evidence however the data fell, and the
+    diagnostic would have printed "[KILL-GATE: rev ~ 0]" with `rev` sitting at 0.90.
+
+    The prereg's words are "`rev` strict reverse is well above zero". An additive margin says
+    that and degrades correctly at both ends: at base_rev ~ 0 the bar is 0.05, which is
+    literally "well above zero"; at base_rev 0.75 it is 0.80, which is attainable and still
+    means training on reverse data taught something the untouched model did not have.
+
+    The 0.95 cap is there so the bar stays reachable at the top of the range too: a base
+    already at 0.95 leaves less than the margin in headroom, and such a base has ALREADY
+    demonstrated the thing the kill-gate asks about -- the untouched model can do the reverse
+    direction -- so the clause should be trivially satisfied rather than arithmetically
+    impossible. No floor may ever exceed a rate that can be achieved; that is the property the
+    old multiplicative form violated.
+    """
+    return max(0.05, min(base_rev + 0.05, 0.95))
+
+
 def gate_verdict(runs: list[Path], metric: str = "strict") -> dict:
     """The pre-registered rule from RUN_PLAN.md §5. Stated here in code so the verdict is a
     computation and not a reading."""
@@ -100,6 +125,7 @@ def gate_verdict(runs: list[Path], metric: str = "strict") -> dict:
         mean = {k: sum(v) / len(v) for k, v in rates.items()}
         base_rev = mean.get(("base", "reverse"), 0.0)
         sft_rev = mean.get(("sft", "reverse"), 0.0)
+        rev_rev = mean.get(("rev", "reverse"), 0.0)
         rel = (sft_rev - base_rev) / base_rev if base_rev > 0 else float("nan")
         cells[cell] = {
             "base_reverse": base_rev, "sft_reverse": sft_rev, "rev_reverse": mean.get(("rev", "reverse"), 0.0),
@@ -107,7 +133,8 @@ def gate_verdict(runs: list[Path], metric: str = "strict") -> dict:
             "sft_forward": mean.get(("sft", "forward"), 0.0), "base_forward": mean.get(("base", "forward"), 0.0),
             "relative_reverse_change": rel,
             "collapses": bool(base_rev > 0 and rel <= -0.5),
-            "reverse_learnable": mean.get(("rev", "reverse"), 0.0) >= max(0.05, 2 * base_rev),
+            "reverse_learnable": rev_rev >= learnable_floor(base_rev),
+            "learnable_floor": learnable_floor(base_rev),
         }
     nlp = [c for c in cells if not c.startswith("code")]
     verdict = {
@@ -151,10 +178,13 @@ def main() -> int:
         v = gate_verdict([r for r in runs if (r / "trials.jsonl").exists()], a.metric)
         print("\n=== GATE ===")
         for cell, c in sorted(v["cells"].items()):
+            # The kill-gate note names both numbers. Saying only "rev ~ 0" was how the old
+            # multiplicative floor hid the fact that it was unsatisfiable rather than unmet.
+            kill = ("" if c["reverse_learnable"] else
+                    f"  [KILL-GATE: rev={c['rev_reverse']:.3f} < floor {c['learnable_floor']:.3f}]")
             print(f"  {cell:<12s} base_rev={c['base_reverse']:.4f} sft_rev={c['sft_reverse']:.4f} "
                   f"({c['relative_reverse_change']:+.1%})  rev_ceiling={c['rev_reverse']:.4f}  "
-                  f"{'COLLAPSE' if c['collapses'] else 'no collapse'}"
-                  f"{'' if c['reverse_learnable'] else '  [KILL-GATE: rev ~ 0]'}")
+                  f"{'COLLAPSE' if c['collapses'] else 'no collapse'}{kill}")
         print(f"\n  verdict: {'PASS — proceed to Phase 2' if v['passes'] else 'FAIL — reset to the boundary-conditions paper'}")
         print(f"  rule: {v['rule']}")
         out = RESULTS_DIR / "gate_verdict.json"

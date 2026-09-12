@@ -372,3 +372,27 @@ def test_base_gate_has_a_clause_that_can_actually_fail():
     # The echo baseline has to be the INPUT side, per direction -- the project's convention is
     # that forward reads side_a -> side_b, so echoing forward means emitting side_a.
     assert 'i["side_a"] if direction == "forward" else i["side_b"]' in src
+
+
+@pytest.mark.parametrize("base_rev", [0.0, 0.05, 0.285, 0.5, 0.75, 0.95])
+def test_kill_gate_floor_is_always_satisfiable(base_rev):
+    """A floor above 1.0 cannot be met by any rate, so the gate could only return FAIL.
+
+    The floor was `max(0.05, 2 * base_rev)`, and a metric-based tau puts the base at 0.75 by
+    construction -- so every MT cell faced a bar of 1.50. Since verdict["passes"] requires a
+    collapsing NLP cell to clear the kill-gate, the decision gate could not have passed on MT
+    evidence however the data fell.
+    """
+    import importlib.util
+    from pathlib import Path
+
+    spec = importlib.util.spec_from_file_location(
+        "contrasts", Path(__file__).resolve().parents[1] / "scripts" / "50_contrasts.py")
+    m = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(m)
+
+    floor = m.learnable_floor(base_rev)
+    assert floor <= 0.95, f"base_rev={base_rev} gives an unreachable floor of {floor}"
+    assert floor >= min(base_rev, 0.95), (
+        f"floor {floor} lets rev count as learnable while scoring below base {base_rev}")
+    assert floor >= 0.05, "the prereg's 'well above zero' needs an absolute floor too"

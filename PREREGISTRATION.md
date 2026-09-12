@@ -689,3 +689,47 @@ falsifiable clause is the τ margin, and `gate_rule` in each report now says so.
 direction Zhu et al. (2024) would predict and is the RQ2 moderator, not a defect. The gate is
 being re-run under the amended rule so that the frozen τ and the gate that licensed it come from
 the same pass.
+
+### Amendment 14 — 2026-09-12, before any adapter was trained
+
+**The kill-gate was unsatisfiable for every MT cell.**
+
+§3 registers three clauses, the third being the kill-gate: "`rev` strict reverse is well above
+zero in that same cell". `scripts/50_contrasts.py` implemented it as
+
+    reverse_learnable = rev_reverse >= max(0.05, 2 * base_reverse)
+
+which is unreachable whenever `base_reverse > 0.5`. And a metric-based τ puts the base's rate at
+`1 − tau_quantile` = **0.75 by construction** (Amendment 13), so for `mt_en-de` and `mt_de-en` the
+bar was **1.50** — a strict rate that cannot exist.
+
+`verdict["passes"]` requires a collapsing NLP cell to also clear the kill-gate. The NLP cells are
+`mt_en-de`, `mt_de-en` and `sql`. So had the two MT cells collapsed and `sql` not, **the gate
+would have returned FAIL however the data fell**, and the printed diagnostic would have read
+`[KILL-GATE: rev ~ 0]` with `rev` sitting anywhere up to 0.90. That is a false negative on the
+study's own go/no-go decision, and it would have read as a substantive finding about MT.
+
+**What is registered instead.** The floor is **additive**:
+
+    learnable_floor(base_reverse) = max(0.05, min(base_reverse + 0.05, 0.95))
+
+At `base_reverse ≈ 0` the bar is 0.05, which is literally the prereg's "well above zero". At
+`base_reverse = 0.75` it is 0.80 — attainable, and still requires that training on reverse data
+taught something the untouched model did not already have. The 0.95 cap keeps the bar reachable
+at the top of the range as well: a base at 0.95 leaves less than the margin in headroom, and such
+a base has *already* demonstrated what the kill-gate asks — that the untouched model can do the
+reverse direction — so the clause should be trivially satisfied rather than arithmetically
+impossible. **The invariant, now asserted by a test across the whole range, is that no floor may
+exceed a rate that can be achieved.** That is the property the multiplicative form violated. Every cell's `learnable_floor` is
+written into `gate_verdict.json`, and the kill-gate diagnostic now prints `rev` and the floor
+together so that "unmet" can never again be indistinguishable from "unsatisfiable".
+
+**No prediction changes**, and the direction of the error is worth recording: this defect could
+only ever have produced a FAIL. Of the defects found in this project so far, three would have
+manufactured support for the null and this one would have manufactured a failed gate — so the
+audit has now caught errors pointing in both directions, which is weak evidence that the auditing
+is not itself biased toward the result we want.
+
+This is the fifth instance of **a nominal parameter standing in for the quantity that matters**:
+drop share ≠ determinability; row count ≠ token budget; raw length ≠ rendered length; rows ≠
+optimizer steps; and now *a multiple of the base ≠ "above zero"*.
