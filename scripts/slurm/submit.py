@@ -98,7 +98,12 @@ def juno_jobs_held() -> int:
 
 def build_script(argv, *, job_name, partition, gres, cpus, mem, time, dependency=None,
                  qos=None, nodelist=None, exclude=None) -> str:
-    command = "python " + " ".join(shlex.quote(a) for a in argv)
+    # -u, unconditionally. A job's stdout is a FILE, so python block-buffers it at 4-8 KB and a
+    # long job shows nothing until it exits or the buffer fills -- which makes a running job
+    # indistinguishable from a hung one, and makes a job killed at the walltime lose whatever
+    # progress it had printed. Scripts that pass flush=True everywhere are unaffected; the ones
+    # that do not are exactly the ones worth watching.
+    command = "python -u " + " ".join(shlex.quote(a) for a in argv)
     extra = ""
     if nodelist:
         extra += f"#SBATCH --nodelist={nodelist}\n"

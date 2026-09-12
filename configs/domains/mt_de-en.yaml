@@ -1,4 +1,13 @@
-# MT cell: mt_de-en. Both training directions of a pair are separate cells by design (plan RQ2 —
-# Zhu et al. 2024 report collapse for X->en tuning but not en->X, so the asymmetry is the
-# moderator test and must be run, not assumed).
 _extends: _mt_base.yaml
+thresholds:
+  forward:
+    comet: 0.860885
+  reverse:
+    comet: 0.764888
+thresholds_provenance:
+  model: llama32-3b
+  date: '2026-09-12'
+  quantile: 0.25
+  n: 200
+  note: read from the BASE model's score distribution before any fine-tuned model
+    was scored
