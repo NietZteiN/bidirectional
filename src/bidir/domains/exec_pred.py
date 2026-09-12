@@ -40,14 +40,32 @@ def build_pairs(cfg: Mapping[str, Any]) -> dict[str, list[PairInstance]]:
 
     ds = load_dataset(cfg["hf_id"], split=cfg.get("hf_split", "test"))
     rows = []
+    n_echo_is_correct = 0
     for r in ds:
         code, inp, out = (r["code"] or "").strip(), (r["input"] or "").strip(), (r["output"] or "").strip()
         if not code or not inp or not out:
+            continue
+        # ECHO AND CORRECT MUST NEVER BE THE SAME STRING (Amendment 15). For a handful of
+        # CRUXEval programs the output equals the input -- an identity, or a normalisation that
+        # happens to be a no-op on this argument. On those instances "copy your input" IS the
+        # right answer, so the strict criterion's not-echo conjunct rejects a correct answer
+        # (measured: 7.5 % of gold answers flagged as echoes, capping the domain at 0.925) AND
+        # an echoing model scores real credit (measured: 2.5-5 % of pure-echo probes passed).
+        # Both directions of that error are removed by dropping the instance, which costs a few
+        # problems out of 800 and is reported rather than silent.
+        if normalize(inp) == normalize(out):
+            n_echo_is_correct += 1
             continue
         rows.append(PairInstance(
             pair_id=f"crux::{r['id']}", domain=NAME, subtask="cruxeval",
             side_a=inp, side_b=out, split="train",
             meta={"code": code, "entry_point": _entry_point(code)}))
+    if n_echo_is_correct:
+        print(f"[exec] dropped {n_echo_is_correct} instance(s) whose output equals their input: "
+              f"echo and correct would be the same string (Amendment 15)", flush=True)
+
+    rows, verify_report = _verify_by_execution(rows, cfg)
+    print(f"[exec] execution audit: {verify_report}", flush=True)
     rng = random.Random(int(cfg.get("seed", 17)))
     rng.shuffle(rows)
     n_test, n_val = int(cfg["n_test"]), int(cfg["n_val"])
@@ -58,6 +76,78 @@ def build_pairs(cfg: Mapping[str, Any]) -> dict[str, list[PairInstance]]:
         r.split = "val"
     n_train = int(cfg.get("n_train", 0)) or len(train)
     return {"train": train[:n_train], "val": val, "test": test}
+
+
+def _verify_by_execution(rows: list[PairInstance], cfg: Mapping[str, Any]) -> tuple[list[PairInstance], dict]:
+    """Run every program twice and keep only the instances whose criterion can be trusted.
+
+    THE CORPUS WAS NEVER CHECKED AGAINST THE INTERPRETER. CRUXEval ships (code, input, output)
+    triples and this domain believed all three. Feeding the scorer its own gold answers on
+    2026-09-12 showed two consequences:
+
+      * `f(input) != output` for some instances. Gold then scores 0 with `exact_match=1` and
+        `exec_status="ok"` -- the answer is right, the corpus is wrong, and the domain's ceiling
+        is below 1.0 for a reason no reader could infer. Measured at 1 of 40.
+      * `f(output) == output` for others. In REVERSE the task is "give an input that produces
+        this output", so echoing the output back is then a genuinely CORRECT answer, and pure
+        echo scored 0.200. That breaks the rule the whole project rests on -- echo never counts
+        as success (CLAUDE.md §3.4) -- and echo is exactly what rises under forward-only
+        training, so a model degenerating to copying would look like retained reverse ability.
+
+    Both are decided by execution, once, at build time:
+
+      KEEP   f(input) == output          the forward criterion can be met
+      AND    f(output) != output         echoing is not a correct reverse answer
+
+    An instance that cannot be executed at all is dropped too: a criterion that depends on
+    running the program cannot score an instance that will not run.
+    """
+    from obtune.exec.canon import canon_or_none
+    from obtune.exec.pool import BatchItem, run_batch
+
+    if not rows:
+        return rows, {"kept": 0}
+
+    def run(args_of) -> list:
+        items = [BatchItem(program_id=str(r.pair_id), language="python",
+                           code=(r.meta or {}).get("code", ""),
+                           entry_point=(r.meta or {}).get("entry_point", "f"),
+                           args_reprs=[args_of(r)]) for r in rows]
+        return run_batch(items, timeout_s=float(cfg.get("exec_timeout_s", 2.0)),
+                         workers=exec_workers(cfg))
+
+    on_input = run(lambda r: r.side_a)
+    on_output = run(lambda r: r.side_b)
+
+    kept, n_unrunnable, n_wrong_output, n_echo_valid = [], 0, 0, 0
+    for r, vi, vo in zip(rows, on_input, on_output):
+        ci = (vi.cases or [None])[0]
+        if ci is None or not ci.ok:
+            n_unrunnable += 1
+            continue
+        if ci.output != canon_or_none(_literal(r.side_b)):
+            n_wrong_output += 1
+            continue
+        co = (vo.cases or [None])[0]
+        if co is not None and co.ok and co.output == canon_or_none(_literal(r.side_b)):
+            n_echo_valid += 1          # echoing the output is a valid preimage of itself
+            continue
+        kept.append(r)
+
+    return kept, {"kept": len(kept), "dropped_unrunnable": n_unrunnable,
+                  "dropped_f_input_ne_output": n_wrong_output,
+                  "dropped_echo_is_valid_preimage": n_echo_valid}
+
+
+def _literal(text: str):
+    """The repr in the corpus, as a Python value. Returns the raw string if it will not parse,
+    so an unparseable field is judged by the executor rather than silently reshaped here."""
+    import ast
+
+    try:
+        return ast.literal_eval(text)
+    except Exception:
+        return text
 
 
 def content_key(pair) -> str:

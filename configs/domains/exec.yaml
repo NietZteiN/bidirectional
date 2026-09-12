@@ -2,11 +2,24 @@
 # CRUXEval is 800 problems in one split, so train/val/test are carved from it by PROGRAM with
 # a fixed seed. This cell is deliberately smaller than the 6,500 every other domain gets; it
 # is counted as the small cell it is rather than resampled up to look uniform.
+#
+# AND IT IS SMALLER STILL, BECAUSE THE CORPUS IS NOW VERIFIED BY EXECUTION (Amendment 15).
+# 800 problems in, 602 kept, audited at build time and reported in the build log:
+#   -  56  output equals input as a string  -> "copy your input" would be the correct answer
+#   - 125  f(output) == output              -> echoing the output is a VALID PREIMAGE, so echo
+#                                              is a correct REVERSE answer on those instances
+#   -  16  will not execute at all          -> a criterion that runs the program cannot score it
+#   -   0  f(input) != output               -> the corpus is execution-consistent; good news
+# The 125 are the important ones. Before this, pure echo scored 0.200 on exec reverse, which
+# breaks the rule the project rests on (echo never counts as success, CLAUDE.md §3.4) and echo
+# is precisely what rises under forward-only training -- so a model degenerating to copying
+# would have looked like retained reverse ability. After the audit the oracle test is clean in
+# both directions: GOLD 1.000, ECHO 0.000, EMPTY 0.000.
 
 hf_id: cruxeval-org/cruxeval
 hf_split: test
 
-n_train: 0        # 0 = whatever remains after test and val (~500)
+n_train: 0        # 0 = whatever remains after test and val (302 after the execution audit)
 n_val: 100
 # 200, not 400. Raising it to 400 for the power analysis took the increase straight out of
 # TRAIN -- CRUXEval is 800 problems in total -- leaving 299 training pairs against 6,500 in every
