@@ -166,3 +166,63 @@ probe answers it.
 requires a collapsing NLP cell to clear the kill-gate, so **this run would have returned FAIL on
 a textbook collapse**, and the printed reason would have been `[KILL-GATE: rev ~ 0]` with `rev`
 sitting at 0.5822. The additive floor (0.5519) passes it correctly.
+
+
+## 2026-09-13 — the MT cells, and the asymmetry the plan predicted
+
+Both MT cells completed overnight (`mt_en-de` on an A30, `mt_de-en` on an H100). n=1012.
+
+| cell | trains | arm | forward | reverse | rel. change on reverse |
+|---|---|---|---|---|---|
+| `mt_de-en` | de→en | base | 0.7352 | 0.7964 | |
+| | | **`sft`** | 0.6709 | **0.0000** | **−100 %** |
+| | | `mix5` | 0.6739 | 0.8300 | |
+| `mt_en-de` | en→de | base | 0.7955 | 0.7322 | |
+| | | **`sft`** | 0.8488 | 0.6433 | **−12.1 %** |
+| | | `mix5` | 0.8547 | 0.6848 | |
+
+**The asymmetry is Zhu et al. (2024) replicated.** Training *toward* English annihilates the
+away-from-English direction; training *away* from English costs the toward-English direction
+12 %. Both cells use the same corpus, the same recipe and the same 1,012 FLORES sentences — only
+the direction differs.
+
+**The collapse is total, and it is a language-production failure.** `off_target = 1.0` on every
+one of the 1,012: the model emits fluent text, always in the language it was tuned to produce.
+chrF₂ 18.3, COMET 0.622 — *below* the echo baseline's p90 of 0.757. `empty_output = 0.0`, so it
+is not degenerate output, it is confidently wrong-language output. **Amendment 16 is what makes
+this reportable**: it registered that an MT collapse appearing as off-target or echo must be
+reported as such rather than folded into "reverse accuracy fell", and that is exactly this case.
+
+**A third harness cross-validation.** `mt_de-en/sft/reverse` and `mt_en-de/rev/forward` are the
+same experiment reached from two different cells — a model trained only on de→en, asked for
+en→de. COMET 0.62245 vs 0.62251; chrF₂ 18.341 vs 18.382.
+
+### Amendment 16's three-way verdict earned its place immediately
+
+Four contrasts came back **`?` (inconclusive)** rather than "no difference":
+
+| cell | contrast | Δ | CI | verdict |
+|---|---|---|---|---|
+| `mt_de-en` | forward `mix5 − sft` | +0.30 pp | [−1.38, **+2.08**] | ? |
+| `mt_de-en` | forward `mix50 − sft` | +0.49 pp | [−1.58, **+2.77**] | ? |
+| `mt_en-de` | forward `mix5 − sft` | +0.59 pp | [−1.28, **+2.47**] | ? |
+| `mt_en-de` | forward `mix50 − sft` | +0.79 pp | [−1.38, **+2.96**] | ? |
+
+Each contains zero and each reaches past the registered ±2.0 pp margin — by as little as 0.08 pp.
+Under the old two-way `spans_zero` all four would have read as "the cure is free on forward",
+from intervals too wide to support it. This is precisely the situation Amendment 8 predicted:
+equivalence needs n ≈ 2,500 and **MT caps at 1,012**, so these cells cannot carry an equivalence
+claim and now say so themselves.
+
+### Two things to carry forward
+
+**`rev` on `mt_en-de` scores 0.6611 against a base of 0.7322** — training *on* de→en made de→en
+worse. The kill-gate flags it (`rev=0.661 < floor 0.782`). The cell does not collapse, so it does
+not count toward the gate either way, but it says the news_commentary training distribution is
+below this model's pretrained de→en ability, and any "reverse ceiling" read from `rev` in that
+cell is a floor on what is achievable, not a ceiling.
+
+**Throughput by card, same domain and work:** h100 665 s/arm, a30 1,995 s/arm — **A30 is ~3×
+slower**. The a30 capacity is real and got `mt_en-de` done overnight, but a slot there is worth a
+third of an h100 slot, not one. Grid planning should use ~5–7 days, not the ~3 I estimated from
+slot count alone.
