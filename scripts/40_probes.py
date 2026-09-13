@@ -150,7 +150,13 @@ def main() -> int:
             # RESUMABLE, like the training pack. 18 invocations each build their own vLLM
             # engine, so this job is long and a walltime kill is a normal outcome, not an
             # exotic one. Without this, a resubmission repeats everything already scored.
-            done = out_path.exists() or list(out_root.glob(f"{label}__{t}*/results_*.json"))
+            # lm_eval IGNORES the exact --output_path filename and writes
+            #     {label}__{task}_2026-09-13T12-19-59.821035.json
+            # so checking for out_path itself never matches and a resubmission repeats
+            # everything. Match the stem it actually uses. (Found 2026-09-13: a transient
+            # ENOSPC on the shared scratch failed 1 of 18 invocations, and without this the
+            # retry would have re-scored the 17 that succeeded.)
+            done = out_path.exists() or list(out_root.glob(f"{label}__{t}_*.json"))
             if done and not a.force:
                 print(f"[probes] skip {label} / {t}: already scored", flush=True)
                 results[f"{label}__{t}"] = {"rc": 0, "output": str(out_path), "adapter": adapter,
