@@ -67,12 +67,39 @@ def main() -> int:
     ap.add_argument("--seed", type=int, default=GLOBAL_SEED)
     ap.add_argument("--rank", type=int, default=32)
     ap.add_argument("--limit", type=int, default=None, help="instances per task (smoke tests)")
+    ap.add_argument("--force", action="store_true", help="re-score labels that already have output")
     a = ap.parse_args()
 
     cells = [c.strip() for c in a.cells.split(",") if c.strip()]
     arm_names = [x.strip() for x in a.arms.split(",") if x.strip()]
     tasks = [t.strip() for t in a.tasks.split(",") if t.strip()]
     hf_id = resolve_model(a.model)["hf_id"]
+
+    # LOAD EVERY TASK BEFORE BUILDING A SINGLE ENGINE. lm-eval imports a task's helpers at
+    # module level, and IFEval's pull in `immutabledict`, which is not a declared dependency of
+    # lm-eval -- nothing surfaces it until the task is loaded. On 2026-09-13 the gate's probe
+    # spent its entire 3-hour walltime and produced nothing but an overlap report, because the
+    # failure arrived inside a subprocess whose non-zero return code the loop simply recorded
+    # and moved past. Ten seconds of checking here would have said so immediately.
+    try:
+        from lm_eval.tasks import TaskManager
+
+        tm = TaskManager()
+        broken = {}
+        for t in tasks:
+            try:
+                tm.load_task_or_group([TASKS[t]])
+            except Exception as exc:              # noqa: BLE001
+                broken[t] = f"{type(exc).__name__}: {exc}"
+        if broken:
+            print("these probe tasks cannot be loaded, so no engine is worth building:",
+                  file=sys.stderr)
+            for t, why in broken.items():
+                print(f"  {t}: {why}", file=sys.stderr)
+            return 1
+        print(f"[probes] task preflight OK: {', '.join(tasks)}", flush=True)
+    except ImportError as exc:
+        print(f"[probes] could not preflight tasks ({exc}); continuing", flush=True)
 
     stamp = datetime.now(timezone.utc).strftime("%Y-%m-%d")
     out_root = RESULTS_DIR / "probes" / stamp / a.model
@@ -120,6 +147,16 @@ def main() -> int:
         # been a distorted control, in a direction nobody could predict.
         for t in tasks:
             out_path = out_root / f"{label}__{t}.json"
+            # RESUMABLE, like the training pack. 18 invocations each build their own vLLM
+            # engine, so this job is long and a walltime kill is a normal outcome, not an
+            # exotic one. Without this, a resubmission repeats everything already scored.
+            done = out_path.exists() or list(out_root.glob(f"{label}__{t}*/results_*.json"))
+            if done and not a.force:
+                print(f"[probes] skip {label} / {t}: already scored", flush=True)
+                results[f"{label}__{t}"] = {"rc": 0, "output": str(out_path), "adapter": adapter,
+                                            "task": t, "num_fewshot": FEWSHOT.get(t, 0),
+                                            "status": "skipped"}
+                continue
             cmd = ["lm_eval", "--model", "vllm", "--model_args", ",".join(model_args),
                    "--tasks", TASKS[t], "--batch_size", "auto",
                    "--num_fewshot", str(FEWSHOT.get(t, 0)),

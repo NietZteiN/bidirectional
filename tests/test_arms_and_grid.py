@@ -767,3 +767,25 @@ def test_irreplaceable_results_are_mirrored_off_scratch():
     assert "94_archive_trials.py" in ev, "nothing copies trials off scratch after an eval"
     tail = ev.split("94_archive_trials.py")[1]
     assert "except Exception" in tail, "a failed mirror must not fail an eval that succeeded"
+
+
+def test_probes_preflight_tasks_before_building_engines():
+    """A task that cannot import must be found in seconds, not after a walltime.
+
+    lm-eval imports a task's helpers at module level, and IFEval's pull in `immutabledict`,
+    which is not a declared dependency of lm-eval. The gate's probe spent its entire 3-hour
+    walltime on 2026-09-13 and produced nothing but an overlap report: the failure arrived
+    inside a subprocess whose non-zero return code the loop recorded and moved past.
+    """
+    from pathlib import Path
+
+    root = Path(__file__).resolve().parents[1]
+    src = (root / "scripts" / "40_probes.py").read_text()
+    assert "load_task_or_group" in src, "the probe builds engines before checking the tasks load"
+    # The preflight has to come before the engine loop, or it is not a preflight.
+    assert src.index("load_task_or_group") < src.index("lm_eval\", \"--model\"")
+
+    # ...and the dependency itself must be declared, not just installed by hand.
+    extras = (root / "env" / "extras.txt").read_text()
+    assert "immutabledict" in extras, (
+        "immutabledict is needed by IFEval but is not in extras.txt, so a rebuilt env loses it")
