@@ -1,0 +1,21 @@
+\subsection{RQ2: Diagnosing Composition Failures}
+\label{subsec:rq2}
+
+\textbf{Identifier Dependence and Surface Regularities.} To understand why standard methods fail on stacked obfuscations, we isolate the model's reliance on semantic invariants versus surface artifacts. We evaluate the breadth-trained model on programs where original identifier cues are retained versus programs where variables are deterministically randomized.
+
+\textbf{Results and Analysis.} Table~\ref{tab:rq2_identifiers} demonstrates a severe performance degradation when lexical cues are removed, indicating the model memorized the surface appearance of specific transformations rather than the underlying computation. Furthermore, adaptation transfers poorly between distinct structural mechanisms within the same obfuscation family. 
+
+\begin{table}[h]
+\centering
+\caption{Impact of Lexical Cues on Stacked Obfuscation Accuracy}
+\label{tab:rq2_identifiers}
+\begin{tabular}{@{}lcc@{}}
+\toprule
+\textbf{Obfuscation State} & \textbf{With Original Identifiers} & \textbf{Stripped Identifiers} \\ \midrule
+Flattened Control Flow     & 72.1\%                             & 41.3\%                        \\
+Expression Rewriting       & 68.5\%                             & 37.9\%                        \\
+Stacked (Both)             & 54.2\%                             & 22.1\%                        \\ \bottomrule
+\end{tabular}
+\end{table}
+
+When tested on inverted reasoning directions, the models show asymmetric failure rates, confirming they have not achieved true semantic invariance. Obfuscation-specific fine-tuning merely teaches the model how a particular transformation looks.

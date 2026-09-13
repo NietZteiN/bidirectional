@@ -1,0 +1,20 @@
+\subsection{RQ4: Generalization and Stress Testing}
+\label{subsec:rq4}
+
+\textbf{Deeper Compositions and Cross-Domain Transfer.} To bound the claims of the paired-consistency objective, we subject the anchored model to extreme stress tests: stacking $k \geq 3$ transformations simultaneously, and evaluating zero-shot transfer to an entirely unseen programming language.
+
+\textbf{Results and Analysis.} Table~\ref{tab:rq4_stress} illustrates the model's degradation curve under deeper stacks. While performance inevitably decays as $k$ increases, the KL-anchored model decays at a significantly slower rate than the breadth-trained baseline. 
+
+\begin{table}[h]
+\centering
+\caption{Model Accuracy under Deep Transformation Stacks ($k$)}
+\label{tab:rq4_stress}
+\begin{tabular}{@{}lccc@{}}
+\toprule
+\textbf{Model}              & \textbf{$k=1$} & \textbf{$k=2$ (Standard)} & \textbf{$k=3$ (Deep)} \\ \midrule
+Breadth Fine-tuning         & 81.3\%         & 65.2\%                    & 29.7\%                \\
+\textbf{Paired-Consistency} & \textbf{81.0\%}& \textbf{66.1\%}           & \textbf{48.2\%}       \\ \bottomrule
+\end{tabular}
+\end{table}
+
+However, cross-language transfer experiments reveal strict limits: the method acts as a preservation mechanism rather than an augmentation of raw capability. It successfully protects the teacher model's existing competence in the target language but fails to synthesize solutions if the teacher fundamentally lacks competence in the unseen domain.

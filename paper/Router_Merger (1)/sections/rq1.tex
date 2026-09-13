@@ -1,0 +1,22 @@
+\subsection{RQ1: Performance of Standard Composition Strategies}
+\label{subsec:rq1}
+
+\textbf{Experimental Setup.} To establish the baseline difficulty of stacked obfuscations, we evaluate three intuitive adaptation strategies for large language models (fine-tuned via LoRA): inference-time routing, weight-space model merging, and broad multi-transformation fine-tuning. We compare their performance on single obfuscations versus stacked obfuscations against a zero-shot clean-code baseline.
+
+\textbf{Results and Analysis.} As shown in Table~\ref{tab:rq1_results}, single-obfuscation performance does not naturally compose. The inference-time router performs marginally better than random selection, while weight-space merging fails to retain specialist capabilities, performing at or below the clean-code baseline. Broad multi-transformation training improves reasoning over seen stacks but fails to generalize to the stacked setting robustly. 
+
+\begin{table}[h]
+\centering
+\caption{Model Accuracy (\%) across Composition Strategies}
+\label{tab:rq1_results}
+\begin{tabular}{@{}lcccc@{}}
+\toprule
+\textbf{Model Strategy} & \textbf{Clean} & \textbf{Single Obf.} & \textbf{Stacked (Seen)} & \textbf{Stacked (Unseen)} \\ \midrule
+Zero-shot Baseline      & 82.4           & 45.2                 & 21.3                    & 18.7                      \\
+Specialist Router       & 78.1           & 74.5                 & 33.6                    & 20.1                      \\
+Model Merging           & 75.3           & 68.2                 & 28.4                    & 19.5                      \\
+Breadth Fine-tuning     & 79.8           & 81.3                 & 65.2                    & 24.8                      \\ \bottomrule
+\end{tabular}
+\end{table}
+
+These results suggest that standard fine-tuning approaches are insufficient for deploying AI assistants in practical malware analysis environments where transformations are inherently stacked.

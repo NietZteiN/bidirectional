@@ -1,0 +1,191 @@
+\section{Introduction}
+
+Code obfuscation is widely used to make software difficult to inspect
+while preserving its intended functionality. In benign settings,
+developers employ obfuscation to protect intellectual property,
+implementation details, and proprietary business logic. In adversarial
+settings, however, malware authors routinely exploit the same
+techniques to conceal malicious behavior and frustrate program
+analysis and reverse engineering. Common transformations include
+identifier renaming, control-flow restructuring, dead-code insertion,
+expression rewriting, call indirection, etc. Although such
+transformations are intended to preserve program semantics, they can
+substantially obscure how those semantics are expressed in the source
+code, thereby increasing the difficulty of understanding the
+behavior of malware code~\cite{collberg1997taxonomy,collberg2002manufacturing,
+Obfuscation-The-Hidden-Malware,
+An-Observational-Investigation-of-Reverse-Engineers-Process-and-Mental-Models}.
+
+This difficulty is well established for human analysts. Nguyen
+{\em et al.}~\cite{nguyen2026effectcodeobfuscationhuman}, for example,
+showed that code obfuscation significantly reduces humans' accuracy in
+reasoning about program outputs. Such findings are particularly
+important for malware analysis, where analysts must often infer the
+behavior of code whose surface structure has been deliberately
+engineered to resist comprehension.
+
+Large language models (LLMs) offer a promising alternative for
+automating such reasoning. Models have demonstrated strong
+capabilities in code generation, summarization, vulnerability
+detection, and program understanding
+\cite{chen2021evaluatinglargelanguagemodels,li2022codebert,
+guo2021graphcodebert,roziere2023codegen,
+Competition-level-code-generation-with-AlphaCode}.
+However, most evaluations are performed on naturally written programs,
+where meaningful identifiers, familiar control structures, and common
+coding idioms provide abundant lexical and structural cues. Obfuscated
+programs remove or distort many of these cues while retaining the
+underlying computation, creating a useful stress test of whether an
+LLM actually reasons about program behavior or instead depends on
+surface regularities.
+
+Recent studies suggest that this distinction matters.
+Rong {\em et al.}~\cite{ase26} showed that semantics-preserving
+obfuscations can cause substantial degradation in LLM program
+reasoning, including program-output prediction. Similarly, Nikiema
+{\em et al.}~\cite{nikiema2025codebarrierllmsactually} reported a
+statistically significant decline in model performance as the
+complexity of obfuscation increases. Together, these findings indicate
+that this limitation is especially problematic
+for security applications: an AI-assisted malware analyzer should not
+cease to understand a malicious computation merely due to obfuscation.
+
+%today's code LLMs are not invariant to transformations that leave program semantics unchanged.
+
+An important challenge, however, has received considerably less
+attention: \emph{real obfuscated programs rarely contain only one
+transformation}. Obfuscators can combine multiple techniques so that,
+for example, renamed identifiers are embedded inside flattened control
+flow, rewritten expressions, and additional irrelevant code. Such
+\emph{stacked obfuscation} creates a fundamentally harder deployment
+setting. Success on each transformation independently does not
+necessarily imply success when those transformations occur together.
+Consequently, simply demonstrating that a model can be adapted to
+individual obfuscations is insufficient. For practical malware
+analysis, the learned capability must also \emph{compose}.
+
+This observation naturally suggests several ways to compose knowledge
+learned from individual transformations. One could train a specialist
+for each obfuscation and use a \emph{router} to select the appropriate
+specialist at inference time. Alternatively, one could combine the
+specialists in parameter space through \emph{model merging}. A third,
+and seemingly more direct, strategy is to increase \emph{training
+breadth} by fine-tuning a single model on examples from many individual
+obfuscations, hoping that knowledge learned separately will recombine
+when transformations are stacked. We systematically evaluate these
+three strategies and find that none provides the desired robustness.
+The learned router performs no better than a random routing policy;
+merging specialized models performs at or below the clean-code-tuned
+control; and broader training, although effective on stacks assembled
+from transformations represented during training, introduces a
+substantial performance penalty on an unseen obfuscation
+family. Thus, broader exposure can improve recombination within the
+training distribution while simultaneously making the model
+\emph{less} robust outside that distribution.
+
+Our analysis reveals why. The apparent robustness obtained from
+obfuscation-specific adaptation does not primarily arise from learning
+the semantics that remain invariant under transformation. Instead,
+models learn regularities associated with the \emph{surface artifacts}
+left by particular obfuscators. Evidence for this behavior appears
+across multiple analyses: adaptation transfers poorly between distinct
+mechanisms within the same obfuscation family; the benefit of broad
+training is substantially stronger when recognizable identifier cues
+remain available; and improvements disappear when the same programs
+are queried in a different reasoning direction. Thus, stacking exposes
+a deeper problem than merely insufficient training coverage:
+obfuscation-specific fine-tuning can teach the model how particular
+transformations \emph{look} without teaching it to consistently recover
+the behavior that those transformations preserve.
+
+This diagnosis suggests a different principle for robust adaptation.
+Rather than attempting to compose transformation-specific knowledge,
+we anchor learning to something that is invariant across all such
+transformations: the model's behavior on the corresponding
+\emph{unobfuscated program}. For every obfuscated training program
+$x_{\mathrm{obf}}$, we retain its clean parent
+$x_{\mathrm{clean}}$. A teacher model, tuned for reasoning over clean
+code, processes $x_{\mathrm{clean}}$, while the student processes
+$x_{\mathrm{obf}}$. In addition to the ordinary task loss, we minimize
+the KL divergence between their output distributions:
+%
+\begin{equation}
+\mathcal{L}
+=
+\mathrm{CE}\!\left(y \mid x_{\mathrm{obf}}\right)
++
+\lambda\,
+D_{\mathrm{KL}}\!\left(
+p_{\mathrm{teacher}}(\cdot \mid x_{\mathrm{clean}})
+\,\Vert\,
+p_{\mathrm{student}}(\cdot \mid x_{\mathrm{obf}})
+\right).
+\label{eq:paired_consistency}
+\end{equation}
+%
+The first term exposes the student to obfuscated code, whereas the
+second explicitly encourages it to preserve the behavioral response of
+a model reasoning over the semantics-equivalent clean program.
+Importantly, this objective does not require recognizing which
+obfuscations are present, selecting among specialists, merging
+transformation-specific parameters, or recovering the original source
+code. Instead, it
+changes the learning target itself: rather than anchoring adaptation to
+the surface patterns of individual transformations, it anchors the
+student to the clean-code behavior that those transformations should
+preserve.
+
+Our empirical results demonstrate the advantage of this
+\emph{paired-consistency anchoring}. In contrast to routing, model merging, and breadth-only training, the KL-based objective retains the
+benefits of learning from diverse obfuscations without paying the
+corresponding penalty on an unseen obfuscation family. At the 7B scale,
+the anchored model improves over breadth training by 4.59 percentage
+points on the unseen family while introducing no degradation on clean
+code. Additional stress tests show that the resulting model continues
+to perform well under deeper compositions and transfers to a second
+programming language. At the same time, our analysis carefully bounds
+the claim: the method does not create a new ability to solve arbitrary
+unseen obfuscations beyond that of the clean-code teacher. Rather, it
+prevents obfuscation adaptation from destroying capabilities the model
+already possesses. This distinction is important: robust reasoning
+over obfuscated programs requires not only acquiring adaptation gains,
+but also preserving semantic competence as the surface form of the
+program changes.
+
+{\em Contributions.} This paper makes the following main contributions:
+
+\textbf{1. A systematic study and empirical evaluation of compositional robustness to
+stacked obfuscation.}
+    We investigate whether capabilities learned from individual
+    semantics-preserving transformations compose when multiple
+    transformations are stacked, a setting representative of practical
+    obfuscation and malware analysis.
+
+    %\item \textbf{An empirical evaluation of three natural composition strategies.}
+    %We study inference-time routing, weight-space model merging, and broad multi-transformation training. We show that routing provides essentially no advantage over random selection, merging fails to combine specialist capabilities, and breadth training improves reasoning over seen transformation combinations but significantly degrades performance on an unseen obfuscation family.
+
+\textbf{2. An empirical characterization of why adaptation
+    fails to compose.}
+    With complementary analyses across transformation mechanisms,
+    identifier dependence, reasoning direction, and confidence
+    behavior, we show that obfuscation adaptation predominantly learns
+    transformation-specific surface regularities rather than a general
+    invariance to semantics-preserving transformations.
+
+\textbf{3. A clean-behavior anchoring objective for robust
+    obfuscation adaptation.}
+    We introduce a paired-consistency training objective that minimizes
+    the KL divergence between a clean-code teacher and an
+    obfuscated-code student. The approach preserves the gains of broad
+    obfuscation training while eliminating its degradation on unseen
+    transformation families and clean code, outperforming routing,
+    merging, and breadth-only adaptation.
+
+\textbf{4. Stress testing and characterization of the resulting
+    robustness.} We evaluate the anchored model under deeper obfuscation stacks, a
+    second programming language, unseen transformations, and reversed
+    reasoning tasks. 
+    
+    %These experiments clarify both the benefits and the limits of the proposed approach: anchoring preserves the teacher's semantic reasoning capability under obfuscation rather than creating unsupported new invariance.
+
+%\end{itemize}

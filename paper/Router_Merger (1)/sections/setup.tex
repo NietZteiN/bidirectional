@@ -1,0 +1,7 @@
+\section{Setup}
+
+Because negative-leaning results are frequently attacked at their experimental foundation, our setup is designed to be highly rigorous. Our evaluation relies on a structured ladder consisting of the normalised original code (L0) and five single transforms (e.g., L1b adversarial renaming, S1 control-flow flattening). These are strictly isolated as single-transforms from the L0 parent and never stacked during training. Composites are deliberately placed in a separate namespace so that any transfer result can be reliably attributed to a single mechanism.
+
+To test true invariance, we employ a held-out family (H1) and its trainable proxy (X1). H1 is strictly quarantined behind four independent enforcement layers, meaning every unseen-family measurement reported in our exploration relies on X1, which reproduces H1's difficulty with extreme fidelity ($r = 0.9992$). 
+
+Our correctness machinery utilizes program-level splits and enforces a strict normalised exact match criterion, explicitly rejecting containment matching to avoid false positives. We support these measurements with robust statistics, primarily program-clustered bootstraps with 2,000 resamples to account for correlated input cases. Finally, we establish an important measurement finding regarding model evaluation: untuned format failure fundamentally measures a model's adherence to the prompt contract, rather than its inherent capability. Screening base models by untuned format failure is therefore structurally unsound.

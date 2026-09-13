@@ -1,0 +1,24 @@
+\section{Research Questions}
+\label{sec:rqs}
+
+To systematically evaluate the compositional robustness of large language models against stacked obfuscations, and to assess our proposed paired-consistency anchoring objective, we structure our empirical investigation around four central research questions:
+
+\vspace{0.5em}
+\noindent
+\textbf{RQ1: How do standard composition strategies perform when reasoning over stacked obfuscations?} \\
+Real-world obfuscated programs, particularly in malware analysis, rarely employ a single transformation in isolation. In this question, we establish the baseline difficulty of the stacked obfuscation setting. We investigate whether capabilities learned from individual semantics-preserving transformations naturally compose when multiple transformations are applied simultaneously. Specifically, we evaluate three intuitive adaptation strategies---inference-time routing, weight-space model merging, and broad multi-transformation fine-tuning---to determine if they can successfully bridge the gap between single-obfuscation exposure and multi-obfuscation deployment.
+
+\vspace{0.5em}
+\noindent
+\textbf{RQ2: Why do standard adaptation methods fail to compose under stacked obfuscations?} \\
+Given the anticipated limitations of standard composition strategies, this question seeks to diagnose the underlying cause of failure. We investigate whether obfuscation-specific fine-tuning encourages the model to learn robust programmatic semantics or merely transformation-specific surface artifacts. Through a series of complementary analyses---including measuring reliance on identifier cues, evaluating transferability between mechanisms within the same obfuscation family, and testing inverted reasoning directions---we isolate the behavioral patterns that prevent models from robustly generalizing to stacked transformations.
+
+\vspace{0.5em}
+\noindent
+\textbf{RQ3: Can a paired-consistency anchoring objective improve model robustness to stacked and unseen obfuscations?} \\
+Building on the diagnosis in RQ2, we evaluate our proposed solution. We hypothesize that anchoring the student model's obfuscated-code predictions to a teacher model's clean-code predictions via KL divergence will force the model to focus on invariant semantics rather than surface heuristics. This question compares the paired-consistency objective against the baseline strategies from RQ1, specifically measuring its ability to retain the benefits of broad training on seen stacks while eliminating the severe performance degradation on unseen obfuscation families and clean code.
+
+\vspace{0.5em}
+\noindent
+\textbf{RQ4: To what extent does the paired-consistency model generalize across deeper compositions and new domains?} \\
+Finally, we stress-test the limits of our proposed anchoring approach to precisely bound our claims. We evaluate the resulting model under extreme conditions, including deeper and more complex obfuscation stacks, transferability to a second programming language, and reversed reasoning tasks. This question clarifies whether the method instills an entirely new capability to solve arbitrary unseen obfuscations, or if it strictly acts as a preservation mechanism that protects the teacher model's existing semantic competence from being destroyed by surface-level changes.
