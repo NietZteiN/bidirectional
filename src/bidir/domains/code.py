@@ -266,3 +266,14 @@ def cluster_key(pair) -> str:
     d = pair if isinstance(pair, dict) else pair.model_dump()
     pid = (d.get("meta") or {}).get("program_id")
     return str(pid) if pid else str(d["pair_id"])
+
+
+def cluster_from_pair_id(pair_id: str) -> str:
+    """The program, recovered from a trial row that predates `cluster_id`.
+
+    `pair_id` is built as f"{program_id}::{condition}", so the program is everything before the
+    last separator. Kept beside `cluster_key` so a `trials.jsonl` written before Amendment 20
+    can still be bootstrapped on the right unit instead of being re-generated -- an eval pass is
+    30 minutes of GPU and is only approximately repeatable.
+    """
+    return pair_id.rsplit("::", 1)[0]

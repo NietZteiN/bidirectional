@@ -100,9 +100,39 @@ def paired_delta(trials: Sequence[dict], a: str, b: str, metric: str, direction:
             "ci_halfwidth_pp": (hi - lo) / 2.0}
 
 
+def backfill_clusters(trials: list[dict], run_dir: Path) -> int:
+    """Give old trials their cluster_id, derived from pair_id by the domain.
+
+    `cluster_id` was added to the request dict but not to the trial row, so the first `code`
+    eval wrote none and its bootstrap resampled 2,060 rows as 2,060 independent units instead
+    of 412 programs. Re-running the eval would be 30 minutes of GPU and is only approximately
+    repeatable, so the unit is recovered instead: `code`'s pair_id is f"{program}::{condition}"
+    and `cluster_from_pair_id` inverts it. Returns how many rows were filled.
+    """
+    if not trials or trials[0].get("cluster_id"):
+        return 0
+    domain = run_dir.parent.parent.name
+    try:
+        from bidir import domains
+
+        fn = getattr(domains.get(domain), "cluster_from_pair_id", None)
+    except Exception:
+        fn = None
+    if fn is None:
+        return 0
+    for t in trials:
+        t["cluster_id"] = fn(t["pair_id"])
+    return len(trials)
+
+
 def analyse_run(run_dir: Path, metric: str = "strict", n_boot: int = 2000,
                 margin_pp: float = MARGIN_PP) -> dict:
     trials = list(iter_jsonl(run_dir / "trials.jsonl"))
+    filled = backfill_clusters(trials, run_dir)
+    if filled:
+        n_cl = len({t["cluster_id"] for t in trials})
+        print(f"  [clusters] {run_dir.parent.parent.name}: trials predate cluster_id; "
+              f"derived {n_cl} clusters from {len(trials)} rows", flush=True)
     systems = {t["system"] for t in trials}
     out: dict[str, Any] = {"run": str(run_dir), "systems": sorted(systems),
                            "margin_pp": margin_pp, "contrasts": []}

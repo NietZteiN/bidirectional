@@ -159,5 +159,25 @@ def test_contrasts_resample_clusters_and_report_them():
     assert 't.get("cluster_id") or t["pair_id"]' in src, (
         "the bootstrap resamples rows, which deflates every interval in a clustered domain")
     assert '"n_clusters": len(pairs)' in src, "the record still calls clusters pairs"
+    # BEHAVIOURAL, not a source grep. The previous version asserted the string was present in
+    # evaluate.py -- and it was, in the REQUEST dict, while the trial row is assembled
+    # separately from named fields. So cluster_id never reached trials.jsonl and code's first
+    # eval bootstrapped 2,060 rows as 2,060 independent units. A test that checks an edit
+    # exists rather than that a value arrives will pass on exactly that mistake.
+    from bidir import domains, prompts
+    from bidir.config import DATA_DIR
+    from bidir.evaluate import build_requests
+    from bidir.schema import read_pairs
+
+    mod = domains.get("code")
+    insts = [x.model_dump() for x in read_pairs(DATA_DIR / "code" / "test.jsonl")[:20]]
+    reqs = build_requests(insts, {"base": None}, ("forward",), ("simple",), mod)
+    assert reqs and all(r.get("cluster_id") for r in reqs), "requests carry no cluster_id"
+    assert len({r["cluster_id"] for r in reqs}) < len({r["pair_id"] for r in reqs}), (
+        "cluster_id equals pair_id for code, so the program grouping is not being applied")
+
+    # ...and the row the eval WRITES must carry it through.
     ev = (root / "src" / "bidir" / "evaluate.py").read_text()
-    assert '"cluster_id": cluster_of(inst)' in ev, "trials carry no cluster_id to resample"
+    row_block = ev.split("rows[i] = {")[1].split("}")[0]
+    assert "cluster_id" in row_block, (
+        "the trial row does not carry cluster_id, so trials.jsonl cannot be clustered")

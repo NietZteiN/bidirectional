@@ -205,6 +205,11 @@ def main(argv: Optional[list[str]] = None) -> int:
             r = reqs[i]
             rows[i] = {"trial_id": r["trial_id"], "system": r["system"], "direction": direction,
                        "strategy": strategy, "pair_id": r["pair_id"], "subtask": r["subtask"],
+                       # The bootstrap resamples THIS, not pair_id (Amendment 20). It was added
+                       # to the request dict and not to the row, so it never reached
+                       # trials.jsonl and code's first eval bootstrapped 2,060 rows as 2,060
+                       # independent units instead of 412 programs.
+                       "cluster_id": r["cluster_id"],
                        "adapter": r["adapter"], "output_raw": raw[i], "output": out,
                        "n_gen_tokens": int(ntok[i]), **sc}
 
