@@ -92,8 +92,12 @@ ARMS: dict[str, ArmSpec] = {
                    role="reverse only: the reverse ceiling and the kill-gate"),
     "flip": ArmSpec("flip", ("fwd", "rev"), matched_on=(),
                     role="forward plus every pair reversed: doubled-data reference"),
+    # NOT "tokens": replay matches SEQUENCE tokens (0.999-1.000) but cannot match SUPERVISED
+    # tokens, because tulu-3's completion share of a rendered example is 0.81-0.94 while a
+    # transformation task's is 0.11-0.44 -- the distributions do not overlap (Amendment 22).
+    # The realised supervised ratio is reported per domain and bounds the contrast.
     "replay": ArmSpec("replay", ("fwd",), replay_share=0.5, matched_to="mix50",
-                      matched_on=("instances", "steps", "tokens"),
+                      matched_on=("instances", "steps"),
                       role="forward plus generic instruction data at mix50's replaced share: directional loss vs ordinary forgetting"),
     "mixedtask": ArmSpec("mixedtask", ("fwd",), mixed_task=True, matched_to="sft",
                          role="forward pairs as 20 % of a five-task SFT set: does collapse survive realistic mixtures"),

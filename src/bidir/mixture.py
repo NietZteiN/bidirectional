@@ -159,7 +159,10 @@ def replay_rows(n: int, seed: int, split: str = "train",
         # per (cell, arm) and the budget audit walks 11 arms, so it is cached by (pool identity,
         # unit). Keyed on the measure's identity rather than the tokenizer's, because the caller
         # builds the closure; a different tokenizer produces a different closure.
-        ck = (key, id(measure) if length_of is not None else "chars", len(pool))
+        # NOT id(measure): CPython reuses a freed lambda's address, so five freshly-made
+        # lambdas share one id and the key would collide across callers. The unit is what
+        # actually distinguishes the measurement.
+        ck = (key, "tokens" if length_of is not None else "chars", len(pool))
         if ck in _REPLAY_LEN_CACHE:
             lens_by_row = _REPLAY_LEN_CACHE[ck]
         else:
@@ -170,6 +173,21 @@ def replay_rows(n: int, seed: int, split: str = "train",
         used: set[int] = set()
         chosen = []
         import bisect
+        # MATCHED ON THE TOTAL ONLY, because the completion cannot also be matched from this
+        # corpus. Measured 2026-09-12, completion share of the rendered sequence:
+        #
+        #     tulu-3 replay pool   p25 0.811   p50 0.901   p75 0.944
+        #     mt_en-de                         p50 0.330
+        #     sql                              p50 0.114
+        #     fmt_novel                        p50 0.437
+        #
+        # The distributions do not overlap: instruction data is a short question and a long
+        # answer, a transformation task is a long input and a short output. Matching sql's 0.114
+        # would need a replay row that is 89 % prompt, and the pool holds essentially none.
+        # Adding the completion to the distance therefore chases an infeasible target and gives
+        # up the total-match it could have had -- measured: supervised 0.786 -> 0.680 on
+        # mt_en-de while sequence stayed ~1.00. So: match the total, and REPORT the supervised
+        # ratio (Amendment 22), which bounds the contrast rather than pretending it is exact.
         for t in list(target_lengths)[:n]:
             j = bisect.bisect_left(lens, t)
             best, bestd = None, None

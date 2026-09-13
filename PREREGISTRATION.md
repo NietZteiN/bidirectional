@@ -1060,3 +1060,51 @@ rather than a repair.
 
 Ninth instance of **a nominal parameter standing in for the quantity that matters**: a published
 threshold multiplier ≠ a threshold, once the spectrum it was derived for is gone.
+
+### Amendment 22 — 2026-09-12, before any adapter was trained
+
+**`replay` cannot match supervised tokens, and `mix50 − replay` is therefore an upper bound.**
+
+Amendment 19 moved `replay`'s length matching from rendered characters to rendered tokens and
+declared the arm matched on `(instances, steps, tokens)`. The token fix worked for **sequence**
+tokens — `fmt_novel` went 0.843 → **1.000**, `mt_en-de` and `sql` to 0.999 — but the measurement
+that checked it also showed **supervised** tokens at 0.714, 0.786 and 1.169. The declaration
+overclaimed, in the same amendment that corrected the identical overclaim for `rev`.
+
+An attempt to match both budgets at once made supervised tokens *worse* (`mt_en-de` 0.786 →
+0.680). The reason is structural, not a tuning failure. Completion share of the rendered example:
+
+| corpus | p25 | p50 | p75 |
+|---|---|---|---|
+| tulu-3 replay pool | **0.811** | **0.901** | **0.944** |
+| `mt_en-de` | — | 0.330 | — |
+| `sql` | — | **0.114** | — |
+| `fmt_novel` | — | 0.437 | — |
+
+**The distributions do not overlap.** Instruction data is a short question and a long answer; a
+transformation task is a long input and a short output. Matching `sql`'s 0.114 would require a
+replay row that is 89 % prompt, and the pool holds essentially none. Adding the completion to the
+matching distance therefore chases an infeasible target and gives up the total-match it could
+have had.
+
+**Registered.**
+
+1. `replay` matches on **`(instances, steps)`** and on **sequence** tokens (0.999–1.000). It does
+   **not** match supervised tokens, and `matched_on` no longer says it does.
+2. **`mix50 − replay` is reported as an upper bound on what direction specifically buys**, not as
+   a point estimate, with both arms' realised supervised ratios printed beside it. The direction
+   of the residual is knowable: where `replay` carries fewer supervised tokens (0.71–0.79 in
+   `fmt_novel`, `mt_en-de`), it is a **weaker** forgetting control than `mix50`, so the contrast
+   **overstates** direction's contribution; where it carries more (`sql` 1.17 before this change),
+   it understates. The ratio is in every budget audit, so a reader can bound it per domain.
+3. The same limit applies to any substitution control drawn from a corpus of different geometry.
+   It is a property of comparing instruction data against transformation data, not of this
+   implementation, and it belongs in the Limitations section beside the `rev` supervised-token
+   point from Amendment 19.
+
+**No prediction changes**, but one claim weakens: the paper cannot say "direction buys X pp over
+an equal substitution" as a point estimate. It can say "at most X pp", which is still the claim
+that matters — if even the upper bound is small, direction is not what helps.
+
+Tenth instance of **a nominal parameter standing in for the quantity that matters**: equal
+rendered length ≠ equal training signal.
