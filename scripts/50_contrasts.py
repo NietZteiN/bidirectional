@@ -184,6 +184,68 @@ def learnable_floor(base_rev: float) -> float:
     return max(0.05, min(base_rev + 0.05, 0.95))
 
 
+
+def ifeval_control(model: str = "llama32-3b") -> dict:
+    """`sft - base` on IFEval, per cell, from the probe job.
+
+    The pre-registered rule has three clauses and this is the one that is NOT a contrast:
+    "IFEval `sft - base` better than -5 points". The verdict printed it in the rule text and
+    then never computed it, so the clause was being read by eye off a separate job -- the same
+    gap as the paper's \\NUM{} placeholders having no generator. Computed here so a PASS states
+    all three clauses or names the one it could not check.
+
+    RESOLUTION MATTERS AND IS REPORTED. IFEval is 541 prompts, so its standard error is ~2.15 pp
+    and two arms need ~5.9 pp to differ at 95 %. A cell at -5.0 is therefore NOT distinguishable
+    from 0, and the -5 threshold sits inside the noise of its own instrument.
+    """
+    import glob
+    import re
+
+    out: dict = {"metric": "prompt_level_strict_acc", "cells": {}, "stderr_pp": None}
+    roots = sorted(glob.glob(str(RESULTS_DIR / "probes" / "*" / model)))
+    if not roots:
+        return {**out, "available": False, "why": "no probe results found"}
+    root = roots[-1]
+    scores: dict[str, float] = {}
+    for f in glob.glob(f"{root}/*__ifeval_*.json") + glob.glob(f"{root}/base__ifeval_*.json"):
+        m = re.match(r"(.+)__ifeval_20", Path(f).name)
+        if not m:
+            continue
+        d = json.loads(Path(f).read_text())
+        r = d.get("results", {}).get("ifeval", {})
+        val = next((v for k, v in r.items()
+                    if k.startswith("prompt_level_strict_acc") and "stderr" not in k), None)
+        se = next((v for k, v in r.items()
+                   if k.startswith("prompt_level_strict_acc") and "stderr" in k), None)
+        if val is not None:
+            scores[m.group(1)] = float(val)
+        if se is not None and out["stderr_pp"] is None:
+            out["stderr_pp"] = round(100 * float(se), 2)
+    if "base" not in scores:
+        return {**out, "available": False, "why": "the probe has no `base` IFEval score"}
+
+    base = scores["base"]
+    # Two independent proportions; the gap that clears noise at 95 %.
+    res = round((out["stderr_pp"] or 0) * 1.41 * 1.96, 1)
+    for label, v in sorted(scores.items()):
+        if label == "base" or "__" not in label:
+            continue
+        cell, arm = label.split("__", 1)
+        if arm != "sft":
+            continue
+        delta = 100 * (v - base)
+        out["cells"][cell] = {
+            "sft_ifeval": round(100 * v, 2), "base_ifeval": round(100 * base, 2),
+            "delta_pp": round(delta, 2),
+            "passes_minus5": delta > -5.0,
+            # An honest verdict has to say when the threshold is finer than the instrument.
+            "distinguishable_from_zero": abs(delta) > res,
+        }
+    out["available"] = True
+    out["resolution_pp"] = res
+    return out
+
+
 def gate_verdict(runs: list[Path], metric: str = "strict") -> dict:
     """The pre-registered rule from RUN_PLAN.md §5. Stated here in code so the verdict is a
     computation and not a reading."""
@@ -211,6 +273,12 @@ def gate_verdict(runs: list[Path], metric: str = "strict") -> dict:
             "reverse_learnable": rev_rev >= learnable_floor(base_rev),
             "learnable_floor": learnable_floor(base_rev),
         }
+    control = ifeval_control()
+    for cell, c in cells.items():
+        ic = (control.get("cells") or {}).get(cell)
+        c["ifeval_delta_pp"] = ic["delta_pp"] if ic else None
+        c["ifeval_passes_minus5"] = ic["passes_minus5"] if ic else None
+
     nlp = [c for c in cells if not c.startswith("code")]
     verdict = {
         "cells": cells,
@@ -220,8 +288,19 @@ def gate_verdict(runs: list[Path], metric: str = "strict") -> dict:
         "collapsing_nlp_cells": [c for c in nlp if cells[c]["collapses"]],
         "kill_gate_ok": [c for c in cells if cells[c]["reverse_learnable"]],
     }
-    verdict["passes"] = bool(verdict["collapsing_nlp_cells"]
-                             and any(c in verdict["kill_gate_ok"] for c in verdict["collapsing_nlp_cells"]))
+    # ALL THREE CLAUSES, in one cell. The IFEval control is the third and used to be read by
+    # eye off the probe job; a cell with no probe result cannot satisfy it and is named.
+    verdict["ifeval_control"] = control
+    qualifying = [c for c in verdict["collapsing_nlp_cells"]
+                  if c in verdict["kill_gate_ok"] and cells[c].get("ifeval_passes_minus5")]
+    verdict["qualifying_cells"] = qualifying
+    verdict["passes"] = bool(qualifying)
+    if not qualifying and verdict["collapsing_nlp_cells"]:
+        verdict["why_not"] = [
+            f"{c}: collapse={cells[c]['collapses']}, kill_gate={c in verdict['kill_gate_ok']}, "
+            f"ifeval={cells[c].get('ifeval_delta_pp')} ("
+            f"{'ok' if cells[c].get('ifeval_passes_minus5') else 'worse than -5 or unmeasured'})"
+            for c in verdict["collapsing_nlp_cells"]]
     return verdict
 
 

@@ -1108,3 +1108,49 @@ that matters — if even the upper bound is small, direction is not what helps.
 
 Tenth instance of **a nominal parameter standing in for the quantity that matters**: equal
 rendered length ≠ equal training signal.
+
+### Amendment 23 — 2026-09-14, gate complete, before Phase 2
+
+**The IFEval clause was never computed, and its threshold is finer than its instrument.**
+
+§3's pass rule has three clauses. The third — "IFEval `sft − base` better than −5 points" — is
+the only one that is not a contrast, and `scripts/50_contrasts.py` printed it in the rule text
+and then never evaluated it. It was being read by eye off a separate job. That is the same gap
+as the paper's `\NUM{}` placeholders having no generator, and it is now closed: `gate_verdict`
+reads the probe results, computes `sft − base` per cell, and a cell qualifies only if all three
+clauses hold. `qualifying_cells` names them; `why_not` names the failures.
+
+**And the threshold sits inside the noise.** IFEval is 541 prompts, so its standard error is
+**2.15 pp** and two arms need **≈5.9 pp** to differ at 95 %. Measured:
+
+| cell | collapse | kill-gate | IFEval Δ | passes −5 | distinguishable from 0 |
+|---|---|---|---|---|---|
+| `sql` | ✓ | ✓ | **+0.37** | ✓ | no |
+| `mt_de-en` | ✓ | ✓ | **−4.99** | ✓ **by 0.01 pp** | no |
+| `mt_en-de` | ✗ | ✗ | −2.22 | ✓ | no |
+| `code` | ✓ | ✓ | −6.47 | ✗ | yes (marginally) |
+
+`mt_de-en` passes by a hundredth of a point on a measurement whose standard error is two
+hundred times that. A cell can pass or fail this clause on a coin flip, and the gate should not
+rest on it.
+
+**Registered.** The gate passes on **`sql`**, whose IFEval delta is +0.37 — the clause is
+satisfied unambiguously there, and `sql`'s collapse is −54.9 % with the kill-gate clear.
+`mt_de-en` is reported as **also qualifying, with the caveat that its IFEval margin is 0.01 pp
+against a 5.9 pp resolution**. Every IFEval number in the paper is reported with that resolution
+beside it, and no claim rests on an IFEval difference smaller than 5.9 pp.
+
+**The substantive finding is the disproportion, and it is not borderline.** Reverse capability
+falls **55–100 %** while general ability moves **0 to −6.5 pp**, and only `code`'s −6.47 is
+distinguishable from zero at all. GSM8K is flat everywhere: the range is −1.6 to +1.7 pp against
+a 3.8 pp resolution. That is RQ1's claim — directional loss without general loss — demonstrated
+on three domains.
+
+**One thing the cure does NOT do.** `mix5` restores the reverse direction but does **not**
+measurably restore IFEval: the largest `mix5 − sft` gap is 3.4 pp (`code`), inside the 5.9 pp
+resolution, and `mt_de-en` shows −5.0 for both arms. So "the dose is free" is supported in the
+sense that it costs nothing further on general ability — not in the sense that it repairs what
+`sft` cost. Where `sft` loses general ability, `mix5` loses it too.
+
+Eleventh instance of **a nominal parameter standing in for the quantity that matters**: a
+threshold in points ≠ a threshold the instrument can resolve.
