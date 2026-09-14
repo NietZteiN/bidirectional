@@ -285,3 +285,35 @@ def test_relation_is_bijective_and_echo_is_never_correct():
 
     # The country is the independent unit, not the row: three facts per country.
     assert len({mod.cluster_key(r) for r in rows}) < len(rows)
+
+
+def test_diacritics_criterion_measures_diacritics_not_quote_style():
+    """A model that answers with an ASCII apostrophe has still done this task.
+
+    The corpus uses U+2019; the model answers with U+0027. Comparing character-for-character
+    scored that as "changed the letters", and `diacritics` forward came back at rate 0.020 with
+    format_fail 0.910 -- on a task (strip the accents) that is trivial. The criterion was
+    measuring typography. Folding must NOT touch the diacritics themselves, which are the task,
+    and must still catch a model that deletes an apostrophe outright.
+    """
+    from bidir import domains
+    from bidir.config import load_config
+    from bidir.domains.diacritics import fold_punctuation, skeleton
+
+    mod = domains.get("diacritics")
+    cfg = load_config("domains/diacritics.yaml")
+
+    gold = "SAN FRANCISCO – Il n’a jamais ete facile d’avoir une discussion."
+    same = "SAN FRANCISCO - Il n'a jamais ete facile d'avoir une discussion."
+    assert skeleton(gold) == skeleton(same)
+    assert fold_punctuation(gold) == fold_punctuation(same)
+
+    # Deleting the apostrophe is a real error and must still fail.
+    assert skeleton("c'est") != skeleton("cest")
+    # Diacritics are the task and are never folded away.
+    assert fold_punctuation("été") != fold_punctuation("ete")
+
+    inst = [{"side_a": gold.replace("ete", "été"), "side_b": gold,
+             "meta": {"lang": "fr"}, "subtask": "fr"}]
+    assert mod.score_batch("forward", [same], inst, cfg)[0]["strict"] == 1
+    assert mod.score_batch("forward", ["Voici le texte : " + same], inst, cfg)[0]["strict"] == 0

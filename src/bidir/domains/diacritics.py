@@ -36,6 +36,29 @@ def strip_diacritics(text: str) -> str:
     return unicodedata.normalize("NFC", without)
 
 
+#: Typographic variants that mean the same character. A model that answers with an ASCII
+#: apostrophe where the corpus used U+2019 has done THIS task correctly -- the task is about
+#: diacritics, not about quote style -- so the skeleton comparison must not see a difference.
+#: Measured 2026-09-14: this alone accounted for most of `diacritics` forward's 0.910
+#: format_fail, i.e. the criterion was rejecting correct answers as "changed the letters".
+_PUNCT_FOLD = str.maketrans({
+    "\u2019": "'", "\u2018": "'", "\u02bc": "'", "\u00b4": "'",
+    "\u201c": '"', "\u201d": '"', "\u201e": '"',
+    "\u2013": "-", "\u2014": "-", "\u2212": "-", "\u2026": "...",
+    "\u00a0": " ", "\u202f": " ", "\u2009": " ",
+})
+
+
+def fold_punctuation(text: str) -> str:
+    """Typographic punctuation folded to ASCII, and whitespace collapsed."""
+    return " ".join(text.translate(_PUNCT_FOLD).split())
+
+
+def skeleton(text: str) -> str:
+    """What must be preserved: the letters, ignoring diacritics AND typographic punctuation."""
+    return fold_punctuation(strip_diacritics(text))
+
+
 def n_diacritics(text: str) -> int:
     return sum(1 for ch in unicodedata.normalize("NFD", text) if unicodedata.combining(ch))
 
@@ -112,10 +135,15 @@ def score_batch(direction: str, outputs: Sequence[str], insts: Sequence[Mapping[
         row = base_row(out, source, target)
         pred = unicodedata.normalize("NFC", (out or "").strip())
         gold = unicodedata.normalize("NFC", target.strip())
-        row["exact"] = int(pred == gold)
+        # THE SAME FOLD APPLIES HERE, or the fix above only repairs `format_fail` and leaves
+        # the rate untouched: a model that answers with an ASCII apostrophe where the corpus
+        # used U+2019 has restored (or removed) every diacritic correctly and must score. The
+        # DIACRITICS are not folded -- they are the task -- only typographic punctuation and
+        # whitespace.
+        row["exact"] = int(fold_punctuation(pred) == fold_punctuation(gold))
         # The letters must be untouched: a model that rewrites the sentence and accents it
         # correctly has not done this task.
-        row["skeleton_preserved"] = int(strip_diacritics(pred) == strip_diacritics(gold))
+        row["skeleton_preserved"] = int(skeleton(pred) == skeleton(gold))
         row["off_target"] = int(not row["skeleton_preserved"])
         row["n_diacritics_pred"] = n_diacritics(pred)
         row["n_diacritics_gold"] = n_diacritics(gold)
@@ -124,6 +152,7 @@ def score_batch(direction: str, outputs: Sequence[str], insts: Sequence[Mapping[
             row["strict"] = int(row["exact"] and not row["echo"])
         else:
             row["strict"] = int(row["exact"])
-        row["criterion"] = ("exact match after NFC" + (" & not-echo" if direction == "reverse" else ""))
+        row["criterion"] = ("exact match after NFC and typographic-punctuation folding"
+                            + (" & not-echo" if direction == "reverse" else ""))
         rows.append(row)
     return rows
