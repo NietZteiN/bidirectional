@@ -18,10 +18,15 @@ and 77 jobs pending from other users when last checked).
 
 | sustained slots | everything below |
 |---|---|
-| 0.89 (what we are actually getting) | **~18 days** |
+| 0.89 (what we were actually getting) | ~18 days |
 | 1 | 15.7 days |
-| 3 | 5.2 days |
+| **3 — this project's allocation** | **5.2 days** |
 | 6 | 2.6 days |
+
+**This project holds three cells at a time** (`scripts/95_runner.py --max-inflight 3`; a cell is
+one training job plus its chained eval, so three is the number of GPUs at peak). Three rather
+than four because four other projects share this account and this cluster. The runner is
+idempotent, so re-running it simply tops the allocation back up as cells finish.
 
 **The lever is concurrency, not hardware.** The cluster has ~65 GPUs; we are using less than
 one. `juno-pri` would give 8 slots at priority 200000 but preempts every other user on a shared

@@ -8,8 +8,12 @@
 WHY A RUNNER. Measured over the 64 h to 2026-09-14 this project achieved 0.89 GPU-hours per
 wall-hour -- under one sustained GPU on a cluster with ~65 -- because work was submitted in
 bursts and then the queue drained while nobody was looking. The remaining ~378 GPU-hours take
-~18 days at that rate and ~4 days at four sustained slots. Holding a steady allocation is worth
-more than any speedup to the code.
+~18 days at that rate. Holding a steady allocation is worth more than any speedup to the code:
+at 3 sustained slots it is ~5 days.
+
+THE DEFAULT IS 3, not 4, and deliberately. Four other projects share this account and this
+cluster; three is what this project takes. Raise it with --max-inflight only if the share has
+actually been renegotiated, the same discipline $BIDIR_JUNO_SHARE applies to the juno pool.
 
 IT PREFERS THE UNCAPPED PARTITIONS. `h100` and `a30` carry no QoS, so four jobs there cost the
 `juno` pool nothing and squeeze no neighbouring project -- the account shares that pool of 4
@@ -132,7 +136,7 @@ def submit(name, argv, partition, time, dep=None, cpus=16, mem="64G", dry=False)
 
 def main() -> int:
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    ap.add_argument("--max-inflight", type=int, default=4,
+    ap.add_argument("--max-inflight", type=int, default=3,
                     help="cells in flight at once. A cell is one train job plus its eval, so "
                          "this is the number of GPUs held, not the number of jobs.")
     ap.add_argument("--dry-run", action="store_true")
