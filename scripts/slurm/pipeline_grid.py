@@ -35,7 +35,13 @@ TIERS = {
         "domains": ["code", "mt_en-de", "mt_de-en", "sql", "d2t", "fmt",
                     # Added 2026-09-10 (docs/CANDIDATE_DOMAINS.md): a formal domain, a domain
                     # whose forward direction is trivial, and a determined-but-hard inverse.
-                    "algebra", "diacritics", "automata"],
+                    "algebra",
+                    # The MIRROR of `algebra`: forward is FACTORING (search) rather than
+                    # expansion (mechanical). Paired with `algebra` it separates "training a
+                    # direction destroys its inverse" from "training the direction the model is
+                    # better at destroys the weaker one" -- two readings that fit every MT
+                    # result equally and cannot be separated there.
+                    "algebra_rev", "diacritics", "automata"],
         "seeds": list(SEEDS_SMALL), "arms": "full", "train_time": "10:00:00",
     },
     "small_zh": {

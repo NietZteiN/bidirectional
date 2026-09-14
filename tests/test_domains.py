@@ -198,3 +198,39 @@ def test_coverage_ground_truth_is_measured_not_inherited():
     assert v["status"] == "ok"
     assert v["lines"] == [1, 3, 4, 5, 9, 12]
     assert 9 in v["lines"], "the for-else clause executes and must be in the ground truth"
+
+
+def test_algebra_rev_is_a_true_mirror_of_algebra():
+    """The pair separates "directional" from "you trained the stronger direction".
+
+    Every collapse measured so far trains a direction the model is comparatively good at. In MT
+    "toward English" and "the stronger direction" coincide, so the two readings fit the data
+    equally and cannot be separated. Algebra's asymmetry is mathematical -- expansion is
+    mechanical, factoring is search -- so training FACTORING and watching expansion answers it.
+    That only works if the two cells differ in exactly one thing: which direction is forward.
+    """
+    from bidir import domains, prompts
+    from bidir.config import DATA_DIR, load_config
+    from bidir.schema import read_pairs
+
+    a, r = domains.get("algebra"), domains.get("algebra_rev")
+    ai = [p.model_dump() for p in read_pairs(DATA_DIR / "algebra" / "test.jsonl")[:20]]
+    ri = [p.model_dump() for p in read_pairs(DATA_DIR / "algebra_rev" / "test.jsonl")[:20]]
+
+    # Same expressions, sides swapped.
+    assert [x["side_a"] for x in ai] == [x["side_b"] for x in ri]
+    assert [x["side_b"] for x in ai] == [x["side_a"] for x in ri]
+
+    # The instruction follows the swap: algebra_rev's FORWARD is algebra's REVERSE task.
+    assert r.instruction("forward", ri[0]) == a.instruction("reverse", ai[0])
+    assert r.instruction("reverse", ri[0]) == a.instruction("forward", ai[0])
+
+    # ...and so does the criterion, which is what makes the contrast comparable.
+    cfg = load_config("domains/algebra_rev.yaml")
+    for d, expect in (("forward", "factored"), ("reverse", "expansion")):
+        gold = [prompts.completion_for(i, d) for i in ri]
+        rows = r.score_batch(d, gold, ri, cfg)
+        assert sum(x["strict"] for x in rows) == len(rows), f"gold fails on algebra_rev {d}"
+        assert expect in rows[0]["criterion"], f"{d} criterion is {rows[0]['criterion']!r}"
+        echo = [prompts.input_for(i, d) for i in ri]
+        assert sum(x["strict"] for x in r.score_batch(d, echo, ri, cfg)) == 0

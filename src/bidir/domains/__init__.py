@@ -53,6 +53,11 @@ CELLS: dict[str, tuple[str, dict]] = {
     "exec":     ("bidir.domains.exec_pred", {}),
     # Added 2026-09-10 from docs/CANDIDATE_DOMAINS.md, each closing a specific hole:
     "algebra":    ("bidir.domains.algebra", {}),      # the formal-reasoning domain the paper lacked
+    # The SAME expressions with the training direction mirrored: forward is factoring (search)
+    # rather than expansion (mechanical). `algebra` and `algebra_rev` together separate
+    # "training a direction destroys its inverse" from "training the direction a model is
+    # better at destroys the weaker one" -- two readings that fit every MT result equally.
+    "algebra_rev": ("bidir.domains.algebra_rev", {}),
     "diacritics": ("bidir.domains.diacritics", {}),   # forward is trivial, so collapse cannot be capacity-spend
     "automata":   ("bidir.domains.automata", {}),     # a DETERMINED but computationally hard inverse
     # The one cell whose EVAL SET is somebody else's published benchmark, on a task they defined

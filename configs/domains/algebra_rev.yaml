@@ -1,0 +1,21 @@
+# `algebra` with the training direction MIRRORED: forward is factoring (search), reverse is
+# expansion (mechanical). Same generator, same seed, same split assignment -- the ONLY thing
+# that differs from `algebra` is which direction training sees.
+#
+# The pair is the experiment. Every collapse measured so far trains the direction the model is
+# comparatively good at, so "training a direction destroys its inverse" and "training the
+# stronger direction destroys the weaker" fit the data equally. They coincide in MT and cannot
+# be separated there. Here the asymmetry is mathematical rather than linguistic: if training
+# FACTORING also destroys expansion, competence is ruled out and the effect is directional.
+n_train: 6500
+n_val: 500
+n_test: 2500
+seed: 17
+n_shots: 2
+
+degrees: [2, 3, 3, 4, 4]
+max_root: 15               # roots in [-15, 15]; widened so 7,500 distinct polynomials exist
+
+sampling: {temperature: 0.0, top_p: 1.0, max_tokens: 256, seed: 17}
+engine: {max_model_len: 4096, max_loras: 8, gpu_memory_utilization: 0.85, seed: 17}
+

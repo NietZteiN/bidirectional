@@ -1182,3 +1182,43 @@ changing it would change what `mixedtask − sft` means across the two halves of
 
 Twelfth instance of **a nominal parameter standing in for the quantity that matters**: "four
 other domains" ≠ four domains that are not this task.
+
+### Amendment 25 — 2026-09-14, before Phase 2 results
+
+**A mirrored `algebra` cell, because "directional" and "the stronger direction" fit every result
+so far equally.**
+
+The gate's MT cells admit two readings, and they are not separable there:
+
+| | trains | model's competence on it | the other direction |
+|---|---|---|---|
+| `mt_de-en` | de→en | **stronger** (COMET 0.883) | **0.0000, −100 %** |
+| `mt_en-de` | en→de | weaker (COMET 0.819) | 0.6433, −12.1 % |
+
+1. **Directional** — training one direction destroys its inverse, whichever that is.
+2. **Competence** — training the direction a model is *better* at destroys the weaker one.
+
+Both predict exactly what was observed. "Toward English" and "the stronger direction" coincide
+for every European pair this model knows, so no MT cell can distinguish them, and `sql` and
+`code` do not help: both train a direction the base handles comparatively well.
+
+**`algebra_rev` separates them.** Expansion is mechanical and factoring is search — an asymmetry
+that is mathematical, independent of surface form and language, and present for any model that
+can do algebra at all. `algebra` trains expansion (the easy, strong direction); `algebra_rev`
+trains **factoring** (the hard, weak one) on the same expressions with the sides swapped.
+
+- Under **directional**, both cells collapse.
+- Under **competence**, only `algebra` does.
+
+**Registered before either is run.** `algebra_rev` is built from the identical generator, seed
+and split assignment, so the two cells differ in exactly one thing: which direction training
+sees. Its instruction and criterion delegate to `algebra` with the direction flipped, so the two
+share one scorer and cannot drift apart — the "genuinely factored" test already cost 19 of 40
+gold answers once, and a second copy is the last thing this domain needs. Oracle test passes in
+all four combinations (gold 1.000, echo 0.000).
+
+**This is a prediction the paper can lose.** If only `algebra` collapses, the headline is not
+"fine-tuning one direction erases the other" but "fine-tuning your model's *better* direction
+erases its worse one" — a different and narrower claim, and one that changes the practical
+advice from "always include reverse pairs" to "include them when you are tuning a strength".
+Recorded now so that outcome reads as a finding rather than a retreat.
