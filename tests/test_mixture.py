@@ -181,3 +181,32 @@ def test_contrasts_resample_clusters_and_report_them():
     row_block = ev.split("rows[i] = {")[1].split("}")[0]
     assert "cluster_id" in row_block, (
         "the trial row does not carry cluster_id, so trials.jsonl cannot be clustered")
+
+
+def test_mixedtask_never_fills_from_the_mirror_direction():
+    """mt_en-de's FORWARD is mt_de-en's REVERSE, so it cannot be filler for that cell.
+
+    The roster is five fixed domains and a cell outside it excludes nothing, which is how
+    mt_de-en asked for 5 others and raised (2026-09-14). The raise was lucky: had the count
+    worked out, the mixture would have fed en->de pairs into the one arm whose question is
+    whether collapse survives a realistic mixture -- the confound the arm exists to avoid,
+    arriving through the filler instead of the cell.
+    """
+    import collections
+
+    from bidir import arms as A
+    from bidir.mixture import _mirror_of, build_mixture
+
+    assert _mirror_of("mt_de-en") == "mt_en-de"
+    assert _mirror_of("mt_en-zh") == "mt_zh-en"
+    assert _mirror_of("sql") is None
+
+    for cell, own, banned in (("mt_de-en", "de-en", "en-de"), ("mt_en-de", "en-de", "de-en")):
+        rows = build_mixture(A.resolve("mixedtask"), cell, "train", seed=17)
+        subs = collections.Counter(r.subtask for r in rows)
+        assert subs[own] > 0, f"{cell}: the cell's own pairs are missing from its mixture"
+        assert subs[banned] == 0, (
+            f"{cell}: mixture contains {subs[banned]} {banned!r} rows -- that is this cell's "
+            f"reverse direction entering as filler")
+        # The registered design is a five-task set with the cell at `share`.
+        assert abs(subs[own] / len(rows) - 0.2) < 0.02, f"{cell}: share is not 0.2"

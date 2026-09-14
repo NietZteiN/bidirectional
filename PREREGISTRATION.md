@@ -1154,3 +1154,31 @@ sense that it costs nothing further on general ability — not in the sense that
 
 Eleventh instance of **a nominal parameter standing in for the quantity that matters**: a
 threshold in points ≠ a threshold the instrument can resolve.
+
+### Amendment 24 — 2026-09-14, Phase 2 wave 1
+
+**`mixedtask` must not draw filler from the cell's mirror direction.**
+
+The `mixedtask` arm places a cell's forward pairs at 20 % of a five-task SFT set and fills the
+rest equally from four other domains, asking whether collapse survives a realistic mixture where
+the paired task is a minority. The roster is fixed at `[code, mt_en-de, sql, d2t, fmt]`.
+
+`mt_de-en` is not in that roster, so nothing was excluded, five others remained, and the arm
+raised rather than training. **The raise was fortunate.** `mt_en-de` *is* in the roster and its
+forward direction (en→de) is exactly `mt_de-en`'s **reverse**. Had the count happened to work
+out, the mixture would have supplied reverse pairs as filler — into the one arm whose question
+is whether collapse survives a realistic mixture. That is the confound the arm exists to
+isolate, arriving through the filler rather than through the cell, and it would have made
+`mixedtask` look like a partial `mix` arm.
+
+**Registered:** `mixedtask` excludes both the cell **and its mirror**, where the mirror is the
+same task pair read the other way (`mt_en-de` ↔ `mt_de-en`, `mt_en-zh` ↔ `mt_zh-en`; no other
+domain has one). `mt_de-en` therefore fills from `[code, sql, d2t, fmt]` — exactly four, the
+registered five-task shape, with the cell at 0.2 and no reverse data. Verified: 1,300 of 6,500
+rows are `de-en` and zero are `en-de`.
+
+**No prediction changes.** The roster stays fixed, as its config comment requires, because
+changing it would change what `mixedtask − sft` means across the two halves of the grid.
+
+Twelfth instance of **a nominal parameter standing in for the quantity that matters**: "four
+other domains" ≠ four domains that are not this task.
