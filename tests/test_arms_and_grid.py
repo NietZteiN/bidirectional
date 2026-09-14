@@ -345,14 +345,25 @@ def test_gate_pipeline_respects_the_juno_share():
     assert 'partition="h200"' not in src, "the probe job is back on a contested partition"
 
 
-def test_gate_pipeline_never_submits_an_eval_without_its_dependency():
-    """A refused training submission must skip its eval, not produce an undepended one."""
+@pytest.mark.parametrize("script", ["pipeline_gate.py", "pipeline_grid.py"])
+def test_no_pipeline_submits_an_eval_without_its_dependency(script):
+    """A refused training submission must skip its eval, not produce an undepended one.
+
+    `sub` returns None on refusal, and passing that through as `dep` yields an eval with NO
+    dependency: it starts immediately and scores adapters that do not exist. Fixed in
+    pipeline_gate and left in pipeline_grid, where on 2026-09-14 `code` was refused for h200
+    and escaped only because its eval was refused too. Parametrised so a third pipeline cannot
+    inherit the bug either.
+    """
     from pathlib import Path
 
-    src = (Path(__file__).resolve().parents[1] / "scripts" / "slurm" / "pipeline_gate.py").read_text()
-    assert "if not jid and not a.dry_run:" in src and "skipped.append(cell)" in src, (
-        "an eval submitted with dep=None starts immediately and scores adapters that do not "
-        "exist yet")
+    src = (Path(__file__).resolve().parents[1] / "scripts" / "slurm" / script).read_text()
+    assert "skipped" in src, f"{script} does not track refused submissions"
+    # The guard must sit BEFORE the eval submission, or it guards nothing.
+    guard = src.find("jid is None") if "jid is None" in src else src.find("not jid")
+    ev = src.find('"-m", "bidir.evaluate"')
+    assert guard != -1, f"{script} never checks whether the train job was submitted"
+    assert guard < ev, f"{script} checks the train submission after submitting the eval"
 
 
 def test_base_gate_has_a_clause_that_can_actually_fail():

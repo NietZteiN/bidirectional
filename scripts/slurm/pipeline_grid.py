@@ -83,6 +83,14 @@ TIERS = {
 SMALL_PARTITIONS = ["a30", "h100", "h200"]
 LARGE_PARTITIONS = ["h200", "h100"]
 
+#: Domains whose sequences are long enough that an a30 placement does not finish in a sane
+#: walltime. MEASURED 2026-09-13: the a30 runs ~3x slower than h100 on identical work (MT,
+#: 1,995 vs 665 s per adapter-unit), and `code` costs ~5,300 s per unit there -- so its full
+#: 11-arm pack, which is 13 adapter-units once flip and fwd2x are counted at 2x, needs ~19 h.
+#: The pack resumes after a walltime kill, but a job that reliably times out wastes its queue
+#: position every time, and on a contended cluster that is the scarce resource.
+A30_TOO_SLOW = {"code", "sql", "d2t", "coverage", "exec"}
+
 
 def size_gb(model: str) -> float:
     m = resolve_model(model)
@@ -141,6 +149,47 @@ def resolvable_arms(arm_names: list[str], domain: str, model: str) -> tuple[list
 #: programs for ~5,000 executions. Training does not execute anything; the eval does, and the
 #: two share this setting because a cell is one pipeline.
 CPUS = 16
+
+
+
+#: Hours per adapter-unit, CALIBRATED from this project's own runs on 2026-09-12/13 rather than
+#: guessed. Baseline is an MT-shaped domain on h100/h200; the multipliers are measured:
+#:
+#:     mt on h100    665 s/unit = 0.185 h      <- baseline
+#:     mt on a30   1,995 s/unit = 0.554 h      <- a30 is ~3x h100 on identical work
+#:     sql on h200 1,100 s/unit = 0.306 h
+#:     code on a30 5,300 s/unit = 1.47  h      <- long sequences cost ~2.7x MT on the same card
+_BASE_UNIT_H = 0.20
+_A30_FACTOR = 3.0
+_LONG_SEQ = {"code", "sql", "d2t", "coverage", "exec"}
+
+
+def _per_unit_hours(domain: str, partition: str) -> float:
+    h = _BASE_UNIT_H
+    if partition == "a30":
+        h *= _A30_FACTOR
+    if domain in _LONG_SEQ:
+        h *= 2.7
+    return h
+
+
+def _already_trained(domain: str, model: str, arm: str, seed: int) -> bool:
+    """Complete on disk, by the same standard the pack uses to skip it."""
+    import json
+
+    from bidir import arms as _A
+    from bidir.train import adapter_dir
+
+    spec = _A.resolve(arm)
+    out = adapter_dir(domain, model, arm, 32, seed,
+                      root="adapters_fullft" if spec.full_ft else "adapters")
+    if not (out / "final").exists() or not (out / "run_manifest.json").exists():
+        return False
+    try:
+        return bool((json.loads((out / "run_manifest.json").read_text())
+                     .get("adapter") or {}).get("sha256"))
+    except Exception:
+        return False
 
 
 def sub(name, argv, *, partition, time, dep=None, mem="64G", extra=None, dry=False,
@@ -208,19 +257,45 @@ def main() -> int:
         cells = cells[: a.max_submit]
 
     n = 0
+    skipped: list[str] = []
     for i, (domain, model, seed) in enumerate(cells):
         small = size_gb(model) <= 4.0
         parts = SMALL_PARTITIONS if small else LARGE_PARTITIONS
+        if domain in A30_TOO_SLOW:
+            parts = [x for x in parts if x != "a30"] or ["h100"]
         partition = parts[i % len(parts)]
         extra = ["--exclude", "g-06-01"] if partition == "h100" and not small else []
         tag = f"{a.tier}"
         jid = None
         if not a.eval_only:
             cell_arms = ",".join(resolved[(domain, model)])
+            # Walltime from the units this pack will actually train, not a flat figure: `flip`
+            # and `fwd2x` cost 2x each, so an 11-arm pack is 13 units, and a domain's per-unit
+            # cost varies 3x between partitions. Capped at the 2-day partition limit.
+            # Only the arms this pack will ACTUALLY train: it skips any whose adapter is
+            # already complete, so sizing from the full list asked for 35 h where 9 h was
+            # needed, and a needlessly long job is scheduled worse on a contended cluster.
+            todo = [x for x in resolved[(domain, model)]
+                    if not _already_trained(domain, model, x, seed)]
+            units = arm_registry.units(todo) if todo else 0.0
+            train_time = min(47.0, max(2.0, units * _per_unit_hours(domain, partition) * 1.6))
+            hh = int(train_time)
+            t_train = f"{hh:02d}:{int((train_time - hh) * 60):02d}:00"
             jid = sub(f"tr_{domain}_{model}_s{seed}",
                       ["scripts/20_train_pack.py", "--domain", domain, "--model", model,
                        "--seed", str(seed), "--arms", cell_arms],
-                      partition=partition, time=t["train_time"], extra=extra, dry=a.dry_run)
+                      partition=partition, time=t_train, extra=extra, dry=a.dry_run)
+        # AN EVAL WITHOUT ITS DEPENDENCY IS WORSE THAN NO EVAL -- the same defect fixed in
+        # pipeline_gate.py and left here. `sub` returns None when a submission is refused (a
+        # full queue, or the juno share guard), and passing that through as `dep` yields an
+        # eval with NO dependency: it starts immediately and scores adapters that do not exist.
+        # On 2026-09-14 `code` was refused for h200 and escaped this only because its EVAL was
+        # refused too -- luck, not design.
+        if not a.eval_only and jid is None and not a.dry_run:
+            skipped.append(f"{domain}/{model}/s{seed}")
+            print(f"  !! {domain} {model} s{seed}: training was not submitted, so its eval is "
+                  f"skipped too", file=sys.stderr)
+            continue
         ev_part = "h200" if not small else partition
         sub(f"ev_{domain}_{model}_s{seed}",
             ["-m", "bidir.evaluate", "--domain", domain, "--model", model, "--seed", str(seed),
@@ -228,9 +303,13 @@ def main() -> int:
             partition=ev_part, time="03:00:00", dep=jid, extra=extra, dry=a.dry_run)
         n += 1
 
+    if skipped:
+        print(f"\nNOT SUBMITTED ({len(skipped)}): {', '.join(skipped)}\n"
+              f"  Re-run when the queue frees; packs skip arms whose adapter is already "
+              f"complete, so nothing is recomputed.", file=sys.stderr)
     print(f"\n{n} cells {'planned' if a.dry_run else 'submitted'}. "
           f"Read them with: python scripts/50_contrasts.py --run <result dir>")
-    return 0
+    return 2 if skipped else 0
 
 
 if __name__ == "__main__":
