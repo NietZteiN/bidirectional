@@ -21,9 +21,18 @@ def test_every_registered_cell_implements_the_contract(cell):
 
 
 @pytest.mark.parametrize("cell", sorted(domains.CELLS))
-def test_every_registered_cell_has_a_config(cell):
+def test_every_registered_cell_declares_its_eval_size(cell):
+    """Every cell states how big its eval is, in whatever unit it is sized by.
+
+    Most size by row (`n_test`). `relation` sizes by COUNTRY, because a country carries three
+    facts and splitting by row would put its capital in train and its TLD in test -- the unit
+    that matters for the split, the direction partition and the bootstrap is the country
+    (Amendment 20's principle, applied at build time rather than retrofitted).
+    """
     cfg = load_config(f"domains/{cell}.yaml")
-    assert cfg.get("n_test"), f"{cell} config has no eval size"
+    by_row = cfg.get("n_test")
+    by_cluster = cfg.get("n_test_countries")
+    assert by_row or by_cluster, f"{cell} config declares no eval size in any unit"
 
 
 @pytest.mark.skipif(not BUILT, reason="no domains built")
@@ -234,3 +243,45 @@ def test_algebra_rev_is_a_true_mirror_of_algebra():
         assert expect in rows[0]["criterion"], f"{d} criterion is {rows[0]['criterion']!r}"
         echo = [prompts.input_for(i, d) for i in ri]
         assert sum(x["strict"] for x in r.score_batch(d, echo, ri, cfg)) == 0
+
+
+def test_relation_is_bijective_and_echo_is_never_correct():
+    """The cell that separates directional collapse from the Reversal Curse.
+
+    Two properties are load-bearing. BIJECTIVE, or the reverse is underdetermined and the cell
+    conflates with the RQ3 invertibility ladder (country_currency maps 27 countries to one
+    value; excluded). And ECHO NEVER CORRECT -- Djibouti's capital is Djibouti, so on those the
+    gold answer IS an echo and the criterion both rejects a correct answer and rewards an
+    echoing model, which is the Amendment 15 defect in a new domain.
+    """
+    import collections
+
+    from bidir import domains, prompts
+    from bidir.config import DATA_DIR, load_config
+    from bidir.schema import read_pairs
+
+    mod = domains.get("relation")
+    cfg = load_config("domains/relation.yaml")
+    rows = [p.model_dump() for p in read_pairs(DATA_DIR / "relation" / "test.jsonl")]
+    assert rows, "relation test split is empty"
+
+    per_rel = collections.defaultdict(list)
+    for r in rows:
+        per_rel[r["subtask"]].append(r)
+    for sub, rs in per_rel.items():
+        vals = collections.Counter(r["side_b"].lower() for r in rs)
+        assert max(vals.values()) == 1, f"{sub}: value {vals.most_common(1)} is not unique"
+        for r in rs:
+            assert r["side_a"].lower() != r["side_b"].lower(), (
+                f"{sub}: {r['side_a']!r} equals its own answer, so echo and correct coincide")
+
+    for d in ("forward", "reverse"):
+        gold = [prompts.completion_for(i, d) for i in rows]
+        echo = [prompts.input_for(i, d) for i in rows]
+        g = mod.score_batch(d, gold, rows, cfg)
+        e = mod.score_batch(d, echo, rows, cfg)
+        assert sum(x["strict"] for x in g) == len(g), f"gold fails on relation {d}"
+        assert sum(x["strict"] for x in e) == 0, f"echo scores on relation {d}"
+
+    # The country is the independent unit, not the row: three facts per country.
+    assert len({mod.cluster_key(r) for r in rows}) < len(rows)

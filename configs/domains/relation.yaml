@@ -1,0 +1,45 @@
+# Bijective world-knowledge relations: country <-> capital / ISO code / TLD, both directions.
+#
+# THE POINT OF THIS CELL is to separate directional collapse from the REVERSAL CURSE (Berglund
+# et al. 2023). The curse concerns facts a model never learned bidirectionally; this concerns
+# facts the base can already recite BOTH ways, which ordinary fine-tuning then removes. That
+# contrast is only demonstrable if the base passes its gate in both directions -- so the gate is
+# the load-bearing evidence here, not a formality, and a failure makes the cell uninformative
+# rather than making it a collapse.
+#
+# BIJECTIVE ONLY. Measured over the source on 2026-09-14: country_currency maps 27 countries to
+# one value and country_calling_code maps 4, so both are excluded. A many-to-one relation leaves
+# the reverse underdetermined and would conflate this cell with the RQ3 invertibility ladder,
+# which exists to vary exactly that. Remaining collisions are dropped at build time and reported.
+#
+# SMALL BY NATURE, like `exec` and `coverage`. There are ~195 countries and three relations, so
+# this is a few hundred pairs and it is counted as the small cell it is rather than resampled up
+# to look uniform. Amendment 17's rung filter will drop the dose rungs its corpus cannot express.
+#
+# SPLIT AND CLUSTERED BY COUNTRY. A country carries up to three facts; splitting by row would
+# put its capital in train and its TLD in test. The country is the independent unit for the
+# split, for the direction partition and for the bootstrap.
+
+# SIZED IN COUNTRIES, not rows, because the country is the independent unit. 60 test countries
+# give ~135 rows across the three relations -- but the BOOTSTRAP resamples countries, so the
+# effective n is 60, not 135. Against Amendment 8's power table that detects a large collapse
+# with certainty and supports NO equivalence claim: this cell carries RQ1 and the Reversal-Curse
+# contrast, nothing finer. Stated here so the interval is never read off the row count.
+n_test_countries: 60
+n_val_countries: 30
+seed: 17
+n_shots: 2
+
+sampling:
+  temperature: 0.0
+  top_p: 1.0
+  max_tokens: 32        # an answer is a name
+  seed: 17
+
+engine:
+  max_model_len: 2048
+  max_loras: 8
+  gpu_memory_utilization: 0.85
+  seed: 17
+
+# No thresholds: the criterion is exact match, so there is no tau to freeze.

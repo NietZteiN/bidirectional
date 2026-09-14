@@ -58,6 +58,10 @@ CELLS: dict[str, tuple[str, dict]] = {
     # "training a direction destroys its inverse" from "training the direction a model is
     # better at destroys the weaker one" -- two readings that fit every MT result equally.
     "algebra_rev": ("bidir.domains.algebra_rev", {}),
+    # Bijective world-knowledge relations, to separate directional collapse from the REVERSAL
+    # CURSE: the curse is about facts never learned both ways, this is about facts the base
+    # demonstrably knows both ways and fine-tuning removes. The base gate is the evidence.
+    "relation":   ("bidir.domains.relation", {}),
     "diacritics": ("bidir.domains.diacritics", {}),   # forward is trivial, so collapse cannot be capacity-spend
     "automata":   ("bidir.domains.automata", {}),     # a DETERMINED but computationally hard inverse
     # The one cell whose EVAL SET is somebody else's published benchmark, on a task they defined

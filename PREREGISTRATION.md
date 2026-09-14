@@ -1222,3 +1222,47 @@ all four combinations (gold 1.000, echo 0.000).
 erases its worse one" — a different and narrower claim, and one that changes the practical
 advice from "always include reverse pairs" to "include them when you are tuning a strength".
 Recorded now so that outcome reads as a finding rather than a retreat.
+
+### Amendment 26 — 2026-09-14, before Phase 2 results
+
+**A bijective-relation cell, to separate directional collapse from the Reversal Curse.**
+
+Berglund et al. (2023) showed that a model trained on "A is B" often cannot answer "B is A".
+Every reviewer will reach for that comparison, and the two phenomena differ in a way that
+decides what this paper is about:
+
+| | the model's prior state | what happens |
+|---|---|---|
+| **Reversal Curse** | never had the reverse mapping | it cannot produce it |
+| **Directional collapse** | **demonstrably had it** | ordinary fine-tuning **removes** it |
+
+That contrast is only demonstrable on facts the base can already recite **both ways**, so the
+base gate is this cell's load-bearing evidence rather than a formality. **If the untouched model
+fails either direction, the cell is reported as uninformative — not as a collapse from a floor.**
+
+**Registered design.**
+
+- **Bijective relations only**: country ↔ capital, ISO code, TLD. Measured over the source on
+  2026-09-14, `country_currency` maps 27 countries to one value and `country_calling_code` maps
+  4; both are excluded, because a many-to-one relation leaves the reverse underdetermined and
+  would conflate this cell with the RQ3 ladder, which exists to vary exactly that. Remaining
+  collisions are dropped at build time and counted (12 in `capital`).
+- **Echo is never correct.** Djibouti's capital is Djibouti, and the source records Kuwait's as
+  "Kuwait" — on those the gold answer *is* an echo, so the criterion would both reject a correct
+  answer and reward an echoing model. Dropped, the same guard Amendment 15 wrote for `exec`.
+  Oracle test then passes: gold 1.000, echo 0.000, both directions.
+- **Split, partitioned and bootstrapped by COUNTRY.** A country carries up to three facts;
+  splitting by row would put its capital in train and its TLD in test. `cluster_key` returns the
+  country, so Amendment 20's unit is correct here by construction rather than by retrofit.
+
+**And its power is stated up front.** 60 test countries give ~135 rows, but the bootstrap
+resamples countries, so **the effective n is 60**. Against Amendment 8's table that detects a
+large collapse with certainty and supports **no equivalence claim whatsoever**. This cell carries
+RQ1 and the Reversal-Curse contrast and nothing finer; its interval is never read off the row
+count. Amendment 17's rung filter independently drops `mix1`, `mix5` and `mix10` here, leaving
+`mix25` and `mix50`.
+
+**What each outcome means.** If the base passes both directions and `sft` collapses the reverse,
+the paper can state plainly that directional collapse is *not* the Reversal Curse — the knowledge
+was there and fine-tuning took it. If the base fails a direction, this cell says nothing about
+that distinction and the paper says so.

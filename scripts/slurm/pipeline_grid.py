@@ -41,7 +41,11 @@ TIERS = {
                     # direction destroys its inverse" from "training the direction the model is
                     # better at destroys the weaker one" -- two readings that fit every MT
                     # result equally and cannot be separated there.
-                    "algebra_rev", "diacritics", "automata"],
+                    "algebra_rev", "diacritics", "automata",
+                    # Bijective world-knowledge relations, to separate directional collapse from
+                    # the Reversal Curse: facts the base recites BOTH ways, which fine-tuning
+                    # then removes. Small by nature (~195 countries x 3 relations).
+                    "relation"],
         "seeds": list(SEEDS_SMALL), "arms": "full", "train_time": "10:00:00",
     },
     "small_zh": {
