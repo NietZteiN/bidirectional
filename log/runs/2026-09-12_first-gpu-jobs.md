@@ -226,3 +226,66 @@ cell is a floor on what is achievable, not a ceiling.
 slower**. The a30 capacity is real and got `mt_en-de` done overnight, but a slot there is worth a
 third of an h100 slot, not one. Grid planning should use ~5–7 days, not the ~3 I estimated from
 slot count alone.
+
+
+## 2026-09-14 — Phase 2 wave 1: the dose ladder, and the control that decides the paper
+
+Three cells complete (llama32-3b, seed 17). Reverse-direction strict success:
+
+| cell | base | `sft` | **`mix1`** | `mix5` | `mix50` | `flip` | **`fwd2x`** | `replay` | `mixedtask` |
+|---|---|---|---|---|---|---|---|---|---|
+| `mt_de-en` | 0.8014 | **0.0000** | **0.7964** | 0.8271 | 0.8281 | 0.8360 | **0.0138** | 0.5850 | 0.4377 |
+| `sql` | 0.5058 | 0.2340 | **0.4836** | 0.5532 | 0.5754 | 0.5861 | **0.2669** | 0.1712 | **0.0164** |
+| `mt_en-de` | 0.7332 | 0.6433 | 0.7125 | 0.6897 | 0.6739 | 0.6709 | 0.6443 | 0.7164 | 0.7065 |
+
+**1. The knee is at or below 1 %.** `mix1` takes `mt_de-en` from 0.0000 to 0.7964 — **99.4 % of
+base** — and `sql` to 0.4836 (95.6 %). One reversed pair in a hundred recovers almost the whole
+loss. That is the paper's practical claim and it is much stronger than "5 % is cheap".
+
+**2. It is DIRECTION, not substitution.** The primary contrast on `sql`:
+
+| contrast | Δ reverse | CI |
+|---|---|---|
+| `mix50 − replay` | **+40.43 pp** | [+37.04, +43.42] |
+| `replay − sft` | **−6.29 pp** | [−8.80, −3.77] |
+
+`replay` spends the identical budget on generic instruction data and lands at 0.1712 — **below**
+`sft`. An equal substitution does not merely fail to help; on this domain it hurts. Per
+Amendment 22 this is an **upper bound** (replay carries ~0.70× `sft`'s supervised tokens, so it
+is the weaker control), but the margin is far too large for that to change the conclusion.
+
+**3. Training longer in the same direction recovers nothing.** `fwd2x` doubles the forward
+epochs and leaves reverse at 0.0138 (`mt_de-en`) and 0.2669 (`sql`). Undertraining is dead as an
+explanation.
+
+**4. Replacing is as good as doubling.** `flip` and `mix50` agree to ≤1.1 pp in all three cells
+(0.8360/0.8281, 0.5861/0.5754, 0.6709/0.6739). `mix50 − flip` is −1.06 pp [−2.71, +0.58] —
+**inconclusive** by the registered ±2.0 pp margin, not equivalent, exactly as Amendment 8
+predicted for n=1,012–1,034. The claim needs the 2,500-instance domains.
+
+**5. A practical warning, with a caveat.** `mixedtask` puts the cell at 20 % of a five-task
+mixture and `sql`'s reverse falls to **0.0164** — worse than single-task tuning. The realistic
+setting is the harsher one. The caveat is structural: that arm also has one fifth the sql data,
+so mixture and quantity are entangled in it by construction, and the arm cannot separate them.
+
+### Gates for the new cells
+
+| cell | forward | reverse | format_fail | verdict |
+|---|---|---|---|---|
+| **`relation`** | **0.711** | **0.652** | 0.000 / 0.000 | **PASS** |
+| `mt_en-zh` | 0.750 | 0.745 | 0.000 | PASS |
+| `mt_zh-en` | 0.745 | 0.750 | 0.010 | PASS |
+
+`relation` passing both directions with **zero** format failures is what the Reversal-Curse
+contrast needs: these are facts the base recites both ways, so a collapse there cannot be
+"it never knew the reverse".
+
+### Open: eight domains fail their gate on FORMAT, not ability
+
+`diacritics` forward is the clearest: rate 0.020 with **format_fail 0.910**. Stripping accents is
+trivial, so a 91 % unparseable rate is the criterion rejecting the model's answers, not the model
+failing. `automata` (0.83/0.75), `algebra` (0.31) and `fmt` reverse (0.175) are the same shape.
+Note `relation` scores 0.000 format_fail because its scorer reads the FIRST LINE only, which is
+the likely fix. A diagnostic job is capturing real outputs before anything is changed — the
+criterion must measure the task, not instruction-following, and IFEval is where format compliance
+belongs.
