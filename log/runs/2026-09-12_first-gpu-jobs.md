@@ -289,3 +289,71 @@ Note `relation` scores 0.000 format_fail because its scorer reads the FIRST LINE
 the likely fix. A diagnostic job is capturing real outputs before anything is changed — the
 criterion must measure the task, not instruction-following, and IFEval is where format compliance
 belongs.
+
+
+## 2026-09-15 — P1 breadth: a boundary condition, and the asymmetry story breaks
+
+### `relation` does NOT collapse — and that is the point of having built it
+
+| arm | forward | reverse | echo |
+|---|---|---|---|
+| base | 0.7259 | 0.6519 | 0.000 |
+| **`sft`** | 0.8667 | **0.7037** | 0.022 |
+| `fwd2x` | 0.8963 | **0.5852** | 0.163 |
+| `rev` | 0.7926 | 0.8370 | 0.000 |
+
+Fine-tuning country→capital **did not** damage capital→country: reverse went *up*, 0.6519 →
+0.7037. The base recites these facts both ways (the gate: 0.711/0.652, zero format failures) and
+forward-only tuning left that intact.
+
+**This is a boundary condition, not a failure.** It says directional collapse is not universal:
+where the pairing is heavily-attested factual knowledge rather than a learned transformation, the
+reverse survives. And it sharpens the Reversal-Curse contrast in an unexpected direction — this
+is neither the curse (the model *can* go both ways) nor collapse (fine-tuning did not remove it).
+
+`fwd2x` is the crack: twice the forward epochs takes reverse to 0.5852 with echo rising 0.000 →
+0.163. So the mechanism is present and dose-dependent; one epoch-budget of forward-only tuning
+is simply not enough to express it here.
+
+### Chinese breaks both explanations of the MT asymmetry
+
+| cell | trains | base COMET | reverse outcome |
+|---|---|---|---|
+| `mt_de-en` | de→en | **0.883 (stronger)** | **0.0000** (−100 %) |
+| `mt_zh-en` | zh→en | **0.850 (stronger)** | **0.0000** (−100 %) |
+| `mt_en-zh` | en→zh | 0.828 (weaker) | **0.0395** (−94.8 %) |
+| `mt_en-de` | en→de | 0.819 (weaker) | 0.6433 (−12.1 %) |
+
+Amendment 25 registered two readings of the gate's MT result: **toward English**, or **the
+stronger direction**. `mt_en-zh` refutes both — it trains the weaker direction, away from
+English, and still collapses 95 %.
+
+**Three of four MT cells collapse totally. The exception is `mt_en-de`.** Whatever protects it is
+not direction-of-English and not relative competence. A conjecture worth stating as a conjecture:
+en↔de share a script and a great deal of vocabulary, en↔zh share neither. With four cells and one
+seed that is a hypothesis, not a finding, and the paper should say so.
+
+**`algebra` / `algebra_rev` are now the decisive test** — a difficulty asymmetry (expansion 0.825
+base, factoring 0.500) with no language or script confound at all. Both gated PASS today and both
+are training.
+
+### Two results to check before they are quoted
+
+- `mt_zh-en` `replay`: reverse **0.0099** with echo **0.551** — worse than `sft`'s 0.0000/0.466
+  is not possible, so this is replay landing at the floor *and* echoing hard. Consistent with
+  `sql`, where `replay` also fell below `sft`, but the magnitude wants checking.
+- `mt_en-zh` `mixedtask`: **forward 0.0375**. A forward collapse in the one arm that dilutes the
+  cell to 20 % of a five-task mixture. Plausible — 1,300 en→zh rows may be too few to hold the
+  target script — but it is odd enough to verify rather than report.
+
+### Gate repairs from the dumped outputs
+
+`algebra` **0.512 → 0.8250** and `algebra_rev` **→ 0.5000/0.8250**, both with format_fail ≤0.005,
+after the implicit-multiplication parser fix. The mirror is confirmed: the two cells report the
+same pair of numbers with the direction labels swapped, which is what makes their contrast
+interpretable.
+
+`diacritics` still fails (reverse 0.2700, format_fail 0.360) after the prompt was disambiguated.
+The prompt was genuinely ambiguous and the fix was right, but it was not the whole cause. Left
+failing rather than patched further; it is one cell and the capacity argument it was bought for
+can be made from `fmt`'s trivial forward direction instead.
