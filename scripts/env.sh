@@ -66,6 +66,20 @@ export VLLM_WORKER_MULTIPROC_METHOD="${VLLM_WORKER_MULTIPROC_METHOD:-spawn}"
 export BIDIR_JUNO_SHARE="${BIDIR_JUNO_SHARE:-1}"
 export TOKENIZERS_PARALLELISM=false
 
+# ON THE LOGIN NODE ONLY, cap the BLAS thread pools. That node has RLIMIT_NPROC=300 against a
+# compute node's 1,545,830, so OpenBLAS spawning one thread per core (16 here) exhausts it once
+# a few python processes are alive:
+#     OpenBLAS blas_thread_init: pthread_create failed for thread 10 of 16
+# and the interpreter dumps core. Capping costs nothing for the work the login node should be
+# doing -- reading results, git, editing -- and is deliberately NOT applied inside a job, where
+# tokenisation and CPU-side COMET want every core the allocation gives them.
+if [ -z "${SLURM_JOB_ID:-}" ]; then
+  export OPENBLAS_NUM_THREADS="${OPENBLAS_NUM_THREADS:-1}"
+  export OMP_NUM_THREADS="${OMP_NUM_THREADS:-1}"
+  export MKL_NUM_THREADS="${MKL_NUM_THREADS:-1}"
+  export NUMEXPR_NUM_THREADS="${NUMEXPR_NUM_THREADS:-1}"
+fi
+
 # Fail loudly rather than three frames into a download. A cached model tree that is suddenly
 # unreachable reads as a network error or a corrupt cache, not as a wrong path.
 for _d in "$HF_HOME" "$TMPDIR"; do
