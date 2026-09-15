@@ -1266,3 +1266,27 @@ count. Amendment 17's rung filter independently drops `mix1`, `mix5` and `mix10`
 the paper can state plainly that directional collapse is *not* the Reversal Curse — the knowledge
 was there and fine-tuning took it. If the base fails a direction, this cell says nothing about
 that distinction and the paper says so.
+
+### Amendment 27 — 2026-09-15, Phase 2
+
+**`mixedtask`'s roster is fixed, so cells outside it take the first four in roster order.**
+
+Amendment 24 excluded the cell's *mirror* from the `mixedtask` filler, which fixed `mt_de-en`.
+It did not fix the general case: the roster is five fixed domains and **most cells are not in
+it** — `relation`, `mt_en-zh`, `mt_zh-en`, `algebra`, `algebra_rev`, every `fmt_det` rung. For
+those, excluding the cell and its mirror removes nothing, five others remain, `n_others = 4`
+fails, and the arm raises. `relation` hit this on 2026-09-15; `mt_en-zh` and `mt_zh-en` were
+seven hours into their packs and would have hit it at their last arm.
+
+**Registered:** after excluding the cell and its mirror, `mixedtask` takes the **first
+`n_others` domains in roster order**. Deterministic, so the arm is the same five-task set for
+every cell sharing a roster prefix, and the realised list is written into each run manifest.
+
+The roster itself is **not** extended, which its config comment forbids: adding a domain per
+cell would change what `mixedtask − sft` means between halves of the grid, and that contrast is
+the arm's entire purpose. Truncating keeps the mixture's *size* and *shape* identical across
+cells and varies only which four fillers are drawn from a fixed pool — the weaker assumption.
+
+Verified across `relation`, `mt_en-zh`, `mt_zh-en`, `mt_de-en` and `sql`: every cell builds, the
+cell sits at the registered 0.2 share, and **zero rows of a cell's own reverse direction** enter
+as filler where a mirror exists.

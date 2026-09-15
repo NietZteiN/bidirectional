@@ -210,3 +210,32 @@ def test_mixedtask_never_fills_from_the_mirror_direction():
             f"reverse direction entering as filler")
         # The registered design is a five-task set with the cell at `share`.
         assert abs(subs[own] / len(rows) - 0.2) < 0.02, f"{cell}: share is not 0.2"
+
+
+def test_mixedtask_builds_for_every_cell_outside_the_roster():
+    """Most cells are NOT in the five-domain roster, and every one of them raised.
+
+    The roster is fixed at [code, mt_en-de, sql, d2t, fmt]. A cell outside it excludes nothing,
+    five others remain, and n_others=4 fails: mt_de-en first (fixed by excluding the mirror,
+    which only helps cells whose mirror IS in the roster), then relation, with mt_en-zh and
+    mt_zh-en queued behind. Truncation is deterministic and roster-ordered so the arm means the
+    same thing across the grid.
+    """
+    import collections
+
+    from bidir import arms as A
+    from bidir.config import DATA_DIR
+    from bidir.mixture import build_mixture
+
+    for cell in ("relation", "mt_en-zh", "mt_zh-en", "algebra", "fmt_det75"):
+        if not (DATA_DIR / cell / "train.jsonl").exists():
+            continue
+        rows = build_mixture(A.resolve("mixedtask"), cell, "train", seed=17)
+        assert rows, f"{cell}: mixedtask built nothing"
+        subs = collections.Counter(r.subtask for r in rows)
+        # Five tasks: the cell plus exactly four others, and the cell at the registered share.
+        assert len(subs) >= 2, f"{cell}: mixture has one task"
+        mirror = {"mt_en-zh": "zh-en", "mt_zh-en": "en-zh"}.get(cell)
+        if mirror:
+            assert subs.get(mirror, 0) == 0, (
+                f"{cell}: {subs[mirror]} rows of its own reverse direction entered as filler")

@@ -307,13 +307,30 @@ def build_mixture(arm: ArmSpec, domain: str, split: str, seed: int = GLOBAL_SEED
         # would have fed reverse pairs into the one arm whose question is whether collapse
         # survives a realistic mixture. That is the confound this arm exists to avoid, arriving
         # through the filler rather than through the cell.
-        others = list(mixed_task_others or
-                      [d for d in cfg["domains"] if d != domain and d != _mirror_of(domain)])
-        if len(others) != int(cfg.get("n_others", 4)):
+        n_others = int(cfg.get("n_others", 4))
+        if mixed_task_others:
+            others = list(mixed_task_others)
+        else:
+            # Exclude the cell and its mirror, then TAKE THE FIRST n_others IN ROSTER ORDER.
+            #
+            # The roster is five fixed domains and most cells are not in it -- `relation`,
+            # `mt_en-zh`, `algebra`, every fmt_det rung. For those nothing was excluded, five
+            # others remained, and the arm raised: `mt_de-en` first (fixed by excluding the
+            # mirror, which only helps cells whose mirror IS in the roster), then `relation`
+            # (2026-09-15), with mt_en-zh and mt_zh-en queued to hit it next.
+            #
+            # Truncation is deterministic and roster-ordered, so `mixedtask` is the same
+            # five-task set for every cell that shares a roster prefix, and the realised list is
+            # written into the run manifest. The alternative -- extending the roster per cell --
+            # is what the config comment forbids, because it would change what `mixedtask - sft`
+            # means between halves of the grid.
+            others = [d for d in cfg["domains"]
+                      if d != domain and d != _mirror_of(domain)][:n_others]
+        if len(others) != n_others:
             raise ValueError(
-                f"mixedtask needs exactly {cfg.get('n_others', 4)} other domains for {domain!r}, "
-                f"got {others}. The roster is fixed at {cfg['domains']}; a cell outside it that "
-                f"has no mirror in it cannot form the registered five-task mixture.")
+                f"mixedtask needs {n_others} other domains for {domain!r}, got {others} from "
+                f"roster {cfg['domains']}. After excluding the cell and its mirror the roster "
+                f"must still hold at least {n_others}.")
         rows = mixed_task_rows(domain, split, len(pairs), seed, float(cfg.get("share", 0.2)), others)
     else:
         for t in arm.tasks:
