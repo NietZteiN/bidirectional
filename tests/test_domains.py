@@ -317,3 +317,32 @@ def test_diacritics_criterion_measures_diacritics_not_quote_style():
              "meta": {"lang": "fr"}, "subtask": "fr"}]
     assert mod.score_batch("forward", [same], inst, cfg)[0]["strict"] == 1
     assert mod.score_batch("forward", ["Voici le texte : " + same], inst, cfg)[0]["strict"] == 0
+
+
+def test_algebra_accepts_the_notation_people_actually_write():
+    """`x^2 - 10x` is a correct answer to "expand x*(x-10)".
+
+    sympify(text.replace("^","**")) rejects implicit multiplication, so the strict parser called
+    the model's standard notation unparseable: measured on 320 dumped base-model outputs it
+    accepted 75-85 % where the lenient parser accepts 100 %, which took `algebra` forward from a
+    0.512 gate rate with 0.250 format_fail to 0.762 correct with none.
+
+    This is a notation repair, not leniency about correctness.
+    """
+    from bidir import domains
+    from bidir.config import load_config
+
+    mod = domains.get("algebra")
+    cfg = load_config("domains/algebra.yaml")
+    inst = [{"side_a": "x*(x - 10)", "side_b": "x**2 - 10*x", "meta": {}, "subtask": "t"}]
+
+    for written in ("x^2 - 10x", "x**2 - 10*x", "x^2 - 10*x"):
+        assert mod.score_batch("forward", [written], inst, cfg)[0]["strict"] == 1, written
+
+    # A wrong answer that happens to parse is still wrong.
+    wrong = mod.score_batch("forward", ["x^2 - 25"], inst, cfg)[0]
+    assert wrong["parse_ok"] == 1 and wrong["strict"] == 0
+
+    # And the reverse criterion still demands a genuinely factored form.
+    rev = mod.score_batch("reverse", ["x**2 - 10*x"], inst, cfg)[0]
+    assert rev["strict"] == 0, "the expanded polynomial is the algebraic echo"

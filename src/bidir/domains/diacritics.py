@@ -113,10 +113,22 @@ LANG_NAME = {"fr": "French", "vi": "Vietnamese", "es": "Spanish"}
 def instruction(direction: str, inst: Mapping[str, Any]) -> str:
     lang = LANG_NAME.get((inst.get("meta") or {}).get("lang", "fr"), "French")
     if direction == "forward":
-        return (f"Remove every accent and diacritical mark from this {lang} text, changing "
-                f"nothing else.\n\n{lang}:\n" + inst["side_a"])
-    return (f"Restore the accents and diacritical marks to this {lang} text, changing nothing "
-            f"else.\n\n{lang} without accents:\n" + inst["side_b"])
+        # "Remove every accent and diacritical mark" is AMBIGUOUS and the model took the other
+        # reading: it DELETED the accented letters instead of unaccenting them --
+        #     "du tort a la legitimite de l'Union europeenne"
+        #  -> "du tort   la lgitimit  de lUnion europenne"
+        # which is a defensible reading of "remove the mark" and made the base gate 0.050 on a
+        # task that is supposed to be trivial. Measured on 120 dumped outputs, 2026-09-15: only
+        # 51.7 % preserved even the LETTER skeleton. The instruction now names the substitution
+        # and gives examples, and says explicitly what must not change.
+        return (f"Rewrite this {lang} text, replacing every accented letter with its unaccented "
+                f"form (e.g. é→e, à→a, ç→c, ü→u). Keep every word, every punctuation mark and "
+                f"all spacing exactly as given; change nothing except the accents."
+                f"\n\n{lang}:\n" + inst["side_a"])
+    return (f"Rewrite this {lang} text, restoring the accent on every letter that should carry "
+            f"one. Keep every word, every punctuation mark and all spacing exactly as given; "
+            f"change nothing except the accents."
+            f"\n\n{lang} without accents:\n" + inst["side_b"])
 
 
 def augmented_hint(direction: str) -> str:

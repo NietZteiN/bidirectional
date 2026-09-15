@@ -1290,3 +1290,49 @@ cells and varies only which four fillers are drawn from a fixed pool — the wea
 Verified across `relation`, `mt_en-zh`, `mt_zh-en`, `mt_de-en` and `sql`: every cell builds, the
 cell sits at the registered 0.2 share, and **zero rows of a cell's own reverse direction** enter
 as filler where a mirror exists.
+
+### Amendment 28 — 2026-09-15, before either cell is trained
+
+**Two gate failures were the instrument, not the model. Diagnosed from 440 dumped outputs.**
+
+Five domains failed their base gate on `format_fail` rather than on ability. Rather than guess a
+third time — the typographic-apostrophe fix moved `diacritics` only 0.910 → 0.850 — the base
+model's **full** outputs were dumped for `diacritics`, `algebra`, `algebra_rev` and `fmt` and
+categorised offline. Two distinct causes, one fix each, and both are registered because they
+change a measured base rate.
+
+**1. `diacritics`: the prompt was ambiguous and the model took the other reading.**
+
+> "Remove every accent and diacritical mark from this French text, changing nothing else."
+
+The model **deleted the accented letters** rather than unaccenting them:
+
+```
+gold: du tort a la legitimite de l'Union europeenne
+out : du tort   la lgitimit  de lUnion europenne
+```
+
+That is a defensible reading of "remove the mark", and it is why only **51.7 %** of outputs
+preserved even the letter skeleton, on a task chosen precisely because it is trivial. The
+instruction now names the substitution (`é→e, à→a, ç→c, ü→u`) and states what must not change;
+the reverse instruction is sharpened to match. **No training has run on this cell**, so the
+prompt change costs nothing and the train/eval prompts remain byte-identical (CLAUDE.md §3.3).
+
+**2. `algebra` / `algebra_rev`: the parser rejected standard notation.**
+`sympify(text.replace("^","**"))` cannot read **implicit multiplication**, so the model's
+`x^2 - 10x` was unparseable against a gold of `x**2 - 10*x`. Measured over 320 dumped outputs:
+strict parsing accepted 75–85 %, lenient parsing accepts **100 %**, and `algebra` forward moves
+from 0.512 with 0.250 `format_fail` to **0.762 correct with none**.
+
+This is a notation repair and **not leniency about correctness**: `(x−5)*(x−5)` for a gold of
+`x*(x−10)` still parses and is still wrong, the equivalence test is untouched, and the reverse
+criterion still rejects the expanded polynomial as the algebraic echo.
+
+**What is NOT being fixed.** `automata` emits grids of the wrong *shape* — the base cannot
+compute a Game of Life step, its 0.000 is honest, and inventing a lenient criterion there would
+manufacture a competence that does not exist. `fmt`'s residual failures are the JSON-array/XML
+ambiguity that **is** that domain's subject. Both stand as gate failures.
+
+**The general lesson, now standing practice.** A gate failure is diagnosed from dumped outputs
+before any criterion is touched, because the first two explanations offered here (preambles,
+then punctuation) were both wrong and both looked complete from truncated examples.

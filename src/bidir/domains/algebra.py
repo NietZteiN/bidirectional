@@ -114,6 +114,28 @@ def augmented_hint(direction: str) -> str:
             "polynomial you were given.")
 
 
+
+def _parse(sp, text: str):
+    """Parse an algebraic answer the way a person writes one.
+
+    `sympify(text.replace("^", "**"))` rejects IMPLICIT MULTIPLICATION, which is how everyone
+    writes algebra: the model answers `x^2 - 10x` for a gold of `x**2 - 10*x` and the strict
+    parser calls it unparseable. Measured on 320 dumped base-model outputs (2026-09-15) the
+    strict parser accepted 75-85 % and this one accepts 100 %, taking `algebra` forward from a
+    0.512 gate rate with 0.250 format_fail to 0.762 correct with none.
+
+    That is a criterion repair, not leniency about correctness: `(x-5)*(x-5)` for a gold of
+    `x*(x-10)` still parses and is still WRONG, and the equivalence test is unchanged. Only the
+    notation gate moves.
+    """
+    from sympy.parsing.sympy_parser import (convert_xor, implicit_multiplication_application,
+                                            parse_expr, standard_transformations)
+
+    return parse_expr(text.strip(),
+                      transformations=standard_transformations
+                      + (convert_xor, implicit_multiplication_application))
+
+
 def score_batch(direction: str, outputs: Sequence[str], insts: Sequence[Mapping[str, Any]],
                 cfg: Mapping[str, Any]) -> list[dict[str, Any]]:
     sp = _sympy()
@@ -124,7 +146,7 @@ def score_batch(direction: str, outputs: Sequence[str], insts: Sequence[Mapping[
         row = base_row(out, source, target)
         expr = None
         try:
-            expr = sp.sympify((out or "").strip().replace("^", "**"))
+            expr = _parse(sp, out or "")
             row["parse_ok"] = 1
         except Exception:
             row["parse_ok"] = 0
@@ -133,7 +155,7 @@ def score_batch(direction: str, outputs: Sequence[str], insts: Sequence[Mapping[
         row["is_factored"] = 0
         if expr is not None:
             try:
-                row["equivalent"] = int(sp.simplify(sp.expand(expr) - sp.expand(sp.sympify(target))) == 0)
+                row["equivalent"] = int(sp.simplify(sp.expand(expr) - sp.expand(_parse(sp, target))) == 0)
             except Exception:
                 row["equivalent"] = 0
             if direction == "reverse":
