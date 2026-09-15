@@ -30,6 +30,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import random
 import statistics
 import sys
 from datetime import datetime, timezone
@@ -53,7 +54,19 @@ def gate_one(a, domain: str, e) -> dict:
     """Gate one domain on an already-built engine. Returns the report; does not exit."""
     mod = domains.get(domain)
     cfg = load_config(f"domains/{domain}.yaml")
-    insts = [p.model_dump() for p in load_pairs(domain, "test")][: a.limit]
+    # A SEEDED RANDOM SAMPLE, not the first N. `load_pairs` sorts by pair_id so that file order
+    # is never load-bearing -- but that makes a PREFIX load-bearing instead whenever the id
+    # encodes a difficulty parameter. `algebra`'s ids are f"alg::{degree}::{n}", so the first 200
+    # are every degree-2 polynomial: the gate scored forward 0.8250 where the full 2,500-instance
+    # eval scores 0.1724, because this model expands quadratics (0.945/0.736) and cannot touch
+    # cubics or quartics (0.009/0.000). The gate decides whether a cell is usable at all, so it
+    # must see the distribution the paper will report.
+    _pool = [p.model_dump() for p in load_pairs(domain, "test")]
+    if a.limit and a.limit < len(_pool):
+        _rng = random.Random(a.seed)
+        insts = _rng.sample(_pool, a.limit)
+    else:
+        insts = _pool
 
     metric = TAU_METRIC.get(domain.split("_")[0])
     report: dict = {"domain": domain, "model": a.model, "n": len(insts), "tau_metric": metric,
