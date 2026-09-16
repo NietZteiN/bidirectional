@@ -1336,3 +1336,56 @@ ambiguity that **is** that domain's subject. Both stand as gate failures.
 **The general lesson, now standing practice.** A gate failure is diagnosed from dumped outputs
 before any criterion is touched, because the first two explanations offered here (preambles,
 then punctuation) were both wrong and both looked complete from truncated examples.
+
+### Amendment 29 — 2026-09-16, AFTER the Phase-2 MT results were observed
+
+**Disclosure first: unlike Amendments 13–28, this one is written after seeing the result it
+governs.** The forward-direction numbers below were already on disk when the gap was noticed.
+It is recorded that way deliberately; the criterion it adds is defined to apply uniformly to
+every cell, past and future, and it *removes* claims rather than admitting any.
+
+**The gap.** The collapse claim is "training on the forward direction destroys the reverse
+direction". That presupposes the forward training taught the forward direction. Nothing checked
+it. `gate_verdict` records `sft_forward` and `base_forward` in every cell dict and then uses
+neither in any criterion; `collapses` reads only the reverse side, and the kill-gate reads only
+`rev`. A cell in which fine-tuning damaged *both* directions would have passed every registered
+check and been reported as directional collapse.
+
+**What the data shows.** Forward strict success, `small_s17` unless noted:
+
+| cell | base→ | sft→ | fwd2x→ |
+|---|---|---|---|
+| mt_de-en | 0.736 | **0.668** | **0.577** |
+| mt_zh-en | 0.764 | **0.719** | **0.644** |
+| mt_en-de | 0.796 | 0.845 | **0.773** |
+| mt_en-zh | 0.744 | 0.782 | **0.751** |
+
+Two facts. **More forward training makes the forward direction worse in every MT cell** —
+`fwd2x` is below `sft` in all four. And for the two X→English cells a single dose already hurts,
+reproducibly: `mt_de-en` is −0.064 at the gate, −0.068 at `small_s17`, −0.080 at `small_s42`.
+The pattern is interpretable — the base model is already strong at producing English, so WMT
+LoRA SFT mostly teaches target-language style, which can only help when the target is not
+English — but interpretability is not validity.
+
+**The criterion, applied to all cells.** A cell is `forward_learned` iff
+`sft_forward - base_forward > +0.02` — the same ±2.0 pp equivalence margin as Amendment 8,
+because a gain the instrument cannot resolve is not a gain. Cells failing it keep their data and
+are reported, but:
+
+1. They may **not** be described as "forward preserved, reverse destroyed", and no sentence may
+   imply the forward direction was learned or held.
+2. Their contribution is the **disproportion** only, which must be stated with both numbers:
+   `mt_de-en` is −6.8 pp forward against −80.1 pp reverse, `mt_zh-en` −4.4 against −74.0.
+3. They may not be the *sole* support for any headline claim. `code`, `sql`, `algebra`,
+   `algebra_rev`, `mt_en-de` and `mt_en-zh` all pass the criterion, so no current claim rests
+   on a failing cell alone.
+
+**Reverse must fall, not merely rise less.** Recorded because the first ad-hoc rule written
+against this data got it wrong: a rule of the form `dR < dF - margin` flags `relation`, whose
+reverse *improved* +5.2 pp, purely because forward improved more. The registered `collapses`
+criterion (`rel <= -0.5`) is unaffected and correctly returns no-collapse for `relation`; the
+rule is written down here so the mistake is not reintroduced in analysis code.
+
+**Thirteenth instance of the standing pattern** — a nominal parameter standing in for the
+quantity that matters. "Trained on the forward direction" ≠ "got better at the forward
+direction". The arm's *name* was doing the work its *measurement* should have done.

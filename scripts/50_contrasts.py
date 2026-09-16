@@ -270,6 +270,14 @@ def gate_verdict(runs: list[Path], metric: str = "strict") -> dict:
             "sft_forward": mean.get(("sft", "forward"), 0.0), "base_forward": mean.get(("base", "forward"), 0.0),
             "relative_reverse_change": rel,
             "collapses": bool(base_rev > 0 and rel <= -0.5),
+            # Amendment 29. The collapse claim presupposes the forward training taught the
+            # forward direction; nothing checked that. These two fields were already recorded
+            # here and used by no criterion, so a cell damaged in BOTH directions passed every
+            # check and was reported as directional collapse. Margin is Amendment 8's +/-2.0 pp:
+            # a gain the instrument cannot resolve is not a gain.
+            "forward_learned": bool(mean.get(("sft", "forward"), 0.0)
+                                    - mean.get(("base", "forward"), 0.0) > 0.02),
+            "forward_delta": mean.get(("sft", "forward"), 0.0) - mean.get(("base", "forward"), 0.0),
             "reverse_learnable": rev_rev >= learnable_floor(base_rev),
             "learnable_floor": learnable_floor(base_rev),
         }
@@ -287,6 +295,10 @@ def gate_verdict(runs: list[Path], metric: str = "strict") -> dict:
                  "The IFEval control is read from the probe job, not from here."),
         "collapsing_nlp_cells": [c for c in nlp if cells[c]["collapses"]],
         "kill_gate_ok": [c for c in cells if cells[c]["reverse_learnable"]],
+        # Amendment 29. Named, not silently dropped: these cells keep their data and contribute
+        # the DISPROPORTION, but may not be described as "forward preserved" nor be the sole
+        # support for a headline claim.
+        "forward_not_learned": [c for c in cells if not cells[c]["forward_learned"]],
     }
     # ALL THREE CLAUSES, in one cell. The IFEval control is the third and used to be read by
     # eye off the probe job; a cell with no probe result cannot satisfy it and is named.
@@ -336,9 +348,12 @@ def main() -> int:
             # multiplicative floor hid the fact that it was unsatisfiable rather than unmet.
             kill = ("" if c["reverse_learnable"] else
                     f"  [KILL-GATE: rev={c['rev_reverse']:.3f} < floor {c['learnable_floor']:.3f}]")
+            # Amendment 29: a cell damaged in BOTH directions used to print as clean COLLAPSE.
+            fwd = ("" if c["forward_learned"] else
+                   f"  [FWD-NOT-LEARNED: sft-base={c['forward_delta']:+.3f} -- disproportion only]")
             print(f"  {cell:<12s} base_rev={c['base_reverse']:.4f} sft_rev={c['sft_reverse']:.4f} "
                   f"({c['relative_reverse_change']:+.1%})  rev_ceiling={c['rev_reverse']:.4f}  "
-                  f"{'COLLAPSE' if c['collapses'] else 'no collapse'}{kill}")
+                  f"{'COLLAPSE' if c['collapses'] else 'no collapse'}{kill}{fwd}")
         print(f"\n  verdict: {'PASS — proceed to Phase 2' if v['passes'] else 'FAIL — reset to the boundary-conditions paper'}")
         print(f"  rule: {v['rule']}")
         out = RESULTS_DIR / "gate_verdict.json"

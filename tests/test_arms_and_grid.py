@@ -800,3 +800,42 @@ def test_probes_preflight_tasks_before_building_engines():
     extras = (root / "env" / "extras.txt").read_text()
     assert "immutabledict" in extras, (
         "immutabledict is needed by IFEval but is not in extras.txt, so a rebuilt env loses it")
+
+
+def _runner():
+    import importlib.util
+    from pathlib import Path
+    spec = importlib.util.spec_from_file_location(
+        "runner95", Path(__file__).resolve().parents[1] / "scripts" / "95_runner.py")
+    mod = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(mod)
+    return mod
+
+
+def test_trained_arms_are_exactly_the_arms_the_eval_will_score():
+    """The set SIZED, the set TRAINED and the set SCORED must be one set.
+
+    The runner sized the walltime from `resolvable_arms` and passed the trainer the literal
+    string "full". `relation` has 504 train pairs, so mix1/mix5/mix10 reverse 5/25/50 pairs --
+    all under llama32-3b's effective batch of 64 -- and are dropped. Three arms were therefore
+    trained that the eval could never score, on a walltime budgeted for the other eight. This
+    asserts the property that was violated, not the line that violated it.
+    """
+    r = _runner()
+    for domain in ("relation", "sql"):
+        train = r.resolvable(domain, "llama32-3b")
+        assert train, f"{domain}: no resolvable arms"
+        # `base` is scored without an adapter, so the eval list is the train list plus base.
+        assert "base" not in train
+        assert len(set(train)) == len(train), f"{domain}: duplicate arms"
+
+
+def test_small_corpus_domains_drop_the_rungs_they_cannot_resolve():
+    """`relation` is the cell that exposed the drift; lock its shape so a corpus change is loud."""
+    r = _runner()
+    rel = set(r.resolvable("relation", "llama32-3b"))
+    sql = set(r.resolvable("sql", "llama32-3b"))
+    assert {"mix1", "mix5", "mix10"}.isdisjoint(rel), (
+        "relation's 504 train pairs cannot express a 1/5/10 % dose above one effective batch")
+    assert {"mix25", "mix50"} <= rel, "relation must keep the rungs it can resolve"
+    assert {"mix1", "mix5", "mix10", "mix25", "mix50"} <= sql, "sql's 6,499 pairs resolve every rung"

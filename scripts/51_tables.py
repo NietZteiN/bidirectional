@@ -34,6 +34,22 @@ ARM_ORDER = ["base", "sft", "fwd2x", "rev", "mix1", "mix5", "mix10", "mix25", "m
              "flip", "replay", "mixedtask", "cft", "unlikelihood", "roundtrip"]
 
 
+def unresolvable(domain: str, model: str) -> set:
+    """Dose rungs this domain's corpus is too small to express, from the same function the
+    runner uses to decide what to train. Read here so the table's notation cannot drift from
+    the pipeline's behaviour."""
+    import importlib.util
+
+    try:
+        spec = importlib.util.spec_from_file_location("pg", ROOT / "scripts" / "slurm" / "pipeline_grid.py")
+        pg = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(pg)
+        from bidir import arms as A
+        return set(pg.resolvable_arms(list(A.TIERS["full"]), domain, model)[1])
+    except Exception:
+        return set()
+
+
 def cell_means(run: Path, metric: str = "strict") -> dict:
     """(system, direction) -> mean, from one pass. Contrasts are only valid within a pass."""
     acc: dict[tuple[str, str], list[float]] = defaultdict(list)
@@ -143,14 +159,22 @@ def main() -> int:
             m = by_domain[domain][model]
             if not any((d, "reverse") in m for d in doses):
                 continue
+            # A rung this corpus cannot express is NOT a missing result, and printing both as
+            # "--" invites exactly the misreading it caused: `relation` (504 train pairs) reverses
+            # 5/25/50 pairs at mix1/5/10, all under the effective batch, so those rungs were
+            # deliberately never run. They print as $\varnothing$ against "--" for absent data.
             drows.append([tex(domain), tex(model)]
-                         + [f"{100 * m[(d, 'reverse')]:.1f}" if (d, "reverse") in m else "--" for d in doses])
+                         + [f"{100 * m[(d, 'reverse')]:.1f}" if (d, "reverse") in m
+                            else ("$\\varnothing$" if d in unresolvable(domain, model) else "--")
+                            for d in doses])
     if drows:
         (a.out / "dose.tex").write_text(latex_table(
             drows, ["Domain", "Model"] + [tex(d) for d in doses],
             "Reverse-direction strict success along the dose ladder. Every rung replaces forward "
             "pairs with their own reversal, so instances, sequence tokens and steps are matched to "
-            "\\textsc{sft} at every dose.", "dose"))
+            "\\textsc{sft} at every dose. $\\varnothing$ marks a rung the domain\'s corpus cannot "
+            "express: the reversed pairs fall below one effective batch, so the arm would be noise "
+            "rather than a dose and was not run. \'--\' would be an absent result.", "dose"))
         provenance["dose"] = provenance["main"]
 
     # RQ3 ladder.

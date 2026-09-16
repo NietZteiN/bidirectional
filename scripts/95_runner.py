@@ -28,6 +28,7 @@ counting, not by memory.
 from __future__ import annotations
 
 import argparse
+import functools
 import getpass
 import json
 import re
@@ -112,15 +113,34 @@ def gate_passed(domain: str, model: str) -> bool | None:
 
 def cell_state(domain: str, model: str, seed: int) -> tuple[list[str], bool]:
     """(arms still to train, whether an eval already exists)."""
-    import importlib.util
-
-    spec = importlib.util.spec_from_file_location("pg", ROOT / "scripts" / "slurm" / "pipeline_grid.py")
-    pg = importlib.util.module_from_spec(spec)
-    spec.loader.exec_module(pg)
-    wanted = pg.resolvable_arms(list(A.TIERS["full"]), domain, model)[0]
+    wanted = resolvable(domain, model)
     todo = [a for a in wanted if not adapter_complete(domain, model, a, seed)]
     evald = bool(list(RESULTS_DIR.glob(f"*/{domain}/{model}/*_s{seed}/trials.jsonl")))
     return todo, evald
+
+
+def resolvable(domain: str, model: str) -> list[str]:
+    """The arms this cell can actually express -- the ONE definition both call sites use.
+
+    `resolvable_arms` drops dose rungs whose reversed-pair count falls below one effective
+    batch. The runner used to call it for the eval's `--arms` and for the walltime, but hand
+    the trainer the literal string "full": `relation` (504 train pairs) then had mix1/mix5/mix10
+    trained and never scored, on a walltime sized for the eight arms that survive. Both call
+    sites now read this, so the set that is SIZED, the set that is TRAINED and the set that is
+    SCORED cannot drift apart again.
+    """
+    return _pg().resolvable_arms(list(A.TIERS["full"]), domain, model)[0]
+
+
+@functools.lru_cache(maxsize=1)
+def _pg():
+    """`scripts/slurm/pipeline_grid.py` is a script, not a package module; load it once."""
+    import importlib.util
+
+    spec = importlib.util.spec_from_file_location("pg", ROOT / "scripts" / "slurm" / "pipeline_grid.py")
+    mod = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(mod)
+    return mod
 
 
 def submit(name, argv, partition, time, dep=None, cpus=16, mem="64G", dry=False):
@@ -152,10 +172,7 @@ def main() -> int:
     ap.add_argument("--status", action="store_true")
     a = ap.parse_args()
 
-    import importlib.util
-    spec = importlib.util.spec_from_file_location("pg", ROOT / "scripts" / "slurm" / "pipeline_grid.py")
-    pg = importlib.util.module_from_spec(spec)
-    spec.loader.exec_module(pg)
+    pg = _pg()
 
     inflight = squeue_ours()
     running = [n for n, s in inflight if s == "RUNNING"]
@@ -204,14 +221,21 @@ def main() -> int:
             units = A.units(todo)
             hours = min(47.0, max(2.0, units * pg._per_unit_hours(cell, "a30" if "a30" in part else "h100") * 1.6))
             t = f"{int(hours):02d}:{int((hours - int(hours)) * 60):02d}:00"
+            # The walltime above is sized from `todo`, so the pack must be asked for `todo` and
+            # not for the whole `full` tier. It was asked for "full": `relation` has 504 train
+            # pairs, so `resolvable_arms` drops mix1/mix5/mix10 (5/25/50 reversed pairs, all
+            # under the effective batch of 64) -- the runner then sized 8 arms and trained 11.
+            # Wasted GPU on three arms the eval can never score, and a walltime short by three
+            # arms on every small-corpus cell. Same failure as always: what we SIZED for was not
+            # what we ASKED for.
             jid = submit(f"tr_{cell}_{model}_s{seed}",
                          ["scripts/20_train_pack.py", "--domain", cell, "--model", model,
-                          "--seed", str(seed), "--arms", "full"], part, t, dry=a.dry_run)
+                          "--seed", str(seed), "--arms", ",".join(todo)], part, t, dry=a.dry_run)
             print(f"[runner] {label}: train {cell}/{model}/s{seed} on {part} "
                   f"({len(todo)} arms, {t}) -> {jid}")
             if jid is None:
                 continue                      # refused; do not orphan an eval behind it
-        arms = ",".join(["base"] + pg.resolvable_arms(list(A.TIERS["full"]), cell, model)[0])
+        arms = ",".join(["base"] + resolvable(cell, model))
         ev_time = "06:00:00" if cell in SLOW_EVAL else "03:00:00"
         ev = submit(f"ev_{cell}_{model}_s{seed}",
                     ["-m", "bidir.evaluate", "--domain", cell, "--model", model,

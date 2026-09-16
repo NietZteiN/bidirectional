@@ -102,7 +102,16 @@ def test_matched_arms_really_are_budget_matched(cell):
 # things at once, in the known-positive control -- see PREREGISTRATION Amendment 20.
 # --------------------------------------------------------------------------------------
 
-def test_code_is_the_only_clustered_domain_and_declares_it():
+#: Domains whose rows are NOT independent observations, and why. Amendment 20 (`code`) and the
+#: `relation` build both turn on this: resampling rows instead of the independent unit deflated
+#: `code`'s intervals by up to 2.2x.
+CLUSTERED = {
+    "code": "five obfuscation conditions share one source program",
+    "relation": "capital / ISO / TLD are three readings of one country",
+}
+
+
+def test_clustered_domains_are_registered_and_their_keys_collapse_rows():
     """If another domain becomes clustered, it needs a cluster_key too."""
     import os
 
@@ -119,10 +128,20 @@ def test_code_is_the_only_clustered_domain_and_declares_it():
         key = getattr(mod, "cluster_key", default_key)
         pairs = read_pairs(train)
         ratio = len(pairs) / len({key(p) for p in pairs})
-        if d == "code":
-            assert ratio > 1.5, "code's conditions no longer share a program; check cluster_key"
-            assert hasattr(mod, "cluster_key"), "code must override cluster_key"
+        # A REGISTRY, NOT A WHITELIST OF ONE. This read `if d == "code"` and told `relation`
+        # it "declares no cluster_key" -- which was false; relation declares one and correctly
+        # collapses 504 rows onto 202 countries. A stale whitelist that fails a CORRECT domain
+        # with a WRONG reason is worse than no test: the next person reads the message, not the
+        # code. Adding a clustered domain means adding it here, with why.
+        if d in CLUSTERED:
+            assert hasattr(mod, "cluster_key"), f"{d} is registered as clustered but overrides nothing"
+            assert ratio > 1.0, (
+                f"{d} declares a cluster_key that collapses nothing (ratio {ratio:.2f}); a "
+                f"no-op key silently restores the row-level bootstrap it was added to prevent")
         else:
+            assert not hasattr(mod, "cluster_key"), (
+                f"{d} overrides cluster_key but is not in CLUSTERED; register it with the "
+                f"reason its rows are not independent")
             assert ratio == 1.0, (
                 f"{d} has {ratio:.2f} rows per cluster but declares no cluster_key, so its "
                 f"direction partition and its bootstrap are both operating on rows")

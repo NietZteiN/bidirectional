@@ -1,0 +1,31 @@
+{
+  "generated_utc": "2026-09-16T13:11:48.930594+00:00",
+  "metric": "strict",
+  "rule": "every number here was computed from the listed trials.jsonl files; nothing is hand-typed and re-running the eval regenerates it",
+  "tables": {
+    "main": [
+      "/scratch/juno/jvl210002/bidir/results/2026-09-14/code/llama32-3b/small_s17",
+      "/scratch/juno/jvl210002/bidir/results/2026-09-14/mt_de-en/llama32-3b/small_s17",
+      "/scratch/juno/jvl210002/bidir/results/2026-09-14/mt_en-de/llama32-3b/small_s17",
+      "/scratch/juno/jvl210002/bidir/results/2026-09-14/sql/llama32-3b/small_s17",
+      "/scratch/juno/jvl210002/bidir/results/2026-09-15/algebra/llama32-3b/small_s17",
+      "/scratch/juno/jvl210002/bidir/results/2026-09-15/algebra_rev/llama32-3b/small_s17",
+      "/scratch/juno/jvl210002/bidir/results/2026-09-15/mt_de-en/llama32-3b/small_s42",
+      "/scratch/juno/jvl210002/bidir/results/2026-09-15/mt_en-zh/llama32-3b/small_s17",
+      "/scratch/juno/jvl210002/bidir/results/2026-09-15/mt_zh-en/llama32-3b/small_s17",
+      "/scratch/juno/jvl210002/bidir/results/2026-09-15/relation/llama32-3b/small_s17"
+    ],
+    "dose": [
+      "/scratch/juno/jvl210002/bidir/results/2026-09-14/code/llama32-3b/small_s17",
+      "/scratch/juno/jvl210002/bidir/results/2026-09-14/mt_de-en/llama32-3b/small_s17",
+      "/scratch/juno/jvl210002/bidir/results/2026-09-14/mt_en-de/llama32-3b/small_s17",
+      "/scratch/juno/jvl210002/bidir/results/2026-09-14/sql/llama32-3b/small_s17",
+      "/scratch/juno/jvl210002/bidir/results/2026-09-15/algebra/llama32-3b/small_s17",
+      "/scratch/juno/jvl210002/bidir/results/2026-09-15/algebra_rev/llama32-3b/small_s17",
+      "/scratch/juno/jvl210002/bidir/results/2026-09-15/mt_de-en/llama32-3b/small_s42",
+      "/scratch/juno/jvl210002/bidir/results/2026-09-15/mt_en-zh/llama32-3b/small_s17",
+      "/scratch/juno/jvl210002/bidir/results/2026-09-15/mt_zh-en/llama32-3b/small_s17",
+      "/scratch/juno/jvl210002/bidir/results/2026-09-15/relation/llama32-3b/small_s17"
+    ]
+  }
+}
