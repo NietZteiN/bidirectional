@@ -60,7 +60,16 @@ PLAN = [
 ]
 
 #: Long-sequence or two-model cells: an a30 placement does not finish in a sane walltime.
-NO_A30 = {"code", "sql", "d2t", "coverage", "exec", "relation"}
+#: MT is here for the EVAL's sake, not the training's: its criterion scores COMET-22 on the same
+#: card, and vLLM at 0.85 of an a30's 24 GB leaves ~3.6 GB -- too little, so COMET falls back to
+#: CPU and a 24,288-generation pass runs past any sane walltime. Both s42 MT evals timed out at
+#: 3 h that way on 2026-09-15. On an h100 the same 15 % is 12 GB and COMET stays on the GPU.
+NO_A30 = {"code", "sql", "d2t", "coverage", "exec", "relation",
+          "mt_en-de", "mt_de-en", "mt_en-zh", "mt_zh-en"}
+
+#: Cells whose eval scores a second neural metric (COMET) and therefore needs room for it.
+#: 6 h rather than 3: 12 arms x 1,012 instances x 2 directions is 24k generations plus scoring.
+SLOW_EVAL = {"mt_en-de", "mt_de-en", "mt_en-zh", "mt_zh-en", "d2t"}
 #: Needs the 141 GB card: two models resident at once.
 NEEDS_H200 = {"d2t"}
 
@@ -203,10 +212,11 @@ def main() -> int:
             if jid is None:
                 continue                      # refused; do not orphan an eval behind it
         arms = ",".join(["base"] + pg.resolvable_arms(list(A.TIERS["full"]), cell, model)[0])
+        ev_time = "06:00:00" if cell in SLOW_EVAL else "03:00:00"
         ev = submit(f"ev_{cell}_{model}_s{seed}",
                     ["-m", "bidir.evaluate", "--domain", cell, "--model", model,
                      "--seed", str(seed), "--arms", arms, "--tag", "small"],
-                    part, "03:00:00", dep=jid, dry=a.dry_run)
+                    part, ev_time, dep=jid, dry=a.dry_run)
         print(f"[runner] {label}: eval  {cell}/{model}/s{seed} -> {ev}")
         launched += 1
 
