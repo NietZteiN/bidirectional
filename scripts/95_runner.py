@@ -1,8 +1,8 @@
 #!/usr/bin/env python
 """Hold a fixed number of jobs in flight and feed them from the priority queue.
 
-    python scripts/95_runner.py --max-inflight 4            # top up to 4 and exit
-    python scripts/95_runner.py --max-inflight 4 --dry-run
+    python scripts/95_runner.py                             # top up to 3 (the default) and exit
+    python scripts/95_runner.py --dry-run
     python scripts/95_runner.py --status                    # what is in flight and what is next
 
 WHY A RUNNER. Measured over the 64 h to 2026-09-14 this project achieved 0.89 GPU-hours per
@@ -166,8 +166,10 @@ def submit(name, argv, partition, time, dep=None, cpus=16, mem="64G", dry=False)
 def main() -> int:
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--max-inflight", type=int, default=3,
-                    help="cells in flight at once. A cell is one train job plus its eval, so "
-                         "this is the number of GPUs held, not the number of jobs.")
+                    help="cells in flight at once (default 3). A cell is one train job plus its "
+                         "eval, so this is the number of GPUs held, not the number of jobs. "
+                         "Three is this project's standing share of an account used by four "
+                         "projects; raise it only if that share has actually been renegotiated.")
     ap.add_argument("--dry-run", action="store_true")
     ap.add_argument("--status", action="store_true")
     a = ap.parse_args()
