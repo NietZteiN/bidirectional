@@ -299,7 +299,28 @@ def main(argv: Optional[list[str]] = None) -> int:
     print(f"[bidir.train] {args.domain} {spec.name}: {json.dumps(balance)}", flush=True)
 
     def to_examples(rows: Sequence[TrainRow]) -> list[dict[str, Any]]:
-        return [oprompts.to_trl_example(prompts.build_example(r.model_dump(), domain), tokenizer) for r in rows]
+        """Render each row through ITS OWN cell's template, not the cell being trained.
+
+        `mixedtask` fills 80 % of its set from four other domains. This built every one of them
+        with the host cell's `instruction()`, so the prompt named one task and the completion
+        answered another: `sql` learned "Write one SQLite query" over German news text, `mt_en-de`
+        learned "Translate the following English text into German" over Python source. It never
+        raised -- most templates just wrap `side_a` -- until `fmt`, whose template reads
+        `subtask.split("-")`, took a foreign subtask and crashed the s17 pack (2026-09-16).
+
+        GROUPED, NOT PER ROW, because `domains.get` binds `CELL` on a module object that four MT
+        cells share: resolving row-by-row would leave the last lookup's CELL bound for everyone.
+        """
+        by_cell: dict[str, list[int]] = defaultdict(list)
+        for i, r in enumerate(rows):
+            by_cell[r.src_cell or args.domain].append(i)
+        out: list[Any] = [None] * len(rows)
+        for cell, idxs in by_cell.items():
+            mod = domains.get(cell)          # binds mod.CELL for this group, then renders it
+            for i in idxs:
+                out[i] = oprompts.to_trl_example(prompts.build_example(rows[i].model_dump(), mod), tokenizer)
+        assert all(e is not None for e in out), "a row was not rendered"
+        return out
 
     train_ex, val_ex = to_examples(train_rows), to_examples(val_rows)
     if spec.loss != "ce":

@@ -258,3 +258,67 @@ def test_mixedtask_builds_for_every_cell_outside_the_roster():
         if mirror:
             assert subs.get(mirror, 0) == 0, (
                 f"{cell}: {subs[mirror]} rows of its own reverse direction entered as filler")
+
+
+def test_mixedtask_rows_render_through_their_own_cell_not_the_host():
+    """80 % of `mixedtask` is other domains' pairs; each must keep its own instruction.
+
+    They were all built with the HOST cell's template, so the prompt named one task and the
+    completion answered another -- `sql` trained on "Write one SQLite query that answers this
+    question" over German news text. It never raised, because most templates just wrap side_a;
+    `fmt` reads `subtask.split("-")` and crashed the s17 pack on 2026-09-16, which is the only
+    reason it was found. See PREREGISTRATION Amendment 30.
+    """
+    from collections import defaultdict
+
+    from bidir import arms as A
+    from bidir import domains, prompts
+    from bidir.mixture import build_mixture
+
+    for host in ("sql", "fmt", "mt_en-zh"):
+        rows = build_mixture(A.resolve("mixedtask"), host, "train", seed=17)
+        foreign = [r for r in rows if r.src_cell and r.src_cell != host]
+        assert foreign, f"{host}: mixedtask has no foreign rows; the arm is not a mixture"
+        assert len(foreign) / len(rows) > 0.5, f"{host}: foreign share collapsed"
+
+        by_cell = defaultdict(list)
+        for r in rows:
+            by_cell[r.src_cell or host].append(r)
+        for cell, group in by_cell.items():
+            mod = domains.get(cell)
+            text = prompts.build_example(group[0].model_dump(), mod)["prompt"][-1]["content"]
+            # The host's own template must NOT be what a foreign row got. Compare against the
+            # text the host would have produced for the same row.
+            if cell != host:
+                # Under the host's template a foreign row either renders DIFFERENTLY (wrong
+                # instruction over the wrong content -- the silent case) or RAISES (fmt reads
+                # subtask.split("-")). Both prove src_cell is what is now steering the render;
+                # identical text would mean it is not.
+                try:
+                    host_text = prompts.build_example(
+                        group[0].model_dump(), domains.get(host))["prompt"][-1]["content"]
+                except Exception:
+                    continue          # the host template cannot even express this row
+                assert text != host_text, (
+                    f"{host}: a {cell} row renders identically under the host template; "
+                    f"src_cell is not reaching the renderer")
+
+
+def test_mt_cells_sharing_one_module_do_not_clobber_each_other():
+    """`domains.get` binds CELL on the module object, and four MT cells share `mt.py`.
+
+    `mt_en-zh` takes `mt_en-de` as mixedtask filler, so a row-by-row lookup would leave the last
+    cell's CELL bound and render both groups in the same target language. Grouping is what makes
+    this safe, so assert the property grouping was introduced to provide.
+    """
+    from bidir import domains, prompts
+    from bidir.mixture import load_pairs
+
+    zh = load_pairs("mt_en-zh", "train")[0].model_dump() | {"task": "fwd"}
+    de = load_pairs("mt_en-de", "train")[0].model_dump() | {"task": "fwd"}
+    zh_text = prompts.build_example(zh, domains.get("mt_en-zh"))["prompt"][-1]["content"]
+    de_text = prompts.build_example(de, domains.get("mt_en-de"))["prompt"][-1]["content"]
+    # After resolving mt_en-de, re-resolving mt_en-zh must restore Chinese.
+    zh_again = prompts.build_example(zh, domains.get("mt_en-zh"))["prompt"][-1]["content"]
+    assert "German" in de_text and "Chinese" in zh_text
+    assert zh_again == zh_text, "CELL leaked between two cells sharing mt.py"

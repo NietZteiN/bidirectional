@@ -227,7 +227,10 @@ def mixed_task_rows(domain: str, split: str, n_total: int, seed: int, share: flo
     for od in others:
         op = load_pairs(od, split)
         rng.shuffle(op)
-        rows += [TrainRow.from_pair(p, "fwd") for p in op[:per_other]]
+        # STAMP THE SOURCE CELL. Without it these rows reach the renderer indistinguishable from
+        # the host's own and are built with the host's instruction template -- 80 % of this arm's
+        # rows, silently, in every cell trained before 2026-09-16. See PREREGISTRATION Amdt 30.
+        rows += [TrainRow.from_pair(p, "fwd", src_cell=od) for p in op[:per_other]]
     return rows
 
 

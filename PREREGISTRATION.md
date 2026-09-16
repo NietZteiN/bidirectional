@@ -1389,3 +1389,48 @@ rule is written down here so the mistake is not reintroduced in analysis code.
 **Thirteenth instance of the standing pattern** — a nominal parameter standing in for the
 quantity that matters. "Trained on the forward direction" ≠ "got better at the forward
 direction". The arm's *name* was doing the work its *measurement* should have done.
+
+### Amendment 30 — 2026-09-16, invalidating every `mixedtask` result to date
+
+**All `mixedtask` numbers produced before this date are withdrawn.** They are not noisy or
+weak; they measured something other than the arm.
+
+**The bug.** `mixedtask` fills 80 % of its training set from four other domains' forward pairs
+(`configs/domains/mixedtask.yaml`: `share: 0.2`, `n_others: 4`). Every one of those rows was
+rendered through the HOST cell's `instruction()`, because `train.py` passed the single cell
+module to `build_example` for all rows. `PairInstance.domain` had carried the source family all
+along and nothing read it. So the prompt named one task and the completion answered another:
+
+| cell | instruction the model saw | content it saw |
+|---|---|---|
+| sql | "Write one SQLite query that answers this question." | German news text |
+| code | "Rewrite the following Python program so that it is obfuscated…" | German news text |
+| mt_en-de | "Translate the following English text into German." | Python source |
+| relation | "Name the attribute of the following." | a SQL schema question |
+
+**Why it survived to now.** It never raised. Most templates wrap `side_a` in a preamble, so a
+foreign row produces a well-formed, confidently wrong example. It surfaced only because `fmt`'s
+template reads `subtask.split("-")`, which a foreign subtask cannot satisfy — it crashed the
+`fmt/s17` pack on 2026-09-16 after ten arms had trained. A loud failure in the eleventh arm is
+the only reason the silent failure in the other ten cells was ever found.
+
+**What this explains.** The `mixedtask` reverse rates that read as anomalies are consistent with
+an arm trained on 80 % mismatched pairs: `algebra` 0.005, `sql` 0.016, `mt_zh-en` 0.063,
+`code` 0.199. It also resolves one of the two numbers flagged as needing verification before
+quoting — `mt_en-zh` mixedtask forward 0.0375 — which was not a measurement error but this.
+
+**The fix.** `TrainRow` gains `src_cell`, stamped by `mixed_task_rows` on foreign rows only;
+rendering groups rows by cell and resolves each group's module. Grouping is load-bearing rather
+than tidy: `domains.get` binds `CELL` on the module object and four MT cells share `mt.py`, so a
+row-by-row lookup would leave the last cell's `CELL` bound and render `mt_en-zh`'s filler into
+the wrong target language. Two tests assert the property, not the line.
+
+**Scope of the withdrawal.** Training only — evaluation always scored the host cell's own test
+set, so no other arm is affected and no gate verdict changes (`mixedtask` enters no registered
+criterion). Affected: `mixedtask` in `code`, `sql`, `mt_de-en`, `mt_en-de`, `mt_en-zh`,
+`mt_zh-en`, `algebra`, `algebra_rev`, `relation`. Their adapters are deleted and the arm is
+re-trained; the withdrawn numbers stay in this file and nowhere else.
+
+**Fourteenth instance of the standing pattern.** The cell being trained ≠ the cell a row came
+from. A nominal parameter — "the domain" — stood in for a quantity that varies per row, and the
+data structure had carried the right answer the whole time.

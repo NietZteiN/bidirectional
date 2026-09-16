@@ -42,6 +42,13 @@ class PairInstance(BaseModel):
 
 class TrainRow(PairInstance):
     task: str  # fwd | rev | replay
+    #: The CELL this row came from, when that is not the cell being trained. Only `mixedtask`
+    #: sets it: 80 % of its rows are other domains' pairs, and every one of them was rendered
+    #: through the HOST cell's instruction template -- "Write one SQLite query that answers this
+    #: question" over German news text, "Translate the following English text into German" over
+    #: Python source. `PairInstance.domain` already carried the family, but a family is not a
+    #: cell (`mt` is four cells sharing one module), and rendering needs the cell.
+    src_cell: Optional[str] = None
 
     @field_validator("task")
     @classmethod
@@ -55,8 +62,8 @@ class TrainRow(PairInstance):
         return DIRECTION_OF_TASK[self.task]
 
     @classmethod
-    def from_pair(cls, p: PairInstance, task: str) -> "TrainRow":
-        return cls(**p.model_dump(), task=task)
+    def from_pair(cls, p: PairInstance, task: str, src_cell: Optional[str] = None) -> "TrainRow":
+        return cls(**p.model_dump(), task=task, src_cell=src_cell)
 
 
 def write_jsonl(path: str | Path, rows: Iterable[BaseModel | dict[str, Any]]) -> int:
