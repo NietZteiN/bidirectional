@@ -839,3 +839,37 @@ def test_small_corpus_domains_drop_the_rungs_they_cannot_resolve():
         "relation's 504 train pairs cannot express a 1/5/10 % dose above one effective batch")
     assert {"mix25", "mix50"} <= rel, "relation must keep the rungs it can resolve"
     assert {"mix1", "mix5", "mix10", "mix25", "mix50"} <= sql, "sql's 6,499 pairs resolve every rung"
+
+
+def test_runner_never_queues_a_cell_that_is_already_in_flight():
+    """A cell in flight with work left was re-submitted whenever a slot looked free.
+
+    `n_cells` was derived from the in-flight job names and used only as a COUNT; the ready list
+    was built without consulting those names, so `fmt/s17` (one arm still to train) went out
+    twice and two `tr_fmt_llama32-3b_s17` jobs raced on one adapter directory on 2026-09-16.
+    Latent because the runner is normally called at capacity and returns before the loop.
+
+    Drives the real `main()` with `submit` and `squeue_ours` replaced, and asserts on what it
+    WOULD have submitted -- not on the source text, which would pass on a comment.
+    """
+    import sys
+
+    r = _runner()
+    calls = []
+    r.submit = lambda name, argv, partition, time, **kw: (calls.append(name), "999")[1]
+    # fmt/s17 is already queued, and it still has an arm to train, so it stays "ready".
+    r.squeue_ours = lambda: [("tr_fmt_llama32-3b_s17", "RUNNING")]
+    r.PLAN = [("test", ["fmt"], ["llama32-3b"], [17])]
+    if r.gate_passed("fmt", "llama32-3b") is not True:
+        import pytest
+        pytest.skip("fmt gate has not passed here; nothing would be submitted either way")
+
+    argv = sys.argv
+    sys.argv = ["95_runner.py", "--max-inflight", "3"]
+    try:
+        r.main()
+    finally:
+        sys.argv = argv
+
+    assert not [c for c in calls if "fmt_llama32-3b_s17" in c], (
+        f"runner re-submitted a cell that was already in flight: {calls}")

@@ -178,7 +178,13 @@ def main() -> int:
 
     inflight = squeue_ours()
     running = [n for n, s in inflight if s == "RUNNING"]
-    n_cells = len({n.split("_", 1)[1] for n, _ in inflight})
+    # The KEYS, not just the count. These were only counted, and the ready list was then built
+    # without consulting them, so a cell already in flight that still had an arm to train was
+    # re-submitted whenever a slot looked free -- two `tr_fmt_llama32-3b_s17` jobs racing on one
+    # adapter directory on 2026-09-16. Latent until now because the runner is usually called at
+    # capacity and returns before this point.
+    inflight_cells = {n.split("_", 1)[1] for n, _ in inflight}
+    n_cells = len(inflight_cells)
     print(f"[runner] in flight: {n_cells} cell(s), {len(inflight)} job(s), "
           f"{len(running)} running")
     for n, s in sorted(inflight):
@@ -194,6 +200,8 @@ def main() -> int:
                         blocked.append((label, cell, model,
                                         "gate not run" if g is None else "gate FAILED"))
                         continue
+                    if f"{cell}_{model}_s{seed}" in inflight_cells:
+                        continue          # already queued or running; never submit it twice
                     todo, evald = cell_state(cell, model, seed)
                     if not todo and evald:
                         continue
