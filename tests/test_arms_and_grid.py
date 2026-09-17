@@ -873,3 +873,24 @@ def test_runner_never_queues_a_cell_that_is_already_in_flight():
 
     assert not [c for c in calls if "fmt_llama32-3b_s17" in c], (
         f"runner re-submitted a cell that was already in flight: {calls}")
+
+
+def test_force_arm_enumerates_every_cell_holding_the_arm_not_just_planned_ones():
+    """A withdrawal applies to every cell that holds the arm, scheduled or not.
+
+    PLAN covers only what is still queued; the four original gate cells (code, sql, mt_de-en,
+    mt_en-de at s17) appear in no entry. A PLAN-driven sweep would have left four stale
+    `mixedtask` adapters in place and reported success -- so --force-arm reads disk instead.
+    """
+    r = _runner()
+    found = r.find_adapters("mixedtask")
+    if not found:
+        import pytest
+        pytest.skip("no mixedtask adapters on this filesystem")
+    planned = {(c, m, s) for _, cells, models, seeds in r.PLAN
+               for c in cells for m in models for s in seeds}
+    assert all(isinstance(x, tuple) and len(x) == 3 for x in found)
+    # The point of reading disk: it must be able to return cells PLAN does not mention.
+    assert set(found) - planned, (
+        "find_adapters returned only cells PLAN already covers; the disk scan is not "
+        "contributing anything and the gate cells would be missed")

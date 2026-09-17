@@ -119,6 +119,26 @@ def cell_state(domain: str, model: str, seed: int) -> tuple[list[str], bool]:
     return todo, evald
 
 
+def find_adapters(arm: str) -> list[tuple[str, str, int]]:
+    """Every (cell, model, seed) holding a COMPLETE adapter for `arm`, read off disk.
+
+    Used by --force-arm, where the question is "which cells hold the withdrawn thing", not
+    "what is still scheduled". Matches the layout `adapter_dir` writes:
+    `adapters/<cell>/<model>/<arm>_r<rank>_s<seed>/final`.
+    """
+    out: list[tuple[str, str, int]] = []
+    root = RUNS_DIR / "adapters"
+    if not root.is_dir():
+        return out
+    for d in root.glob(f"*/*/{arm}_r*_s*"):
+        if not (d / "final").is_dir():
+            continue                  # half-written: the pack retrains it anyway
+        m = re.fullmatch(rf"{re.escape(arm)}_r\d+_s(\d+)", d.name)
+        if m:
+            out.append((d.parent.parent.name, d.parent.name, int(m.group(1))))
+    return sorted(set(out))
+
+
 def resolvable(domain: str, model: str) -> list[str]:
     """The arms this cell can actually express -- the ONE definition both call sites use.
 
@@ -172,6 +192,11 @@ def main() -> int:
                          "projects; raise it only if that share has actually been renegotiated.")
     ap.add_argument("--dry-run", action="store_true")
     ap.add_argument("--status", action="store_true")
+    ap.add_argument("--force-arm", default=None, metavar="ARM",
+                    help="retrain ARM over its existing adapter in every cell that has one, then "
+                         "re-evaluate. For an arm whose results have been WITHDRAWN -- the pack "
+                         "skips a complete adapter forever, so this is the only way to redo one "
+                         "without deleting it. See PREREGISTRATION Amendment 30 (mixedtask).")
     a = ap.parse_args()
 
     pg = _pg()
@@ -191,7 +216,24 @@ def main() -> int:
         print(f"    {s:<10} {n}")
 
     todo_list, blocked = [], []
+    if a.force_arm:
+        # ENUMERATED FROM DISK, NOT FROM `PLAN`. A withdrawal applies to every cell that holds
+        # the arm, and `PLAN` covers only what is still scheduled -- the four original gate cells
+        # (code, sql, mt_de-en, mt_en-de at s17) appear in no entry, so a PLAN-driven sweep would
+        # have quietly left four stale adapters in place and called the job done.
+        for d in sorted(find_adapters(a.force_arm)):
+            cell, model, seed = d
+            if f"{cell}_{model}_s{seed}" in inflight_cells:
+                continue
+            todo_list.append(("force " + a.force_arm, cell, model, seed, [a.force_arm], False))
+        print(f"[runner] {len(todo_list)} cell(s) hold a stale {a.force_arm!r} adapter")
+        if a.status:
+            for label, cell, model, seed, _, _ in todo_list:
+                print(f"    FORCE   {cell}/{model}/s{seed}")
+            return 0
     for label, cells, models, seeds in PLAN:
+        if a.force_arm:
+            break                     # force mode built todo_list from disk above
         for model in models:
             for seed in seeds:
                 for cell in cells:
@@ -238,9 +280,11 @@ def main() -> int:
             # Wasted GPU on three arms the eval can never score, and a walltime short by three
             # arms on every small-corpus cell. Same failure as always: what we SIZED for was not
             # what we ASKED for.
-            jid = submit(f"tr_{cell}_{model}_s{seed}",
-                         ["scripts/20_train_pack.py", "--domain", cell, "--model", model,
-                          "--seed", str(seed), "--arms", ",".join(todo)], part, t, dry=a.dry_run)
+            pack = ["scripts/20_train_pack.py", "--domain", cell, "--model", model,
+                    "--seed", str(seed), "--arms", ",".join(todo)]
+            if a.force_arm:
+                pack.append("--force")        # retrain over the stale adapter; nothing is deleted
+            jid = submit(f"tr_{cell}_{model}_s{seed}", pack, part, t, dry=a.dry_run)
             print(f"[runner] {label}: train {cell}/{model}/s{seed} on {part} "
                   f"({len(todo)} arms, {t}) -> {jid}")
             if jid is None:
