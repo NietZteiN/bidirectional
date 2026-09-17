@@ -12,6 +12,8 @@ set -uo pipefail
 cd "$(dirname "$0")/../.."
 LOG=runs/logs/topup.log
 ARGS=("$@")
+# The sweep needs a cutoff or it re-selects what it just rebuilt; see 95_runner --stale-before.
+: "${TOPUP_STALE_BEFORE:?set TOPUP_STALE_BEFORE=ISO8601 when passing --force-arm}"
 END=$(( $(date +%s) + ${TOPUP_HOURS:-12} * 3600 ))
 while [ "$(date +%s)" -lt "$END" ]; do
   {
@@ -21,7 +23,8 @@ while [ "$(date +%s)" -lt "$END" ]; do
     # currently unusable; whatever slots it leaves are filled by the normal plan. Running only
     # the sweep would idle every slot the moment it finished.
     if [ ${#ARGS[@]} -gt 0 ]; then
-      python scripts/95_runner.py "${ARGS[@]}" 2>&1 | grep -vE "^    (PENDING|RUNNING)"
+      python scripts/95_runner.py "${ARGS[@]}" --stale-before "$TOPUP_STALE_BEFORE" 2>&1 \
+        | grep -vE "^    (PENDING|RUNNING)"
     fi
     python scripts/95_runner.py 2>&1 | grep -vE "^    (PENDING|RUNNING)"
   } >> "$LOG" 2>&1

@@ -894,3 +894,66 @@ def test_force_arm_enumerates_every_cell_holding_the_arm_not_just_planned_ones()
     assert set(found) - planned, (
         "find_adapters returned only cells PLAN already covers; the disk scan is not "
         "contributing anything and the gate cells would be missed")
+
+
+def test_a_chain_stalled_behind_a_held_job_does_not_hold_a_slot():
+    """Deadness is transitive, and Slurm does not say so.
+
+    `ev_fmt` was queued behind a user-HELD `tr_fmt`; its reason stayed plain "Dependency", so it
+    read as an ordinary pending job and kept the `fmt` cell in the in-flight count. The runner
+    reported "at capacity (3)" with exactly one job running, overnight on 2026-09-17.
+    """
+    import subprocess as sp
+
+    r = _runner()
+    rows = "\n".join([
+        "409773|tr_algebra_llama32-3b_s17|RUNNING|None|(null)",
+        "408476|ev_sql_llama32-3b_s42|PENDING|Priority|(null)",
+        "409210|tr_fmt_llama32-3b_s17|PENDING|JobHeldUser|(null)",
+        "409211|ev_fmt_llama32-3b_s17|PENDING|Dependency|afterok:409210(unfulfilled)",
+        "408473|ev_fmt_llama32-3b_s17|PENDING|DependencyNeverSatisfied|afterok:408472(failed)",
+    ])
+
+    class _R:
+        stdout = rows
+    orig, sp.run = sp.run, lambda *a, **k: _R()
+    r.subprocess.run = lambda *a, **k: _R()
+    try:
+        live = r.squeue_ours()
+        allj = r.squeue_ours(include_dead=True)
+    finally:
+        sp.run = orig
+
+    names = [n for n, _ in live]
+    assert "tr_fmt_llama32-3b_s17" not in names, "held job counted as live"
+    assert "ev_fmt_llama32-3b_s17" not in names, (
+        "a job waiting on a held job was counted as live; the stalled chain still holds a slot")
+    assert len(allj) == 5 and len(live) == 2
+    assert len({n.split("_", 1)[1] for n, _ in live}) == 2, "fmt must not appear as a live cell"
+
+
+def test_force_arm_sweep_terminates(tmp_path):
+    """`stale_before` is what stops the sweep re-selecting what it just rebuilt.
+
+    Selecting "cells that have the adapter" re-selects a cell the moment it is rebuilt. Overnight
+    on 2026-09-17 that retrained `algebra/s17`, watched it finish, and retrained it again, while
+    ten other stale cells went untouched for nine hours.
+    """
+    import os
+    import time
+
+    r = _runner()
+    root = tmp_path / "adapters" / "algebra" / "llama32-3b" / "mixedtask_r32_s17" / "final"
+    root.mkdir(parents=True)
+    cutoff = time.time()
+    os.utime(root, (cutoff - 3600, cutoff - 3600))          # written BEFORE the cutoff: stale
+
+    orig, r.RUNS_DIR = r.RUNS_DIR, tmp_path
+    try:
+        assert r.find_adapters("mixedtask", stale_before=cutoff) == [("algebra", "llama32-3b", 17)]
+        os.utime(root, (cutoff + 3600, cutoff + 3600))      # rebuilt AFTER: no longer selected
+        assert r.find_adapters("mixedtask", stale_before=cutoff) == [], (
+            "a rebuilt adapter is still selected; the sweep would never terminate")
+        assert r.find_adapters("mixedtask") == [("algebra", "llama32-3b", 17)]
+    finally:
+        r.RUNS_DIR = orig

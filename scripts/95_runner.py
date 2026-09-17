@@ -34,6 +34,7 @@ import json
 import re
 import subprocess
 import sys
+from datetime import datetime
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -77,15 +78,43 @@ NEEDS_H200 = {"d2t"}
 OURS = re.compile(r"^(tr|ev)_(" + "|".join(sorted(set(CORE + READY + FORMAT_BLOCKED))) + r")_")
 
 
-def squeue_ours() -> list[tuple[str, str]]:
-    out = subprocess.run(["squeue", "-u", getpass.getuser(), "-h", "-o", "%j|%T"],
+#: Reasons a PENDING job will never start on its own. A job in one of these states occupies a
+#: slot in the in-flight count for ever, and the count is what gates submission -- on 2026-09-17
+#: the `fmt` cell was a user-held train job, a DependencyNeverSatisfied orphan and an eval
+#: waiting on the held one, so it held 1 of 3 slots with nothing that could run, and the runner
+#: reported "at capacity (3)" while exactly one job was running. Capacity must mean work.
+DEAD_REASONS = ("DependencyNeverSatisfied", "JobHeldUser", "JobHeldAdmin")
+
+
+def squeue_ours(include_dead: bool = False) -> list[tuple[str, str]]:
+    out = subprocess.run(["squeue", "-u", getpass.getuser(), "-h", "-o", "%i|%j|%T|%r|%E"],
                          capture_output=True, text=True, timeout=30).stdout
-    rows = []
+    jobs = []
     for line in out.splitlines():
-        name, _, state = line.partition("|")
-        if OURS.match(name.strip()):
-            rows.append((name.strip(), state.strip()))
-    return rows
+        parts = [x.strip() for x in line.split("|")]
+        if len(parts) < 5:
+            continue
+        jid, name, state, reason, dep = parts[0], parts[1], parts[2], parts[3], parts[4]
+        if OURS.match(name):
+            jobs.append({"id": jid, "name": name, "state": state, "reason": reason, "dep": dep})
+
+    # DEADNESS IS TRANSITIVE. A job waiting on a job that can never run can never run either,
+    # and Slurm does not say so: its reason stays plain "Dependency". `ev_fmt` was queued behind
+    # a user-HELD `tr_fmt`, so it read as an ordinary pending job and kept the `fmt` cell in the
+    # in-flight count -- 3 cells "at capacity" with exactly 1 job running. Closes over the
+    # dependency graph so the whole stalled chain drops out of the count, not just its head.
+    dead = {j["id"] for j in jobs if j["reason"] in DEAD_REASONS}
+    for _ in range(len(jobs)):
+        grew = False
+        for j in jobs:
+            if j["id"] in dead:
+                continue
+            if any(d in dead for d in re.findall(r"\d+", j["dep"])):
+                dead.add(j["id"])
+                grew = True
+        if not grew:
+            break
+    return [(j["name"], j["state"]) for j in jobs if include_dead or j["id"] not in dead]
 
 
 def adapter_complete(domain: str, model: str, arm: str, seed: int) -> bool:
@@ -119,12 +148,19 @@ def cell_state(domain: str, model: str, seed: int) -> tuple[list[str], bool]:
     return todo, evald
 
 
-def find_adapters(arm: str) -> list[tuple[str, str, int]]:
+def find_adapters(arm: str, stale_before: float | None = None) -> list[tuple[str, str, int]]:
     """Every (cell, model, seed) holding a COMPLETE adapter for `arm`, read off disk.
 
     Used by --force-arm, where the question is "which cells hold the withdrawn thing", not
     "what is still scheduled". Matches the layout `adapter_dir` writes:
     `adapters/<cell>/<model>/<arm>_r<rank>_s<seed>/final`.
+
+    `stale_before` IS WHAT MAKES THE SWEEP TERMINATE. Selecting "cells that have the adapter"
+    re-selects a cell the moment it is rebuilt, because rebuilding it leaves it having the
+    adapter. Run in a loop with one free slot that is not a sweep, it is a treadmill: overnight
+    on 2026-09-17 it retrained `algebra/s17` (first in sort order), watched it complete, and
+    retrained it again -- ten other stale cells untouched, for nine hours. The cutoff is the
+    only thing that distinguishes "holds the arm" from "holds the OLD arm".
     """
     out: list[tuple[str, str, int]] = []
     root = RUNS_DIR / "adapters"
@@ -133,6 +169,8 @@ def find_adapters(arm: str) -> list[tuple[str, str, int]]:
     for d in root.glob(f"*/*/{arm}_r*_s*"):
         if not (d / "final").is_dir():
             continue                  # half-written: the pack retrains it anyway
+        if stale_before is not None and (d / "final").stat().st_mtime >= stale_before:
+            continue                  # already redone since the cutoff
         m = re.fullmatch(rf"{re.escape(arm)}_r\d+_s(\d+)", d.name)
         if m:
             out.append((d.parent.parent.name, d.parent.name, int(m.group(1))))
@@ -192,6 +230,10 @@ def main() -> int:
                          "projects; raise it only if that share has actually been renegotiated.")
     ap.add_argument("--dry-run", action="store_true")
     ap.add_argument("--status", action="store_true")
+    ap.add_argument("--stale-before", default=None, metavar="ISO8601",
+                    help="with --force-arm: treat only adapters written BEFORE this instant as "
+                         "stale. Required, because 'has the adapter' re-selects a cell as soon "
+                         "as it is rebuilt and the sweep never terminates.")
     ap.add_argument("--force-arm", default=None, metavar="ARM",
                     help="retrain ARM over its existing adapter in every cell that has one, then "
                          "re-evaluate. For an arm whose results have been WITHDRAWN -- the pack "
@@ -216,12 +258,19 @@ def main() -> int:
         print(f"    {s:<10} {n}")
 
     todo_list, blocked = [], []
+    cutoff = None
+    if a.force_arm:
+        if not a.stale_before:
+            print("[runner] --force-arm requires --stale-before ISO8601; refusing to run an "
+                  "unterminating sweep", file=sys.stderr)
+            return 2
+        cutoff = datetime.fromisoformat(a.stale_before).timestamp()
     if a.force_arm:
         # ENUMERATED FROM DISK, NOT FROM `PLAN`. A withdrawal applies to every cell that holds
         # the arm, and `PLAN` covers only what is still scheduled -- the four original gate cells
         # (code, sql, mt_de-en, mt_en-de at s17) appear in no entry, so a PLAN-driven sweep would
         # have quietly left four stale adapters in place and called the job done.
-        for d in sorted(find_adapters(a.force_arm)):
+        for d in sorted(find_adapters(a.force_arm, stale_before=cutoff)):
             cell, model, seed = d
             if f"{cell}_{model}_s{seed}" in inflight_cells:
                 continue
