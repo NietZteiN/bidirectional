@@ -957,3 +957,39 @@ def test_force_arm_sweep_terminates(tmp_path):
         assert r.find_adapters("mixedtask") == [("algebra", "llama32-3b", 17)]
     finally:
         r.RUNS_DIR = orig
+
+
+def test_tables_do_not_conflate_seeds(tmp_path):
+    """A table row names one cell; it must not mix seeds.
+
+    `by_domain[domain][model] = ...` let the last seed sorted overwrite the others, so the main
+    table showed `sql`'s s42 numbers and `mt_de-en`'s s1234 numbers while its provenance block
+    claimed all 26 runs. Re-running an eval would then change published numbers with nothing in
+    the table to say why.
+    """
+    import json
+    import subprocess
+    import sys
+    from pathlib import Path
+
+    root = Path(__file__).resolve().parents[1]
+    res = tmp_path / "results"
+    for seed, rate in ((17, 0.10), (42, 0.90)):
+        d = res / "2026-09-17" / "sql" / "llama32-3b" / f"small_s{seed}"
+        d.mkdir(parents=True)
+        rows = []
+        for system, val in (("base", 0.5), ("sft", rate)):
+            for direction in ("forward", "reverse"):
+                rows.append({"pair_id": "p1", "cluster_id": "p1", "system": system,
+                             "direction": direction, "strategy": "simple", "strict": val})
+        (d / "trials.jsonl").write_text("\n".join(json.dumps(r) for r in rows) + "\n")
+
+    env = {**__import__("os").environ, "BIDIR_RESULTS": str(res)}
+    out = tmp_path / "tables"
+    subprocess.run([sys.executable, str(root / "scripts" / "51_tables.py"),
+                    "--tag", "small", "--out", str(out)], env=env, check=True,
+                   capture_output=True, text=True)
+    main = (out / "main.tex").read_text()
+    # Both seeds must appear as their own rows, with both distinct sft values present.
+    assert "10.0" in main and "90.0" in main, (
+        f"a seed was dropped from the table; only one sft value survived:\n{main}")

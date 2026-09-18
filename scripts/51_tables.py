@@ -128,21 +128,27 @@ def main() -> int:
     a.out.mkdir(parents=True, exist_ok=True)
     provenance: dict[str, list[str]] = defaultdict(list)
 
+    # KEYED BY SEED, NOT JUST BY MODEL. This was `by_domain[domain][model] = ...`, so with three
+    # seeds on disk the last one sorted silently overwrote the others: the table showed `sql`'s
+    # s42 numbers and `mt_de-en`'s s1234 numbers while its provenance block claimed all 26 runs.
+    # A row that names one cell but mixes seeds is a misreport, and re-running the eval would
+    # change published numbers with nothing in the table to say why.
     by_domain: dict[str, dict] = {}
     for run in sorted(runs):
         domain, model = run.parent.parent.name, run.parent.name
-        by_domain.setdefault(domain, {})[model] = cell_means(run, a.metric)
+        seed = run.name.rsplit("_s", 1)[-1]
+        by_domain.setdefault(domain, {})[(model, seed)] = cell_means(run, a.metric)
         provenance["main"].append(str(run))
 
     arms_present = [x for x in ARM_ORDER
                     if any(any(s == x for s, _ in m) for d in by_domain.values() for m in d.values())]
-    header = ["Domain", "Model"] + [f"{tex(x)}$_\\rightarrow$" for x in arms_present] + \
+    header = ["Domain", "Model", "Seed"] + [f"{tex(x)}$_\\rightarrow$" for x in arms_present] + \
              [f"{tex(x)}$_\\leftarrow$" for x in arms_present]
     rows = []
     for domain in sorted(by_domain):
-        for model in sorted(by_domain[domain]):
-            m = by_domain[domain][model]
-            rows.append([tex(domain), tex(model)]
+        for (model, seed) in sorted(by_domain[domain]):
+            m = by_domain[domain][(model, seed)]
+            rows.append([tex(domain), tex(model), seed]
                         + [f"{100 * m[(x, 'forward')]:.1f}" if (x, "forward") in m else "--" for x in arms_present]
                         + [f"{100 * m[(x, 'reverse')]:.1f}" if (x, "reverse") in m else "--" for x in arms_present])
     (a.out / "main.tex").write_text(latex_table(
@@ -151,25 +157,56 @@ def main() -> int:
         "Every column is one evaluation pass; contrasts are taken within a pass.",
         "main"))
 
+    # RQ2, the realistic-mixture question: how much of what `sft` destroyed does a five-task
+    # mixture give back? Reported as a FRACTION of the loss, which is only meaningful when there
+    # was a loss: the denominator is `base - sft`, and `algebra_rev` (0.174 vs 0.147) yields
+    # "442 % recovered" from a gap of 2.7 pp. So the fraction is printed ONLY for cells that meet
+    # the pre-registered collapse criterion (<= -50 % relative), which bounds the denominator
+    # away from zero by construction rather than by a hand-picked epsilon. Other cells still show
+    # their three rates; they just get no ratio.
+    mrows = []
+    for domain in sorted(by_domain):
+        for (model, seed) in sorted(by_domain[domain]):
+            m = by_domain[domain][(model, seed)]
+            try:
+                b, sf, mx = (m[("base", "reverse")], m[("sft", "reverse")],
+                             m[("mixedtask", "reverse")])
+            except KeyError:
+                continue
+            collapsed = b > 0 and (sf - b) / b <= -0.5
+            rec = f"{100 * (mx - sf) / (b - sf):.0f}\\%" if collapsed else "--"
+            mrows.append([tex(domain), tex(model), seed, f"{100 * b:.1f}", f"{100 * sf:.1f}",
+                          f"{100 * mx:.1f}", rec])
+    if mrows:
+        (a.out / "mixture.tex").write_text(latex_table(
+            mrows, ["Domain", "Model", "Seed", "base$_\\leftarrow$", "sft$_\\leftarrow$",
+                    "mixedtask$_\\leftarrow$", "recovered"],
+            "Reverse-direction strict success when the paired task is 20 \\% of a five-task SFT "
+            "set. \\emph{recovered} is $(\\textsc{mixedtask}-\\textsc{sft})/(\\textsc{base}-"
+            "\\textsc{sft})$, shown only for cells meeting the pre-registered collapse criterion "
+            "($\\le -50$ \\% relative); elsewhere the denominator is too small for the ratio to "
+            "mean anything.", "mixture"))
+        provenance["mixture"] = provenance["main"]
+
     # Dose ladder: one row per (domain, model), one column per rung.
     doses = [x for x in ("sft", "mix1", "mix5", "mix10", "mix25", "mix50", "flip", "rev") if x in arms_present]
     drows = []
     for domain in sorted(by_domain):
-        for model in sorted(by_domain[domain]):
-            m = by_domain[domain][model]
+        for (model, seed) in sorted(by_domain[domain]):
+            m = by_domain[domain][(model, seed)]
             if not any((d, "reverse") in m for d in doses):
                 continue
             # A rung this corpus cannot express is NOT a missing result, and printing both as
             # "--" invites exactly the misreading it caused: `relation` (504 train pairs) reverses
             # 5/25/50 pairs at mix1/5/10, all under the effective batch, so those rungs were
             # deliberately never run. They print as $\varnothing$ against "--" for absent data.
-            drows.append([tex(domain), tex(model)]
+            drows.append([tex(domain), tex(model), seed]
                          + [f"{100 * m[(d, 'reverse')]:.1f}" if (d, "reverse") in m
                             else ("$\\varnothing$" if d in unresolvable(domain, model) else "--")
                             for d in doses])
     if drows:
         (a.out / "dose.tex").write_text(latex_table(
-            drows, ["Domain", "Model"] + [tex(d) for d in doses],
+            drows, ["Domain", "Model", "Seed"] + [tex(d) for d in doses],
             "Reverse-direction strict success along the dose ladder. Every rung replaces forward "
             "pairs with their own reversal, so instances, sequence tokens and steps are matched to "
             "\\textsc{sft} at every dose. $\\varnothing$ marks a rung the domain\'s corpus cannot "
