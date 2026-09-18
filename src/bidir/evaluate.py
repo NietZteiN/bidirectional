@@ -21,7 +21,8 @@ from typing import Any, Iterable, Mapping, Optional, Sequence
 
 from bidir import arms as arm_registry
 from bidir import domains, engine as eng, prompts
-from bidir.config import GLOBAL_SEED, RESULTS_DIR, ensure_obtune, load_config, resolve_model
+from bidir.config import (GLOBAL_SEED, RESULTS_DIR, ensure_obtune, load_config,
+                          resolve_model, resolve_thresholds)
 from bidir.mixture import load_pairs
 from bidir.train import adapter_dir
 
@@ -160,7 +161,8 @@ def main(argv: Optional[list[str]] = None) -> int:
     arm_names = list(arm_registry.TIERS.get(args.arms, ())) or [a.strip() for a in args.arms.split(",") if a.strip()]
     if "base" not in arm_names:
         arm_names = ["base"] + arm_names
-    dcfg = load_config(f"domains/{args.domain}.yaml")
+    # Thresholds are per-model: tau is a quantile of the BASE model's own distribution.
+    dcfg = resolve_thresholds(load_config(f"domains/{args.domain}.yaml"), args.model)
     domain_mod = domains.get(args.domain)
     systems = resolve_systems(args.domain, args.model, arm_names, args.seed, rank=args.rank)
 

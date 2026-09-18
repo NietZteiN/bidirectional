@@ -105,3 +105,39 @@ def resolve_model(key: str) -> dict[str, Any]:
 
 def frozen_scorer(name: str) -> str:
     return load_models()["frozen_scorers"][name]
+
+
+def resolve_thresholds(cfg: dict, model: str) -> dict:
+    """Return `cfg` with `thresholds` set to the block belonging to `model`.
+
+    tau IS MODEL-SPECIFIC: it is a quantile of the BASE model's own score distribution, so
+    llama32-3b's comet tau says nothing about gemma3-4b's. The domain config held ONE flat
+    `thresholds` block plus a `thresholds_provenance.model` note naming whoever wrote it last,
+    and `15_base_gate.py --write` did `doc["thresholds"].update(...)`. Gating a second model
+    would therefore have overwritten the first model's frozen tau in place -- every later
+    llama32-3b eval would have scored against gemma3-4b's threshold, and the corruption would
+    have been invisible because the file still looked well-formed. Caught on 2026-09-18 with
+    both gate jobs queued; they were held before they ran.
+
+    Layout is `thresholds_by_model: {<model>: {<direction>: {<metric>: tau}}}`. The legacy flat
+    block is still honoured, but ONLY for the model its provenance names -- an unlabelled block
+    is accepted for any model, since the single-model configs predate this split.
+    """
+    out = dict(cfg)
+    by_model = cfg.get("thresholds_by_model") or {}
+    if model in by_model:
+        out["thresholds"] = by_model[model]
+        return out
+    flat = cfg.get("thresholds")
+    if flat:
+        owner = ((cfg.get("thresholds_provenance") or {}).get("model"))
+        if owner in (None, model):
+            out["thresholds"] = flat
+            return out
+        raise KeyError(
+            f"this domain's frozen thresholds belong to {owner!r}, not {model!r}, and tau is "
+            f"read from the BASE model's own distribution. Run scripts/15_base_gate.py --write "
+            f"--model {model} to freeze this model's thresholds; they are stored separately."
+        )
+    out["thresholds"] = {}
+    return out

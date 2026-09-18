@@ -211,11 +211,18 @@ def gate_one(a, domain: str, e) -> dict:
     if a.write and thresholds:
         path = CONFIGS_DIR / "domains" / f"{domain}.yaml"
         doc = yaml.safe_load(path.read_text()) or {}
-        doc.setdefault("thresholds", {}).update(thresholds)
-        doc["thresholds_provenance"] = {
+        # WRITTEN UNDER THE MODEL, NOT OVER THE PREVIOUS ONE. tau is a quantile of the BASE
+        # model's own score distribution, so it is meaningless across models. This was
+        # `doc["thresholds"].update(...)` against a single flat block, so gating a second model
+        # silently overwrote the first model's frozen tau and every later eval of the first model
+        # would have scored against the second's threshold -- with the file still well-formed.
+        doc.setdefault("thresholds_by_model", {}).setdefault(a.model, {}).update(thresholds)
+        doc.setdefault("thresholds_provenance_by_model", {})[a.model] = {
             "model": a.model, "date": stamp, "quantile": a.tau_quantile, "n": len(insts),
             "note": "read from the BASE model's score distribution before any fine-tuned model was scored",
         }
+        # The legacy flat block is left exactly as it is: it belongs to whichever model froze it,
+        # and `resolve_thresholds` honours it only for that model.
         path.write_text(yaml.safe_dump(doc, sort_keys=False, allow_unicode=True))
         print(f"[gate] wrote thresholds into {path}")
 

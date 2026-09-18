@@ -322,3 +322,50 @@ def test_mt_cells_sharing_one_module_do_not_clobber_each_other():
     zh_again = prompts.build_example(zh, domains.get("mt_en-zh"))["prompt"][-1]["content"]
     assert "German" in de_text and "Chinese" in zh_text
     assert zh_again == zh_text, "CELL leaked between two cells sharing mt.py"
+
+
+def test_tau_is_per_model_and_one_model_cannot_inherit_anothers():
+    """tau is a quantile of the BASE model's own score distribution.
+
+    The domain config held ONE flat `thresholds` block plus a provenance note naming whoever
+    wrote it last, and `--write` did `doc["thresholds"].update(...)`. Gating a second model would
+    have overwritten the first model's frozen tau in place: every later llama32-3b eval would
+    have scored against gemma3-4b's threshold, with the file still perfectly well-formed. Caught
+    2026-09-18 with both gate jobs queued and held before they ran.
+    """
+    import pytest
+
+    from bidir.config import resolve_thresholds
+
+    legacy = {"thresholds": {"forward": {"comet": 0.1}},
+              "thresholds_provenance": {"model": "llama32-3b"}}
+    assert resolve_thresholds(legacy, "llama32-3b")["thresholds"]["forward"]["comet"] == 0.1
+    with pytest.raises(KeyError, match="belong to"):
+        resolve_thresholds(legacy, "gemma3-4b")
+
+    # An unlabelled legacy block predates the split and is accepted for any model.
+    assert resolve_thresholds({"thresholds": {"forward": {"comet": 0.2}}}, "anything")
+
+    # Per-model blocks are independent and neither shadows the other.
+    both = {"thresholds_by_model": {"llama32-3b": {"forward": {"comet": 0.3}},
+                                    "gemma3-4b": {"forward": {"comet": 0.7}}}}
+    assert resolve_thresholds(both, "llama32-3b")["thresholds"]["forward"]["comet"] == 0.3
+    assert resolve_thresholds(both, "gemma3-4b")["thresholds"]["forward"]["comet"] == 0.7
+
+
+def test_gate_write_does_not_touch_another_models_thresholds(tmp_path):
+    """The writer must add under the model, never over the flat block another model owns."""
+    import yaml
+
+    doc = {"thresholds": {"forward": {"comet": 0.5}},
+           "thresholds_provenance": {"model": "llama32-3b"}}
+    # Reproduce exactly what the patched writer does.
+    doc.setdefault("thresholds_by_model", {}).setdefault("gemma3-4b", {}).update(
+        {"forward": {"comet": 0.9}})
+    doc.setdefault("thresholds_provenance_by_model", {})["gemma3-4b"] = {"model": "gemma3-4b"}
+
+    p = tmp_path / "d.yaml"
+    p.write_text(yaml.safe_dump(doc))
+    back = yaml.safe_load(p.read_text())
+    assert back["thresholds"]["forward"]["comet"] == 0.5, "llama's frozen tau was overwritten"
+    assert back["thresholds_by_model"]["gemma3-4b"]["forward"]["comet"] == 0.9
