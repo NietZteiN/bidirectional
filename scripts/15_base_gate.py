@@ -68,6 +68,10 @@ def gate_one(a, domain: str, e) -> dict:
     else:
         insts = _pool
 
+    out_dir = RESULTS_DIR / "base_gates" / domain
+    out_dir.mkdir(parents=True, exist_ok=True)
+    stamp = datetime.now(timezone.utc).strftime("%Y-%m-%d")
+
     metric = TAU_METRIC.get(domain.split("_")[0])
     report: dict = {"domain": domain, "model": a.model, "n": len(insts), "tau_metric": metric,
                     "tau_quantile": a.tau_quantile, "directions": {}}
@@ -83,6 +87,34 @@ def gate_one(a, domain: str, e) -> dict:
         # metric column, choose tau from it, then report the rate under the chosen tau.
         scored = mod.score_batch(direction, outs, insts, {**cfg, "thresholds": {direction: {metric or "chrf2": -1e9}}})
         fmt_fail = sum(r.get("off_target", 0) or r.get("empty_output", 0) for r in scored) / max(1, len(scored))
+
+        # DUMP THE FAILURES. Standing practice on this project: a gate failure is diagnosed from
+        # dumped outputs before any criterion is touched, because the first two explanations
+        # offered for `diacritics` were both wrong and both looked complete from truncated
+        # examples. `fmt_det*` fails on reverse format_fail 0.16-0.18 against a 0.15 threshold
+        # while its rates form the monotone ladder RQ3 predicts, and nothing recorded WHICH
+        # instances failed -- so the obvious hypothesis (that they are the non-determinable ones,
+        # an artifact of the lossy transform rather than a format problem) was untestable.
+        if a.dump_failures:
+            dump = []
+            for r, o, i in zip(scored, outs, insts):
+                if not (r.get("off_target") or r.get("empty_output")):
+                    continue
+                dump.append({"pair_id": i.get("pair_id"), "direction": direction,
+                             "determinable": (i.get("meta") or {}).get("determinable"),
+                             "n_dropped": (i.get("meta") or {}).get("n_dropped"),
+                             "information_kept": (i.get("meta") or {}).get("information_kept"),
+                             "off_target": bool(r.get("off_target")),
+                             "empty_output": bool(r.get("empty_output")),
+                             "source": str(i.get("side_a" if direction == "forward" else "side_b"))[:600],
+                             "output": str(o)[:600]})
+            dd = out_dir / f"{a.model}_{stamp}_failures_{direction}.json"
+            dd.write_text(json.dumps(dump, indent=2, ensure_ascii=False))
+            # The denominator matters as much as the numerator: "17 % failed" means one thing if
+            # the cell has 25 % non-determinable instances and another if it has none.
+            det = [i for i in insts if ((i.get("meta") or {}).get("determinable") is True)]
+            print(f"[gate] {domain} {direction}: {len(dump)}/{len(insts)} unparseable, "
+                  f"{len(det)}/{len(insts)} determinable -> {dd}", flush=True)
         row: dict = {"format_fail": fmt_fail,
                      "echo": sum(r.get("echo", 0) for r in scored) / max(1, len(scored)),
                      "rate_uncapped": sum(r["strict"] for r in scored) / max(1, len(scored))}
@@ -174,9 +206,6 @@ def gate_one(a, domain: str, e) -> dict:
         f"`echo_clears_tau_on_metric_alone` are reported as diagnostics of how much the metric "
         f"contributes, and are NOT gate clauses (Amendment 16)")
 
-    out_dir = RESULTS_DIR / "base_gates" / domain
-    out_dir.mkdir(parents=True, exist_ok=True)
-    stamp = datetime.now(timezone.utc).strftime("%Y-%m-%d")
     (out_dir / f"{a.model}_{stamp}.json").write_text(json.dumps(report, indent=2))
 
     if a.write and thresholds:
@@ -207,6 +236,9 @@ def main() -> int:
     ap.add_argument("--min-base-rate", type=float, default=0.10,
                     help="vacuous for metric domains (see --min-tau-margin); kept because it is "
                          "a real check where the criterion is exact")
+    ap.add_argument("--dump-failures", action="store_true",
+                    help="write every unparseable generation, with the instance's determinability "
+                         "metadata, so a format failure can be diagnosed instead of guessed at")
     ap.add_argument("--max-echo-probe-strict", type=float, default=0.02,
                     help="the echo probe (the model's own input, copied) may pass the FULL "
                          "criterion at most this often. Metric domains only, and this is the "
