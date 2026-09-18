@@ -1434,3 +1434,44 @@ re-trained; the withdrawn numbers stay in this file and nowhere else.
 **Fourteenth instance of the standing pattern.** The cell being trained ≠ the cell a row came
 from. A nominal parameter — "the domain" — stood in for a quantity that varies per row, and the
 data structure had carried the right answer the whole time.
+
+### Amendment 31 — 2026-09-18, diagnosing the `fmt_det*` gate failures
+
+**No threshold is changed by this amendment.** The `format_fail` criterion stays at 0.15. What
+changes is the sample size it is estimated from, because the estimate cannot currently resolve
+the line it is compared against.
+
+**The failures, from dumped outputs.** `fmt_det{75,50,25}` fail the gate on reverse
+`format_fail` 0.175 against a 0.15 threshold, while their rates form the monotone ladder RQ3
+predicts (0.365 / 0.285 / 0.185 / 0.000). Three hypotheses were tested and two died:
+
+1. *Artifact of the lossy transform* — REFUTED. At `det75`, 23 of 35 failures are on
+   **determinable** instances (nothing dropped). The majority of failures are not lossy cases.
+2. *Truncation at the generation budget* — REFUTED. `max_tokens` is 1024; the failing outputs
+   are 57–512 **characters** (median 200), roughly 150 tokens. Nothing hit the limit.
+3. *Unclosed JSON* — CONFIRMED. The model emits correct content and stops one or more closing
+   braces short: 19/35, 21/35 and 23/35 of the failures become **valid JSON** when the missing
+   braces are appended. The shortest is 57 characters, complete but for its final `}`.
+
+**The failures are a corpus property, not a ladder property.** Comparing the underlying
+documents (the pair_id embeds `lossy_share`, so the ids differ by construction and naive id
+overlap reads zero — that comparison is a naming artifact and was nearly reported as a result):
+**31 of 35 failing documents are common to all three rungs**, union 40. The same ~40 of 200
+documents defeat this model's brace-closing regardless of how much information was dropped. The
+det ladder does not vary this quantity, so gating each rung on it separately is applying one
+noisy instrument four times to the same underlying number.
+
+**Why the pass/fail split is not meaningful.** At n=200 a rate near 0.15 has a standard error of
+**0.027**. `fmt` measures 0.130 and passes; `fmt_det75` measures 0.175 and fails. Both lie
+within ~1 SE of the threshold, and they differ from each other by 1.7 SE. These cells are not
+distinguishable from the threshold or from one another; the gate is currently deciding on noise.
+
+**The change.** `format_fail` for this family is estimated at **n=1000**, where the standard
+error falls to ~0.012 and 0.175 sits a decisive 2 SE above the line. The threshold is untouched,
+so the cells may still fail — and if they do, they fail honestly, which is the point. This is
+the same defect Amendment 16 fixed for the base-rate clause and that `50_contrasts.ifeval_control`
+documents for the −5 IFEval rule: **a threshold stated in points its instrument cannot resolve
+is not a criterion.**
+
+**Sixteenth instance of the standing pattern.** A rate measured to ±2.7 pp ≠ a rate that can be
+compared to a line drawn at 0.15.
