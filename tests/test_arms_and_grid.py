@@ -993,3 +993,50 @@ def test_tables_do_not_conflate_seeds(tmp_path):
     # Both seeds must appear as their own rows, with both distinct sft values present.
     assert "10.0" in main and "90.0" in main, (
         f"a seed was dropped from the table; only one sft value survived:\n{main}")
+
+
+def test_juno_share_guard_parses_a_partition_list():
+    """The share check must see a contested partition inside a comma list.
+
+    It read `a.partition in CONTESTED`, an exact-string test, so "h100,h200" matched nothing and
+    skipped the check entirely -- while `juno_jobs_held` counts by the partition a job LANDED on
+    and would have kept reporting the truth. The gate would have been silently off for exactly
+    the mixed requests introduced on 2026-09-18 to reach a larger share.
+    """
+    import importlib.util
+    from pathlib import Path
+
+    spec = importlib.util.spec_from_file_location(
+        "submitmod", Path(__file__).resolve().parents[1] / "scripts" / "slurm" / "submit.py")
+    m = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(m)
+
+    def split(p):
+        parts = [x.strip() for x in p.split(",") if x.strip()]
+        return ([x for x in parts if x in m.CONTESTED],
+                [x for x in parts if x not in m.CONTESTED])
+
+    assert split("h200") == (["h200"], [])
+    assert split("h100,h200") == (["h200"], ["h100"]), "a contested entry in a list must be seen"
+    assert split("h100,a30") == ([], ["h100", "a30"])
+    assert split("normal") == (["normal"], [])
+
+
+def test_runner_lets_uncapped_cells_reach_h200():
+    """Cells that cannot use an a30 should be able to take an idle h200.
+
+    The cluster's h200s sit mostly idle behind a QoS capped at 4 for the whole account, while the
+    uncapped partitions are ~9 GPUs contended by every user. A cell pinned to "h100" alone cannot
+    use the capacity that actually exists. Asserts the placement the runner COMPUTES.
+    """
+    r = _runner()
+    assert r.NO_A30, "NO_A30 is empty; this test is checking nothing"
+    for cell in ("code", "sql", "mt_de-en"):
+        assert cell in r.NO_A30
+        parts = r.partition_for(cell).split(",")
+        assert "h200" in parts, f"{cell} cannot reach idle h200 capacity"
+        assert "h100" in parts, f"{cell} lost its uncapped fallback"
+        assert "a30" not in parts, f"{cell} is in NO_A30 but was offered one"
+    assert r.partition_for("algebra") == "h100,a30", "an a30-capable cell should stay uncapped"
+    for cell in r.NEEDS_H200:
+        assert r.partition_for(cell) == "h200"

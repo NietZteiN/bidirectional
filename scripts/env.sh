@@ -63,7 +63,10 @@ export VLLM_WORKER_MULTIPROC_METHOD="${VLLM_WORKER_MULTIPROC_METHOD:-spawn}"
 # four -- a CPU analysis on `normal` blocks a GPU training job, and moving work there frees
 # nothing. `dev` is QoS=juno-dev, a separate pool, which is why the CPU jobs in this project run
 # there. `h100` and `a30` carry no QoS at all and are unaffected.
-export BIDIR_JUNO_SHARE="${BIDIR_JUNO_SHARE:-1}"
+# 3 of the account's 4 juno slots, from 1, since obtune finished on 2026-09-18 and released the
+# 2 it held. One is left for the remaining projects. This is the h200/normal QoS budget, which is
+# separate from the runner's --max-inflight: the pool is ONE budget of 4 for the whole account.
+export BIDIR_JUNO_SHARE="${BIDIR_JUNO_SHARE:-3}"
 export TOKENIZERS_PARALLELISM=false
 
 # ON THE LOGIN NODE ONLY, cap the BLAS thread pools. That node has RLIMIT_NPROC=300 against a

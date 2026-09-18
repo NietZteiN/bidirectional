@@ -11,9 +11,10 @@ bursts and then the queue drained while nobody was looking. The remaining ~378 G
 ~18 days at that rate. Holding a steady allocation is worth more than any speedup to the code:
 at 3 sustained slots it is ~5 days.
 
-THE DEFAULT IS 3, not 4, and deliberately. Four other projects share this account and this
-cluster; three is what this project takes. Raise it with --max-inflight only if the share has
-actually been renegotiated, the same discipline $BIDIR_JUNO_SHARE applies to the juno pool.
+THE DEFAULT IS 7, raised from 3 on 2026-09-18 when obtune finished and released its share of
+the account. It is a NEGOTIATED number, not a technical limit: the account is shared, and the
+figure should drop again if another project starts up. $BIDIR_JUNO_SHARE applies the same
+discipline to the h200/normal QoS pool, which is a separate and finer-grained budget.
 
 IT PREFERS THE UNCAPPED PARTITIONS. `h100` and `a30` carry no QoS, so four jobs there cost the
 `juno` pool nothing and squeeze no neighbouring project -- the account shares that pool of 4
@@ -148,6 +149,24 @@ def cell_state(domain: str, model: str, seed: int) -> tuple[list[str], bool]:
     return todo, evald
 
 
+def partition_for(cell: str) -> str:
+    """Which partitions this cell may be placed on, most-permissive first.
+
+    h200 IS WHERE THE FREE CAPACITY IS. The cluster's 52 h200s sit mostly idle behind the `juno`
+    QoS (4 concurrent for the WHOLE account); the uncapped partitions are ~9 GPUs contended by
+    every other user. A cell that cannot use an a30 was pinned to "h100" alone and so could not
+    touch the capacity that actually exists. It now asks for either and lets Slurm take whichever
+    frees first -- `submit.py` still enforces $BIDIR_JUNO_SHARE, and when that budget is full it
+    drops the h200 option rather than refusing, so this never costs a cell an h100 it could have
+    had.
+    """
+    if cell in NEEDS_H200:
+        return "h200"
+    if cell in NO_A30:
+        return "h100,h200"
+    return "h100,a30"
+
+
 def find_adapters(arm: str, stale_before: float | None = None) -> list[tuple[str, str, int]]:
     """Every (cell, model, seed) holding a COMPLETE adapter for `arm`, read off disk.
 
@@ -223,11 +242,11 @@ def submit(name, argv, partition, time, dep=None, cpus=16, mem="64G", dry=False)
 
 def main() -> int:
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    ap.add_argument("--max-inflight", type=int, default=3,
-                    help="cells in flight at once (default 3). A cell is one train job plus its "
+    ap.add_argument("--max-inflight", type=int, default=7,
+                    help="cells in flight at once (default 7). A cell is one train job plus its "
                          "eval, so this is the number of GPUs held, not the number of jobs. "
-                         "Three is this project's standing share of an account used by four "
-                         "projects; raise it only if that share has actually been renegotiated.")
+                         "Seven is this project's share since obtune finished on 2026-09-18; it "
+                         "is negotiated, not technical, and should drop if another project starts.")
     ap.add_argument("--dry-run", action="store_true")
     ap.add_argument("--status", action="store_true")
     ap.add_argument("--stale-before", default=None, metavar="ISO8601",
@@ -316,7 +335,7 @@ def main() -> int:
     for label, cell, model, seed, todo, evald in todo_list:
         if launched >= free:
             break
-        part = "h200" if cell in NEEDS_H200 else ("h100" if cell in NO_A30 else "h100,a30")
+        part = partition_for(cell)
         jid = None
         if todo:
             units = A.units(todo)

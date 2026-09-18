@@ -197,16 +197,32 @@ def main() -> int:
         print("nothing to run", file=sys.stderr)
         return 1
 
+    # THE PARTITION MAY BE A LIST, AND THE CHECK HAS TO PARSE IT. This read
+    # `a.partition in CONTESTED`, an exact-string test: a request for "h100,h200" matched
+    # nothing and skipped the share check entirely, while `juno_jobs_held` counts by the
+    # partition a job LANDED on and would have gone on reporting the truth. The gate would have
+    # been silently off for exactly the mixed requests introduced to reach a larger share.
     share = int(os.environ.get("BIDIR_JUNO_SHARE", "1"))
-    if share and a.partition in CONTESTED and not a.dry_run and not queues_behind_pool(a.dependency):
+    parts = [p.strip() for p in a.partition.split(",") if p.strip()]
+    contested = [p for p in parts if p in CONTESTED]
+    uncapped = [p for p in parts if p not in CONTESTED]
+    if share and contested and not a.dry_run and not queues_behind_pool(a.dependency):
         held = juno_jobs_held()
         if held >= share:
-            print(f"REFUSED: this project may hold {share} running job(s) in the juno pool "
-                  f"(h200 + normal are one budget) and already holds {held}.\n"
-                  f"  Wait, or submit to a30/h100/dev, which carry no QoS.\n"
-                  f"  Override with BIDIR_JUNO_SHARE=<n> if the share has been renegotiated.",
-                  file=sys.stderr)
-            return 2
+            if uncapped:
+                # A mixed request can still run: drop the contested options and let Slurm place
+                # it on the free ones. Refusing outright would deny a cell an h100 it could have
+                # had, purely because the h200 budget was full.
+                print(f"note: juno pool full ({held}/{share}); submitting to "
+                      f"{','.join(uncapped)} only", file=sys.stderr)
+                a.partition = ",".join(uncapped)
+            else:
+                print(f"REFUSED: this project may hold {share} running job(s) in the juno pool "
+                      f"(h200 + normal are one budget) and already holds {held}.\n"
+                      f"  Wait, or submit to a30/h100/dev, which carry no QoS.\n"
+                      f"  Override with BIDIR_JUNO_SHARE=<n> if the share has been renegotiated.",
+                      file=sys.stderr)
+                return 2
     dep = a.dependency
     if dep and not dep.startswith(("afterok:", "afterany:", "after:")):
         dep = f"afterok:{dep}"
