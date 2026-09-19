@@ -1475,3 +1475,26 @@ is not a criterion.**
 
 **Sixteenth instance of the standing pattern.** A rate measured to ±2.7 pp ≠ a rate that can be
 compared to a line drawn at 0.15.
+
+**Amendment 31, outcome (2026-09-19).** Re-gated at n=1000. Every rung is now decisive and the
+answer is FAIL — no threshold was moved, and the cells stay blocked:
+
+| cell | rev `format_fail` | SE | vs 0.15 |
+|---|---|---|---|
+| fmt | 0.124 | 0.010 | −2.5 σ (pass) |
+| fmt_det75 | 0.205 | 0.013 | **+4.3 σ** |
+| fmt_det50 | 0.206 | 0.013 | **+4.4 σ** |
+| fmt_det25 | 0.190 | 0.012 | **+3.2 σ** |
+| fmt_det00 | 0.107 | 0.010 | −4.4 σ (fails on rate=0.000) |
+
+**`format_fail` is non-monotone in `lossy_share`** — 0.124 at share 0, ~0.20 across the three
+middle rungs, 0.107 at share 1.0. Partial information loss makes this model markedly worse at
+emitting closeable JSON; total loss does not, because the output is then trivially short. That
+is a confound for RQ3 and a second reason the gate is right to block: the rungs differ not only
+in information kept but in how often a well-formed answer is produced at all.
+
+**The RQ3 signal is nonetheless real.** Base reverse rates form a clean monotone ladder
+(0.515 / 0.333 / 0.235 / 0.129 / 0.000), and it survives conditioning on parseable output
+(≈0.59 / 0.42 / 0.30 / 0.16 / 0.00), so the ordering is not an artifact of the varying
+format-failure tax. The ladder is reportable as a BASE-MODEL descriptive result; the arms are
+not run on these cells, because a criterion the cells fail decisively is not one to argue with.
