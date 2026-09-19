@@ -1040,3 +1040,46 @@ def test_runner_lets_uncapped_cells_reach_h200():
     assert r.partition_for("algebra") == "h100,a30", "an a30-capable cell should stay uncapped"
     for cell in r.NEEDS_H200:
         assert r.partition_for(cell) == "h200"
+
+
+def test_a_full_juno_pool_does_not_permanently_pin_a_mixed_request():
+    """A momentary condition must not become a permanent property of the job.
+
+    The share check used to DROP the contested partitions from a mixed request when the pool was
+    full. The pool is full for a moment; the job then carries the reduced list for its entire
+    queue life. On 2026-09-18 five jobs were submitted at 16:14 while three juno slots were held,
+    lost h200, and were still pinned to a congested h100 the next morning when we held zero juno
+    slots and h200 was the shorter queue. One of them started on h200 within five seconds of the
+    option being handed back with `scontrol update`.
+
+    Slurm enforces the account QoS at SCHEDULE time, which is when the question is actually live.
+    """
+    import re
+    from pathlib import Path
+
+    src = (Path(__file__).resolve().parents[1] / "scripts" / "slurm" / "submit.py").read_text()
+    guard = src[src.index("share = int(os.environ.get"):src.index("dep = a.dependency")]
+    assert "a.partition = " not in guard, (
+        "the share check rewrites a.partition; a full pool would again pin a mixed request to "
+        "its uncapped subset for the job's whole queue life")
+    # A request with no uncapped fallback must still be refusable.
+    assert "return 2" in guard, "an all-contested request over budget must still be refused"
+
+
+def test_runner_surfaces_the_submitters_stderr_on_success():
+    """A submission altered on the way through must say so.
+
+    submit() echoed the submitter's stderr only when the submission FAILED, so a job that was
+    quietly changed and then succeeded reported nothing. The note saying h200 had been dropped
+    was captured and discarded, and the consequence stayed invisible until someone read a
+    .sbatch file by hand.
+    """
+    from pathlib import Path
+
+    src = (Path(__file__).resolve().parents[1] / "scripts" / "95_runner.py").read_text()
+    body = src[src.index("def submit(name"):src.index("def main()")]
+    idx_err = body.index("r.stderr")
+    idx_ret = body.index('if line.startswith("submitted ")')
+    assert idx_err < idx_ret, (
+        "stderr is only surfaced after the success path returns, so a successful-but-altered "
+        "submission stays silent")

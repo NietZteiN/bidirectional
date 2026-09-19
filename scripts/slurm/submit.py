@@ -210,12 +210,16 @@ def main() -> int:
         held = juno_jobs_held()
         if held >= share:
             if uncapped:
-                # A mixed request can still run: drop the contested options and let Slurm place
-                # it on the free ones. Refusing outright would deny a cell an h100 it could have
-                # had, purely because the h200 budget was full.
-                print(f"note: juno pool full ({held}/{share}); submitting to "
-                      f"{','.join(uncapped)} only", file=sys.stderr)
-                a.partition = ",".join(uncapped)
+                # A MIXED REQUEST IS LEFT ALONE. This used to drop the contested options, which
+                # turned a momentary condition into a permanent one: the pool was full for the
+                # minute the job was submitted, so it lost h200 for its whole queue life. By the
+                # next morning we held zero juno slots, h200 was the shorter queue, and five
+                # jobs were pinned to a congested h100 because of how things looked at 16:14.
+                # Slurm already enforces the account's QoS at SCHEDULE time, which is when the
+                # question is actually live; the share check exists to stop us queueing an
+                # unbounded pile that can only run on h200, and a mixed request is not that.
+                print(f"note: juno pool at {held}/{share}; keeping {a.partition} and letting "
+                      f"the scheduler choose", file=sys.stderr)
             else:
                 print(f"REFUSED: this project may hold {share} running job(s) in the juno pool "
                       f"(h200 + normal are one budget) and already holds {held}.\n"

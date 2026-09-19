@@ -233,10 +233,17 @@ def submit(name, argv, partition, time, dep=None, cpus=16, mem="64G", dry=False)
     r = subprocess.run(cmd, capture_output=True, text=True, cwd=ROOT)
     if dry:
         return "DRY"
+    # SURFACE THE SUBMITTER'S STDERR EVEN ON SUCCESS. This only echoed it on FAILURE, so a
+    # submission that succeeded after being quietly altered said nothing at all: the note
+    # explaining that h200 had been dropped from a job's partition list was captured here and
+    # thrown away, and the consequence (jobs pinned to one partition overnight) was invisible
+    # until someone read a .sbatch file.
+    if r.stderr.strip():
+        sys.stderr.write(r.stderr)
     for line in r.stdout.splitlines():
         if line.startswith("submitted "):
             return line.split()[1]
-    sys.stderr.write(r.stdout + r.stderr)
+    sys.stderr.write(r.stdout)
     return None
 
 
