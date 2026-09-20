@@ -54,12 +54,21 @@ CORE = ["mt_de-en", "mt_en-de", "sql", "code"]
 READY = ["relation", "mt_en-zh", "mt_zh-en"]
 FORMAT_BLOCKED = ["diacritics", "algebra", "algebra_rev", "fmt", "fmt_det75"]
 
+#: Cells where `sft` actually collapsed the reverse direction, so "erased or merely suppressed?"
+#: is a question with something to measure. Taken from the recorded verdicts, not from intuition:
+#: each of these meets the pre-registered criterion (<= -50 % relative on strict reverse).
+COLLAPSED = ["code", "sql", "fmt", "mt_de-en", "mt_zh-en", "mt_en-zh"]
+
+#: (label, cells, models, seeds, tier, tag). `tier` picks the arm set; `tag` names the run
+#: directory, and MUST differ between tiers -- a mechanism eval scores a different arm set, and
+#: writing it to the main tag would replace a 12-arm result with a 6-arm one.
 PLAN = [
-    ("P1 s17 breadth",        READY,          ["llama32-3b"], [17]),
-    ("P2 blocked-cell s17",   FORMAT_BLOCKED, ["llama32-3b"], [17]),
-    ("P3 seeds",              CORE,           ["llama32-3b"], [42, 1234]),
-    ("P5 gemma3-4b",          CORE + READY,   ["gemma3-4b"],  [17]),
-    ("P6 olmo2-1b",           CORE + READY,   ["olmo2-1b"],   [17]),
+    ("P1 s17 breadth",        READY,          ["llama32-3b"], [17],      "full",    "small"),
+    ("P2 blocked-cell s17",   FORMAT_BLOCKED, ["llama32-3b"], [17],      "full",    "small"),
+    ("P3 seeds",              CORE,           ["llama32-3b"], [42, 1234], "full",   "small"),
+    ("P4 mechanism",          COLLAPSED,      ["llama32-3b"], [17],      "relearn", "mech"),
+    ("P5 gemma3-4b",          CORE + READY,   ["gemma3-4b"],  [17],      "full",    "small"),
+    ("P6 olmo2-1b",           CORE + READY,   ["olmo2-1b"],   [17],      "full",    "small"),
 ]
 
 #: Long-sequence or two-model cells: an a30 placement does not finish in a sane walltime.
@@ -132,20 +141,35 @@ def adapter_complete(domain: str, model: str, arm: str, seed: int) -> bool:
 
 
 def gate_passed(domain: str, model: str) -> bool | None:
-    files = sorted((RESULTS_DIR / "base_gates" / domain).glob(f"{model}_*.json"))
+    # Defence in depth: dumps now live in a `failures/` subdirectory, but this glob is what
+    # decides whether a cell is allowed to run, so it also refuses anything without a verdict
+    # rather than trusting the newest filename.
+    files = [f for f in sorted((RESULTS_DIR / "base_gates" / domain).glob(f"{model}_*.json"))
+             if "_failures_" not in f.name]
     if not files:
         return None
-    try:
-        return bool(json.loads(files[-1].read_text()).get("passes_gate"))
-    except Exception:
-        return None
+    for f in reversed(files):
+        try:
+            d = json.loads(f.read_text())
+        except Exception:
+            continue
+        if "passes_gate" in d:
+            return bool(d["passes_gate"])
+    return None
 
 
-def cell_state(domain: str, model: str, seed: int) -> tuple[list[str], bool]:
-    """(arms still to train, whether an eval already exists)."""
-    wanted = resolvable(domain, model)
+def cell_state(domain: str, model: str, seed: int, tier: str = "full",
+               tag: str = "small") -> tuple[list[str], bool]:
+    """(arms still to train, whether an eval already exists).
+
+    TAG-SCOPED. The mechanism tier writes its own run directory: its eval scores base, sft and
+    the relearn ladder, and pointing it at the main run's tag would overwrite the 12-arm result
+    with a 6-arm one -- contrasts are only valid within a pass, so the two cannot be merged and
+    the survivor would be whichever ran last.
+    """
+    wanted = resolvable(domain, model, tier)
     todo = [a for a in wanted if not adapter_complete(domain, model, a, seed)]
-    evald = bool(list(RESULTS_DIR.glob(f"*/{domain}/{model}/*_s{seed}/trials.jsonl")))
+    evald = bool(list(RESULTS_DIR.glob(f"*/{domain}/{model}/{tag}_s{seed}/trials.jsonl")))
     return todo, evald
 
 
@@ -196,7 +220,7 @@ def find_adapters(arm: str, stale_before: float | None = None) -> list[tuple[str
     return sorted(set(out))
 
 
-def resolvable(domain: str, model: str) -> list[str]:
+def resolvable(domain: str, model: str, tier: str = "full") -> list[str]:
     """The arms this cell can actually express -- the ONE definition both call sites use.
 
     `resolvable_arms` drops dose rungs whose reversed-pair count falls below one effective
@@ -206,7 +230,7 @@ def resolvable(domain: str, model: str) -> list[str]:
     sites now read this, so the set that is SIZED, the set that is TRAINED and the set that is
     SCORED cannot drift apart again.
     """
-    return _pg().resolvable_arms(list(A.TIERS["full"]), domain, model)[0]
+    return _pg().resolvable_arms(list(A.TIERS[tier]), domain, model)[0]
 
 
 @functools.lru_cache(maxsize=1)
@@ -300,13 +324,14 @@ def main() -> int:
             cell, model, seed = d
             if f"{cell}_{model}_s{seed}" in inflight_cells:
                 continue
-            todo_list.append(("force " + a.force_arm, cell, model, seed, [a.force_arm], False))
+            todo_list.append(("force " + a.force_arm, cell, model, seed, [a.force_arm], False,
+                              "full", "small"))
         print(f"[runner] {len(todo_list)} cell(s) hold a stale {a.force_arm!r} adapter")
         if a.status:
-            for label, cell, model, seed, _, _ in todo_list:
+            for label, cell, model, seed, *_ in todo_list:
                 print(f"    FORCE   {cell}/{model}/s{seed}")
             return 0
-    for label, cells, models, seeds in PLAN:
+    for label, cells, models, seeds, tier, tag in PLAN:
         if a.force_arm:
             break                     # force mode built todo_list from disk above
         for model in models:
@@ -319,14 +344,14 @@ def main() -> int:
                         continue
                     if f"{cell}_{model}_s{seed}" in inflight_cells:
                         continue          # already queued or running; never submit it twice
-                    todo, evald = cell_state(cell, model, seed)
+                    todo, evald = cell_state(cell, model, seed, tier, tag)
                     if not todo and evald:
                         continue
-                    todo_list.append((label, cell, model, seed, todo, evald))
+                    todo_list.append((label, cell, model, seed, todo, evald, tier, tag))
 
     print(f"[runner] {len(todo_list)} cell(s) ready, {len(blocked)} blocked")
     if a.status:
-        for label, cell, model, seed, todo, evald in todo_list[:12]:
+        for label, cell, model, seed, todo, evald, tier, tag in todo_list[:12]:
             print(f"    READY   {label:<18} {cell}/{model}/s{seed}  "
                   f"{len(todo)} arm(s) to train{'' if evald else ', eval needed'}")
         for label, cell, model, why in blocked[:12]:
@@ -339,7 +364,7 @@ def main() -> int:
         return 0
 
     launched = 0
-    for label, cell, model, seed, todo, evald in todo_list:
+    for label, cell, model, seed, todo, evald, tier, tag in todo_list:
         if launched >= free:
             break
         part = partition_for(cell)
@@ -359,16 +384,21 @@ def main() -> int:
                     "--seed", str(seed), "--arms", ",".join(todo)]
             if a.force_arm:
                 pack.append("--force")        # retrain over the stale adapter; nothing is deleted
-            jid = submit(f"tr_{cell}_{model}_s{seed}", pack, part, t, dry=a.dry_run)
+            jid = submit(f"tr_{cell}_{model}_s{seed}" + ("" if tag == "small" else f"_{tag}"),
+                         pack, part, t, dry=a.dry_run)
             print(f"[runner] {label}: train {cell}/{model}/s{seed} on {part} "
                   f"({len(todo)} arms, {t}) -> {jid}")
             if jid is None:
                 continue                      # refused; do not orphan an eval behind it
-        arms = ",".join(["base"] + resolvable(cell, model))
+        # `sft` is carried into a mechanism eval even though it is not in the relearn tier:
+        # the ladder is read against the collapse it starts from, and a contrast is only valid
+        # within one pass, so it cannot be borrowed from the main run's trials.
+        extra = ["sft"] if tier == "relearn" else []
+        arms = ",".join(["base"] + extra + resolvable(cell, model, tier))
         ev_time = "06:00:00" if cell in SLOW_EVAL else "03:00:00"
-        ev = submit(f"ev_{cell}_{model}_s{seed}",
+        ev = submit(f"ev_{cell}_{model}_s{seed}" + ("" if tag == "small" else f"_{tag}"),
                     ["-m", "bidir.evaluate", "--domain", cell, "--model", model,
-                     "--seed", str(seed), "--arms", arms, "--tag", "small"],
+                     "--seed", str(seed), "--arms", arms, "--tag", tag],
                     part, ev_time, dep=jid, dry=a.dry_run)
         print(f"[runner] {label}: eval  {cell}/{model}/s{seed} -> {ev}")
         launched += 1

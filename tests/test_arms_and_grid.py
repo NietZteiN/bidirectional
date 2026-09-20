@@ -859,7 +859,7 @@ def test_runner_never_queues_a_cell_that_is_already_in_flight():
     r.submit = lambda name, argv, partition, time, **kw: (calls.append(name), "999")[1]
     # fmt/s17 is already queued, and it still has an arm to train, so it stays "ready".
     r.squeue_ours = lambda: [("tr_fmt_llama32-3b_s17", "RUNNING")]
-    r.PLAN = [("test", ["fmt"], ["llama32-3b"], [17])]
+    r.PLAN = [("test", ["fmt"], ["llama32-3b"], [17], "full", "small")]
     if r.gate_passed("fmt", "llama32-3b") is not True:
         import pytest
         pytest.skip("fmt gate has not passed here; nothing would be submitted either way")
@@ -887,7 +887,7 @@ def test_force_arm_enumerates_every_cell_holding_the_arm_not_just_planned_ones()
     if not found:
         import pytest
         pytest.skip("no mixedtask adapters on this filesystem")
-    planned = {(c, m, s) for _, cells, models, seeds in r.PLAN
+    planned = {(c, m, s) for _, cells, models, seeds, *_ in r.PLAN
                for c in cells for m in models for s in seeds}
     assert all(isinstance(x, tuple) and len(x) == 3 for x in found)
     # The point of reading disk: it must be able to return cells PLAN does not mention.
@@ -1083,3 +1083,41 @@ def test_runner_surfaces_the_submitters_stderr_on_success():
     assert idx_err < idx_ret, (
         "stderr is only surfaced after the success path returns, so a successful-but-altered "
         "submission stays silent")
+
+
+def test_mechanism_tier_writes_its_own_tag_and_does_not_shadow_the_main_run():
+    """A tier that scores a different arm set must not reuse the main run's tag.
+
+    The relearn eval scores base + sft + four relearn arms; the main eval scores twelve. They
+    cannot be merged -- contrasts are only valid within a pass -- so writing both to `small_s17`
+    would leave whichever ran last, silently replacing a 12-arm result with a 6-arm one.
+    """
+    r = _runner()
+    tags = {}
+    for entry in r.PLAN:
+        label, cells, models, seeds, tier, tag = entry
+        tags.setdefault(tier, set()).add(tag)
+    assert len(tags) > 1, "no tier other than the default; this test is checking nothing"
+    seen = {}
+    for tier, ts in tags.items():
+        for t in ts:
+            assert t not in seen or seen[t] == tier, (
+                f"tag {t!r} is used by both {seen[t]!r} and {tier!r}; the two runs would "
+                f"overwrite each other")
+            seen[t] = tier
+
+
+def test_relearn_eval_carries_sft_so_the_ladder_has_its_baseline():
+    """The ladder is read against the collapse it starts from.
+
+    `sft` is not in the relearn tier, and a contrast cannot be borrowed from another pass, so
+    the mechanism eval has to score it in the same run or the ladder has no zero point.
+    """
+    r = _runner()
+    arms = ["base", "sft"] + r.resolvable("code", "llama32-3b", "relearn")
+    assert "sft" in arms and "base" in arms
+    assert any(a.startswith("relearn") for a in arms)
+    # And the relearn arms must initialise FROM sft, or the ladder measures something else.
+    from bidir import arms as A
+    for a in r.resolvable("code", "llama32-3b", "relearn"):
+        assert A.resolve(a).init_from == "sft", f"{a} does not start from the collapsed model"

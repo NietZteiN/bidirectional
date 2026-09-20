@@ -108,7 +108,13 @@ def gate_one(a, domain: str, e) -> dict:
                              "empty_output": bool(r.get("empty_output")),
                              "source": str(i.get("side_a" if direction == "forward" else "side_b"))[:600],
                              "output": str(o)[:600]})
-            dd = out_dir / f"{a.model}_{stamp}_failures_{direction}.json"
+            # A SUBDIRECTORY, NOT A SIBLING. `base_gates/<domain>/` is globbed as `<model>_*.json`
+            # by gate_passed, 93_numbers and the archiver; a sibling named
+            # `<model>_<stamp>_failures_<dir>.json` sorts AFTER the report, so `files[-1]` picked
+            # a dump with no `passes_gate` key and `fmt` -- which had just PASSED at n=1000 --
+            # read as "gate not run" and stayed blocked.
+            dd = out_dir / "failures" / f"{a.model}_{stamp}_{direction}.json"
+            dd.parent.mkdir(parents=True, exist_ok=True)
             dd.write_text(json.dumps(dump, indent=2, ensure_ascii=False))
             # The denominator matters as much as the numerator: "17 % failed" means one thing if
             # the cell has 25 % non-determinable instances and another if it has none.
