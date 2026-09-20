@@ -66,7 +66,14 @@ PLAN = [
     ("P1 s17 breadth",        READY,          ["llama32-3b"], [17],      "full",    "small"),
     ("P2 blocked-cell s17",   FORMAT_BLOCKED, ["llama32-3b"], [17],      "full",    "small"),
     ("P3 seeds",              CORE,           ["llama32-3b"], [42, 1234], "full",   "small"),
-    ("P4 mechanism",          COLLAPSED,      ["llama32-3b"], [17],      "relearn", "mech"),
+    # Tag is "relearn", NOT "mech": `53_mech_report.py` globs `*/*/*/relearn_s*` and would not
+    # have seen a single one of these runs. The consumer's convention predates this entry.
+    ("P4 mechanism",          COLLAPSED,      ["llama32-3b"], [17],      "relearn", "relearn"),
+    # The control the P4 curves are READ AGAINST. Without it "fast relearning" has no scale and
+    # `53_mech_report` cannot return a verdict -- it defaulted to "erased" when this was absent.
+    # Needs `sft` first (forward on the invented transform) before the ladder has a start point.
+    ("P4 never-had control",  ["fmt_novel"],  ["llama32-3b"], [17],      "core",    "small"),
+    ("P4 control ladder",     ["fmt_novel"],  ["llama32-3b"], [17],      "relearn", "relearn"),
     ("P5 gemma3-4b",          CORE + READY,   ["gemma3-4b"],  [17],      "full",    "small"),
     ("P6 olmo2-1b",           CORE + READY,   ["olmo2-1b"],   [17],      "full",    "small"),
 ]
@@ -138,6 +145,33 @@ def adapter_complete(domain: str, model: str, arm: str, seed: int) -> bool:
         return bool((json.loads(mf.read_text()).get("adapter") or {}).get("sha256"))
     except Exception:
         return False
+
+
+#: Cells whose base gate PRECONDITION IS INVERTED. `fmt_novel` encodes the same documents as
+#: `fmt` in an invented format no pretraining corpus contains, so the base scores at floor by
+#: construction -- that is the point, not a defect. It is the never-had baseline the relearning
+#: curves are read against, and a cell the base can already do would be useless as one. So the
+#: normal clause ("the base can do this") is replaced by its mirror ("the base cannot"), checked
+#: rather than assumed: the gate still runs and its rates must be at floor in BOTH directions.
+CONTROL_CELLS = {"fmt_novel"}
+CONTROL_FLOOR = 0.10
+
+
+def control_gate_ok(domain: str, model: str) -> bool | None:
+    """For a never-had control: the gate must have RUN and found the base at floor."""
+    files = [f for f in sorted((RESULTS_DIR / "base_gates" / domain).glob(f"{model}_*.json"))
+             if "_failures_" not in f.name]
+    for f in reversed(files):
+        try:
+            d = json.loads(f.read_text())
+        except Exception:
+            continue
+        dirs = d.get("directions") or {}
+        if not dirs:
+            continue
+        rates = [v.get("rate", v.get("rate_uncapped", 1.0)) for v in dirs.values()]
+        return bool(rates) and max(rates) < CONTROL_FLOOR
+    return None
 
 
 def gate_passed(domain: str, model: str) -> bool | None:
@@ -347,10 +381,15 @@ def main() -> int:
         for model in models:
             for seed in seeds:
                 for cell in cells:
-                    g = gate_passed(cell, model)
+                    if cell in CONTROL_CELLS:
+                        g = control_gate_ok(cell, model)
+                        why = ("gate not run" if g is None else
+                               f"base is NOT at floor (>={CONTROL_FLOOR}); useless as a never-had control")
+                    else:
+                        g = gate_passed(cell, model)
+                        why = "gate not run" if g is None else "gate FAILED"
                     if g is not True:
-                        blocked.append((label, cell, model,
-                                        "gate not run" if g is None else "gate FAILED"))
+                        blocked.append((label, cell, model, why))
                         continue
                     # THE KEY MUST BE BUILT THE SAME WAY THE JOB NAME IS. Adding the `_mech`
                     # tag suffix to job names broke this comparison silently: the guard asked for

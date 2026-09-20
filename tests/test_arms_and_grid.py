@@ -1089,25 +1089,29 @@ def test_runner_surfaces_the_submitters_stderr_on_success():
 
 
 def test_mechanism_tier_writes_its_own_tag_and_does_not_shadow_the_main_run():
-    """A tier that scores a different arm set must not reuse the main run's tag.
+    """Two tiers must never write the same run directory for the same cell.
 
     The relearn eval scores base + sft + four relearn arms; the main eval scores twelve. They
-    cannot be merged -- contrasts are only valid within a pass -- so writing both to `small_s17`
-    would leave whichever ran last, silently replacing a 12-arm result with a 6-arm one.
+    cannot be merged -- contrasts are only valid within a pass -- so sharing a directory would
+    leave whichever ran last, silently replacing a 12-arm result with a 6-arm one.
+
+    The invariant is per (cell, model, seed, tag), NOT per tier: two different CELLS may share a
+    tag, and `fmt_novel` legitimately uses `small` for its core arms because it has no `full` run.
     """
     r = _runner()
-    tags = {}
-    for entry in r.PLAN:
-        label, cells, models, seeds, tier, tag = entry
-        tags.setdefault(tier, set()).add(tag)
-    assert len(tags) > 1, "no tier other than the default; this test is checking nothing"
     seen = {}
-    for tier, ts in tags.items():
-        for t in ts:
-            assert t not in seen or seen[t] == tier, (
-                f"tag {t!r} is used by both {seen[t]!r} and {tier!r}; the two runs would "
-                f"overwrite each other")
-            seen[t] = tier
+    for label, cells, models, seeds, tier, tag in r.PLAN:
+        for cell in cells:
+            for model in models:
+                for seed in seeds:
+                    key = (cell, model, seed, tag)
+                    if key in seen and seen[key] != tier:
+                        raise AssertionError(
+                            f"{cell}/{model}/s{seed} tag {tag!r} is written by both "
+                            f"{seen[key]!r} and {tier!r}; one would overwrite the other")
+                    seen[key] = tier
+    tiers = {t for _, _, _, _, t, _ in r.PLAN}
+    assert len(tiers) > 1, "no tier other than the default; this test is checking nothing"
 
 
 def test_relearn_eval_carries_sft_so_the_ladder_has_its_baseline():
@@ -1144,3 +1148,36 @@ def test_inflight_key_matches_the_job_name_for_every_planned_tag():
                         assert name.split("_", 1)[1] == key, (
                             f"{name!r} does not strip back to {key!r}; the in-flight check "
                             f"would never match this job")
+
+
+def test_never_had_control_uses_the_inverted_gate():
+    """`fmt_novel` must FAIL a normal base gate; that is its precondition, not a defect.
+
+    It encodes `fmt`'s documents in an invented format, so the base scores at floor by
+    construction. A cell the base could already do would be useless as a never-had baseline. The
+    normal clause is therefore replaced by its mirror and still CHECKED: the gate runs, and the
+    base's rates must be at floor in both directions.
+    """
+    r = _runner()
+    assert "fmt_novel" in r.CONTROL_CELLS
+    planned = {c for _, cells, *_ in r.PLAN for c in cells}
+    assert "fmt_novel" in planned, "the control is not in the plan; P4 cannot reach a verdict"
+    # It must NOT be judged by the ordinary rule.
+    assert r.gate_passed is not r.control_gate_ok
+
+
+def test_mech_report_abstains_without_the_never_had_control():
+    """A missing control must not read as evidence for erasure.
+
+    `outruns_never_had_at_k` is only set when the fmt_novel curve is on disk. With it absent
+    every domain scored 0 and the vote returned a confident 'erased' -- the opposite of what the
+    curves show. The other three experiments already abstain when their inputs are missing.
+    """
+    from pathlib import Path
+
+    src = (Path(__file__).resolve().parents[1] / "scripts" / "53_mech_report.py").read_text()
+    block = src[src.index("if relearn:"):src.index("=== 7. spectral")]
+    assert "have_control" in block, "the relearn vote does not check for the control"
+    idx_guard = block.index("have_control")
+    idx_vote = block.index('votes["relearn"]')
+    assert idx_guard < idx_vote, "the vote is cast before the control is checked for"

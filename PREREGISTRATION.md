@@ -1498,3 +1498,33 @@ in information kept but in how often a well-formed answer is produced at all.
 (≈0.59 / 0.42 / 0.30 / 0.16 / 0.00), so the ordering is not an artifact of the varying
 format-failure tax. The ladder is reportable as a BASE-MODEL descriptive result; the arms are
 not run on these cells, because a criterion the cells fail decisively is not one to argue with.
+
+### Amendment 32 — 2026-09-20, the never-had control and its inverted gate
+
+**`fmt_novel` is exempt from the base gate's normal clause, and subject to its mirror.** Every
+other cell must show the untouched model CAN already do the reverse direction, or a later drop
+measures nothing. For the never-had control the requirement is the opposite: it encodes `fmt`'s
+documents in an invented format (fixed sigil alphabet, reversible key mangle) that no
+pretraining corpus contains, so the base scores at floor by construction. A control the base
+could already do would be useless as one.
+
+The exemption is not a waiver. The gate still RUNS, and the control's precondition is checked:
+the base's rate must be **below 0.10 in both directions**. `CONTROL_CELLS` names the cells this
+applies to; adding one is a registered decision, not a convenience.
+
+**Why the control is required before any mechanism claim.** The P4 curves are striking — 10
+reversed pairs recover 55–171 % of what 6,500 forward pairs destroyed, and by k=1000 four of
+five cells exceed their own base. But "fast" is not a property of a curve; it is a comparison.
+Without the never-had baseline there is no scale, and the recovery could simply be how quickly
+this model learns this kind of task from any starting point.
+
+**A defect this exposed, recorded because it produced a confident wrong answer.**
+`53_mech_report.py` sets `outruns_never_had_at_k` only when the control curve is on disk, then
+voted `"suppressed" if outrun > len(relearn)/2 else "erased"`. With the control absent, every
+domain scored zero and the report printed **`relearn  erased`** and **`unanimous: ['erased']`** —
+the opposite of what the curves show, stated without qualification. The other three experiments
+already abstain when their inputs are missing; this one rendered **absence of evidence as
+evidence**. It now abstains and says why, and "unanimous" requires more than one voter.
+
+**Seventeenth instance of the standing pattern.** A missing comparison ≠ a comparison that came
+out unfavourable.

@@ -164,10 +164,20 @@ def main() -> int:
         if r.get("outruns_never_had_at_k"):
             print(f"               outruns the never-had control at k = {r['outruns_never_had_at_k']}")
     if relearn:
-        outrun = sum(1 for r in relearn.values() if r.get("outruns_never_had_at_k"))
-        votes["relearn"] = "suppressed" if outrun > len(relearn) / 2 else "erased"
-        print(f"  -> {outrun}/{len(relearn)} domains relearn faster than a capability never had: "
-              f"{votes['relearn']}")
+        # THE VOTE REQUIRES THE CONTROL. `outruns_never_had_at_k` is only set when the
+        # `fmt_novel` curve is on disk, so with the control missing every domain scored 0 and
+        # this returned a confident "erased" -- the OPPOSITE of what the curves show (10 pairs
+        # recovering 55-171 % of a 6,500-pair loss). The other three experiments already abstain
+        # when their inputs are absent; this one rendered absence of evidence as evidence.
+        have_control = any("control" in r for r in relearn.values())
+        if not have_control:
+            print(f"  -> NO VERDICT: the never-had control (fmt_novel) has not been run, and "
+                  f"'fast' is only meaningful against it. {len(relearn)} domain curve(s) on disk.")
+        else:
+            outrun = sum(1 for r in relearn.values() if r.get("outruns_never_had_at_k"))
+            votes["relearn"] = "suppressed" if outrun > len(relearn) / 2 else "erased"
+            print(f"  -> {outrun}/{len(relearn)} domains relearn faster than a capability never had: "
+                  f"{votes['relearn']}")
 
     print("\n=== 7. spectral repair: does removing a component of the update restore the reverse? ===")
     for d, r in sorted(spectral.items()):
@@ -193,9 +203,14 @@ def main() -> int:
     else:
         for k, v in votes.items():
             print(f"  {k:<14s} {v}")
+        # "unanimous" needs more than one voter. With a single experiment reporting, this said
+        # "unanimous: ['erased']" off one defaulted vote.
         agree = len(set(votes.values())) == 1
-        print(f"  {'unanimous' if agree else 'SPLIT — report the disagreement, do not average it'}: "
-              f"{sorted(set(votes.values()))}")
+        if len(votes) < 2:
+            head = f"single experiment reporting ({', '.join(votes)}); not a converged verdict"
+        else:
+            head = "unanimous" if agree else "SPLIT — report the disagreement, do not average it"
+        print(f"  {head}: {sorted(set(votes.values()))}")
 
     out = a.out or (RESULTS_DIR / "mech" / "verdict.json")
     out.parent.mkdir(parents=True, exist_ok=True)
