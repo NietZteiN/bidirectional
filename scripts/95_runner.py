@@ -173,6 +173,16 @@ def cell_state(domain: str, model: str, seed: int, tier: str = "full",
     return todo, evald
 
 
+def job_key(cell: str, model: str, seed: int, tag: str = "small") -> str:
+    """The identity a job name encodes, built in ONE place.
+
+    `squeue_ours` recovers this by stripping the `tr_`/`ev_` prefix, so it has to be assembled
+    exactly as the name is or the in-flight check compares two different strings and always
+    misses. Keep this and the `submit(...)` name arguments in step.
+    """
+    return f"{cell}_{model}_s{seed}" + ("" if tag == "small" else f"_{tag}")
+
+
 def partition_for(cell: str) -> str:
     """Which partitions this cell may be placed on, most-permissive first.
 
@@ -342,7 +352,11 @@ def main() -> int:
                         blocked.append((label, cell, model,
                                         "gate not run" if g is None else "gate FAILED"))
                         continue
-                    if f"{cell}_{model}_s{seed}" in inflight_cells:
+                    # THE KEY MUST BE BUILT THE SAME WAY THE JOB NAME IS. Adding the `_mech`
+                    # tag suffix to job names broke this comparison silently: the guard asked for
+                    # `code_llama32-3b_s17` while the queue held `code_llama32-3b_s17_mech`, so
+                    # every mechanism cell looked absent and `code` was submitted twice.
+                    if job_key(cell, model, seed, tag) in inflight_cells:
                         continue          # already queued or running; never submit it twice
                     todo, evald = cell_state(cell, model, seed, tier, tag)
                     if not todo and evald:
@@ -384,8 +398,7 @@ def main() -> int:
                     "--seed", str(seed), "--arms", ",".join(todo)]
             if a.force_arm:
                 pack.append("--force")        # retrain over the stale adapter; nothing is deleted
-            jid = submit(f"tr_{cell}_{model}_s{seed}" + ("" if tag == "small" else f"_{tag}"),
-                         pack, part, t, dry=a.dry_run)
+            jid = submit("tr_" + job_key(cell, model, seed, tag), pack, part, t, dry=a.dry_run)
             print(f"[runner] {label}: train {cell}/{model}/s{seed} on {part} "
                   f"({len(todo)} arms, {t}) -> {jid}")
             if jid is None:
@@ -396,7 +409,7 @@ def main() -> int:
         extra = ["sft"] if tier == "relearn" else []
         arms = ",".join(["base"] + extra + resolvable(cell, model, tier))
         ev_time = "06:00:00" if cell in SLOW_EVAL else "03:00:00"
-        ev = submit(f"ev_{cell}_{model}_s{seed}" + ("" if tag == "small" else f"_{tag}"),
+        ev = submit("ev_" + job_key(cell, model, seed, tag),
                     ["-m", "bidir.evaluate", "--domain", cell, "--model", model,
                      "--seed", str(seed), "--arms", arms, "--tag", tag],
                     part, ev_time, dep=jid, dry=a.dry_run)

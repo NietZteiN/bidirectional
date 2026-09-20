@@ -860,6 +860,9 @@ def test_runner_never_queues_a_cell_that_is_already_in_flight():
     # fmt/s17 is already queued, and it still has an arm to train, so it stays "ready".
     r.squeue_ours = lambda: [("tr_fmt_llama32-3b_s17", "RUNNING")]
     r.PLAN = [("test", ["fmt"], ["llama32-3b"], [17], "full", "small")]
+    assert r.job_key("fmt", "llama32-3b", 17, "small") == "fmt_llama32-3b_s17"
+    assert r.job_key("fmt", "llama32-3b", 17, "mech") == "fmt_llama32-3b_s17_mech", (
+        "the in-flight key must carry the tag, or a tagged job name never matches it")
     if r.gate_passed("fmt", "llama32-3b") is not True:
         import pytest
         pytest.skip("fmt gate has not passed here; nothing would be submitted either way")
@@ -1121,3 +1124,23 @@ def test_relearn_eval_carries_sft_so_the_ladder_has_its_baseline():
     from bidir import arms as A
     for a in r.resolvable("code", "llama32-3b", "relearn"):
         assert A.resolve(a).init_from == "sft", f"{a} does not start from the collapsed model"
+
+
+def test_inflight_key_matches_the_job_name_for_every_planned_tag():
+    """The guard strips `tr_`/`ev_` off a job name and compares; both sides must agree.
+
+    Adding the `_mech` tag suffix to job names broke this silently -- the guard asked for
+    `code_llama32-3b_s17` while the queue held `code_llama32-3b_s17_mech`, so every mechanism
+    cell read as absent and `code` was submitted twice on 2026-09-20.
+    """
+    r = _runner()
+    for label, cells, models, seeds, tier, tag in r.PLAN:
+        for cell in cells:
+            for model in models:
+                for seed in seeds:
+                    key = r.job_key(cell, model, seed, tag)
+                    for prefix in ("tr_", "ev_"):
+                        name = prefix + key
+                        assert name.split("_", 1)[1] == key, (
+                            f"{name!r} does not strip back to {key!r}; the in-flight check "
+                            f"would never match this job")
