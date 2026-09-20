@@ -1528,3 +1528,36 @@ evidence**. It now abstains and says why, and "unanimous" requires more than one
 
 **Seventeenth instance of the standing pattern.** A missing comparison ≠ a comparison that came
 out unfavourable.
+
+### Amendment 33 — 2026-09-20, the mechanism claim is stated at small k
+
+**The never-had control ran and the registered vote returns `suppressed`, 6/6 domains.** The
+control's precondition was met exactly: `fmt_novel`'s base scores **0.0000 in both directions**,
+a true floor, so its relearning curve is acquisition from nothing.
+
+**But the registered statistic hides where the evidence is.** `outruns_never_had_at_k` counts a
+domain that beats the control at ANY k, and the margin is strongly k-dependent:
+
+| k | median margin over control | domains ahead |
+|---|---|---|
+| 10 | **+0.428** | **6/6** |
+| 50 | +0.117 | 5/6 |
+| 200 | +0.012 | 3/6 |
+| 1000 | −0.012 | 2/6 |
+
+At k=10 the control is at 0.098 — a genuinely novel capability has barely begun — while every
+collapsed cell sits at 0.44–0.75. That gap is the finding: **the collapsed model recovers from
+ten examples what a never-had model cannot learn from ten examples**, which is what latent,
+masked knowledge looks like. By k=200 both have seen enough data to approach the task ceiling,
+and convergence there is EXPECTED; it is evidence for neither account. `sql` illustrates the
+danger of the unqualified vote — it counts as "outruns" on k=10 alone while sitting 0.21 BELOW
+the control at k=1000.
+
+**So the claim is stated at small k**, with the full curve reported and the convergence shown
+rather than omitted. The registered vote is kept as-is and reported as-is; this amendment adds
+the per-k margin alongside it so the vote cannot be read as uniform dominance. No threshold or
+criterion changes.
+
+**The verdict remains provisional.** One of four mechanism experiments has reported. Elicitation,
+adapter scaling and spectral repair have not run, and the report now says "single experiment
+reporting; not a converged verdict" rather than "unanimous".

@@ -178,6 +178,21 @@ def main() -> int:
             votes["relearn"] = "suppressed" if outrun > len(relearn) / 2 else "erased"
             print(f"  -> {outrun}/{len(relearn)} domains relearn faster than a capability never had: "
                   f"{votes['relearn']}")
+            # WHERE THE EVIDENCE LIVES. The registered vote counts a domain that outruns the
+            # control at ANY k, which hides that the margin is not uniform: at k=10 a never-had
+            # capability is still at floor, so a collapsed model recovering there had something
+            # to recover. By k=200 both have seen enough data to approach the task ceiling and
+            # convergence is expected -- it is not evidence either way, and reading the vote
+            # alone would suggest a dominance that only k=10 supports.
+            for k in (10, 50, 200, 1000):
+                margins = [r[f"relearn{k}"] - r["control"][f"relearn{k}"]
+                           for r in relearn.values()
+                           if r.get(f"relearn{k}") is not None
+                           and (r.get("control") or {}).get(f"relearn{k}") is not None]
+                if margins:
+                    pos = sum(1 for m in margins if m > 0)
+                    print(f"     k={k:<5d} margin over control: median {sorted(margins)[len(margins)//2]:+.3f}, "
+                          f"{pos}/{len(margins)} domains ahead")
 
     print("\n=== 7. spectral repair: does removing a component of the update restore the reverse? ===")
     for d, r in sorted(spectral.items()):
