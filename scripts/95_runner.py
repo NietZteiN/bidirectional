@@ -58,6 +58,12 @@ FORMAT_BLOCKED = ["diacritics", "algebra", "algebra_rev", "fmt", "fmt_det75"]
 #: is a question with something to measure. Taken from the recorded verdicts, not from intuition:
 #: each of these meets the pre-registered criterion (<= -50 % relative on strict reverse).
 COLLAPSED = ["code", "sql", "fmt", "mt_de-en", "mt_zh-en", "mt_en-zh"]
+#: Same criterion, applied to each model's own recorded verdict -- collapse is NOT a property of
+#: the cell alone. `sql` collapses on llama32-3b (-53.7 %) and not on gemma3-4b (-4.8 %), and
+#: `relation` never collapses anywhere. Running a relearning ladder where nothing collapsed
+#: would measure recovery from a loss that did not happen.
+GEMMA_COLLAPSED = ["code", "mt_de-en", "mt_en-de", "mt_en-zh", "mt_zh-en"]
+OLMO_COLLAPSED = ["mt_de-en", "mt_en-de"]
 
 #: (label, cells, models, seeds, tier, tag). `tier` picks the arm set; `tag` names the run
 #: directory, and MUST differ between tiers -- a mechanism eval scores a different arm set, and
@@ -76,6 +82,26 @@ PLAN = [
     ("P4 control ladder",     ["fmt_novel"],  ["llama32-3b"], [17],      "relearn", "relearn"),
     ("P5 gemma3-4b",          CORE + READY,   ["gemma3-4b"],  [17],      "full",    "small"),
     ("P6 olmo2-1b",           CORE + READY,   ["olmo2-1b"],   [17],      "full",    "small"),
+
+    # --- added 2026-09-21 -----------------------------------------------------------------
+    # Does "suppressed, not erased" replicate off llama32-3b? The control is MODEL-SPECIFIC --
+    # tau and the never-had curve are both read from the model's own base -- so each model needs
+    # its own fmt_novel before its ladder means anything. Collapsed cells are taken from the
+    # recorded verdicts: gemma3-4b collapses on 5, olmo2-1b on 2.
+    ("P4b control gemma",     ["fmt_novel"],  ["gemma3-4b"],  [17],      "core",    "small"),
+    ("P4b ladder gemma",      ["fmt_novel"],  ["gemma3-4b"],  [17],      "relearn", "relearn"),
+    ("P4b mechanism gemma",   GEMMA_COLLAPSED, ["gemma3-4b"], [17],      "relearn", "relearn"),
+    ("P4c control olmo",      ["fmt_novel"],  ["olmo2-1b"],   [17],      "core",    "small"),
+    ("P4c ladder olmo",       ["fmt_novel"],  ["olmo2-1b"],   [17],      "relearn", "relearn"),
+    ("P4c mechanism olmo",    OLMO_COLLAPSED, ["olmo2-1b"],   [17],      "relearn", "relearn"),
+
+    # Seed replication on the second and third models.
+    ("P5b gemma3-4b s42",     CORE + READY,   ["gemma3-4b"],  [42],      "full",    "small"),
+    ("P6b olmo2-1b s42",      CORE + READY,   ["olmo2-1b"],   [42],      "full",    "small"),
+
+    # P7, the scale question. Gates are queued; cells stay blocked until they pass.
+    ("P7 llama31-8b",         CORE + READY,   ["llama31-8b"], [17],      "full",    "small"),
+    ("P7 gemma3-12b",         CORE + READY,   ["gemma3-12b"], [17],      "full",    "small"),
 ]
 
 #: Long-sequence or two-model cells: an a30 placement does not finish in a sane walltime.
