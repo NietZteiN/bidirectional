@@ -1200,6 +1200,9 @@ def test_walltime_floor_comes_from_what_previous_runs_actually_took():
         "tr_other_llama32-3b_s17|COMPLETED|09:00:00",     # different cell: must be ignored
         "tr_fmt_novel_llama32-3b_s17|FAILED|00:00:03",    # a crash teaches nothing about time
         "ev_fmt_novel_llama32-3b_s17|COMPLETED|08:00:00", # an eval is not a train pack
+        # A DIFFERENT TIER of the same cell. 4 cheap arms against 11: matching on the cell alone
+        # made a full-tier run the floor for a relearn pack, a 20x over-request.
+        "tr_fmt_novel_llama32-3b_s17_relearn|COMPLETED|00:30:00",
     ])
 
     class _R:
@@ -1214,6 +1217,14 @@ def test_walltime_floor_comes_from_what_previous_runs_actually_took():
     assert abs(h - 4.806) < 0.01, f"expected the 4:48:23 TIMEOUT to set the floor, got {h}"
     # A TIMEOUT counts: it is a lower bound on what the job needed, which is the point.
     assert h > 1.4, "a completed shorter run must not lower the floor below a timeout"
+
+    r.subprocess.run = lambda *a, **k: _R()
+    try:
+        h_relearn = r.measured_floor_hours("fmt_novel", "llama32-3b", "relearn")
+    finally:
+        r.subprocess.run = orig
+    assert abs(h_relearn - 0.5) < 0.01, (
+        f"the relearn floor must come from relearn runs only, got {h_relearn}")
 
 
 def test_walltime_floor_is_never_a_cap():

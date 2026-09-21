@@ -243,7 +243,7 @@ def job_key(cell: str, model: str, seed: int, tag: str = "small") -> str:
     return f"{cell}_{model}_s{seed}" + ("" if tag == "small" else f"_{tag}")
 
 
-def measured_floor_hours(cell: str, model: str) -> float:
+def measured_floor_hours(cell: str, model: str, tag: str = "small") -> float:
     """Never ask for less walltime than a previous run of this cell actually used.
 
     The analytic estimate is a table of constants (`_BASE_UNIT_H`, `_A30_FACTOR`, a long-sequence
@@ -263,11 +263,19 @@ def measured_floor_hours(cell: str, model: str) -> float:
             capture_output=True, text=True, timeout=30).stdout
     except Exception:
         return 0.0
-    want = f"tr_{cell}_{model}_s"
+    # TIER-SCOPED. Job names carry the tag, and a relearn pack is a different animal from a
+    # full-tier pack of the same cell: 4 cheap arms against 11. Matching on the cell alone made
+    # a 4.4 h full-tier run the floor for a 0.22 h relearn pack -- a 20x over-request. The
+    # suffix is the only thing that distinguishes them.
+    suffix = "" if tag == "small" else f"_{tag}"
     best = 0.0
     for line in out.splitlines()[1:]:
         parts = line.split("|")
-        if len(parts) < 3 or not parts[0].startswith(want):
+        if len(parts) < 3:
+            continue
+        name = parts[0]
+        m = re.fullmatch(rf"tr_{re.escape(cell)}_{re.escape(model)}_s\d+{re.escape(suffix)}", name)
+        if not m:
             continue
         if parts[1] not in ("COMPLETED", "TIMEOUT"):
             continue
@@ -503,7 +511,7 @@ def main() -> int:
             # The measured floor is for whatever pack that run held; scale it by the share of
             # this tier still to do, or a one-arm resume would request the whole pack's hours.
             full_units = A.units(resolvable(cell, model, tier)) or units
-            floor = measured_floor_hours(cell, model) * 1.3 * min(1.0, units / full_units)
+            floor = measured_floor_hours(cell, model, tag) * 1.3 * min(1.0, units / full_units)
             if floor > est:
                 print(f"[runner] {cell}/{model}: estimate {est:.2f} h below measured floor "
                       f"{floor:.2f} h (a previous run of this cell took longer); using the floor")
