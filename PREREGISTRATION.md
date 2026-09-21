@@ -1561,3 +1561,45 @@ criterion changes.
 **The verdict remains provisional.** One of four mechanism experiments has reported. Elicitation,
 adapter scaling and spectral repair have not run, and the report now says "single experiment
 reporting; not a converged verdict" rather than "unanimous".
+
+### Amendment 34 — 2026-09-21, collapse magnitude is seed-dependent for partial collapses
+
+Seed replication now covers seven (cell, model) pairs with two or more seeds, and the spread in
+relative reverse change splits cleanly:
+
+| cell / model | seeds | spread |
+|---|---|---|
+| mt_de-en / llama32-3b | −100 / −100 / −100 | 0 pp |
+| mt_de-en / gemma3-4b | −100 / −100 | 0 pp |
+| relation / gemma3-4b | +1 / +1 | 0 pp |
+| mt_en-de / llama32-3b | −14 / −12 / −14 | 2 pp |
+| code / llama32-3b | −94 / −88 / −88 | 6 pp |
+| **sql / llama32-3b** | **−68 / −55 / −29** | **38 pp** |
+| **mt_en-de / gemma3-4b** | **−97 / −31** | **66 pp** |
+
+**The pattern is not random.** Every cell that collapses TOTALLY is perfectly stable — a floor
+effect, since a rate at 0.000 cannot vary downward. The unstable cells are exactly the PARTIAL
+collapses, which sit in a regime where the outcome is genuinely bimodal: `mt_en-de/gemma3-4b`
+gives `sft` reverse 0.021 at s17 and 0.521 at s42, from an identical base (0.752 both) and a
+near-identical forward (0.770 / 0.771). This is not measurement noise; it is the fine-tune
+landing in one of two states.
+
+**Consequences, all restrictive.**
+
+1. **No single-seed collapse magnitude may be quoted as a point estimate** for a partial-collapse
+   cell. The seed range is reported, or the number is not reported.
+2. **`sql/llama32-3b` straddles the registered −50 % criterion**: s17 (−55 %) and s1234 (−68 %)
+   qualify as COLLAPSED, s42 (−29 %) does not. Its collapse verdict is therefore seed-dependent
+   and must be stated as such wherever it appears.
+3. **P4's mechanism cell lists were drawn from s17 alone.** That remains correct as a
+   description of which adapters the ladders actually started from — a relearning curve is a
+   property of the checkpoint it resumes, not of the cell in the abstract — but the `sql` ladder
+   must be labelled as starting from a seed that collapsed, not from "the" collapsed `sql`.
+4. Cells reaching the 0.000 floor are unaffected: `mt_de-en` on both models is −100 % at every
+   seed tested.
+
+**Not changed:** the collapse criterion, the arms, or any threshold. This amendment constrains
+what may be *claimed* from the numbers already collected.
+
+**Eighteenth instance of the standing pattern.** One seed's collapse magnitude ≠ the cell's
+collapse magnitude.
