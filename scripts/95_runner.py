@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 """Hold a fixed number of jobs in flight and feed them from the priority queue.
 
-    python scripts/95_runner.py                             # top up to 3 (the default) and exit
+    python scripts/95_runner.py                             # top up to 12 (the default) and exit
     python scripts/95_runner.py --dry-run
     python scripts/95_runner.py --status                    # what is in flight and what is next
 
@@ -11,10 +11,21 @@ bursts and then the queue drained while nobody was looking. The remaining ~378 G
 ~18 days at that rate. Holding a steady allocation is worth more than any speedup to the code:
 at 3 sustained slots it is ~5 days.
 
-THE DEFAULT IS 7, raised from 3 on 2026-09-18 when obtune finished and released its share of
-the account. It is a NEGOTIATED number, not a technical limit: the account is shared, and the
-figure should drop again if another project starts up. $BIDIR_JUNO_SHARE applies the same
-discipline to the h200/normal QoS pool, which is a separate and finer-grained budget.
+THE DEFAULT IS 12, raised from 7 on 2026-09-21. The ceiling is not one number, because the
+limits are asymmetric. Queried from Slurm rather than assumed:
+
+    juno QoS (h200 + normal)   MaxJobsPU=4      hard, and PER USER -- so it is shared across
+                               MaxSubmitJobsPU=100   every project this account runs
+    h100, a30                  no job-count limit    bounded only by physical contention
+
+So the real cap is 4 on h200 plus whatever the uncapped partitions yield: ~9 h100 GPUs and 4
+a30s plus MIG slices, contested by ~50 users. 12 is 4 + 8 opportunistic. Queueing beyond what
+we can win costs nothing (MaxSubmitJobsPU is 100) but gains nothing either.
+
+$BIDIR_JUNO_SHARE stays at 3 of the 4, NOT 4. The pool is per user, so taking all of it would
+starve this account's other projects on h200 -- and `probing` has an ARR deadline of 2026-10-12,
+which is nearer than ours. That is a scheduling courtesy, not a technical requirement; raise it
+if the priorities change.
 
 IT PREFERS THE UNCAPPED PARTITIONS. `h100` and `a30` carry no QoS, so four jobs there cost the
 `juno` pool nothing and squeeze no neighbouring project -- the account shares that pool of 4
@@ -390,11 +401,11 @@ def submit(name, argv, partition, time, dep=None, cpus=16, mem="64G", dry=False)
 
 def main() -> int:
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    ap.add_argument("--max-inflight", type=int, default=7,
-                    help="cells in flight at once (default 7). A cell is one train job plus its "
+    ap.add_argument("--max-inflight", type=int, default=12,
+                    help="cells in flight at once (default 12). A cell is one train job plus its "
                          "eval, so this is the number of GPUs held, not the number of jobs. "
-                         "Seven is this project's share since obtune finished on 2026-09-18; it "
-                         "is negotiated, not technical, and should drop if another project starts.")
+                         "12 = the juno QoS hard cap of 4 on h200, plus ~8 opportunistic on the "
+                         "uncapped h100/a30 partitions, which carry no job-count limit.")
     ap.add_argument("--dry-run", action="store_true")
     ap.add_argument("--status", action="store_true")
     ap.add_argument("--stale-before", default=None, metavar="ISO8601",

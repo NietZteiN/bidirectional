@@ -11,3 +11,41 @@ thresholds_provenance:
   n: 200
   note: read from the BASE model's score distribution before any fine-tuned model
     was scored
+thresholds_by_model:
+  gemma3-4b:
+    forward:
+      comet: 0.84506
+    reverse:
+      comet: 0.850115
+  olmo2-1b:
+    forward:
+      comet: 0.698151
+    reverse:
+      comet: 0.625003
+  llama31-8b:
+    forward:
+      comet: 0.84409
+    reverse:
+      comet: 0.844345
+thresholds_provenance_by_model:
+  gemma3-4b:
+    model: gemma3-4b
+    date: '2026-09-18'
+    quantile: 0.25
+    n: 200
+    note: read from the BASE model's score distribution before any fine-tuned model
+      was scored
+  olmo2-1b:
+    model: olmo2-1b
+    date: '2026-09-18'
+    quantile: 0.25
+    n: 200
+    note: read from the BASE model's score distribution before any fine-tuned model
+      was scored
+  llama31-8b:
+    model: llama31-8b
+    date: '2026-09-21'
+    quantile: 0.25
+    n: 200
+    note: read from the BASE model's score distribution before any fine-tuned model
+      was scored
