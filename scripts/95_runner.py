@@ -217,6 +217,45 @@ def job_key(cell: str, model: str, seed: int, tag: str = "small") -> str:
     return f"{cell}_{model}_s{seed}" + ("" if tag == "small" else f"_{tag}")
 
 
+def measured_floor_hours(cell: str, model: str) -> float:
+    """Never ask for less walltime than a previous run of this cell actually used.
+
+    The analytic estimate is a table of constants (`_BASE_UNIT_H`, `_A30_FACTOR`, a long-sequence
+    multiplier) and it has been wrong in the dangerous direction: `fmt_novel`'s core pack was
+    sized at 4:48 on a30 and the walltime killed it with one arm left. Constants can be re-tuned
+    for ever; what a job of this exact shape DID take is not a guess.
+
+    Used as a FLOOR, never a cap, and deliberately crude: a run that was itself resumed did less
+    work than a fresh one, so this can only be an underestimate of the true need -- which is
+    still strictly better than a number that has already proved too small. Returns 0.0 when
+    there is nothing to learn from.
+    """
+    try:
+        out = subprocess.run(
+            ["sacct", "-u", getpass.getuser(), "-S", "2026-09-01", "-X", "-P",
+             "-o", "JobName,State,Elapsed"],
+            capture_output=True, text=True, timeout=30).stdout
+    except Exception:
+        return 0.0
+    want = f"tr_{cell}_{model}_s"
+    best = 0.0
+    for line in out.splitlines()[1:]:
+        parts = line.split("|")
+        if len(parts) < 3 or not parts[0].startswith(want):
+            continue
+        if parts[1] not in ("COMPLETED", "TIMEOUT"):
+            continue
+        el = parts[2].split("-")[-1].split(":")
+        try:
+            h = int(el[0]) + int(el[1]) / 60 + int(el[2]) / 3600
+        except (ValueError, IndexError):
+            continue
+        if "-" in parts[2]:                      # D-HH:MM:SS
+            h += int(parts[2].split("-")[0]) * 24
+        best = max(best, h)
+    return best
+
+
 def partition_for(cell: str) -> str:
     """Which partitions this cell may be placed on, most-permissive first.
 
@@ -424,7 +463,25 @@ def main() -> int:
         jid = None
         if todo:
             units = A.units(todo)
-            hours = min(47.0, max(2.0, units * pg._per_unit_hours(cell, "a30" if "a30" in part else "h100") * 1.6))
+            # SAFETY MARGIN, MEASURED NOT GUESSED. This was a flat 1.6 and it was not enough on
+            # a30: `fmt_novel`'s 5-arm core pack was sized at 4:48 and completed 4 of 5 arms
+            # before the walltime killed it (2026-09-20). Measured medians are 0.80 h/job on
+            # h100 and 2.22 h on a30 -- a ratio of 2.8, so _A30_FACTOR=3.0 is sound and the
+            # shortfall was the margin, not the rate. A timeout costs a whole queue wait (median
+            # 40-160 min) and the resume only preserves finished arms, whereas an over-long
+            # request costs nothing while we are waiting on Priority rather than backfill. So
+            # the margin is wider where the variance is: a30's p90/median spread is 4.4x.
+            on_a30 = "a30" in part
+            margin = 2.2 if on_a30 else 1.8
+            est = units * pg._per_unit_hours(cell, "a30" if on_a30 else "h100") * margin
+            # The measured floor is for whatever pack that run held; scale it by the share of
+            # this tier still to do, or a one-arm resume would request the whole pack's hours.
+            full_units = A.units(resolvable(cell, model, tier)) or units
+            floor = measured_floor_hours(cell, model) * 1.3 * min(1.0, units / full_units)
+            if floor > est:
+                print(f"[runner] {cell}/{model}: estimate {est:.2f} h below measured floor "
+                      f"{floor:.2f} h (a previous run of this cell took longer); using the floor")
+            hours = min(47.0, max(2.0, est, floor))
             t = f"{int(hours):02d}:{int((hours - int(hours)) * 60):02d}:00"
             # The walltime above is sized from `todo`, so the pack must be asked for `todo` and
             # not for the whole `full` tier. It was asked for "full": `relation` has 504 train

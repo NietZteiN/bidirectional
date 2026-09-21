@@ -1181,3 +1181,44 @@ def test_mech_report_abstains_without_the_never_had_control():
     idx_guard = block.index("have_control")
     idx_vote = block.index('votes["relearn"]')
     assert idx_guard < idx_vote, "the vote is cast before the control is checked for"
+
+
+def test_walltime_floor_comes_from_what_previous_runs_actually_took():
+    """A timeout is a measurement failure, so the request is floored by measurement.
+
+    `fmt_novel`'s 5-arm core pack was sized at 4:48 on a30 by a table of constants and the
+    walltime killed it with one arm left (2026-09-20). Constants can be re-tuned for ever; what
+    a job of this exact shape DID take is not a guess.
+    """
+    import subprocess as sp
+
+    r = _runner()
+    rows = "\n".join([
+        "JobName|State|Elapsed",
+        "tr_fmt_novel_llama32-3b_s17|TIMEOUT|04:48:23",
+        "tr_fmt_novel_llama32-3b_s17|COMPLETED|01:22:40",
+        "tr_other_llama32-3b_s17|COMPLETED|09:00:00",     # different cell: must be ignored
+        "tr_fmt_novel_llama32-3b_s17|FAILED|00:00:03",    # a crash teaches nothing about time
+        "ev_fmt_novel_llama32-3b_s17|COMPLETED|08:00:00", # an eval is not a train pack
+    ])
+
+    class _R:
+        stdout = rows
+    orig = r.subprocess.run
+    r.subprocess.run = lambda *a, **k: _R()
+    try:
+        h = r.measured_floor_hours("fmt_novel", "llama32-3b")
+    finally:
+        r.subprocess.run = orig
+
+    assert abs(h - 4.806) < 0.01, f"expected the 4:48:23 TIMEOUT to set the floor, got {h}"
+    # A TIMEOUT counts: it is a lower bound on what the job needed, which is the point.
+    assert h > 1.4, "a completed shorter run must not lower the floor below a timeout"
+
+
+def test_walltime_floor_is_never_a_cap():
+    """The floor may only raise a request, never lower one."""
+    r = _runner()
+    r.measured_floor_hours = lambda cell, model: 0.0
+    # With no history the floor contributes nothing and the analytic estimate stands.
+    assert r.measured_floor_hours("anything", "any") == 0.0
