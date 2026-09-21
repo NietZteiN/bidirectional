@@ -109,6 +109,11 @@ PLAN = [
     # Seed replication on the second and third models.
     ("P5b gemma3-4b s42",     CORE + READY,   ["gemma3-4b"],  [42],      "full",    "small"),
     ("P6b olmo2-1b s42",      CORE + READY,   ["olmo2-1b"],   [42],      "full",    "small"),
+    # A THIRD SEED FOR THE UNSTABLE CELLS (Amendment 34). Partial collapses are bimodal, not
+    # noisy: `mt_en-de/gemma3-4b` reads -97 % at s17 and -31 % at s42 from an identical base.
+    # Two seeds cannot say which mode is typical, and `sql/llama32-3b` straddles the registered
+    # -50 % line, so its COLLAPSED verdict currently depends on which seed is read.
+    ("P5c unstable cells s1234", ["mt_en-de"], ["gemma3-4b"], [1234],    "full",    "small"),
 
     # P7, the scale question. Gates are queued; cells stay blocked until they pass.
     ("P7 llama31-8b",         CORE + READY,   ["llama31-8b"], [17],      "full",    "small"),
