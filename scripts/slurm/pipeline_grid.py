@@ -174,13 +174,29 @@ _A30_FACTOR = 3.0
 _LONG_SEQ = {"code", "sql", "d2t", "coverage", "exec"}
 
 
-def _per_unit_hours(domain: str, partition: str) -> float:
+def _per_unit_hours(domain: str, partition: str, model: str = "llama32-3b") -> float:
+    """Hours per arm-unit. NOW INCLUDING MODEL SIZE, which was missing entirely.
+
+    This took (domain, partition) only, so a 12B model was budgeted exactly like a 1B one --
+    the single largest driver of training time was absent from the estimate. Three packs timed
+    out at 4:40 on 2026-09-21 for that reason (mt_en-zh/llama31-8b, mt_de-en and mt_en-de on
+    gemma3-12b). Measured on `sql`, the same cell across five models:
+
+        olmo2-1b   1B   2:29        gemma3-4b    4B   6:30
+        llama32-3b 3B   3:59        llama31-8b   8B   6:34
+                                    gemma3-12b  12B  12:05
+
+    The constants were tuned on llama32-3b, so the factor is relative to 3 GB. It is clamped at
+    1.0 so it can only ever LENGTHEN a request: the fit is loose (8B runs faster than linear,
+    4B slower), and on this cluster an over-request costs nothing while jobs wait on Priority
+    rather than backfill, whereas a timeout costs the whole queue wait again.
+    """
     h = _BASE_UNIT_H
     if partition == "a30":
         h *= _A30_FACTOR
     if domain in _LONG_SEQ:
         h *= 2.7
-    return h
+    return h * max(1.0, size_gb(model) / 3.0)
 
 
 def _already_trained(domain: str, model: str, arm: str, seed: int) -> bool:

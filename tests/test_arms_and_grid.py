@@ -1275,3 +1275,24 @@ def test_fmt_novel_is_kept_off_a30():
     assert "fmt_novel" in r.NO_A30
     assert "a30" not in r.partition_for("fmt_novel").split(",")
     assert "h100" in r.partition_for("fmt_novel").split(",")
+
+
+def test_walltime_estimate_accounts_for_model_size():
+    """_per_unit_hours took (domain, partition) only, so a 12B model was budgeted like a 1B one.
+
+    Model size is the largest single driver of training time and it was absent from the
+    estimate. Three packs timed out at 4:40 on 2026-09-21 because of it. Measured on `sql`, the
+    same cell across five models: 1B 2:29, 3B 3:59, 4B 6:30, 8B 6:34, 12B 12:05.
+    """
+    r = _runner()
+    pg = r._pg()
+    base = pg._per_unit_hours("mt_en-zh", "h100", "llama32-3b")
+    for bigger in ("gemma3-4b", "llama31-8b", "gemma3-12b"):
+        assert pg._per_unit_hours("mt_en-zh", "h100", bigger) > base, (
+            f"{bigger} is budgeted no higher than llama32-3b")
+    # Monotone in size, and never SHORTER than the 3B baseline the constants were tuned on.
+    sizes = ["olmo2-1b", "llama32-3b", "gemma3-4b", "llama31-8b", "gemma3-12b"]
+    hours = [pg._per_unit_hours("mt_en-zh", "h100", m) for m in sizes]
+    assert hours == sorted(hours), f"not monotone in model size: {dict(zip(sizes, hours))}"
+    assert pg._per_unit_hours("mt_en-zh", "h100", "olmo2-1b") == base, (
+        "a model smaller than the baseline must not SHORTEN the request")

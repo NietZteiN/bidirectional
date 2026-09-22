@@ -541,7 +541,7 @@ def main() -> int:
             # the margin is wider where the variance is: a30's p90/median spread is 4.4x.
             on_a30 = "a30" in part
             margin = 2.2 if on_a30 else 1.8
-            est = units * pg._per_unit_hours(cell, "a30" if on_a30 else "h100") * margin
+            est = units * pg._per_unit_hours(cell, "a30" if on_a30 else "h100", model) * margin
             # The measured floor is for whatever pack that run held; scale it by the share of
             # this tier still to do, or a one-arm resume would request the whole pack's hours.
             full_units = A.units(resolvable(cell, model, tier)) or units
