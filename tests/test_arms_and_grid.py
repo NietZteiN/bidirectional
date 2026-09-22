@@ -1233,3 +1233,45 @@ def test_walltime_floor_is_never_a_cap():
     r.measured_floor_hours = lambda cell, model: 0.0
     # With no history the floor contributes nothing and the analytic estimate stands.
     assert r.measured_floor_hours("anything", "any") == 0.0
+
+
+def test_relearn_ladder_is_not_queued_before_its_sft_exists():
+    """Every relearn arm has init_from="sft"; the pack refuses in 2-3 s without it.
+
+    The runner had no notion that one plan entry depends on another, so while `fmt_novel`'s core
+    tier kept timing out it resubmitted the ladder on every 15-minute pass: 10+ instant failures,
+    each orphaning an eval, producing 14 DependencyNeverSatisfied jobs (2026-09-21).
+    """
+    r = _runner()
+    from bidir import arms as A
+    for arm in A.TIERS["relearn"]:
+        assert A.resolve(arm).init_from == "sft"
+
+    calls = []
+    r.submit = lambda name, argv, partition, time, **kw: (calls.append(name), "999")[1]
+    r.squeue_ours = lambda: []
+    r.adapter_complete = lambda cell, model, arm, seed: False      # nothing trained at all
+    r.gate_passed = lambda cell, model: True
+    r.PLAN = [("t", ["code"], ["llama32-3b"], [17], "relearn", "relearn")]
+
+    import sys
+    argv = sys.argv
+    sys.argv = ["95_runner.py", "--max-inflight", "3"]
+    try:
+        r.main()
+    finally:
+        sys.argv = argv
+    assert not calls, f"queued a relearn ladder with no sft on disk: {calls}"
+
+
+def test_fmt_novel_is_kept_off_a30():
+    """Measured, not assumed: 4 timeouts on a30 against 17-23 minutes on h100.
+
+    tr_fmt_novel timed out at 2:00, 3:26, 4:48 and 6:36 on a30 across two models; the same work
+    finished in 00:17:10 and 00:23:25 on h100. A >15x penalty, where _A30_FACTOR assumes 3x, so
+    every walltime derived from that factor was short by construction.
+    """
+    r = _runner()
+    assert "fmt_novel" in r.NO_A30
+    assert "a30" not in r.partition_for("fmt_novel").split(",")
+    assert "h100" in r.partition_for("fmt_novel").split(",")

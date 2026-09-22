@@ -126,7 +126,14 @@ PLAN = [
 #: CPU and a 24,288-generation pass runs past any sane walltime. Both s42 MT evals timed out at
 #: 3 h that way on 2026-09-15. On an h100 the same 15 % is 12 GB and COMET stays on the GPU.
 NO_A30 = {"code", "sql", "d2t", "coverage", "exec", "relation",
-          "mt_en-de", "mt_de-en", "mt_en-zh", "mt_zh-en"}
+          "mt_en-de", "mt_de-en", "mt_en-zh", "mt_zh-en",
+          # `fmt_novel` added 2026-09-21 on measurement, not intuition. On a30 it timed out FOUR
+          # times (2:00, 3:26, 4:48, 6:36 across llama32-3b and gemma3-4b); on h100 the same work
+          # completes in 17-23 MINUTES. That is a >15x penalty, not the 3x `_A30_FACTOR` assumes,
+          # so no walltime derived from that factor can be right here. olmo2-1b does finish on an
+          # a30 (3:25), which fits the cause: a 24 GB card forces a tiny batch for a 3B+ model on
+          # this cell, and the slowdown is not linear.
+          "fmt_novel"}
 
 #: Cells whose eval scores a second neural metric (COMET) and therefore needs room for it.
 #: 6 h rather than 3: 12 arms x 1,012 instances x 2 directions is 24k generations plus scoring.
@@ -486,6 +493,17 @@ def main() -> int:
                     # every mechanism cell looked absent and `code` was submitted twice.
                     if job_key(cell, model, seed, tag) in inflight_cells:
                         continue          # already queued or running; never submit it twice
+                    # A RELEARN LADDER CANNOT START BEFORE THE THING IT RESUMES FROM. Every
+                    # relearn arm has init_from="sft", and the pack refuses in 2-3 seconds when
+                    # that adapter is absent. The runner did not know one plan entry depends on
+                    # another, so while `fmt_novel`'s core tier kept timing out it resubmitted
+                    # the ladder every pass: 10+ instant failures, each orphaning an eval, which
+                    # is where 14 DependencyNeverSatisfied jobs came from. Checking the same
+                    # precondition here turns a submission loop into a quiet skip.
+                    if tier == "relearn" and not adapter_complete(cell, model, "sft", seed):
+                        blocked.append((label, cell, model,
+                                        "sft not trained yet; the ladder resumes from it"))
+                        continue
                     todo, evald = cell_state(cell, model, seed, tier, tag)
                     if not todo and evald:
                         continue
