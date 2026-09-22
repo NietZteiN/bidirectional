@@ -27,6 +27,11 @@ thresholds_by_model:
       comet: 0.84409
     reverse:
       comet: 0.844345
+  gemma3-12b:
+    forward:
+      comet: 0.85914
+    reverse:
+      comet: 0.865201
 thresholds_provenance_by_model:
   gemma3-4b:
     model: gemma3-4b
@@ -44,6 +49,13 @@ thresholds_provenance_by_model:
       was scored
   llama31-8b:
     model: llama31-8b
+    date: '2026-09-21'
+    quantile: 0.25
+    n: 200
+    note: read from the BASE model's score distribution before any fine-tuned model
+      was scored
+  gemma3-12b:
+    model: gemma3-12b
     date: '2026-09-21'
     quantile: 0.25
     n: 200
