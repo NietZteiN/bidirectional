@@ -1603,3 +1603,365 @@ what may be *claimed* from the numbers already collected.
 
 **Eighteenth instance of the standing pattern.** One seed's collapse magnitude ≠ the cell's
 collapse magnitude.
+
+### Amendment 35 — 2026-10-03, exact unit-conversion expansion pilot
+
+Registered before any units model gate or tuned result is inspected. This exploratory domain
+adds reversible numerical conversion: m/cm, kg/g, h/min, and C/F. Forward maps from the first
+unit to the second; reverse restores the first. Values are exact hundredths sampled uniformly
+from [-10000,10000]. Negative values are mathematical inputs, including for length/mass/time;
+this task makes no physical-feasibility claim. Gold targets use exact affine/rational maps.
+Scoring accepts only a numeric decimal or exact fraction plus the requested unit, with exact
+rational equality; malformed output, wrong units, empty output and source echoes fail. There
+is no metric threshold or rounding tolerance. All splits are disjoint by dimension and
+canonical physical value, with 6500/500/1000 train/validation/test instances at seed 17.
+
+Compute-node gold/echo/empty/garbage oracle tests must pass before gates. Gate Llama 3B and
+Gemma 4B on all 1000 held-out rows in both directions, using unchanged eligibility
+rules. The full set replaces the proposed 200-row screening stage before any results
+are observed. Report both outcomes, including failures; do not alter the scorer to obtain a pass.
+The prediction is exploratory: no direction-specific collapse outcome is prespecified.
+For eligible models, pilot sft, rev, mix50, replay at seed 17 under the existing matched
+recipe, evaluating base plus all arms together. Promote valid eligible cells including
+null-collapse results to seeds 42/1234; no selective promotion based on beneficial outcomes.
+This version tests held-out quantities within the sampled range, not magnitude extrapolation
+or held-out conversion families. Those extensions require separate declarations.
+
+
+## Amendment 36 — Boolean-function generality pilot (October 3, 2026)
+
+Before any logic model outputs: add exploratory four-variable Boolean formula ↔
+complete truth-table tasks. Sample 6,500/500/1,000 distinct nonconstant functions
+uniformly without replacement from the 65,534-function space using seed 17.
+Construct canonical disjunctive formulas; group splits by the entire 16-bit truth
+vector, so equivalent expressions cannot leak across splits. Constants are excluded
+from sampling but permitted in generated model answers. Score forward answers as
+exact 16-bit strings and reverse answers by exhaustive equivalence over all 16
+assignments with a bounded syntax interpreter; reject explanations, invalid syntax,
+echoes, and empty answers. Alternate equivalent formulas are accepted.
+Run full 1,000-row base gates for Llama 3B and Gemma 4B under unchanged eligibility
+thresholds. Eligible models enter seed-17 sft/rev/mix50/replay pilots, in one fresh
+evaluation pass per model cell. Preserve failures and valid null results; only
+eligible, valid pilots may expand to seeds 42 and 1234. This does not claim
+held-out formula families or variable-count extrapolation. No threshold tuning
+based on model outputs.
+
+Pre-gate implementation audit: the initial logic prompts differed substantially
+in instruction length, producing a 1.10× reverse sequence-token budget. Before
+any model output, both prompts were changed to share the same syntax and row-order
+instructions, differing only in the requested representation. The exact scorer,
+corpus and semantic split definition are unchanged; repeat the budget audit before
+submitting gates. Reverse supervised-token exposure remains asymmetric and must
+be reported rather than claimed matched.
+
+
+## Amendment 37 — fixed-setting exploratory contrastive pilot (October 3, 2026)
+
+Before experimental contrastive training: run fmt and mt_de-en on Llama 3B and
+Gemma 4B, seed 17, only where existing gates pass. Engineering smokes are isolated
+in results/engineering_smokes and are excluded from paper tables. Use forward CE
+plus symmetric paired InfoNCE (cl_fwd), mix5 CE plus InfoNCE (cl_mix5), and forward
+CE plus shuffled InfoNCE (cl_shuffled). Fix lambda=0.1 and temperature=0.1 a priori
+for this exploratory pilot: this replaces the proposed validation grid, and no
+held-out result selects a setting. Independently encode raw sides without special
+tokens or a wrapper (the identical neutral wrapper is empty), final hidden-layer
+non-padding mean pooling, L2 normalization, no projection head, four fixed seeded
+training negatives per anchor independent of batch size. Exclude equivalent fmt
+documents and duplicate texts on either side; MT semantic false negatives remain
+a stated limitation. Shuffled positives use a fixed cyclic shift of the five B
+candidates per anchor, never the true pair. Every auxiliary training run must
+assert nonzero auxiliary adapter gradients on its first batch; never silently
+fall back to CE. Refuse truncation of isolated encodings.
+
+Use sft_extra_ce and mix5_extra_ce with six independent dropout CE passes averaged
+within each microstep as fixed compute proxies. Keep optimizer, schedule, unique
+pairs, three epochs, LoRA rank32, and effective batch64 matched; auxiliary arms use
+microbatch1 with accumulation64. Six CE passes are NOT claimed to equal actual
+contrastive FLOPs or time: report measured timings, memory and exposure, and bound
+interpretation by residual differences. Repeated CE evaluations expose the same
+examples, without extra unique pairs or optimizer steps. Record CE token exposures
+separately from contrastive side tokens/pair associations.
+
+Evaluate base, existing sft/mix5/replay/rev, and all five new arms together in one
+fresh pass per cell. Primary reverse-generation contrasts: cl_fwd−sft,
+cl_fwd−sft_extra_ce, cl_fwd−cl_shuffled, cl_mix5−mix5, cl_mix5−mix5_extra_ce. Report
+paired bootstrap 99% intervals (Bonferroni family of five within each cell), point
+estimates, forward retention, echo, off-target and validity. Do not infer recovery
+from retrieval gains or cross-pass subtraction. This pilot is exploratory across
+four cells, not a confirmatory claim with multiplicity controlled across cells.
+Promote valid implementations including null/adverse effects; do not select domains
+or seeds by benefit. Profile the complete trainer and controls before cost claims.
+
+
+## Amendment 38 — throughput-only batch refit (October 3, 2026)
+
+Before contrastive evaluation outputs: benchmark microbatch4 with accumulation1
+against the completed microbatch1/accumulation4 engineering smokes on identical
+seed17 fmt examples and two optimizer steps. Keep negative identities/count fixed
+per anchor and the objective averaged over anchors, independently of microbatch.
+Test equivalence of the loss and gradients across concatenated/split batches without
+dropout. If real-model contrastive and CE-control batch4 checks pass on Llama/Gemma
+within H100 memory, permit later arms to use microbatch4/accumulation16 instead of
+1/64, preserving effective batch64, unique examples, optimizer steps and schedule.
+Running arms continue unchanged. Record each arm's actual shape and acknowledge
+dropout/padding numerical differences; do not claim bitwise identical training.
+The selection criterion is valid gradients, memory fit and throughput only, never
+held-out generation performance. Failed benchmarks cannot alter experimental results.
+
+
+## Amendment 39 — bounded Python↔C++ program pilot (October 3, 2026)
+
+Before py_cpp model outputs: exploratory single-input integer arithmetic functions
+f(x) with one return expression, +/−/*, comparisons and conditional expressions.
+No calls, imports, includes, assignments, loops or recursion. Integer input space
+is exhaustively x=-16..16. Check every intermediate against signed32 bounds;
+accept Python function ASTs and fully allowlisted C++17 functions using int or
+long long. Compile accepted C++ and compare actual outputs to the interpreter on
+all33 inputs. Alternate behaviorally equivalent programs count as correct; reject
+echoes/empty/malformed programs. Harness timeout/compiler disagreement raises a
+measurement error, never semantic wrongness. Scorer accepts complete single code
+fences. Compile on allocated workers (at most4), with15s compiler/5s executor
+limits. Log compiler version and repeat the oracle on a compute node.
+
+Generate6500 training quadratic functions,500 validation piecewise-linear functions,
+and1000 test cubic functions with seeded bounded integer coefficients. Group by
+complete finite behavior vector across all splits; template families are also
+disjoint. This is explicitly template-held-out translation, not IID natural-code
+evidence or equivalence outside the declared input space. This narrows the initial
+proposed typed-program subset; boolean/list/loop translation is deferred. Audit
+behavior overlap with existing code/exec using matching single-input function
+signatures; record unsupported programs separately rather than claiming they are
+semantically disjoint. Do not promote until overlap/scorer audits are recorded.
+Run unchanged full1000-row base gates on Llama3B and Gemma4B, then eligible seed17
+sft/rev/mix50/replay pilots and one fresh evaluation pass. Preserve gate failures
+and valid null/adverse pilots; seed expansion requires validity, not a benefit.
+
+
+## Amendment 40 — replay nearest-length defect (October 3, 2026)
+
+Before py_cpp model gates, its oracle passed but replay sequence budget was0.87×
+sft. Inspection found nearest-length matching only searched a fixed local window
+and fell back to the globally shortest unused row when that window was exhausted.
+Replace this with globally nearest unused length matching, preserving seeded pool
+order and pair replacement. Audit the repaired py_cpp budget before pilot admission.
+Existing adapters remain as originally trained and are not relabeled/retrained.
+The active contrastive new arms do not use replay rows; their same-pass existing
+replay reference remains its original corpus, with recorded realized budgets.
+Any future replay run uses the repaired matcher with script-hash provenance.
+
+
+## Amendment41 — matched microbatch4 versus8 throughput profiles (October3)
+
+Before contrastive evaluation outputs: compare auxiliary microbatches4/8 on both
+models for cl_fwd and sft_extra_ce, two optimizer steps with effective batch8
+(same16 seed17 examples, fixed negatives). Future arms may use8 with accumulation8
+if both objective/control checks pass and improve measured train runtime over the
+matched4 profile, with peak memory below70% of available GPU memory. Preserve
+effective batch64, optimizer schedule, epoch count and all scientific settings.
+Running arms are unchanged. This extends Amendment38 using only engineering
+measurements; retain4 if8 is slower, invalid, or cannot fit.
+
+## Amendment 42 — full-checkpoint evaluation layout (October 7, 2026)
+
+Before scoring any full-FT checkpoint, correct its evaluation routing: fullft_sft
+and fullft_mix5 are model weights, never LoRA requests. Evaluate the original
+base plus existing sft/mix5 adapters together, then each full checkpoint in an
+isolated subprocess, over identical held-out instances, messages, tokenizer,
+sampling and scorer settings. All rows belong to one newly generated campaign;
+never borrow baseline trials from old passes. Record checkpoint paths, rendered
+prompt hashes, engine versions and evaluation_layout. Full-FT comparisons span
+engine restarts and must be labeled accordingly; the measured decoding floor
+applies. This is an explicit exception to the single-engine rule necessitated by
+full weight changes, not a claim of bitwise matched inference. First run a small
+engineering coverage/load test, then full evals across six completed cells.
+Adapter/full-weight effectiveness checks remain mandatory.
+
+## Amendment 43 — repair D2T gate metric routing (October 7, 2026)
+
+The previous D2T gate crashed before reporting eligibility because it requested
+forward-only chrF++ in reverse. D2T's declared primary criteria remain exact
+triple-set match (reverse) and frozen-extractor exact round-trip match (forward).
+Neither criterion uses a chrF threshold; chrF remains a forward diagnostic only.
+Measure the extractor's exact accuracy on reference texts as the forward ceiling.
+Run a GPU oracle audit before rerunning unchanged both-direction eligibility
+thresholds on 200 seeded held-out pairs. No tuned D2T model was evaluated under
+the crashed gate. Record audit limitations where the frozen extractor itself
+fails reference texts; do not change the primary criterion to improve a gate.
+
+## Amendment 44 — explicit-format domain diagnostics (October 7, 2026)
+
+After inspecting the failed units/logic/py_cpp base outputs, create separate
+units_explicit, logic_explicit and py_cpp_explicit cells. Retain the original
+failed cells and their results unchanged. These are post-diagnostic exploratory
+prompt variants, not independent new domains or confirmatory replications.
+Use exactly the original semantic corpora/splits and primary correctness rules;
+shared content is deliberate and must not be counted as additional independent
+evidence. Add direction-specific output contracts: a single number/unit with no
+calculation for units; explicit bit-vector versus formula format for logic;
+a complete function signature/body for Python/C++. Retain the common system
+prompt and identical training/evaluation construction. No examples from held-out
+pairs, threshold relaxation, answer extraction changes, or scorer leniency.
+Audit gold/echo/empty/garbage and realized budgets on a compute node before gates.
+Run both original models on all1000 test rows. Preserve every outcome. Admit only
+unchanged-gate passing cells to sft/rev/mix50/replay seed17 pilots; promote valid
+null/adverse cells too. These diagnostics test sensitivity to task specification,
+not the claim that the previously failed generality tasks were successful.
+
+## Amendment 45 — full-FT spectral engineering (October 7, 2026)
+
+Implement streaming deltas W_tuned-W_base for attention/MLP projection matrices;
+apply full-spectrum omega(beta)*median(sigma) hard threshold at fixed scale1.0.
+Keep all other tuned tensors unchanged. This is a separately labeled exploratory
+projection repair, not repair of every tensor or evidence that IID-noise
+assumptions hold. Record per-matrix spectra summaries, ranks, retained energy,
+base/tuned paths and implementation hashes. First validate exact reconstruction
+on synthetic full weights and run one measured GPU repair of de→en/fullft_sft.
+Do not silently score an all-zero projection update as repair. A checkpoint is
+complete only after repair_manifest.json is written. Evaluate base, original
+fullft_sft, and repair in a new isolated-engine campaign; never borrow baseline
+trials. Interpret reverse changes jointly with forward retention and decoding
+floor; no threshold search using held-out performance.
+
+## Amendment 46 — larger-model generality feasibility (October 7, 2026)
+
+Before measuring either larger model on the three expansion tasks, gate the original
+units, logic, and py_cpp corpora on Llama3.1-8B and Gemma3-12B. This advances the
+previously planned scale feasibility stage despite failed small-model gates; it is
+exploratory and does not replace or erase those six failures or the explicit-prompt
+diagnostics. Use every one of the same1000 held-out pairs, original instructions,
+sampling, exact scorers and unchanged eligibility thresholds. Preserve all six
+large-model outcomes. Passing cells enter the existing seed17 sft/rev/mix50/replay
+pilot recipe and one fresh base-plus-four-arm evaluation. Failed cells stay blocked.
+Retain valid null/adverse pilots; seed expansion remains a later registered stage.
+The same semantic corpus is reused across models and is not additional independent
+domain evidence. No criterion, extraction or prompt revision is selected from the
+large-model results.
+
+## Amendment 47 — validity-based larger-model generality replication (October 8, 2026)
+
+Before training or evaluating additional seeds, add seeds42 and1234 for every
+Amendment46 cell with a passing unchanged base gate and a valid seed17 campaign.
+Validity requires all1000 held-out pairs, a fresh base-plus-sft/rev/mix50/replay
+pass, complete adapter manifests, successful evaluation status, effectiveness
+checks and paired-coverage analysis. Promotion never requires directional
+collapse or a favorable intervention: the completed units/Gemma12B pilot improves
+both directions under sft and remains eligible. Other five cells use the same
+rule if their gates and pilots become valid. Preserve all failures and technical
+retries. Use the original corpus, prompts, scorers, recipes and budgets; seeds
+vary training randomness, not held-out instances. These are exploratory
+replications of the same domain, not additional independent domains.
+
+Engineering note: Llama8B's logic gate447995 exhausted CPython's parser stack on
+a generated formula, preventing py_cpp from running. Treat that specific parser
+complexity exception as malformed/off-target output, matching existing syntax
+and recursion rejection. Actual allocation MemoryError still aborts measurement.
+Retry only logic and py_cpp with unchanged full1000-row criteria; retain the
+already written failed units gate and the original failed-job record.
+
+## Amendment 48 — contrastive scale and numerical-domain extension (October 8, 2026)
+
+Before larger-model contrastive training, extend Amendment37 to fmt and mt_de-en
+on Llama8B and Gemma12B, plus units on Gemma12B, whose original base gate passed.
+This is five additional model/task cells. Begin at seed17 and add seeds42/1234
+only after the same implementation-validity checks used for the original pilots;
+null/adverse results remain eligible. Other failed-gate tasks stay blocked. This
+adds fifteen registered model/task/seed cells to the original twelve, rather than
+reclassifying the original phase as incomplete or claiming independent domains.
+
+Keep the fixed lambda0.1, temperature0.1, four deterministic training-only
+negatives, shuffled-positive control, six-pass CE proxies, five primary reverse
+contrasts, effective batch64, optimizer schedule and complete fresh ten-system
+evaluation from Amendment37. Existing ordinary adapters may be reused, but their
+evaluation rows must be regenerated together with every new arm and the base.
+Train missing ordinary comparison arms with the existing recipe. Replications
+vary training seeds on the same held-out instances. Report forward retention and
+paired99% intervals per cell; no performance-based setting selection or pooling.
+
+Require actual two-step cl_fwd and sft_extra_ce trainer checks for each larger
+model before admission. Engineering checks use the existing smoke recipe
+(microbatch1, accumulation4, eight examples in two optimizer steps) in separate
+output paths, verify positive auxiliary gradients/six CE passes and record peak
+memory. Production auxiliary training conservatively uses microbatch1 with
+accumulation preserving effective64, on H200, with no automatic larger-microbatch
+promotion from small-model measurements. Use restartable packs capped at47h;
+completed arms survive resubmission. These are exploratory scale/transfer checks,
+including a domain where the completed ordinary-SFT pilot has no reverse collapse.
+For units, negative identities use the exact canonical physical-quantity key.
+Exclude equal quantities and duplicates on either side, including equivalent
+numeric renderings. Audit all6500 training anchors at all three seeds, exact
+conversion identities and quantity-disjoint train/validation/test splits before
+admission; retain audit and implementation/corpus hashes. Failed audits block runs.
+
+## Amendment 49 — measured larger-model auxiliary batching (October 8, 2026)
+
+Before production contrastive training at8B/12B, add matched microbatch1-versus4
+profiles for each model's cl_fwd and sft_extra_ce paths. Both use the same eight
+fmt training examples in two optimizer steps at effective batch4:micro1 with
+accumulation4 versus micro4 with accumulation1. All scientific settings and fixed
+negative schedules stay unchanged. Admit micro4 for future auxiliary arms only
+when both larger-model profiles complete, preserve exposure/gradient checks and
+effective batch, improve measured trainer runtime over their respective micro1
+baselines, and peak below70% of the production GPU's memory. Production effective
+batch remains64 via accumulation16. Otherwise retain micro1; running arms do not
+change. Small-model timing is never sufficient to promote either larger model.
+
+## Amendment 50 — paper-completion evaluation and recipe panel (October 8, 2026)
+
+User authorized queueing and testing the draft additions before any new measurement.
+Freeze `configs/paper_finish.json` and the prepared corpus manifest before GPU evaluation.
+This is an exploratory extension; existing observations informed cell selection and it is
+not a claim of prospective selection of collapse cells. Keep new-domain and contrastive
+production first in priority. Existing failed gates and withdrawn results remain unchanged.
+
+General-ability panel: mt_de-en/Llama3B, fmt/Gemma4B, units/Gemma12B, seeds17/42/1234;
+fresh base,sft,replay,mix5,cl_fwd,cl_mix5,sft_extra_ce,mix5_extra_ce campaigns. IFEval is
+zero-shot with the installed harness strict and loose instruction validators; GSM8K is
+five-shot using five fixed training demonstrations and separately named strict #### and
+flexible numeric extraction. All nonoverlapping held-out items are retained, with no test
+subsampling or best-arm selection. Pin dataset revisions and scorer code hashes. Check
+both paired sides of every local training and validation corpus, including replay and
+mixed-task sources; exclude normalized exact/contained prompt overlap and duplicate items.
+Record the limits of lexical auditing and shared arithmetic structure. Fixed demonstrations
+are also checked against the retained test set. General probes use a neutral assistant
+system prompt shared by every adapter, independent of the transformation-task persona.
+Do not subtract benchmark scales or claim semantic contamination has been ruled out.
+
+Independent transfer: OPUS-100 de-en test, fixed revisions and20–400 characters on each
+side; exclude normalized duplicate/contained overlap with all local train/val/original-test
+sources. Evaluate mt_de-en adapters on Llama3B and Gemma4B at all three seeds. Retain
+original model-specific COMET thresholds, original generation parameters and both directions;
+no OOD threshold re-estimation. Score fresh base first, in the same resident engine used
+for tuned systems, and apply unchanged eligibility rules before tuned generation. Preserve
+failed OOD base gates. Primary strict score, continuous COMET/chrF++, echo and off-target
+rates are reported separately. Run reference/echo/empty/garbage oracle checks on compute.
+Source: https://huggingface.co/datasets/Helsinki-NLP/opus-100 .
+
+Prompt panel: mt_de-en/Llama3B, fmt/Gemma4B, units/Gemma12B, py_cpp/Llama8B,
+seeds17/42/1234, base/sft/replay/mix5 (mix50 for units/py_cpp), and corresponding
+contrastive controls where that mixture is registered. Three fixed prompts in the JSON
+are scored in both directions on all original test items. The primary is unchanged;
+alternate instruction prefixes are sensitivity tests, not independently sourced tasks.
+Also evaluate1000 exact units with magnitudes outside the original generator support
+and1000 behavior-disjoint piecewise-quadratic Python/C++ functions, with the existing
+allowlisted scorers and unchanged prompts. These are synthetic extrapolation/template
+tests, not unrestricted natural-code, loop/list, or new independent-domain evidence.
+Keep all adverse/null outcomes. Do not select the best prompt or relax a scorer.
+
+Recipe panel: fmt/Llama3B and units/Gemma12B at seeds17/42/1234; sft and mix5/mix50.
+Four separate changes from the original lr1e-4,r32 recipe: lr5e-5,lr2e-4,r16,r64.
+Hold alpha/r=2, effective batch64, epochs3, pair identity, direction mixture, sequence
+limit and optimizer schedule fixed; audit realized direction/token/step counts. Store
+all new adapters in isolated campaign directories, never overwrite ordinary adapters.
+Evaluate base, the original two arms, and all eight recipe arms together in one fresh
+campaign per cell/seed. Report paired intervals and training-seed ranges without picking
+the best recipe. Full-weight sensitivity is outside this panel's scope.
+
+Production requires successful allocation-local generation/scoring/load smokes for each
+worker mode/model and a two-step rank64 trainer smoke for each recipe model. Smoke outputs
+are engineering evidence, never included in production estimates. Require manifest hashes,
+complete paired coverage, adapter effectiveness and successful Slurm status; archive trials,
+reports and manifests. Packs resume complete arms after bounded infrastructure retries.
+CPU synthesis joins existing dose data and measured cost records without inventing missing
+FLOPs/timing, then produces figure/table provenance and a local anonymous reproducibility
+bundle. Citation/claim review remains distinct from job completion. No external publication
+or submission is authorized by this amendment.

@@ -40,7 +40,10 @@ def test_tier_budgets_match_the_plan():
 
 def test_only_doubled_arms_cost_double():
     doubled = {n for n, s in arms.ARMS.items() if s.cost_units >= 2.0 and s.relearn_k is None}
-    assert doubled == {"flip", "fwd2x", "fullft_sft", "fullft_mix5"}
+    assert doubled == {"flip", "fwd2x", "fullft_sft", "fullft_mix5",
+                       "cl_fwd", "cl_mix5", "cl_shuffled", "sft_extra_ce", "mix5_extra_ce"}
+    assert all(arms.ARMS[n].cost_units == 9 for n in
+               ("cl_fwd", "cl_mix5", "cl_shuffled", "sft_extra_ce", "mix5_extra_ce"))
 
 
 def test_grid_tiers_reference_only_known_arms_and_domains():
@@ -435,7 +438,7 @@ def test_every_engine_entry_point_hard_exits():
     for rel in entry_points:
         src = (root / rel).read_text()
         assert "get_engine" in src or "generate_with" in src or "engine as eng" in src, rel
-        assert "shutdown_and_exit(main())" in src, (
+        assert "shutdown_and_exit(main())" in src or "shutdown_and_exit(rc)" in src, (
             f"{rel} builds a vLLM engine but exits with sys.exit, so a hung engine-core child "
             f"holds the GPU until the walltime kills the job")
         assert "sys.exit(main())" not in src, f"{rel} still has the plain exit path"
@@ -1040,7 +1043,7 @@ def test_runner_lets_uncapped_cells_reach_h200():
         assert "h200" in parts, f"{cell} cannot reach idle h200 capacity"
         assert "h100" in parts, f"{cell} lost its uncapped fallback"
         assert "a30" not in parts, f"{cell} is in NO_A30 but was offered one"
-    assert r.partition_for("algebra") == "h100,a30", "an a30-capable cell should stay uncapped"
+    assert r.partition_for("algebra") == "h100,h200", "avoid the failing A30 CUDA path"
     for cell in r.NEEDS_H200:
         assert r.partition_for(cell) == "h200"
 
@@ -1145,6 +1148,9 @@ def test_inflight_key_matches_the_job_name_for_every_planned_tag():
                     key = r.job_key(cell, model, seed, tag)
                     for prefix in ("tr_", "ev_"):
                         name = prefix + key
+                        assert r.OURS.match(name), (
+                            f"{name!r} would be ignored by the queue scan and could be "
+                            "submitted twice")
                         assert name.split("_", 1)[1] == key, (
                             f"{name!r} does not strip back to {key!r}; the in-flight check "
                             f"would never match this job")
@@ -1296,3 +1302,15 @@ def test_walltime_estimate_accounts_for_model_size():
     assert hours == sorted(hours), f"not monotone in model size: {dict(zip(sizes, hours))}"
     assert pg._per_unit_hours("mt_en-zh", "h100", "olmo2-1b") == base, (
         "a model smaller than the baseline must not SHORTEN the request")
+
+
+def test_capacity_held_jobs_and_dependents_are_counted(monkeypatch):
+    from types import SimpleNamespace
+    r = _runner()
+    monkeypatch.setattr(r.subprocess, 'run', lambda *a, **kw: SimpleNamespace(stdout=(
+        '1|tr_fmt_llama32-3b_s42|PENDING|JobHeldUser|(null)|bidir_capacity_hold\n'
+        '2|ev_fmt_llama32-3b_s42|PENDING|Dependency|afterok:1|(null)\n'
+        '3|tr_algebra_llama32-3b_s42|PENDING|JobHeldUser|(null)|(null)\n')))
+    assert r.squeue_ours() == [
+        ('tr_fmt_llama32-3b_s42', 'PENDING'),
+        ('ev_fmt_llama32-3b_s42', 'PENDING')]

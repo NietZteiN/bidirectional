@@ -1,6 +1,50 @@
+# Current story — October 8, 2026
+
+The manuscript now follows this spine:
+
+1. One-way fine-tuning can damage an existing reverse capability that forward-only evaluation misses.
+2. Matched directional mixtures and controls test whether ordinary SFT preserves it economically.
+3. Original Python/C++, logic, and units gates failed for both small models; retain this boundary evidence. All six explicit-output diagnostics also failed. Gemma12B passes the original units gate and completes replicated null-collapse campaigns:ordinary SFT improves both directions. Replicate by validity, not by effect sign. Llama8B also passes Python/C++ after a technical retry and uses the registered same-pass pilot protocol. Other larger-model gates retain their recorded verdicts; they reuse the original semantic corpora.
+4. Paired contrastive baselines test gains beyond reverse exposure and extra compute; all twelve original model/task/seed cells are complete. Fifteen scale/numerical-domain extension cells are separately registered and automatically admitted after engineering checks. Neither a general benefit nor equivalence is established.
+5. Recovery instruments test accessibility without presupposing universal suppression.
+6. The practical contribution is evaluation in both directions and direction/compute-accounted attribution.
+
+This replaces the stronger historical spine below. Quantitative statements await audited
+integration. The generated snapshot now deduplicates repeated main evaluation campaigns by
+model/task/training seed, using the latest valid completion timestamp and retaining earlier
+passes in the audit. These observations are not independent domains. Blocked invertibility
+experiments do not support a universal repair bound.
+The title is now “Directional Collapse in Fine-Tuning: Preserving the Way Back.”
+
+October 8 draft additions: the main preservation section now reserves a dose/forward/reverse/
+compute figure. [The draft appendix](planned_evaluations.tex) specifies audited general-ability
+controls, independent real-data transfer, frozen prompt/recipe robustness, and an anonymous
+reproducibility package, with a reporting checklist and visible conclusion placeholders.
+These protocols are now registered as Amendment 50 and implemented in the autonomous
+smoke-gated queue; registration is distinct from completed measurements. Existing
+new-domain/contrastive jobs retain first priority. Keep the replicated units null-collapse
+case in the main synthesis. Credit prior directional degradation and reverse training; the
+proposed contribution is the joint preservation comparison and controlled attribution.
+Disproportionate-loss, compute-saving, generality and mechanism claims each need their own
+evidence; the historical stronger claims below remain superseded.
+
+October8 control integration: both generated contrastive tables now show all five primary
+comparisons per completed cell, including extra-CE proxies and shuffled pairs. Mixed-direction
+alignment sometimes exceeds the extra-CE proxy on format conversion; effects differ across
+models/seeds. Forward-only alignment has no consistent control-relative benefit, and empirical
+zero intervals in translation floor cells cannot establish equivalence. These are interim
+within-cell observations, with forward retention and replication required for interpretation.
+
+October7 repair validation: the first full-weight projection repair completed and its saved
+weights passed integrity checks. Its fresh paired generation evaluation is complete, improving both forward and reverse
+success relative to the original full-SFT checkpoint. This is one fixed-threshold exploratory
+checkpoint; no universal repair or validated IID-noise claim follows.
+
+---
+
 # The argument, and why it runs in this order
 
-*Draft 2026-09-10. **No experiment has been run.** This file is the spine — what the paper
+*Historical draft 2026-09-10, written before experiments. This file is the spine — what the paper
 claims, in what order, why that order, what each section has to establish, and what would break
 it. Numbers live in [`main.tex`](main.tex) as `\NUM{}` placeholders that render visibly unfilled.*
 

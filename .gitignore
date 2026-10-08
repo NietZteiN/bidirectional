@@ -10,6 +10,15 @@ data/
 # log/runs/, and a commit that said it was adding a run log added nothing. git reported success
 # because `git add -A` on an ignored path is not an error.
 /runs/
+# Runtime state stays ignored; the autonomous controller source is versioned.
+!/runs/
+/runs/*
+!/runs/feeder/
+/runs/feeder/*
+!/runs/feeder/daemon.py
+!/runs/feeder/supervise.py
+!/runs/feeder/watchdog.py
+!/runs/feeder/feeder.sh
 /bidir_out/
 /results/
 third_party/

@@ -1,5 +1,14 @@
 # Run plan — Directional collapse (ACL 2027)
 
+## Active priority override — 2026-10-03
+
+User decision: new domains and contrastive baselines take first priority over additional
+legacy work and paper integration. The current staged plans are
+[domain expansion](docs/DOMAIN_EXPANSION_PLAN.md) and
+[contrastive baselines](docs/CONTRASTIVE_BASELINE_PLAN.md); implement, preregister, validate,
+gate, and run these pilots next. Keep existing submitted jobs running. Historical budgets
+and priority order below do not override this decision. [TASKS.md](TASKS.md) tracks current status.
+
 *Written 2026-09-09 from an audit of `obtune/`, the cluster, and the Hub. Companion to
 `acl2027-directional-collapse-plan.md` (the science); this file is the execution.*
 

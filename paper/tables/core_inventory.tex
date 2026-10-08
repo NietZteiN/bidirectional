@@ -1,0 +1,16 @@
+\begin{table*}[t]
+\centering\small
+\begin{tabular}{llll}
+\toprule
+Model & Task orientations & Cells & Threshold met \\
+\midrule
+gemma3-12b & 7 & 14 & 8 \\
+gemma3-4b & 7 & 21 & 14 \\
+llama31-8b & 6 & 12 & 7 \\
+llama32-3b & 11 & 32 & 18 \\
+olmo2-1b & 4 & 12 & 5 \\
+\bottomrule
+\end{tabular}
+\caption{Audited model--task--seed cells. Threshold met means SFT reverse strict success is at most half the same-pass base rate. Counts are descriptive and are not independent task counts or pooled significance tests.}
+\label{tab:core-inventory}
+\end{table*}

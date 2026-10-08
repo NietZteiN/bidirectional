@@ -46,7 +46,11 @@ TECTONIC ?= /work/jvl210002/migration/envs/tex/bin/tectonic
 ## compile the draft. Unfilled numbers render as red <<key>> rather than failing the build --
 ## the point is that a circulated draft shows them, not that a draft cannot be circulated.
 paper:
-	@TECTONIC_CACHE_DIR=/work/jvl210002/migration/cache/tectonic \
-	 TMPDIR=/work/jvl210002/migration/tmp \
-	 $(TECTONIC) -X compile $(CURDIR)/paper/main.tex
-	@$(PY) scripts/92_page_budget.py
+	@$(MAKE) -C paper TECTONIC="$(TECTONIC)" PY="$(PY)" paper
+
+.PHONY: paper-check paper-submission
+paper-check:
+	@$(MAKE) -C paper PY="$(PY)" check
+
+paper-submission:
+	@$(MAKE) -C paper TECTONIC="$(TECTONIC)" PY="$(PY)" submission

@@ -168,7 +168,12 @@ def submit(script: str, name: str, dry_run: bool) -> str | None:
     if dry_run:
         print(f"--- {path} (not submitted) ---\n{script}")
         return None
-    out = subprocess.run(["sbatch", str(path)], capture_output=True, text=True)
+    cmd = ["sbatch"]
+    # Start GPU submissions held so they cannot race the six-job admission cap.
+    # The feeder releases only capacity-selected jobs, including dependent evals.
+    if int(os.environ.get("BIDIR_GPU_CAP", "0")) > 0 and "#SBATCH --gres=gpu" in script:
+        cmd += ["--hold", "--comment=bidir_capacity_hold"]
+    out = subprocess.run(cmd + [str(path)], capture_output=True, text=True)
     if out.returncode != 0:
         print(f"sbatch FAILED for {name}: {out.stderr.strip()}", file=sys.stderr)
         return None
@@ -206,6 +211,8 @@ def main() -> int:
     parts = [p.strip() for p in a.partition.split(",") if p.strip()]
     contested = [p for p in parts if p in CONTESTED]
     uncapped = [p for p in parts if p not in CONTESTED]
+    if a.qos is None and "h200" in parts:
+        a.qos = os.environ.get("BIDIR_GPU_QOS") or None
     if share and contested and not a.dry_run and not queues_behind_pool(a.dependency):
         held = juno_jobs_held()
         if held >= share:

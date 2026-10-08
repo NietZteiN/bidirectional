@@ -60,6 +60,7 @@ def main() -> int:
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--models", default="llama32-3b,llama31-8b")
     ap.add_argument("--seeds", default="17,42")
+    ap.add_argument("--partition", default="h200", help='e.g. "h100,h200" to let the scheduler choose')
     ap.add_argument("--dry-run", action="store_true")
     a = ap.parse_args()
 
@@ -69,12 +70,12 @@ def main() -> int:
                 jid = sub(f"at_{arm}_{domain}_{model}_s{seed}",
                           ["scripts/20_train_pack.py", "--domain", domain, "--model", model,
                            "--seed", str(seed), "--arms", f"{arm},{matched}"],
-                          time="10:00:00", dry=a.dry_run)
+                          time="10:00:00", partition=a.partition, dry=a.dry_run)
                 sub(f"at_ev_{arm}_{domain}_{model}_s{seed}",
                     ["-m", "bidir.evaluate", "--domain", domain, "--model", model,
                      "--seed", str(seed), "--arms", f"base,sft,{matched},{arm}",
                      "--tag", f"attrib_{arm}"],
-                    time="03:00:00", dep=jid, dry=a.dry_run)
+                    time="03:00:00", dep=jid, partition=a.partition, dry=a.dry_run)
 
     print("\nEvery objective is paired with the mix arm supplying the same directional content.")
     print("Read them with: python scripts/50_contrasts.py --run <result dir>")

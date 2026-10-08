@@ -1,0 +1,152 @@
+% Paper-completion protocols registered in Amendment 50, October 8, 2026.
+% Fill measured outcomes through source-backed generators, never by hand.
+\section{Paper-completion protocol and reporting plan}
+\label{app:planned-evaluations}
+
+This appendix records frozen exploratory additions registered before their measurements.
+Existing new-domain and contrastive campaigns retain priority. Allocation-local smokes precede
+automatic admission of each new production workload. Registration and queue admission do not
+establish completed results. Visible red markers reserve conclusions to write after analysis.
+Failed gates and the replicated Gemma12B unit-conversion null-collapse result remain visible.
+\IfFileExists{tables/paper_finish_protocol.tex}{\input{tables/paper_finish_protocol.tex}}{}
+
+\subsection{Dose, forward retention, and computational cost}
+\label{app:dose-summary}
+
+The main figure plots forward and reverse strict success for the base model, forward SFT,
+generic replay, available reversed-pair doses, and contrastive/control arms. Panels retain
+model, task orientation, and seed identity. Arms lacking a common evaluation campaign are not
+connected as paired observations. The units boundary case is shown alongside collapse cells.
+Repeated passes use the latest validated completion time, with earlier passes retained in the
+audit; selection never uses effect sign.
+
+Paired contrasts use the domain's instance/cluster unit. Training-seed variation is separate:
+resampling test instances does not measure training variability. No aggregate pools cells as
+independent domains. The dose knee uses the criterion in \S\ref{sec:dose}; overlapping
+intervals do not establish equivalence.
+
+The cost table reports available trainer runtime, optimizer steps, and CE-corpus tokens.
+Auxiliary encoded-side exposure is retained separately in the analysis. Missing timing,
+GPU-type, queue-time, or exposure records remain unavailable. Additional CE is the declared
+proxy; corpus token counts alone do not establish matched objective FLOPs or wall time.
+\IfFileExists{tables/preservation_summary.tex}{\input{tables/preservation_summary.tex}}{}
+\IfFileExists{tables/preservation_costs.tex}{\input{tables/preservation_costs.tex}}{}
+\paragraph{Result to fill.} \NUM{dose-sentence}
+
+\subsection{General ability and overlap controls}
+\label{app:general-probes}
+
+The fixed panel is German-to-English/Llama3B, format conversion/Gemma4B, and units/Gemma12B.
+Each campaign compares base, SFT, replay, mixed-direction SFT, forward-only and mixed-direction
+contrastive arms, and their additional-CE controls. The auxiliary arm is fixed rather than
+selected by its best test score.
+
+IFEval measures instruction following without demonstrations; GSM8K measures numerical
+reasoning using fixed training demonstrations. A neutral assistant system prompt is shared
+by all systems. Dataset revisions and overlap exclusions are recorded before generation.
+Auditing covers both sides of every local training/validation corpus, replay, and mixed-task
+sources, using normalized exact/contained strings. Fixed demonstrations are checked against
+the retained test set. Lexical auditing does not establish semantic or pretraining independence;
+shared numerical structure limits interpretation of the units/GSM8K comparison.
+
+All systems are evaluated together in fresh campaigns with adapter-effectiveness checks.
+Report strict IFEval and strict GSM8K endpoints separately; loose instruction checks and flexible
+numeric extraction remain secondary. Pair endpoint changes within each campaign and show seed
+variation. A concentration claim is scoped to this declared panel; unrelated benchmark scales
+are not subtracted as if interchangeable.
+\paragraph{Result to fill.} \NUM{probe-sentence}
+
+\subsection{Independent real-data transfer}
+\label{app:independent-transfer}
+
+Existing German-to-English checkpoints are evaluated on the independently sourced OPUS-100
+German--English test split.\footnote{\url{https://huggingface.co/datasets/Helsinki-NLP/opus-100}.}
+The panel includes Llama3B and Gemma4B with the registered seeds and the same SFT, replay,
+mixed-direction, contrastive, and additional-CE systems. Dataset revision, character-length
+inclusion rules, directions, overlap exclusions, and scorer are frozen before generations.
+A new prompt on an existing semantic corpus remains a diagnostic rather than independent
+transfer evidence.
+
+Overlap auditing includes all local training, validation, replay, and original test sources.
+Gold, echo, empty, and invalid-output oracles run on compute. Original model-specific COMET
+thresholds are retained. Strict success, continuous COMET, chrF++, echo, and off-target rates
+remain separate; checkpoint choice, decoding, and scoring are not tuned on this corpus.
+
+Generate and score the full fresh base first, using the resident engine retained for tuned
+systems. Failure of the unchanged eligibility conjunction remains boundary evidence and
+blocks tuned generation. Small smokes establish engineering behavior, not production
+eligibility. Report paired forward/reverse changes only for eligible campaigns.
+\paragraph{Result to fill.} \NUM{transfer-sentence}
+
+\subsection{Prompt and training-recipe robustness}
+\label{app:robustness}
+
+The prompt panel includes translation/Llama3B, format conversion/Gemma4B, units/Gemma12B,
+and Python--C++/Llama8B. Frozen variants retain the original primary instruction and add fixed
+task/contract prefixes. Both directions use the same semantic instances, decoding limits,
+and scorers. Keep every frozen prompt, separating echo/off-target output, semantic error,
+and measurement failure. Best-prompt summaries remain exploratory recovery diagnostics.
+
+Synthetic extrapolation additionally uses exact unit magnitudes outside original support and
+behavior-disjoint piecewise-quadratic Python/C++ functions. Original allowlisted scorers and
+input ranges remain unchanged; gold outputs are audited on all generated instances on compute.
+These tests do not establish unrestricted natural-code, loop/list, or independent-domain
+generality.
+
+The recipe panel fixes lower/higher learning-rate and LoRA-rank variants around the original
+recipe, varying the factors separately. Parameter values, cells, seeds, and primary contrasts
+are fixed in the recorded protocol. Preserve alpha/rank ratio, effective batch, paired-data
+identity, direction mixture, sequence limit, epoch count, and optimizer schedule. Audit
+realized exposure, step count, and GPU cost. SFT and mixed-direction SFT are compared on
+format conversion/Llama3B and units/Gemma12B, retaining collapse and null cases.
+
+Store new adapters separately. Regenerate the original arms, base, and all recipe variants
+together in each campaign. Retain every adverse/null outcome and report paired intervals and
+training-seed ranges; no best-recipe selection supports the primary claim.
+\paragraph{Result to fill.} \NUM{robust-sentence}
+
+\begin{table*}[t]
+\centering\small
+\begin{tabular}{p{0.22\textwidth}p{0.46\textwidth}p{0.23\textwidth}}
+\toprule
+Deliverable & Required evidence & Current status \\
+\midrule
+Preservation figure & Both directions, intervals, seeds, doses, exposure and measured cost &
+Audited synthesis integrated; interpretation pending \\
+General-ability table & Frozen panel, overlap exclusions, same-pass changes and intervals &
+Registered and smoke-gated; measurements pending \\
+Independent transfer & Corpus/version, eligibility, both directions, failures and hashes &
+Registered OPUS protocol; measurements pending \\
+Robustness table & Frozen prompts/recipes, both directions, costs and all outcomes &
+Registered panel; measurements pending \\
+Reproducibility manifest & Splits/scorers, environment, manifests, trial hashes and analysis commands &
+Local provenance retained; release audit pending \\
+\bottomrule
+\end{tabular}
+\caption{Reporting checklist. Registration, auditing, and queue admission are separate from
+completed experimental evidence.}
+\label{tab:draft-deliverables}
+\end{table*}
+
+\subsection{Contribution and reproducibility}
+\label{app:reproducibility}
+
+The final abstract and conclusion should state the supported contribution relative to prior
+directional degradation and reverse-training work: the preservation frontier, direction and
+compute controls for objective attribution, and limits revealed by gates and null cells.
+Generality, disproportionate loss, inexpensive preservation, and recovery are separate claims
+with separate evidence requirements. A favorable contrastive result supports a scoped
+objective contribution; a null or generation-floor result does not establish equivalence.
+\paragraph{Final contribution wording to fill.} \NUM{claim-sentence}
+
+The local reproducibility package includes permitted corpora or versioned reconstruction
+recipes; overlap and scorer audits; manifests and environment settings; irreproducible
+per-instance generations and their hashes; analysis entrypoints; and figure/table provenance.
+Failed gates, withdrawals, and corrected replacements remain traceable. Dataset/weight
+redistribution follows their licenses.
+
+Before release, replay analysis and the PDF build from a clean environment, check reported
+values against generating trials and references, and remove identifying local names/paths
+while retaining a hash mapping for transformed artifacts. Missing historical code versions
+must be recorded rather than implying exact training reproducibility. This is a local
+artifact deliverable; no release or submission has been performed.

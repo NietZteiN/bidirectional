@@ -1,0 +1,39 @@
+peft:
+  r: 32
+  alpha: 64
+  dropout: 0.05
+  target_modules:
+  - q_proj
+  - k_proj
+  - v_proj
+  - o_proj
+  - gate_proj
+  - up_proj
+  - down_proj
+  task_type: CAUSAL_LM
+train:
+  dtype: bfloat16
+  attn_implementation: sdpa
+  gradient_checkpointing: true
+  max_seq_len: null
+  auxiliary_microbatch: 4
+  per_device_batch: 4
+  grad_accum: 1
+  lr: 0.0001
+  full_ft_lr: 1.0e-05
+  lr_scheduler_type: cosine
+  warmup_ratio: 0.03
+  epochs: 3
+  weight_decay: 0.0
+  max_grad_norm: 1.0
+  seed: 17
+  val_size: 2
+  save_strategy: 'no'
+  eval_steps: 200
+  logging_steps: 20
+attribution:
+  contrastive_lambda: 0.1
+  contrastive_temperature: 0.1
+relearn:
+  steps: 40
+engineering_smoke: true

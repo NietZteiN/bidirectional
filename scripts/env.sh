@@ -66,7 +66,11 @@ export VLLM_WORKER_MULTIPROC_METHOD="${VLLM_WORKER_MULTIPROC_METHOD:-spawn}"
 # 3 of the account's 4 juno slots, from 1, since obtune finished on 2026-09-18 and released the
 # 2 it held. One is left for the remaining projects. This is the h200/normal QoS budget, which is
 # separate from the runner's --max-inflight: the pool is ONE budget of 4 for the whole account.
-export BIDIR_JUNO_SHARE="${BIDIR_JUNO_SHARE:-3}"
+# User requested maximum GPU concurrency on 2026-10-01. juno-pri has OverPartQOS
+# and permits eight jobs, overriding h200's four-job partition QoS.
+export BIDIR_JUNO_SHARE="${BIDIR_JUNO_SHARE:-0}"
+export BIDIR_GPU_CAP="${BIDIR_GPU_CAP:-0}"
+export BIDIR_GPU_QOS="${BIDIR_GPU_QOS:-juno-pri}"
 export TOKENIZERS_PARALLELISM=false
 
 # ON THE LOGIN NODE ONLY, cap the BLAS thread pools. That node has RLIMIT_NPROC=300 against a

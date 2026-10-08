@@ -19,6 +19,22 @@ from bidir.config import DATA_DIR, GLOBAL_SEED, load_config
 from bidir.schema import PairInstance, TrainRow, read_pairs
 
 
+def nearest_unused_indices(lengths, targets):
+    """Greedy globally nearest unused lengths; deterministic, no local-window fallback."""
+    import bisect
+    available=sorted(range(len(lengths)),key=lambda i:(lengths[i],i))
+    available_lengths=[lengths[i] for i in available]
+    chosen=[]
+    for target in targets:
+        if not available:
+            raise ValueError("replay pool exhausted")
+        position=bisect.bisect_left(available_lengths,target)
+        candidates=[j for j in (position-1,position) if 0<=j<len(available)]
+        best=min(candidates,key=lambda j:(abs(available_lengths[j]-target),j))
+        chosen.append(available.pop(best));available_lengths.pop(best)
+    return chosen
+
+
 def pairs_path(domain: str, split: str) -> Path:
     return DATA_DIR / domain / f"{split}.jsonl"
 
@@ -188,23 +204,12 @@ def replay_rows(n: int, seed: int, split: str = "train",
         # up the total-match it could have had -- measured: supervised 0.786 -> 0.680 on
         # mt_en-de while sequence stayed ~1.00. So: match the total, and REPORT the supervised
         # ratio (Amendment 22), which bounds the contrast rather than pretending it is exact.
-        for t in list(target_lengths)[:n]:
-            j = bisect.bisect_left(lens, t)
-            best, bestd = None, None
-            for k in range(max(0, j - 40), min(len(by_len), j + 40)):
-                if by_len[k] in used:
-                    continue
-                d = abs(lens[k] - t)
-                if bestd is None or d < bestd:
-                    best, bestd = k, d
-            if best is None:                      # exhausted the neighbourhood; take any unused
-                best = next(k for k in range(len(by_len)) if by_len[k] not in used)
-            used.add(by_len[best])
-            chosen.append(pool[by_len[best]])
-        while len(chosen) < n:                    # only if target_lengths was short
-            k = next(k for k in range(len(by_len)) if by_len[k] not in used)
-            used.add(by_len[k])
-            chosen.append(pool[by_len[k]])
+        matched=nearest_unused_indices(lens,list(target_lengths)[:n])
+        for k in matched:
+            used.add(by_len[k]);chosen.append(pool[by_len[k]])
+        while len(chosen) < n:
+            k=next(k for k in range(len(by_len)) if by_len[k] not in used)
+            used.add(by_len[k]);chosen.append(pool[by_len[k]])
 
     out = []
     for rid, u, a in chosen:

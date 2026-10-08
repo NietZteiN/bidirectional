@@ -16,7 +16,7 @@ import torch
 
 #: Extra text columns an example may carry. Each becomes `<name>_input_ids` (+ labels where
 #: the field is supervised).
-AUX_TEXT_FIELDS = ("conflict_prompt", "conflict_completion", "roundtrip_prompt", "roundtrip_target")
+AUX_TEXT_FIELDS = ("conflict_prompt", "conflict_completion", "roundtrip_prompt", "roundtrip_target", "contrastive_a", "contrastive_b", "generation_direction")
 
 
 class AuxiliaryCollator:
@@ -33,6 +33,8 @@ class AuxiliaryCollator:
         aux = {f: [ex.get(f) for ex in features] for f in AUX_TEXT_FIELDS}
         clean = [{k: v for k, v in ex.items() if k not in AUX_TEXT_FIELDS} for ex in features]
         batch = self.base(clean)
+        if all(x is not None for x in aux["generation_direction"]):
+            batch["generation_direction"] = torch.tensor(aux["generation_direction"],dtype=torch.long)
 
         if all(x for x in aux["conflict_prompt"]) and all(x is not None for x in aux["conflict_completion"]):
             full = [p + c for p, c in zip(aux["conflict_prompt"], aux["conflict_completion"])]
@@ -56,4 +58,14 @@ class AuxiliaryCollator:
                 self.tok.padding_side = side
             batch["roundtrip_target_ids"] = self._encode(aux["roundtrip_target"])["input_ids"]
 
+        if any(x is not None for x in aux["contrastive_a"]):
+            if not all(isinstance(x,list) and len(x)==5 for side in ("contrastive_a","contrastive_b") for x in aux[side]):
+                raise ValueError("contrastive batch must carry five candidates per side")
+            for side in ("a","b"):
+                texts = [text for group in aux["contrastive_"+side] for text in group]
+                enc = self.tok(texts,return_tensors="pt",padding=True,add_special_tokens=False)
+                if enc["input_ids"].shape[1] > self.max_length:
+                    raise ValueError("contrastive candidate exceeds sequence budget; refusing truncation")
+                batch["contrastive_"+side+"_input_ids"] = enc["input_ids"]
+                batch["contrastive_"+side+"_attention_mask"] = enc["attention_mask"]
         return batch

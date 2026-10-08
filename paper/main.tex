@@ -1,6 +1,7 @@
 % Directional collapse -- ACL/ARR draft skeleton.
 %
-% NO EXPERIMENT HAS BEEN RUN. Every quantity is a \NUM{} placeholder that renders in red as
+% Story revision 2026-10-03. Experiments have run; results still require audited integration.
+% Every unresolved quantity is a \NUM{} placeholder that renders in red as
 % <<name>>, so an unfilled number cannot reach a PDF unnoticed, and \tabinput{} pulls generated
 % tables rather than pasting them. The prose here is the part of the paper that does not depend
 % on results: framing, definitions, the budget argument, related work, limitations. The argument
@@ -38,8 +39,9 @@
   \else\textcolor{red}{$\langle\langle$\texttt{#1}$\rangle\rangle$}\fi}
 \providecommand{\tabinput}[1]{\textcolor{red}{[table \texttt{#1} not generated yet]}}
 \IfFileExists{numbers.tex}{\input{numbers.tex}}{}
+\IfFileExists{evidence_snapshot.tex}{\input{evidence_snapshot.tex}}{}
 
-\title{Directional Collapse: One-Way Fine-Tuning Erases the Way Back}
+\title{Directional Collapse in Fine-Tuning: Preserving the Way Back}
 
 % Anonymous under [review]; acl.sty suppresses this block. Filled for camera-ready.
 \author{
@@ -50,62 +52,88 @@
 \maketitle
 
 \begin{abstract}
-Many NLP tasks come in pairs whose training instances are the same data read in two directions:
-obfuscation and deobfuscation, translation each way, text-to-SQL and SQL-to-text, data-to-text
-and text-to-data. Fine-tuning on one direction destroys the ability the model already had in the
-other. We characterise this across \NUM{n-domains} paired domains and \NUM{n-families} model
-families, and show three things about it. The loss is disproportionate: the inverse direction
-falls to \NUM{abstract-reverse-after} while held-out general ability moves \NUM{abstract-general-cost}.
-It is cheap to prevent: replacing \NUM{abstract-knee} of the forward pairs with their own
-reversal restores \NUM{abstract-restored} of the lost capability, at matched instances, sequence
-tokens and optimizer steps. And what is lost is suppressed rather than erased --- recoverable by
-prompting, by scaling the adapter, by a few reversed examples, and by a closed-form filter on the
-weight update that uses no data at all. Invertibility bounds the repair, and separates two things
-usually run together: an inverse that is undetermined cannot be restored at any dose, while one
-that is merely hard to find can be. A consequence follows for attribution: any method credited
-with restoring an inverse capability on paired data must be compared against a baseline supplying
-the same directional content and none of the method.
+Paired tasks use the same examples in opposite directions, yet fine-tuning a language model on
+one direction can degrade its pre-existing ability in the other. We study this directional
+collapse through matched training comparisons across translation, code transformation,
+semantic parsing, factual relations, and formal tasks. The central question is whether reverse
+capability can be preserved by changing the direction of existing training pairs, rather than
+collecting additional data or introducing a specialized objective. We compare reversed-pair
+mixtures with forward-only training, generic replay, reverse-only training, and additional
+forward optimization. Recovery experiments distinguish behavioral loss from evidence of
+persistent capability. Extensions to cross-language code translation, Boolean reasoning, and
+unit conversion retain failed small-model gates. Larger-model unit-conversion replications improve
+both directions under forward-only training, providing a boundary case to collapse.
+The initial contrastive campaign is complete; registered scale and domain extensions continue.
+The methodological contribution is a testable comparison: evaluate both task directions, and
+compare proposed bidirectional objectives with ordinary supervised fine-tuning that accounts
+for directional information and computational cost. Quantitative conclusions remain pending
+integration and validation of the completed experiments.
 \end{abstract}
 
 \section{Introduction}
 \label{sec:intro}
 
-Paired data carries a direction. Obfuscating a program rewrites it so that it behaves identically
-but is hard to read; a model can be trained to perform that rewrite, or to undo it. The two tasks
-use the same pairs of programs, and training the second only requires swapping which half of each
-pair is the input. Compilation and decompilation, minification and beautification, translation
-between two languages, and the two directions of semantic parsing all work this way.
+A paired dataset already contains two tasks. A translation pair can teach either language
+direction; a program transformation can be learned or undone; and a question--SQL pair can
+support semantic parsing or verbalization. Changing direction requires changing which side is
+the input, not collecting a second paired corpus. Nevertheless, training only one direction
+can damage the model's ability to perform the other.
 
-% The hook: the data that would have prevented the failure was already in hand.
-This structure is what makes the failure we study both possible and avoidable. Fine-tuning a
-model on the forward direction of such a pair degrades its ability in the reverse direction ---
-an ability the base model already had. \citet{nikiema2025contrastive} name this
-\emph{cognitive specialization} and document it for code obfuscation;
-\citet{zhu2024finetuning} report the same shape in machine translation, where fine-tuning with
-English on the target side damages translation into other languages. We take the phenomenon as
-established in those settings and ask what is true of it in general.
+This phenomenon is established in particular settings. \citet{nikiema2025contrastive} describe
+\emph{cognitive specialization} in code obfuscation, and \citet{zhu2024finetuning} examine
+direction-dependent degradation in translation. Our question is how broadly the failure occurs,
+what comparisons explain it, and how much machinery is needed to prevent it.
 
-\paragraph{The loss is disproportionate, which is why it is easy to miss.}
-\NUM{intro-disproportion-sentence}
+\paragraph{A failure that standard evaluation can miss.}
+Improvement on the trained task does not establish that its inverse remains available. General
+benchmarks also need not measure this specific loss. We therefore evaluate forward and reverse
+success alongside general-ability probes, retaining null effects and model-specific boundary
+conditions. The completed results will quantify this comparison rather than assume that every
+model or domain collapses. We retain model--task--seed results separately and report the
+registered loss threshold descriptively before making aggregate inferential claims.
 
-\paragraph{It is cheap to prevent.}
-\NUM{intro-dose-sentence}
+\paragraph{Direction as an experimental variable.}
+Our main intervention replaces a share of forward pairs with their own reversal. Generic
+instruction replay, reverse-only training, and longer forward training test alternative
+explanations. These controls ask whether recovery depends on directional content, general
+rehearsal, reverse learnability, or additional optimization. Reversed pairs require no new
+paired examples, but budget and performance claims must be supported separately: replacement
+holds the number of instances fixed, while realized token counts, steps, and forward retention
+are audited rather than inferred from the word ``replacement.''
 
-\paragraph{Invertibility bounds the repair, and it is two properties, not one.}
-An inverse can be \emph{undetermined} --- the information needed is not present in the input, and
-no quantity of reverse data can supply it --- or \emph{determined but hard to find}, where the
-information is there and search is the obstacle. These predict different things about a cure, and
-\S\ref{sec:invertibility} separates them with a synthetic ladder that varies determinability
-directly and a domain that holds determinability fixed while varying search difficulty.
+\paragraph{Generality beyond the original domains.}
+The current study covers natural-language, code, and formal transformations. Our next priority
+was to extend it to Python--C++ translation, Boolean formula--truth-table conversion, and unit
+conversion. These tasks add executable semantics, logical equivalence, and numerical reasoning.
+Their exact scorers passed oracle audits, but all original small-model cells failed eligibility.
+Those failures provide boundary evidence about task specification and starting capability.
+Separately registered Gemma12B unit-conversion campaigns passed the unchanged gate and improved
+both directions under forward-only SFT across replication seeds. Separately registered explicit-output variants
+retain the original semantic splits and scorers and are exploratory diagnostics.
 
-\paragraph{What is lost is suppressed, not erased.}
-\NUM{intro-mechanism-sentence}
+\paragraph{Does a specialized objective add value?}
+Paired contrastive learning provides a direct test. Aligning representations may preserve
+reverse generation, but it also supplies both sides of each pair and uses additional compute.
+Our comparison therefore includes ordinary SFT with reversed pairs, additional-CE
+compute controls, and shuffled-pair ablations. A contrastive benefit would establish an
+objective-specific contribution; a null would establish the strength of a simpler baseline.
+Neither outcome is assumed in advance.
 
-\paragraph{A general test follows, and it needs no new data.}
-For any method that adds instances to paired training data, train the arm that supplies the same
-directional content and none of the method. This is more than advice because the ablation arm is
-also the remedy: running it pays for itself whichever way the comparison falls. \S\ref{sec:attrib}
-applies it to \NUM{n-attrib-methods} published objectives.
+\paragraph{What does recovery tell us?}
+Prompting, adapter scaling, relearning against a model-matched never-had control, and update
+repair provide complementary evidence about retained capability. We report them separately:
+behavioral recovery is evidence relevant to suppression, not proof that every observed loss
+is reversible. Information loss and inverse search difficulty are boundary conditions to
+investigate, rather than established universal limits on the remedy.
+
+The practical test is simple: when fine-tuning on paired tasks, evaluate both directions;
+when attributing a gain to a bidirectional objective, compare against ordinary SFT while
+accounting for directional information and compute. This is a falsifiable comparison, not a
+presumption that auxiliary objectives are unnecessary.
+Our contribution is the joint preservation comparison: a cross-domain dose--performance
+frontier, exposure-accounted objective controls, and explicit boundary cases. The general-ability,
+independent-transfer, and robustness analyses in Appendix~\ref{app:planned-evaluations} are
+draft evaluation plans; their results are required before extending the corresponding claims.
 
 \section{Directional collapse, defined}
 \label{sec:defined}
@@ -135,167 +163,249 @@ that produced them.
 \section{Setup}
 \label{sec:setup}
 
-\paragraph{Domains.} \NUM{setup-domains-sentence}
-\tabinput{domains}
+\paragraph{Domains.} The audited main grid contains \NUM{core-domain-count} task orientations
+covering translation, code transformation, semantic parsing, factual relations, executable
+reasoning, format conversion, and algebra. Opposite orientations of the same task are not
+independent domains. The invented-format never-had control is excluded from this count.
 
-\paragraph{Models.} \NUM{setup-models-sentence}
+\paragraph{Models.} The current audited results cover Llama 3B/8B, Gemma 4B/12B, and
+OLMo 1B. Eligibility and seed coverage vary by task and model; failed gates are retained.
 
 \paragraph{Arms and budget.}
 The forward-only baseline (\textsc{sft}) trains on forward pairs. Each \textsc{mix}$k$ arm
 replaces $k\%$ of those pairs with their own reversal, partitioned by pair identity so that no
 pair is seen in both directions. Because the reversal \emph{replaces} rather than adds, instance
-count, sequence tokens and optimizer steps are matched to \textsc{sft} at every dose, and the
-only quantity varying along the ladder is the share of pairs seen backwards.
+count and optimizer steps are matched to \textsc{sft} at every dose. We audit realized
+sequence and supervised-token counts separately: prompt length and unequal side lengths can
+change token exposure even when the pair count is fixed.
 \citet{golovneva2024reversetraining} distinguish data-matched from compute-matched reverse
-training; replacement is matched on both simultaneously, which is what licenses the word
-``free'' in \S\ref{sec:dose} --- scoped, there and throughout, to training budget.
+training; replacement requires no new paired examples. Any compute-saving claim is scoped
+to the measured training recipe and its audited token exposure.
 
 Two controls separate directional loss from its alternatives. \textsc{replay} replaces the same
 share with generic instruction data, so \textsc{replay}~$-$~\textsc{sft} is ordinary forgetting
 and \textsc{mix}~$-$~\textsc{replay} is what direction specifically buys. \textsc{rev} trains on
 reverse pairs only and is the ceiling every reverse number is read against; where \textsc{rev} is
 near zero the direction is not learnable in that cell and no null there is interpretable.
-\tabinput{arms}
+The complete arm definitions and realized direction/token counts are retained in run manifests.
 
-\section{Collapse is general and disproportionate}
+\section{Measuring directional loss across tasks}
 \label{sec:general}
-\NUM{general-headline-sentence}
-\tabinput{main}
+The current snapshot contains \NUM{audited-core-cells} distinct audited model--task--seed cells
+from \NUM{audited-core-campaigns} validated evaluation campaigns. For repeated evaluations,
+we select the latest valid pass by completion time and retain earlier campaigns in the audit;
+selection does not use effect sign.
+In \NUM{core-collapse-cells} cells, forward SFT leaves reverse strict success at most half
+the untouched model's rate in that same pass. These counts apply a descriptive threshold;
+they are not pooled significance tests, independent-domain counts, or a universal failure claim.
+\IfFileExists{tables/core_inventory.tex}{\input{tables/core_inventory.tex}}{}
+\begin{figure}[t]
+\centering
+\includegraphics[width=\columnwidth]{figures/directional_loss_snapshot.pdf}
+\caption{Each point is an audited model--task--seed cell. Both rates come from the same
+evaluation pass. The dashed line marks half of the base rate; repeated tasks and seeds
+are not independent observations.}
+\label{fig:directional-loss-snapshot}
+\end{figure}
 
-\paragraph{It is not ordinary forgetting.} \NUM{general-replay-contrast}
-\paragraph{It is not a loss of instruction following.} \NUM{general-ifeval-contrast}
-\paragraph{Moderators.} \NUM{general-moderators}
+\paragraph{Generic replay as a control.} Every valid main pass includes generic replay where
+registered. Its contrast with reversed-pair SFT tests directional content beyond general rehearsal.
+Aggregate contrasts and their intervals remain to be integrated.
+\paragraph{Instruction-following retention.} General-ability probe artifacts are retained;
+their overlap and comparability audit remains pending. The draft analysis pairs changes in
+inverse success with changes in instruction following and general reasoning on a fixed panel
+(Appendix~\ref{app:general-probes}). Probe instances must be checked against task training,
+replay, and filler data. No preservation or disproportionate-loss claim is made from task
+scores alone.
+\paragraph{Moderators.} Model family, size, task orientation, and starting capability are
+reported separately. Seed ranges will accompany partial-collapse claims.
 
-\section{A small reversed dose restores it at no cost}
+\section{Preserving the reverse direction with existing pairs}
 \label{sec:dose}
-\NUM{dose-headline-sentence}
-\tabinput{dose}
+The registered dose ladder tests whether a small share of reversed pairs preserves reverse
+success. Main-grid evaluations are complete for eligible cells; the final dose analysis must
+combine reverse recovery, forward retention, seed ranges, and realized budgets.
 
 \paragraph{Where the knee is.} We define the knee as the smallest dose whose reverse success
-reaches $90\%$ of \textsc{mix50}'s in that cell. \NUM{dose-knee-sentence}
+reaches $90\%$ of \textsc{mix50}'s in that cell. A point estimate alone does not establish
+that adjacent doses differ or that a plateau is equivalent.
 
-\paragraph{What it costs.} \NUM{dose-cost-sentence} Fine-tuning costs general ability at any
-direction mix; the dose is free relative to the forward-only baseline, not relative to the
-untouched model.
+\paragraph{What it costs.} We report forward retention and general-ability changes alongside reverse recovery.
+Any budget saving is relative to the forward-only training recipe, not the untouched model.
+Figure~\ref{fig:dose-tradeoff-draft} shows the current preservation comparison. The analysis
+distinguishes paired evaluation uncertainty from variation across training seeds and
+separates observed runtime from token exposure and additional-CE proxies.
 
-\section{Invertibility bounds what can be restored}
+\IfFileExists{figures/preservation_frontier.pdf}{%
+\begin{figure*}[t]
+\centering
+\includegraphics[width=\textwidth]{figures/preservation_frontier.pdf}
+\caption{Current preservation frontiers on the fixed reporting panel. Circles show ordinary
+SFT/dose campaigns; squares show separately generated contrastive/control campaigns.
+Opaque points and marginal cluster-bootstrap intervals are seed-17 results; translucent
+points show other training seeds. Contrasts remain paired within each campaign and are
+retained with measured runtime/exposure records in the source-backed analysis. The units
+null-collapse boundary case is included. No cross-campaign pooled test is implied.}
+\label{fig:dose-tradeoff-draft}
+\end{figure*}
+}{%
+\begin{figure}[t]
+\centering
+\fbox{\parbox{0.9\columnwidth}{\textbf{Draft figure slot: preservation frontier.}
+Forward strict success on the horizontal axis; reverse strict success on the vertical axis.
+Show base, SFT, replay, reversed-pair doses, and registered contrastive controls in
+model--task panels. Add paired intervals, seed variation, and a separate measured-cost panel.
+\par\NUM{dose-sentence}}}
+\caption{Planned dose--performance--compute summary. No result is drawn in this slot.
+Comparisons must share an evaluation campaign; independent campaigns remain separate.
+See Appendix~\ref{app:dose-summary} for the reporting protocol.}
+\label{fig:dose-tradeoff-draft}
+\end{figure}
+}
+
+\section{Boundary conditions: information and inverse difficulty}
 \label{sec:invertibility}
-\NUM{invertibility-headline-sentence}
-\tabinput{ladder}
+The format ladder varies whether an inverse is determined, while algebra orientation and
+automata probe inverse search difficulty. Several ladder cells fail eligibility and cannot
+support tuned-model comparisons; their descriptive base results remain separate.
 
-\paragraph{Two kinds of hardness.} \NUM{invertibility-two-kinds}
+\paragraph{Two kinds of hardness.} Information loss can prevent a unique inverse even with
+unlimited search, whereas a determined inverse can remain computationally difficult. Failed
+gates do not distinguish these explanations by themselves.
 
-\section{Suppressed, not erased}
+\section{Is the reverse capability still accessible?}
 \label{sec:mechanism}
 
 Four instruments, reported as separate verdicts rather than averaged: they measure different
 things, and a disagreement between them is a finding rather than noise.
 
-\paragraph{Prompting recovers part of what tuning removed.} \NUM{mech-elicitation}
-\paragraph{The collapse is a cheap direction in weight space.} \NUM{mech-alpha}
-\paragraph{Relearning outruns a capability never held.} \NUM{mech-relearn}
+\paragraph{Elicitation.} The audited reports include both prompt recovery and little recovery
+under tested prompts. Best-prompt summaries are exploratory; behavioral recovery does not
+prove a specific internal mechanism.
+\paragraph{Adapter scaling.} Scaling curves retain forward and reverse success together.
+Forward-progress ratios are undefined when the full update has no positive forward gain,
+and a curve without reverse loss cannot locate a collapse threshold.
+\paragraph{Relearning against a never-had control.} Relearning curves are matched to the
+never-had control by model and seed. A small-sample recovery advantage is descriptive evidence
+of accessible capability; its uncertainty and starting loss must accompany the comparison.
 This is also where the contrast with the reversal curse \citep{berglund2024reversal} becomes
 experimental rather than rhetorical: that literature describes capabilities never acquired, and
 our never-had control is that case, constructed.
-\paragraph{A closed-form filter on the update restores it with no data.} \NUM{mech-spectral}
+\paragraph{Update repair.} LoRA spectral sweeps are exploratory median-relative filters on
+an already low-rank update, with no full-rank noise bulk. Selecting a best threshold on test
+success is exploratory. Full-FT projection repair uses a separately registered fixed threshold
+and has produced \NUM{audited-fullft-repairs} checkpoint passing saved-weight audits.
+The completed fresh generation campaign improves forward and reverse success relative to the
+original full-SFT checkpoint. This single exploratory repair does not establish a general remedy.
 
 \section{Consequences for attribution}
 \label{sec:attrib}
-\NUM{attrib-headline-sentence}
+We distinguish exposure to both paired sides from an objective-specific generation benefit.
 
-We do not claim that every auxiliary-objective result on paired data is a directional artifact.
-We measured \NUM{n-attrib-methods}; the confound is real, cheap to test for, and currently
-untested, and anything stronger than that is unsupported.
+A gain from an auxiliary objective can reflect its directional information, its additional
+computation, or the objective itself. Our paired contrastive arms combine forward-only
+or mixed-direction CE with symmetric representation alignment. Both sides are encoded
+independently, and negatives are drawn only from training data. The contrastive term has no
+reverse generation CE, but it still exposes inverse correspondence; it cannot be described as
+having no inverse supervision.
+
+Matched comparisons include additional-CE controls and shuffled positive pairs. We measure
+strict reverse generation, forward retention, realized side-token exposure, and compute;
+embedding retrieval is secondary. Existing and new adapters must be evaluated together in a
+fresh pass. The contrastive campaign has completed \NUM{contrastive-completed-cells} of
+\NUM{contrastive-planned-cells} registered model--task--seed cells at the current snapshot.
+Table~\ref{tab:contrastive-snapshot} shows completed exploratory contrasts without pooling
+models or seeds. An interval spanning zero is not an equivalence result. The extra-CE controls
+match a declared exposure proxy, not measured identical FLOPs or wall time. The existing attribution results require an audit of
+auxiliary exposure and withdrawn artifacts before supporting a numerical conclusion.
+\IfFileExists{tables/contrastive_snapshot.tex}{\input{tables/contrastive_snapshot.tex}}{}
+\IfFileExists{tables/contrastive_controls.tex}{\input{tables/contrastive_controls.tex}}{}
+
+The completed controls qualify the interpretation: mixed-direction alignment sometimes
+improves reverse generation beyond the extra-CE proxy on format conversion, but the benefit
+varies across seeds and models. Forward-only alignment provides no consistent advantage
+over the additional-compute and shuffled-pair controls. For forward-only translation
+systems at the observed reverse-generation floor, degenerate bootstrap intervals do
+not establish equivalence. These are interim,
+within-cell observations; forward retention and the registered extensions are required
+before a broader objective-specific conclusion.
+
+\paragraph{New-domain eligibility.}
+The \NUM{failed-new-domain-gates} original small-model task--model gates failed the unchanged
+eligibility criteria (Table~\ref{tab:domain-gates-snapshot}). Complete test-set gates and
+scorer audits are retained. No tuned pilot is admitted for these failed cells. Explicit-output
+variants reuse their corpora; they are prompt diagnostics and cannot be counted as independent
+new-domain successes. The \NUM{failed-explicit-domain-gates} completed explicit-format
+gates also fail the unchanged criteria. Larger-model feasibility gates on the original
+tasks are separately registered. Gemma12B passes the unit-conversion gate and completes
+valid replicated campaigns (Table~\ref{tab:generality-snapshot}). Forward-only SFT improves
+both directions; this is retained as a replicated null-collapse result. Replication seeds are admitted by validity,
+independently of effect sign. Llama8B also passes Python--C++ translation after a technical parser retry; its pilot is
+evaluated under the registered same-pass protocol. Boolean gates remain failed, with correctness criteria unchanged.
+\IfFileExists{tables/domain_gates_snapshot.tex}{\input{tables/domain_gates_snapshot.tex}}{}
+\IfFileExists{tables/generality_snapshot.tex}{\input{tables/generality_snapshot.tex}}{}
+
+\paragraph{Full-weight checks.}
+Full-FT training is complete; \NUM{fullft-completed-cells} of \NUM{fullft-planned-cells}
+validated evaluation campaigns are complete in the current snapshot.
+Full checkpoints require isolated engines, unlike the single-engine multi-LoRA comparisons.
+Their newly generated campaigns use the same instances, messages, tokenizer, and scoring
+settings but span engine restarts. We record this layout and interpret small differences
+against the decoding floor. Projection-matrix spectral repair is exploratory; it does not
+assume a validated noise model. Repair results require joint reverse/forward interpretation.
+\IfFileExists{tables/fullft_snapshot.tex}{\input{tables/fullft_snapshot.tex}}{}
 
 \section{Related work}
 \label{sec:related}
 
-Four lines of work meet here. Each has a sentence saying what separates it from directional
-collapse, because in three of the four the distinction is the contribution.
+Prior directional degradation and reverse training are established starting points. Our
+contribution is the joint preservation comparison and controlled attribution, qualified by
+failed gates and replicated null-collapse results.
 
-\paragraph{The phenomenon, in single domains.}
-\citet{nikiema2025contrastive} name \emph{cognitive specialization}: fine-tuning on a forward
-code transformation not only fails to produce the reverse but degrades the bidirectional
-reasoning a base model already had. \citet{zhu2024finetuning} report the same shape in machine
-translation, where fine-tuning on a single direction generalizes to others \emph{except} when
-English is on the target side, which causes task misinterpretation. We take the phenomenon as
-established in those settings. What is open is whether it is general, what predicts the size of
-the loss, how little reversed data prevents it, and whether what is lost is gone.
-% The paper's own premise needs base models to be able to do both directions. DexBench is
-% independent, contemporaneous evidence for that in the execution domain, and its benchmark is
-% the eval set of one of our cells.
-\citet{hasanov2026pathnottaken} evaluate 13 models on the duality of program-execution reasoning
-and find backward performance far below forward throughout, which is the premise this paper
-depends on: the capability is there to be destroyed.
+\paragraph{Directional degradation and reverse training.}
+\citet{nikiema2025contrastive} study cognitive specialization in code transformation;
+\citet{zhu2024finetuning} examine direction-dependent degradation in translation. We ask
+how preservation varies across domains, doses, models, and objectives. Program-execution
+reasoning also exhibits directional asymmetry \citep{hasanov2026pathnottaken}, motivating
+cell-specific measurement of starting reverse capability. The reversal curse concerns
+capabilities never acquired \citep{berglund2024reversal}; reverse training addresses this
+at the data level under data- and compute-matched comparisons
+\citep{golovneva2024reversetraining}. Our relearning experiment compares a collapsed model
+with a model-matched never-had control. Replacement mixtures hold instances and steps fixed
+while auditing realized exposure.
 
-\paragraph{The reversal curse: a capability never acquired.}
-\citet{berglund2024reversal} fine-tune on ``$A$ is $B$'' and find the reverse is not learned;
-\citet{golovneva2024reversetraining} cure it at the data level with reverse training, evaluated
-both data-matched and compute-matched. \textbf{The distinction is not rhetorical here, it is an
-experiment.} That literature describes a capability the model never had. Ours had it, and lost
-it. \S\ref{sec:mechanism} measures relearning cost from a collapsed model against a
-\emph{never-had control} --- an invented transformation no pretraining corpus contains --- and
-the two curves are what separate the cases. A second difference is budget: reverse training
-doubles the token count, while replacing forward pairs with their own reversal holds instances,
-sequence tokens and optimizer steps fixed at once.
+\paragraph{Forgetting and rehearsal.}
+Broader forgetting after fine-tuning \citep{luo2023forgetting} and differences between LoRA
+and full fine-tuning \citep{biderman2024lora} motivate our general-ability and full-weight
+controls; they do not bound directional loss in these tasks. Rehearsal can preserve earlier
+performance \citep{scialom2022rehearsal}. Generic replay at the registered replacement share
+tests whether directional content adds preservation beyond that explanation. Concentration
+of inverse loss relative to general ability remains a separate empirical question.
 
-\paragraph{Forgetting: diffuse loss, versus targeted and total.}
-Fine-tuning degrades capabilities its data never threatened, across model scales
-\citep{luo2023forgetting}, and LoRA forgets less than full fine-tuning
-\citep{biderman2024lora} --- which makes the magnitudes we report on LoRA conservative, and is
-why \S\ref{sec:setup} includes full fine-tuning arms. The difference from directional collapse
-is shape: forgetting is measured as a spread-out decline across unrelated benchmarks, where here
-the inverse direction goes to near zero while general probes move a few points.
-% Scialom is the closest antecedent to the dose result and the honest way to use it is as the
-% source of a prediction our own control tests, not as prior art to be distinguished away.
-\citet{scialom2022rehearsal} show that a memory buffer of roughly 1\,\% of prior data preserves
-almost all earlier-task performance across eight sequential tasks. That is the same shape as our
-dose result and we do not claim the shape as new. Two things differ, and the second is testable:
-their buffer replays genuine earlier-task examples and \emph{adds} to the training budget, where
-a reversed pair is constructed for free and \emph{replaces}; and if directional collapse were
-ordinary forgetting, their result predicts that generic rehearsal at the same share should
-prevent it. \textsc{replay} is that arm.
+\paragraph{Recovery and task inference.}
+Wrapper and offset accounts of fine-tuning \citep{jain2024wrapper,lee2024dpo}, update filtering
+\citep{spectral2026unforgetting}, and skewed task inference \citep{kotha2024forgetting}
+motivate distinct recovery instruments. Our directional tests include a never-had control,
+both-direction retention, and fixed-threshold exploratory repair. Behavioral recovery does
+not identify a unique internal mechanism, and bidirectional behavior need not imply a unified
+representation \citep{latentgen2026illusion}.
 
-\paragraph{Suppression rather than removal, and skewed task inference.}
-That fine-tuning modulates rather than replaces is already well supported outside this setting,
-and \S\ref{sec:mechanism} does not claim it as new. Fine-tuning rarely alters underlying
-capabilities and learns a minimal ``wrapper'' over them \citep{jain2024wrapper}; DPO does not
-remove the ability to produce toxic text but bypasses it with an offset distributed across
-layers \citep{lee2024dpo} --- a distribution that is itself a prediction for our layer
-ablation; and damaged capabilities can be recovered post hoc by filtering the weight update
-\citep{spectral2026unforgetting}. Closest of all is \citet{kotha2024forgetting}, who argue that
-models implicitly infer the task of a prompt and that fine-tuning \emph{skews that inference}
-toward the fine-tuning distribution, recovering capability by making the prompt look farther
-from it. Our hypothesis is their mechanism with direction as the inferred task: forward-only
-training leaves the model applying the trained mapping whichever direction is asked for.
-What \S\ref{sec:mechanism} adds is the directional case, a never-had control that makes
-erased-versus-suppressed a measurement rather than an inference, and four instruments that can
-disagree. \citet{latentgen2026illusion} add a caution we
-take seriously: objectives that repair reversal behaviour need not build a single
-direction-agnostic representation, and their probes are consistent with forward and reverse
-stored as distinct entries. That is why \S\ref{sec:mechanism} uses four instruments rather than
-one, and why both directions share a single system prompt --- if directions can be stored
-separately while behaviour looks bidirectional, two personas would let disjoint circuits
-masquerade as a unified one.
-
-\paragraph{Direction as a confound in attribution.}
-The methodological consequence has a literature of its own: gains attributed to an objective
-often belong to the data mixture \citep{longpre2023flan}, and reporting practice makes such
-claims hard to check \citep{lipton2018troubling}. \citet{chen2025revthink} is the sharpest
-current instance, and a useful one because nothing about it is careless. RevThink augments each
-example with a teacher-generated backward question and backward reasoning and improves
-\emph{forward} accuracy by 13.53\,\% across 12 datasets. Its objective is
-$\mathcal{L} = \frac{1}{3n}\sum_i [\ell(\text{forward}) + \ell(\text{backward question}) +
-\ell(\text{backward reasoning})]$, a sum of cross-entropy terms over a union of three formats
---- which is what supervised fine-tuning on that union is. Its baselines differ from it in data
-direction as well as in method. When an objective has that form, the objective and the data
-mixture are not separable by any experiment the paper contains. That is the general problem
-being structural rather than accidental, and it is why the test in \S\ref{sec:intro} is worth
-stating rather than assuming.
+\paragraph{Attributing objective gains.}
+Data mixtures and reporting choices can confound objective attribution
+\citep{longpre2023flan,lipton2018troubling}. RevThink adds backward questions and reasoning
+\citep{chen2025revthink}; its cross-entropy components illustrate why directional exposure
+must be controlled when assessing a bidirectional objective. Our paired contrastive comparison
+includes reversed-pair SFT, extra-CE proxies, and shuffled positives, measuring generation in
+both directions. These controls test the scope of an objective-specific gain without assuming
+that auxiliary objectives are universally unnecessary.
 
 \section{Conclusion}
-For any method that adds instances to paired training data, train the arm that supplies the same
-directional content and none of the method.
+Paired training data makes direction a variable that can be changed without collecting new
+pairs. Evaluating only the trained direction leaves its inverse unchecked. Our study is
+organized around preservation, boundary conditions, and objective attribution: how much can
+ordinary reversed-pair SFT accomplish, and what do more elaborate methods contribute beyond
+that baseline? The final conclusions will follow the audited generation results, including
+null effects and failed eligibility gates.
 
 % ---------------------------------------------------------------------------
 % ARR requires a Limitations section. It is unnumbered and does not count against the page
@@ -303,30 +413,40 @@ directional content and none of the method.
 \section*{Limitations}
 \label{sec:limitations}
 
-\paragraph{Where the repair does not reach.} \NUM{lim-invertibility}
+\paragraph{Where the repair does not reach.} Reversed-pair training cannot recover information
+absent from an input. Our failed new-domain gates also limit generality beyond established tasks.
 
 \paragraph{Scale.} The full arm set runs at 1--4B with three seeds; only core arms run at
-8--12B with two. \NUM{lim-scale}
+8--12B with two where eligible in the original grid. Separately registered larger-model
+extensions add replication and objective controls in selected cells; coverage remains uneven.
+This does not establish scaling to larger models.
 
-\paragraph{LoRA.} Every arm is trained with LoRA, which maintains out-of-domain performance
-better than full fine-tuning \citep{biderman2024lora}; the collapse magnitudes we report are
-therefore conservative, and the full fine-tuning arms in \S\ref{sec:setup} bound the difference.
-\NUM{lim-lora}
+\paragraph{LoRA.} Most arms use LoRA. Prior work reports different retention under full
+fine-tuning \citep{biderman2024lora}; this does not guarantee a conservative directional-loss
+estimate in our tasks. The full-FT check covers only the registered Llama 3B seed-17 cells;
+it cannot bound directional loss across other models or training recipes.
 
 \paragraph{Resolution of the dose ladder.} Adjacent rungs differ by a couple of points, which
-our evaluation sets cannot separate reliably. We therefore report the knee as a bound rather
-than a point estimate. \NUM{lim-knee}
+our evaluation sets may not separate reliably. Final dose claims require intervals and seed
+ranges; an interval spanning zero does not establish equivalence.
 
 \paragraph{Criteria with a model in them.} Two directions are scored by round-tripping through a
 frozen model rather than by execution. Each reports that model's own accuracy on the references
-as the criterion's ceiling. \NUM{lim-frozen-scorers}
+as the criterion's ceiling where measured. Extractor/parser errors can reject valid generations;
+the D2T measurement is still undergoing validation.
 
-\paragraph{Languages and domains.} The code cell is Python only; the translation cells cover two
-language pairs, both with English on one side. \NUM{lim-coverage}
+\paragraph{Languages and domains.} The original code-transformation cell is Python only;
+the translation cells cover two
+language pairs, both with English on one side. Synthetic task variants do not establish natural
+code or unrestricted reasoning generality, and reused semantic corpora are not independent evidence.
+Independent real-data transfer and alternate-prompt/training-recipe tests are drafted in
+Appendices~\ref{app:independent-transfer} and~\ref{app:robustness}; they have no measured
+results yet.
 
-\section*{Acknowledgments}
-\NUM{acknowledgments}
+% Acknowledgments belong only in the camera-ready version.
+\bibliography{refs}
 
-\bibliography{../papers/references}
+\appendix
+\input{planned_evaluations}
 
 \end{document}

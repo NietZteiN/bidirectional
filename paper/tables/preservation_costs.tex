@@ -1,0 +1,32 @@
+\begin{table*}[t]
+\centering\small
+\begin{tabular}{llllll}
+\toprule
+Task & Model & Arm & Minutes & Steps & CE corpus tokens \\
+\midrule
+mt\_de-en & llama32-3b & sft & 8.9 & 306 & 1096262 \\
+mt\_de-en & llama32-3b & mix5 & 8.9 & 306 & 1096262 \\
+mt\_de-en & llama32-3b & mix50 & 9.0 & 306 & 1096262 \\
+mt\_de-en & llama32-3b & replay & 8.9 & 306 & 1096110 \\
+mt\_de-en & llama32-3b & sft & 8.9 & 306 & 1096262 \\
+mt\_de-en & llama32-3b & mix5 & 8.9 & 306 & 1096262 \\
+mt\_de-en & llama32-3b & replay & 8.9 & 306 & 1096110 \\
+mt\_de-en & llama32-3b & cl\_fwd & 241.9 & 306 & 1096262 \\
+mt\_de-en & llama32-3b & cl\_mix5 & 62.2 & 306 & 1096262 \\
+mt\_de-en & llama32-3b & sft\_extra\_ce & 123.2 & 306 & 1096262 \\
+mt\_de-en & llama32-3b & mix5\_extra\_ce & 119.1 & 306 & 1096262 \\
+fmt & gemma3-4b & sft & 30.6 & 306 & 1927990 \\
+fmt & gemma3-4b & mix5 & 30.7 & 306 & 1927882 \\
+fmt & gemma3-4b & replay & 30.2 & 306 & 1927978 \\
+fmt & gemma3-4b & cl\_fwd & 194.3 & 306 & 1927990 \\
+fmt & gemma3-4b & cl\_mix5 & 193.5 & 306 & 1927882 \\
+fmt & gemma3-4b & sft\_extra\_ce & 191.3 & 306 & 1927990 \\
+fmt & gemma3-4b & mix5\_extra\_ce & 194.0 & 306 & 1927882 \\
+units & gemma3-12b & sft & 21.6 & 306 & 788819 \\
+units & gemma3-12b & mix50 & 22.1 & 306 & 788819 \\
+units & gemma3-12b & replay & 21.5 & 306 & 799547 \\
+\bottomrule
+\end{tabular}
+\caption{Recorded seed-17 trainer runtimes (minutes), optimizer steps, and sequence tokens in the tokenized CE corpus (before epoch repetition). Auxiliary encoded-side exposure remains separately recorded in the analysis; these token counts are not total objective FLOPs. Runtime varies with GPU/training layout and is not a claim of matched wall time. Missing measurements are unavailable, never inferred.}
+\label{tab:preservation-costs}
+\end{table*}

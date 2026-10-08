@@ -30,7 +30,8 @@ from bidir.schema import TrainRow
 
 MAX_DROP_FRACTION = 0.25
 SCRIPTS_FOR_PROVENANCE = ["src/bidir/train.py", "src/bidir/mixture.py", "src/bidir/prompts.py",
-                          "src/bidir/arms.py", "src/bidir/schema.py"]
+                          "src/bidir/arms.py", "src/bidir/schema.py", "src/bidir/contrastive.py",
+                          "src/bidir/collators.py", "src/bidir/losses.py"]
 
 
 def adapter_dir(domain: str, model: str, arm: str, rank: int, seed: int, root: str = "adapters") -> Path:
@@ -177,6 +178,116 @@ def _attach_auxiliary(examples, rows, spec, domain_mod, tokenizer, oprompts):
     return out
 
 
+def validated_auxiliary_microbatch4(model, effective):
+    """Promote only after both real-model batch4 objective/control checks pass."""
+    from bidir.config import RESULTS_DIR
+    checks = {
+        "llama32-3b": [(440706,"cl_batch4_llama","cl_fwd"), (440707,"ce_batch4_llama","sft_extra_ce")],
+        "gemma3-4b": [(440708,"cl_batch4_gemma","cl_fwd"), (440709,"ce_batch4_gemma","sft_extra_ce")],
+    }
+    baselines={"llama32-3b": [(440645,"cl_fwd"),(440646,"sft_extra_ce")],
+               "gemma3-4b": [(440729,"cl_fwd"),(440730,"sft_extra_ce")]}
+    if model in {'llama31-8b', 'gemma3-12b'}:
+        try:
+            profiles = json.loads((PROJECT_ROOT / 'configs/contrastive_scale_batch4.json').read_text())[model]
+            originals = json.loads((PROJECT_ROOT / 'configs/contrastive_scale_smokes.json').read_text())[model]
+            arms = ['cl_fwd', 'sft_extra_ce']
+            if (len(profiles) != 2 or len(originals) != 2
+                    or {p['arm'] for p in profiles} != set(arms)
+                    or {p['arm'] for p in originals} != set(arms)):
+                return 1
+            by_arm = {p['arm']: p for p in profiles}
+            original_by_arm = {p['arm']: p for p in originals}
+            from bidir.pipeline_state import registered_engineering_job
+            status_dir = PROJECT_ROOT / 'runs/status'
+            checks[model] = [(registered_engineering_job(status_dir, by_arm[arm]), by_arm[arm]['name'], arm)
+                             for arm in arms]
+            baselines[model] = [(registered_engineering_job(status_dir, original_by_arm[arm]), arm) for arm in arms]
+        except (OSError, KeyError, ValueError):
+            return 1
+    if model not in checks or effective % 4:
+        return 1
+    try:
+        import torch
+        if not torch.cuda.is_available():
+            return 1
+        memory=torch.cuda.get_device_properties(0).total_memory
+        if memory < 60 * 1024**3:
+            return 1
+        for (job,name,arm),(old_job,old_arm) in zip(checks[model],baselines[model]):
+            status=json.loads((PROJECT_ROOT/"runs"/"status"/f"{name}.{job}.json").read_text())
+            out=RESULTS_DIR/"engineering_smokes"/f"{model}_{arm}_{job}"
+            profile=json.loads((out/"profile.json").read_text())
+            summary=json.loads((out/"training_summary.json").read_text())
+            if status["exit_code"] or profile["exit_code"] or summary["steps"]!=2:
+                return 1
+            if profile["peak_cuda_bytes"] > memory*0.7:
+                return 1
+            manifest=json.loads((out/"run_manifest.json").read_text())
+            if manifest["config_resolved"]["train"]["per_device_batch"] != 4:
+                return 1
+            old=RESULTS_DIR/"engineering_smokes"/f"{model}_{old_arm}_{old_job}"
+            previous=json.loads((old/"training_summary.json").read_text())
+            previous_profile=json.loads((old/"profile.json").read_text())
+            previous_manifest=json.loads((old/"run_manifest.json").read_text())
+            if previous_profile["exit_code"] or previous["steps"]!=2 or previous["effective_batch"]!=summary["effective_batch"]:
+                return 1
+            if previous_manifest["config_resolved"]["train"]["per_device_batch"]!=1:
+                return 1
+            if summary["train_runtime_s"] >= previous["train_runtime_s"]:
+                return 1
+            exposure=summary["direction_exposure"]
+            if arm=="cl_fwd" and not exposure.get("contrastive_gradient_gate_passed"):
+                return 1
+            if arm=="sft_extra_ce" and exposure.get("extra_ce_passes")!=6:
+                return 1
+        return 4
+    except (OSError,KeyError,ValueError):
+        return 1
+
+
+def validated_auxiliary_microbatch(model, effective):
+    """Use the fastest fully validated batch shape, retaining earlier safe settings."""
+    fallback=validated_auxiliary_microbatch4(model,effective)
+    if fallback!=4 or effective%8:
+        return fallback
+    from bidir.config import RESULTS_DIR
+    import torch
+    checks={
+        "llama32-3b": [(440966,"cl_m4_e8_llama",440967,"cl_m8_e8_llama","cl_fwd"),
+                       (440968,"ce_m4_e8_llama",440969,"ce_m8_e8_llama","sft_extra_ce")],
+        "gemma3-4b": [(440970,"cl_m4_e8_gemma",440971,"cl_m8_e8_gemma","cl_fwd"),
+                      (440972,"ce_m4_e8_gemma",440973,"ce_m8_e8_gemma","sft_extra_ce")],
+    }
+    if model not in checks:
+        return fallback
+    try:
+        memory=torch.cuda.get_device_properties(0).total_memory
+        for old_job,old_name,new_job,new_name,arm in checks[model]:
+            summaries=[]
+            for job,name,micro in ((old_job,old_name,4),(new_job,new_name,8)):
+                status=json.loads((PROJECT_ROOT/"runs"/"status"/f"{name}.{job}.json").read_text())
+                out=RESULTS_DIR/"engineering_smokes"/f"{model}_{arm}_{job}"
+                profile=json.loads((out/"profile.json").read_text())
+                summary=json.loads((out/"training_summary.json").read_text())
+                manifest=json.loads((out/"run_manifest.json").read_text())
+                if status["exit_code"] or profile["exit_code"] or summary["steps"]!=2 or summary["effective_batch"]!=8:
+                    return fallback
+                if profile["peak_cuda_bytes"]>memory*0.7 or manifest["config_resolved"]["train"]["per_device_batch"]!=micro:
+                    return fallback
+                exposure=summary["direction_exposure"]
+                if arm=="cl_fwd" and not exposure.get("contrastive_gradient_gate_passed"):
+                    return fallback
+                if arm=="sft_extra_ce" and exposure.get("extra_ce_passes")!=6:
+                    return fallback
+                summaries.append(summary)
+            if summaries[1]["train_runtime_s"]>=summaries[0]["train_runtime_s"]:
+                return fallback
+        return 8
+    except (OSError,KeyError,ValueError):
+        return fallback
+
+
 def build_parser() -> argparse.ArgumentParser:
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--domain", required=True, help="cell name, e.g. mt_en-de, sql, code")
@@ -216,6 +327,13 @@ def main(argv: Optional[list[str]] = None) -> int:
     if args.per_device_batch:
         cfg.setdefault("train", {})["per_device_batch"] = int(args.per_device_batch)
     tcfg = _effective_train_knobs(cfg, mcfg)
+    if spec.loss in ("contrastive", "extra_ce"):
+        effective = int(tcfg["per_device_batch"]) * int(tcfg["grad_accum"])
+        micro = int(tcfg.get("auxiliary_microbatch", validated_auxiliary_microbatch(args.model,effective)))
+        if micro < 1 or effective % micro:
+            raise ValueError("auxiliary microbatch must be positive and divide effective batch")
+        tcfg = {**tcfg, "per_device_batch": micro, "grad_accum": effective // micro}
+        print(f"[train] auxiliary memory refit: microbatch {micro}, effective batch {effective}",flush=True)
     # Only when the caller did not pin it: an explicit --per-device-batch is a deliberate
     # choice (the CPU smoke path uses it) and must not be second-guessed.
     if not args.per_device_batch:
@@ -323,9 +441,13 @@ def main(argv: Optional[list[str]] = None) -> int:
         return out
 
     train_ex, val_ex = to_examples(train_rows), to_examples(val_rows)
-    if spec.loss != "ce":
-        train_ex = _attach_auxiliary(train_ex, train_rows, spec, domain_mod, tokenizer, oprompts)
-        val_ex = _attach_auxiliary(val_ex, val_rows, spec, domain_mod, tokenizer, oprompts)
+    if spec.loss == "contrastive":
+        from bidir.contrastive import attach_candidates
+        train_ex = attach_candidates(train_ex, train_rows, args.domain, seed, spec.name == "cl_shuffled")
+        val_ex = attach_candidates(val_ex, val_rows, args.domain, seed, spec.name == "cl_shuffled")
+    elif spec.loss not in ("ce", "extra_ce"):
+        train_ex = _attach_auxiliary(train_ex, train_rows, spec, domains.get(args.domain), tokenizer, oprompts)
+        val_ex = _attach_auxiliary(val_ex, val_rows, spec, domains.get(args.domain), tokenizer, oprompts)
     keep, length_stats = measure_lengths(train_ex, [r.task for r in train_rows], tokenizer, int(tcfg["max_seq_len"]))
     print(f"[bidir.train] lengths: {json.dumps(length_stats)}", flush=True)
     train_ex = [train_ex[i] for i in keep]
@@ -333,6 +455,10 @@ def main(argv: Optional[list[str]] = None) -> int:
     vkeep, val_length_stats = measure_lengths(val_ex, [r.task for r in val_rows], tokenizer, int(tcfg["max_seq_len"]))
     val_ex = [val_ex[i] for i in vkeep]
 
+    if spec.loss in ("contrastive", "extra_ce"):
+        for examples, rows in ((train_ex, train_rows), (val_ex, [val_rows[i] for i in vkeep])):
+            for example,row in zip(examples,rows):
+                example["generation_direction"] = 1 if row.task == "rev" else 0
     train_ds = Dataset.from_list(train_ex)
     val_ds = Dataset.from_list(val_ex) if val_ex else None
 
@@ -410,6 +536,7 @@ def main(argv: Optional[list[str]] = None) -> int:
         # than the same batch shape does on a GPU. A batch sized for an H200 OOM-killed a 64 GB
         # CPU node on 2026-09-10. Use --per-device-batch to shrink it for smoke runs.
         gradient_checkpointing=bool(tcfg.get("gradient_checkpointing", True)) and use_cuda,
+        gradient_checkpointing_kwargs={"use_reentrant": False} if spec.loss == "contrastive" else None,
         save_strategy=tcfg.get("save_strategy", "no"),
         # Belt and braces on the config: an intermediate checkpoint is never loaded by anything
         # in this project, and keeping three of them per adapter is what took the storage
@@ -443,6 +570,13 @@ def main(argv: Optional[list[str]] = None) -> int:
     total = int(batch["attention_mask"].sum())
     if supervised == 0 or supervised >= total:
         raise SystemExit(f"loss mask gate failed: {supervised}/{total} tokens supervised")
+    # AUXILIARY GATE, same spirit: an attribution arm whose extra tensors never reach the loss
+    # trains as plain CE and still "succeeds". That happened on 2026-09-26 (manifest showed
+    # forward_ce only), so the first real batch must carry them or the run stops here.
+    need = {"unlikelihood": "conflict_input_ids", "roundtrip": "roundtrip_prompt_ids", "contrastive": "contrastive_a_input_ids"}.get(spec.loss)
+    if need and need not in batch:
+        raise SystemExit(f"auxiliary gate failed: {spec.loss} batch has no {need!r}; "
+                         f"keys = {sorted(batch)}")
     print(f"[bidir.train] loss-mask gate ok: {supervised}/{total} tokens supervised in batch 1", flush=True)
 
     if args.dry_run:

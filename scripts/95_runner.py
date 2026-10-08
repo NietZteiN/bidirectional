@@ -42,6 +42,7 @@ from __future__ import annotations
 import argparse
 import functools
 import getpass
+import hashlib
 import json
 import re
 import subprocess
@@ -53,7 +54,7 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "src"))
 
 from bidir import arms as A  # noqa: E402
-from bidir.config import RESULTS_DIR, RUNS_DIR  # noqa: E402
+from bidir.config import DATA_DIR, RESULTS_DIR, RUNS_DIR  # noqa: E402
 from bidir.train import adapter_dir  # noqa: E402
 
 SUBMIT = ROOT / "scripts" / "slurm" / "submit.py"
@@ -80,6 +81,26 @@ OLMO_COLLAPSED = ["mt_de-en", "mt_en-de"]
 #: directory, and MUST differ between tiers -- a mechanism eval scores a different arm set, and
 #: writing it to the main tag would replace a 12-arm result with a 6-arm one.
 PLAN = [
+    ("Priority1 larger-model contrastive extension", ["fmt", "mt_de-en"],
+     ["llama31-8b", "gemma3-12b"], [17, 42, 1234], "contrastive_pilot", "contrastive_pilot"),
+    ("Priority1 numerical-domain contrastive extension", ["units"],
+     ["gemma3-12b"], [17, 42, 1234], "contrastive_pilot", "contrastive_pilot"),
+    ("Priority1 larger-model domain replications", ["units", "logic", "py_cpp"],
+     ["llama31-8b", "gemma3-12b"], [42, 1234], "domain_pilot", "generality_scale_pilot"),
+    ("Priority1 larger-model domain pilots", ["units", "logic", "py_cpp"],
+     ["llama31-8b", "gemma3-12b"], [17], "domain_pilot", "generality_scale_pilot"),
+    ("Priority1 explicit domain pilots", ["units_explicit", "logic_explicit", "py_cpp_explicit"],
+     ["llama32-3b", "gemma3-4b"], [17], "domain_pilot", "explicit_domain_pilot"),
+    ("Priority1 contrastive pilot", ["fmt", "mt_de-en"], ["llama32-3b", "gemma3-4b"], [17, 42, 1234],
+     "contrastive_pilot", "contrastive_pilot"),
+    ("Priority1 program pilot", ["py_cpp"], ["llama32-3b", "gemma3-4b"], [17],
+     "domain_pilot", "py_cpp_pilot"),
+    ("Priority1 logic pilot", ["logic"], ["llama32-3b", "gemma3-4b"], [17],
+     "domain_pilot", "logic_pilot"),
+    ("Priority1 units pilot", ["units"], ["llama32-3b", "gemma3-4b"], [17],
+                                                         "domain_pilot", "units_pilot"),
+    ("D2T repaired gate pilot", ["d2t"], ["llama32-3b"], [17],
+     "domain_pilot", "d2t_repaired_pilot"),
     ("P1 s17 breadth",        READY,          ["llama32-3b"], [17],      "full",    "small"),
     ("P2 blocked-cell s17",   FORMAT_BLOCKED, ["llama32-3b"], [17],      "full",    "small"),
     ("P3 seeds",              CORE,           ["llama32-3b"], [42, 1234], "full",   "small"),
@@ -118,6 +139,28 @@ PLAN = [
     # P7, the scale question. Gates are queued; cells stay blocked until they pass.
     ("P7 llama31-8b",         CORE + READY,   ["llama31-8b"], [17],      "full",    "small"),
     ("P7 gemma3-12b",         CORE + READY,   ["gemma3-12b"], [17],      "full",    "small"),
+    # Error bars at scale. A single-seed magnitude may not be quoted for a partial collapse
+    # (Amendment 34), and P7 so far has only s17.
+    ("P7b llama31-8b s42",    CORE + READY,   ["llama31-8b"], [42],      "full",    "small"),
+    ("P7b gemma3-12b s42",    CORE + READY,   ["gemma3-12b"], [42],      "full",    "small"),
+    # P8. `exec` passed its base gate on 2026-09-25 (forward 0.270, reverse 0.160). The fullft
+    # tier is separately queued after the isolated-checkpoint GPU validation (Amendment42).
+    ("P8 exec",               ["exec"],       ["llama32-3b"], [17],      "full",    "small"),
+    # Complete the registered three-seed small-model panel (configs/models.yaml).
+    # Existing results and failed base gates are still skipped by the usual guards.
+    ("P9 small third seed",   CORE + READY,   ["llama32-3b", "gemma3-4b", "olmo2-1b"],
+                                                                  [1234], "full", "small"),
+    ("P9 formal seed reps",   FORMAT_BLOCKED, ["llama32-3b"], [42, 1234], "full", "small"),
+    ("P9 exec seed reps",     ["exec"],       ["llama32-3b"], [42, 1234], "full", "small"),
+    ("P10 breadth prerequisite42", ["mt_en-zh", "mt_zh-en"], ["llama32-3b"],
+                                                                  [42], "full", "small"),
+    ("P10 control seed42",    ["fmt_novel"],  ["llama32-3b", "gemma3-4b", "olmo2-1b"],
+                                                                  [42], "core", "small"),
+    ("P10 control ladder42",  ["fmt_novel"],  ["llama32-3b", "gemma3-4b", "olmo2-1b"],
+                                                                  [42], "relearn", "relearn"),
+    ("P10 mechanism seed42",  COLLAPSED,      ["llama32-3b"], [42], "relearn", "relearn"),
+    ("P10 gemma mechanism42", GEMMA_COLLAPSED, ["gemma3-4b"], [42], "relearn", "relearn"),
+    ("P10 olmo mechanism42",  OLMO_COLLAPSED, ["olmo2-1b"], [42], "relearn", "relearn"),
 ]
 
 #: Long-sequence or two-model cells: an a30 placement does not finish in a sane walltime.
@@ -141,7 +184,8 @@ SLOW_EVAL = {"mt_en-de", "mt_de-en", "mt_en-zh", "mt_zh-en", "d2t"}
 #: Needs the 141 GB card: two models resident at once.
 NEEDS_H200 = {"d2t"}
 
-OURS = re.compile(r"^(tr|ev)_(" + "|".join(sorted(set(CORE + READY + FORMAT_BLOCKED))) + r")_")
+OURS = re.compile(r"^(tr|ev)_(paper|" + "|".join(sorted({cell for _, cells, *_ in PLAN
+                                                for cell in cells})) + r")_")
 
 
 #: Reasons a PENDING job will never start on its own. A job in one of these states occupies a
@@ -153,7 +197,7 @@ DEAD_REASONS = ("DependencyNeverSatisfied", "JobHeldUser", "JobHeldAdmin")
 
 
 def squeue_ours(include_dead: bool = False) -> list[tuple[str, str]]:
-    out = subprocess.run(["squeue", "-u", getpass.getuser(), "-h", "-o", "%i|%j|%T|%r|%E"],
+    out = subprocess.run(["squeue", "-u", getpass.getuser(), "-h", "-o", "%i|%j|%T|%r|%E|%k"],
                          capture_output=True, text=True, timeout=30).stdout
     jobs = []
     for line in out.splitlines():
@@ -162,7 +206,10 @@ def squeue_ours(include_dead: bool = False) -> list[tuple[str, str]]:
             continue
         jid, name, state, reason, dep = parts[0], parts[1], parts[2], parts[3], parts[4]
         if OURS.match(name):
-            jobs.append({"id": jid, "name": name, "state": state, "reason": reason, "dep": dep})
+            capacity_hold = len(parts) > 5 and parts[5] == "bidir_capacity_hold"
+            jobs.append({"id": jid, "name": name, "state": state,
+                         "reason": "CapacityWait" if capacity_hold and reason == "JobHeldUser" else reason,
+                         "dep": dep})
 
     # DEADNESS IS TRANSITIVE. A job waiting on a job that can never run can never run either,
     # and Slurm does not say so: its reason stays plain "Dependency". `ev_fmt` was queued behind
@@ -223,6 +270,105 @@ def control_gate_ok(domain: str, model: str) -> bool | None:
     return None
 
 
+def generality_replication_valid(cell, model):
+    """Require a complete valid seed17 campaign, including null/adverse effects."""
+    from bidir.pipeline_state import evaluation_succeeded
+    required = {'base', 'sft', 'rev', 'mix50', 'replay'}
+    name = 'ev_' + job_key(cell, model, 17, 'generality_scale_pilot')
+    for path in RESULTS_DIR.glob(f'*/{cell}/{model}/generality_scale_pilot_s17/followup_contrasts.json'):
+        try:
+            report = json.loads(path.read_text())
+            summary = json.loads((path.parent / 'summary.json').read_text())
+            if (report['domain'] != cell or report['model'] != model or report['seed'] != 17
+                    or set(report['means']) != required or set(summary['arms']) != required
+                    or summary['n_instances'] != 1000
+                    or report.get('evaluation_layout') != 'single_engine_pass'
+                    or (path.parent / 'WITHDRAWN.txt').exists()
+                    or report['trial_sha256'] != hashlib.sha256((path.parent / 'trials.jsonl').read_bytes()).hexdigest()
+                    or not evaluation_succeeded(path.parent, ROOT / 'runs/status', name)):
+                continue
+            if any(summary.get('adapter_effectiveness', {}).get(arm, {}).get('identical_rate', 1) >= .999
+                   for arm in required - {'base'}):
+                continue
+            if all(adapter_complete(cell, model, arm, 17) for arm in required - {'base'}):
+                return True
+        except (OSError, KeyError, ValueError):
+            continue
+    return False
+
+
+def contrastive_replication_valid(cell,model):
+    """Promote implementation validity independently of the sign of measured effects."""
+    reports=list(RESULTS_DIR.glob(f"*/{cell}/{model}/contrastive_pilot_s17/contrastive_contrasts.json"))
+    if not reports:
+        return False
+    try:
+        report=json.loads(reports[-1].read_text())
+        if not report.get("same_pass_only") or len([r for r in report["contrasts"] if r["primary"]])!=5:
+            return False
+        for arm in ("cl_fwd","cl_mix5","cl_shuffled","sft_extra_ce","mix5_extra_ce"):
+            out=adapter_dir(cell,model,arm,32,17)
+            summary=json.loads((out/"training_summary.json").read_text())
+            exposure=summary["direction_exposure"]
+            if summary["effective_batch"]!=64 or summary["steps"]<=0:
+                return False
+            if arm.startswith("cl_"):
+                if not (exposure.get("contrastive_gradient_gate_passed") and exposure.get("negative_count")==4
+                        and exposure.get("contrastive_lambda")==0.1 and exposure.get("contrastive_temperature")==0.1):
+                    return False
+            elif exposure.get("extra_ce_passes")!=6:
+                return False
+        return True
+    except (OSError,KeyError,ValueError):
+        return False
+
+
+def contrastive_smokes_ready(model=None, cell=None):
+    """All prerequisite trainer paths must finish successfully before pilot admission."""
+    checks = [
+        (440645,"cl_accum_smoke_llama","llama32-3b","cl_fwd"),
+        (440646,"ce_proxy_smoke_llama","llama32-3b","sft_extra_ce"),
+        (440647,"cl_mix_smoke_gemma","gemma3-4b","cl_mix5"),
+        (440648,"cl_shuffle_smoke_gemma","gemma3-4b","cl_shuffled"),
+    ]
+    if cell == 'units':
+        try:
+            audit = json.loads((RESULTS_DIR / 'audit/contrastive_units_negatives.json').read_text())
+            if (audit['passed'] is not True or audit['n_train'] != 6500
+                    or audit['source_sha256']['train'] != hashlib.sha256((DATA_DIR / 'units/train.jsonl').read_bytes()).hexdigest()
+                    or audit['implementation_sha256'] != hashlib.sha256((ROOT / 'src/bidir/contrastive.py').read_bytes()).hexdigest()):
+                return False
+        except (OSError, KeyError, ValueError):
+            return False
+    if model in {'llama31-8b', 'gemma3-12b'}:
+        try:
+            registry = json.loads((ROOT / 'configs/contrastive_scale_smokes.json').read_text())
+            entries = registry[model]
+            if len(entries) != 2 or {entry['arm'] for entry in entries} != {'cl_fwd', 'sft_extra_ce'}:
+                return False
+            from bidir.pipeline_state import registered_engineering_job
+            checks += [(registered_engineering_job(ROOT / 'runs/status', entry), entry['name'], model, entry['arm'])
+                       for entry in entries]
+        except (OSError, KeyError, ValueError):
+            return False
+    for job,name,model,arm in checks:
+        try:
+            status=json.loads((ROOT / "runs" / "status" / f"{name}.{job}.json").read_text())
+            out=RESULTS_DIR / "engineering_smokes" / f"{model}_{arm}_{job}"
+            summary=json.loads((out / "training_summary.json").read_text())
+            profile=json.loads((out / "profile.json").read_text())
+            exposure=summary["direction_exposure"]
+            if status["exit_code"] != 0 or summary["steps"] != 2 or profile["exit_code"] != 0:
+                return False
+            if arm.startswith("cl_") and not exposure.get("contrastive_gradient_gate_passed"):
+                return False
+            if arm == "sft_extra_ce" and exposure.get("extra_ce_passes") != 6:
+                return False
+        except (OSError,KeyError,ValueError):
+            return False
+    return True
+
+
 def gate_passed(domain: str, model: str) -> bool | None:
     # Defence in depth: dumps now live in a `failures/` subdirectory, but this glob is what
     # decides whether a cell is allowed to run, so it also refuses anything without a verdict
@@ -252,7 +398,13 @@ def cell_state(domain: str, model: str, seed: int, tier: str = "full",
     """
     wanted = resolvable(domain, model, tier)
     todo = [a for a in wanted if not adapter_complete(domain, model, a, seed)]
-    evald = bool(list(RESULTS_DIR.glob(f"*/{domain}/{model}/{tag}_s{seed}/trials.jsonl")))
+    runs=list(RESULTS_DIR.glob(f"*/{domain}/{model}/{tag}_s{seed}/trials.jsonl"))
+    if tag.endswith("pilot"):
+        from bidir.pipeline_state import evaluation_succeeded
+        name="ev_"+job_key(domain,model,seed,tag)
+        evald=any(evaluation_succeeded(p.parent,ROOT/"runs"/"status",name) for p in runs)
+    else:
+        evald=bool(runs)
     return todo, evald
 
 
@@ -328,7 +480,9 @@ def partition_for(cell: str) -> str:
         return "h200"
     if cell in NO_A30:
         return "h100,h200"
-    return "h100,a30"
+    # A30 jobs repeatedly failed CUDA initialization on 2026-10-01 despite
+    # nvidia-smi seeing the device. Use the verified H100/H200 path until repaired.
+    return "h100,h200"
 
 
 def find_adapters(arm: str, stale_before: float | None = None) -> list[tuple[str, str, int]]:
@@ -384,13 +538,13 @@ def _pg():
     return mod
 
 
-def submit(name, argv, partition, time, dep=None, cpus=16, mem="64G", dry=False):
+def submit(name, argv, partition, time, dep=None, cpus=8, mem="64G", dry=False):
     cmd = [sys.executable, str(SUBMIT), "--name", name, "--partition", partition,
            "--time", time, "--mem", mem, "--cpus", str(cpus)]
     if dep:
         cmd += ["--dependency", f"afterok:{dep}"]
     if partition != "a30":
-        cmd += ["--exclude", "g-06-01"]
+        cmd += ["--exclude", "g-06-01,g-08-06"]
     if dry:
         cmd.append("--dry-run")
     cmd += ["--argv"] + argv
@@ -409,6 +563,16 @@ def submit(name, argv, partition, time, dep=None, cpus=16, mem="64G", dry=False)
             return line.split()[1]
     sys.stderr.write(r.stdout)
     return None
+
+
+QUARANTINE = ROOT / "runs" / "feeder" / "quarantine.txt"
+
+
+def quarantined() -> set[str]:
+    try:
+        return {l.split()[0] for l in QUARANTINE.read_text().splitlines() if l.strip()}
+    except FileNotFoundError:
+        return set()
 
 
 def main() -> int:
@@ -477,6 +641,15 @@ def main() -> int:
         for model in models:
             for seed in seeds:
                 for cell in cells:
+                    if tag == 'generality_scale_pilot' and seed != 17 and not generality_replication_valid(cell,model):
+                        blocked.append((label,cell,model,'seed17 validity incomplete'))
+                        continue
+                    if tier == "contrastive_pilot" and seed != 17 and not contrastive_replication_valid(cell,model):
+                        blocked.append((label,cell,model,"seed17 validation incomplete"))
+                        continue
+                    if tier == "contrastive_pilot" and not contrastive_smokes_ready(model,cell):
+                        blocked.append((label,cell,model,"contrastive trainer smokes incomplete"))
+                        continue
                     if cell in CONTROL_CELLS:
                         g = control_gate_ok(cell, model)
                         why = ("gate not run" if g is None else
@@ -493,6 +666,13 @@ def main() -> int:
                     # every mechanism cell looked absent and `code` was submitted twice.
                     if job_key(cell, model, seed, tag) in inflight_cells:
                         continue          # already queued or running; never submit it twice
+                    # A CELL THAT KEEPS CRASHING IS NOT RESUBMITTED FOREVER. The watchdog
+                    # (runs/feeder/watchdog.py) writes its key here after repeated failures, so an
+                    # unattended loop stops paying queue waits for the same traceback. Delete the
+                    # line once the cause is fixed.
+                    if job_key(cell, model, seed, tag) in quarantined():
+                        blocked.append((label, cell, model, "quarantined after repeated failures"))
+                        continue
                     # A RELEARN LADDER CANNOT START BEFORE THE THING IT RESUMES FROM. Every
                     # relearn arm has init_from="sft", and the pack refuses in 2-3 seconds when
                     # that adapter is absent. The runner did not know one plan entry depends on
@@ -528,6 +708,9 @@ def main() -> int:
         if launched >= free:
             break
         part = partition_for(cell)
+        large_contrastive = tier == 'contrastive_pilot' and model in {'llama31-8b', 'gemma3-12b'}
+        if large_contrastive:
+            part = 'h200'  # trainer objective/control profiles were validated on H200
         jid = None
         if todo:
             units = A.units(todo)
@@ -550,6 +733,13 @@ def main() -> int:
                 print(f"[runner] {cell}/{model}: estimate {est:.2f} h below measured floor "
                       f"{floor:.2f} h (a previous run of this cell took longer); using the floor")
             hours = min(47.0, max(2.0, est, floor))
+            if tag == 'generality_scale_pilot' and floor > 0:
+                # These four-arm packs now have measured runtimes. Keep over
+                # 50% headroom over the completed pack without a generic
+                # 5h45 request for the observed 1h36 units/Gemma12B workload.
+                hours = min(47.0, max(2.0, floor * 1.2))
+            if tier == "contrastive_pilot":
+                hours = 47.0 if large_contrastive else (36.0 if model == "gemma3-4b" else 24.0)
             t = f"{int(hours):02d}:{int((hours - int(hours)) * 60):02d}:00"
             # The walltime above is sized from `todo`, so the pack must be asked for `todo` and
             # not for the whole `full` tier. It was asked for "full": `relation` has 504 train
@@ -562,7 +752,11 @@ def main() -> int:
                     "--seed", str(seed), "--arms", ",".join(todo)]
             if a.force_arm:
                 pack.append("--force")        # retrain over the stale adapter; nothing is deleted
-            jid = submit("tr_" + job_key(cell, model, seed, tag), pack, part, t, dry=a.dry_run)
+            # Seed17 contrastive packs peaked below 15 GiB host RSS on both models;
+            # retain over 2x headroom while reducing placement pressure. Eval stays 64G.
+            train_mem = "32G" if tier == "contrastive_pilot" and not large_contrastive else "64G"
+            jid = submit("tr_" + job_key(cell, model, seed, tag), pack, part, t,
+                         mem=train_mem, dry=a.dry_run)
             print(f"[runner] {label}: train {cell}/{model}/s{seed} on {part} "
                   f"({len(todo)} arms, {t}) -> {jid}")
             if jid is None:
@@ -573,14 +767,30 @@ def main() -> int:
         extra = ["sft"] if tier == "relearn" else []
         arms = ",".join(["base"] + extra + resolvable(cell, model, tier))
         ev_time = "06:00:00" if cell in SLOW_EVAL else "03:00:00"
+        if cell == 'units' and model == 'gemma3-12b':
+            ev_time = '01:00:00' if tier == 'contrastive_pilot' else '00:30:00'
         ev = submit("ev_" + job_key(cell, model, seed, tag),
                     ["-m", "bidir.evaluate", "--domain", cell, "--model", model,
                      "--seed", str(seed), "--arms", arms, "--tag", tag],
-                    part, ev_time, dep=jid, dry=a.dry_run)
+                    'h100,h200' if large_contrastive else part,
+                    ev_time, dep=jid, dry=a.dry_run)
         print(f"[runner] {label}: eval  {cell}/{model}/s{seed} -> {ev}")
         launched += 1
 
     print(f"[runner] launched {launched} cell(s); {n_cells + launched}/{a.max_inflight} in flight")
+    # Paper-completion tasks follow the higher-priority registered domain/objective work.
+    # Subprocesses reload the planner each controller pass without restarting active jobs.
+    paper_planner=ROOT/'scripts/104_paper_finish.py'
+    if paper_planner.exists() and not a.force_arm:
+        paper_cmd=[sys.executable,str(paper_planner),'--max-new',str(max(0,free-launched))]
+        if a.dry_run:paper_cmd.append('--dry-run')
+        subprocess.run(paper_cmd,cwd=ROOT,check=True,timeout=180)
+    if not a.dry_run:
+        try:
+            subprocess.run([sys.executable,str(ROOT/"scripts"/"55_contrastive_analysis.py"),"--scan"],
+                           timeout=180,check=True)
+        except (subprocess.SubprocessError,OSError) as exc:
+            print(f"[runner] contrastive analysis deferred: {exc}",flush=True)
     return 0
 
 

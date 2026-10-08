@@ -120,7 +120,7 @@ def main() -> int:
         # `afterany`, not `afterok`: this link exists to cap concurrency, so a failed predecessor
         # must not also cancel the cells behind it. Only the train->eval link is afterok.
         chain = None
-        if partition in CONTESTED and len(contested_running) >= share:
+        if share > 0 and partition in CONTESTED and len(contested_running) >= share:
             chain = contested_running[-(share)]
 
         jid = sub(f"tr_{cell}_{a.model}", ["scripts/20_train_pack.py", "--domain", cell,

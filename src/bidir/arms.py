@@ -69,7 +69,7 @@ class ArmSpec:
         """Adapter-time relative to `sft` (for packing and budgets)."""
         if not self.trains:
             return 0.0
-        u = 1.0
+        u = 6.0 if self.loss in ("contrastive", "extra_ce") else 1.0
         if self.epochs:
             u *= self.epochs / 3.0
         if "fwd" in self.tasks and "rev" in self.tasks and self.reverse_fraction is None:
@@ -84,6 +84,11 @@ class ArmSpec:
 
 
 ARMS: dict[str, ArmSpec] = {
+    "sft_extra_ce": ArmSpec("sft_extra_ce", loss="extra_ce", matched_to="cl_fwd", role="six CE passes per optimizer microstep"),
+    "mix5_extra_ce": ArmSpec("mix5_extra_ce", reverse_fraction=0.05, loss="extra_ce", matched_to="cl_mix5", role="six mix5 CE passes per optimizer microstep"),
+    "cl_fwd": ArmSpec("cl_fwd", loss="contrastive", matched_to="sft", role="forward CE plus paired InfoNCE"),
+    "cl_mix5": ArmSpec("cl_mix5", reverse_fraction=0.05, loss="contrastive", matched_to="mix5", role="mix5 CE plus paired InfoNCE"),
+    "cl_shuffled": ArmSpec("cl_shuffled", loss="contrastive", matched_to="cl_fwd", role="shuffled-positive correspondence ablation"),
     "base": ArmSpec("base", tasks=(), role="untouched control"),
     "sft": ArmSpec("sft", ("fwd",), role="forward only: the collapse"),
     "fwd2x": ArmSpec("fwd2x", ("fwd",), epochs=6.0, matched_to="flip", matched_on=(),
@@ -144,7 +149,9 @@ RELEARN: tuple[str, ...] = ("relearn10", "relearn50", "relearn200", "relearn1000
 FULLFT: tuple[str, ...] = ("fullft_sft", "fullft_mix5")
 
 TIERS: dict[str, tuple[str, ...]] = {"gate": GATE, "core": CORE, "full": FULL,
-                                     "relearn": RELEARN, "fullft": FULLFT}
+                                     "relearn": RELEARN, "fullft": FULLFT,
+                                     "domain_pilot": ("sft", "rev", "mix50", "replay"),
+                                     "contrastive_pilot": ("sft", "mix5", "replay", "rev", "cl_fwd", "cl_mix5", "cl_shuffled", "sft_extra_ce", "mix5_extra_ce")}
 
 
 def resolve(name: str) -> ArmSpec:

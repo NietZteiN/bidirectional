@@ -43,7 +43,9 @@ MARGIN_PP = 2.0
 
 def paired_delta(trials: Sequence[dict], a: str, b: str, metric: str, direction: str,
                  strategy: str = "simple", n_boot: int = 2000, seed: int = GLOBAL_SEED,
-                 margin_pp: float = MARGIN_PP):
+                 margin_pp: float = MARGIN_PP, confidence: float = 0.95):
+    if not 0 < confidence < 1 or n_boot < 2 / (1 - confidence):
+        raise ValueError("confidence must be in (0,1) with enough bootstrap draws for both tails")
     # RESAMPLE THE INDEPENDENT UNIT, WHICH IS NOT ALWAYS THE ROW. `cluster_id` equals pair_id
     # everywhere except `code`, whose five obfuscation conditions share one source program:
     # 2,060 test rows are 412 programs. Resampling rows there treats five correlated
@@ -70,7 +72,8 @@ def paired_delta(trials: Sequence[dict], a: str, b: str, metric: str, direction:
     rng = random.Random(seed)
     boots = [stat([pairs[rng.randrange(len(pairs))] for _ in range(len(pairs))]) for _ in range(n_boot)]
     boots.sort()
-    lo, hi = boots[int(0.025 * n_boot)], boots[min(n_boot - 1, int(0.975 * n_boot))]
+    tail = (1 - confidence) / 2
+    lo, hi = boots[int(tail * n_boot)], boots[min(n_boot - 1, int((1 - tail) * n_boot))]
     mean_a = sum(x for p in pairs for x in by_pair[p][a]) / sum(len(by_pair[p][a]) for p in pairs)
     mean_b = sum(x for p in pairs for x in by_pair[p][b]) / sum(len(by_pair[p][b]) for p in pairs)
     # THREE OUTCOMES, NOT TWO. `spans_zero` is a null test, and Amendment 8 registers that
@@ -95,7 +98,7 @@ def paired_delta(trials: Sequence[dict], a: str, b: str, metric: str, direction:
 
     return {"a": a, "b": b, "metric": metric, "direction": direction, "n_clusters": len(pairs),
             "mean_a": mean_a * 100, "mean_b": mean_b * 100, "delta_pp": point,
-            "ci_lo": lo, "ci_hi": hi, "spans_zero": lo <= 0 <= hi,
+            "confidence": confidence, "ci_lo": lo, "ci_hi": hi, "spans_zero": lo <= 0 <= hi,
             "margin_pp": margin_pp, "verdict": verdict,
             "ci_halfwidth_pp": (hi - lo) / 2.0}
 

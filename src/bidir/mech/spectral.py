@@ -23,7 +23,9 @@ So on a LoRA arm this is a weaker instrument than the source paper's, and a null
 is much weaker evidence than a null on a full fine-tuning delta — which is the arm this
 experiment most wants.
 
-**Full fine-tuning deltas are NOT yet supported.** Repairing one means loading both the base and
+**This LoRA entry point does not handle full fine-tuning deltas.** The separate
+`bidir.mech.fullft_spectral` module streams base/tuned checkpoints and repairs projection
+matrices under Amendment45; its GPU validation and evaluation are separate. Repairing one means loading both the base and
 the tuned checkpoint and taking an SVD of every weight matrix, which is a different and much
 heavier code path than rewriting an adapter. The `fullft_*` arms therefore raise here rather
 than being silently handled by the LoRA path, which would compute a meaningless delta. Every
@@ -157,11 +159,20 @@ def repair_lora_adapter(src: Path, dst: Path, tau_scale: float) -> dict[str, Any
             pairs.setdefault(k.split(".lora_B")[0], {})["B"] = k
 
     out: dict[str, Any] = {}
-    reports, new_rank = [], 0
+    reports, new_rank, zero_modules = [], 0, 0
     for base, kv in sorted(pairs.items()):
         if "A" not in kv or "B" not in kv:
             continue
         A, B = tensors[kv["A"]], tensors[kv["B"]]
+        # AN UNTRAINED MODULE IS PASSED THROUGH, NOT REPAIRED. gemma3's adapter carries LoRA on
+        # the vision tower (81 of 319 pairs), which text-only training never reaches, so B stays
+        # at its zero init. dg_hard rightly refuses a zero delta, and that refusal skipped every
+        # tau rung for all five gemma3-4b cells (2026-09-26). A zero update has nothing to filter.
+        if not bool(B.abs().max() > 0):
+            zero_modules += 1
+            out[kv["B"]] = torch.zeros(B.shape[0], 1, dtype=B.dtype)
+            out[kv["A"]] = torch.zeros(1, A.shape[1], dtype=A.dtype)
+            continue
         delta = (B.float() @ A.float()) * scale
         # Cap at the adapter's own rank: see dg_hard's docstring.
         repaired, rep = dg_hard(delta, tau_scale, max_rank=r)
@@ -199,6 +210,7 @@ def repair_lora_adapter(src: Path, dst: Path, tau_scale: float) -> dict[str, Any
     kept = sum(r_["rank_kept"] for r_ in reports)
     before = sum(r_["rank_considered"] for r_ in reports)
     return {"tau_scale": tau_scale, "n_modules": len(reports), "new_rank": new_rank,
+            "n_zero_modules_passed_through": zero_modules,
             "total_rank_considered": before, "total_rank_kept": kept,
             "mean_energy_kept": sum(r_["energy_kept"] for r_ in reports) / max(1, len(reports)),
             "per_module": reports[:8]}
@@ -228,7 +240,8 @@ def main(argv: Optional[list[str]] = None) -> int:
         raise SystemExit(
             f"arm {a.arm!r} is a full fine-tune. Repairing that delta needs both checkpoints and an "
             "SVD of every weight matrix — a different code path from rewriting an adapter, and not "
-            "implemented. Running it through the LoRA path would compute a meaningless delta.")
+            "implemented in this LoRA entry point; use bidir.mech.fullft_spectral (Amendment45). "
+            "Running it through the LoRA path would compute a meaningless delta.")
     root = "adapters"
     src = adapter_dir(a.domain, a.model, a.arm, a.rank, a.seed, root=root) / "final"
     if not src.exists():
@@ -253,7 +266,7 @@ def main(argv: Optional[list[str]] = None) -> int:
             print(f"  tau x{t:g}: SKIPPED — {e}", flush=True)
             continue
         variants.append((f"dghard_tau{t:g}", str(d), rep))
-        print(f"  tau x{t:g}: rank {rep['total_rank_before']} -> {rep['total_rank_kept']} "
+        print(f"  tau x{t:g}: rank {rep['total_rank_considered']} -> {rep['total_rank_kept']} "
               f"across {rep['n_modules']} modules, energy kept {rep['mean_energy_kept']:.3f}", flush=True)
 
     if len(variants) <= 2:
@@ -297,4 +310,5 @@ def main(argv: Optional[list[str]] = None) -> int:
 
 if __name__ == "__main__":
     # See bidir.engine.shutdown_and_exit: vLLM's engine-core child can outlive the interpreter.
+    from bidir import engine as eng  # main() imports it locally; this scope never saw it
     eng.shutdown_and_exit(main())

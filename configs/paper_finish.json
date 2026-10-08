@@ -1,0 +1,45 @@
+{
+  "campaign": "paper_finish_v1",
+  "amendment": 50,
+  "seeds": [17, 42, 1234],
+  "probe_panel": [
+    {"domain": "mt_de-en", "model": "llama32-3b", "mix": "mix5"},
+    {"domain": "fmt", "model": "gemma3-4b", "mix": "mix5"},
+    {"domain": "units", "model": "gemma3-12b", "mix": "mix5"}
+  ],
+  "robust_panel": [
+    {"domain": "mt_de-en", "model": "llama32-3b", "mix": "mix5"},
+    {"domain": "fmt", "model": "gemma3-4b", "mix": "mix5"},
+    {"domain": "units", "model": "gemma3-12b", "mix": "mix50"},
+    {"domain": "py_cpp", "model": "llama31-8b", "mix": "mix50"}
+  ],
+  "transfer_panel": [
+    {"domain": "mt_de-en", "model": "llama32-3b", "mix": "mix5"},
+    {"domain": "mt_de-en", "model": "gemma3-4b", "mix": "mix5"}
+  ],
+  "recipe_panel": [
+    {"domain": "fmt", "model": "llama32-3b", "mix": "mix5"},
+    {"domain": "units", "model": "gemma3-12b", "mix": "mix50"}
+  ],
+  "recipe_variants": {
+    "lr_low": {"lr": 0.00005, "rank": 32},
+    "lr_high": {"lr": 0.0002, "rank": 32},
+    "rank_low": {"lr": 0.0001, "rank": 16},
+    "rank_high": {"lr": 0.0001, "rank": 64}
+  },
+  "prompt_variants": {
+    "primary": "{instruction}",
+    "reword": "Perform the transformation specified below. Preserve the input's meaning and return only the requested output.\n\n{instruction}",
+    "contract_first": "Output contract: provide only the requested transformed result, without commentary.\n\nTask specification:\n{instruction}"
+  },
+  "probes": {
+    "ifeval": {"repo": "google/IFEval", "split": "train", "shots": 0, "max_tokens": 1280},
+    "gsm8k": {"repo": "openai/gsm8k", "config": "main", "split": "test", "shots": 5, "max_tokens": 1024}
+  },
+  "transfer": {"repo": "Helsinki-NLP/opus-100", "config": "de-en", "split": "test", "min_chars": 20, "max_chars": 400},
+  "synthetic_transfer": {"units_magnitude": 1000, "py_cpp_piecewise_quadratic": 1000},
+  "bootstrap": {"draws": 2000, "confidence": 0.95, "multiplicity": "unadjusted exploratory intervals; no equivalence claims"},
+  "primary_contrasts": ["sft-base", "mix-sft", "replay-sft", "cl_mix5-mix5", "cl_mix5-mix5_extra_ce"],
+  "smoke_limit": 12,
+  "production_requires_smoke": true
+}

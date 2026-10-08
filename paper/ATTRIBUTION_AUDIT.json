@@ -1,0 +1,104 @@
+{
+  "results": [
+    {
+      "run": "/scratch/juno/jvl210002/bidir/results/2026-09-26/code/llama32-3b/attrib_cft_s17",
+      "arm": "cft",
+      "domain": "code",
+      "model": "llama32-3b",
+      "seed": 17,
+      "withdrawn": false,
+      "auxiliary_exposure_verified": true,
+      "eligible_for_analysis": true,
+      "training_summary": "/scratch/juno/jvl210002/bidir/runs/adapters/code/llama32-3b/cft_r32_s17/training_summary.json"
+    },
+    {
+      "run": "/scratch/juno/jvl210002/bidir/results/2026-09-26/code/llama32-3b/attrib_cft_s42",
+      "arm": "cft",
+      "domain": "code",
+      "model": "llama32-3b",
+      "seed": 42,
+      "withdrawn": false,
+      "auxiliary_exposure_verified": true,
+      "eligible_for_analysis": true,
+      "training_summary": "/scratch/juno/jvl210002/bidir/runs/adapters/code/llama32-3b/cft_r32_s42/training_summary.json"
+    },
+    {
+      "run": "/scratch/juno/jvl210002/bidir/results/2026-09-26/mt_en-de/llama31-8b/attrib_unlikelihood_s17",
+      "arm": "unlikelihood",
+      "domain": "mt_en-de",
+      "model": "llama31-8b",
+      "seed": 17,
+      "withdrawn": false,
+      "auxiliary_exposure_verified": true,
+      "eligible_for_analysis": true,
+      "training_summary": "/scratch/juno/jvl210002/bidir/runs/adapters/mt_en-de/llama31-8b/unlikelihood_r32_s17/training_summary.json"
+    },
+    {
+      "run": "/scratch/juno/jvl210002/bidir/results/2026-09-26/mt_en-de/llama31-8b/attrib_unlikelihood_s42",
+      "arm": "unlikelihood",
+      "domain": "mt_en-de",
+      "model": "llama31-8b",
+      "seed": 42,
+      "withdrawn": false,
+      "auxiliary_exposure_verified": true,
+      "eligible_for_analysis": true,
+      "training_summary": "/scratch/juno/jvl210002/bidir/runs/adapters/mt_en-de/llama31-8b/unlikelihood_r32_s42/training_summary.json"
+    },
+    {
+      "run": "/scratch/juno/jvl210002/bidir/results/2026-09-26/mt_en-de/llama32-3b/attrib_unlikelihood_s17",
+      "arm": "unlikelihood",
+      "domain": "mt_en-de",
+      "model": "llama32-3b",
+      "seed": 17,
+      "withdrawn": true,
+      "auxiliary_exposure_verified": false,
+      "eligible_for_analysis": false,
+      "training_summary": "/scratch/juno/jvl210002/bidir/runs/withdrawn_adapters/2026-10-07/mt_en-de/llama32-3b/unlikelihood_r32_s17/training_summary.json"
+    },
+    {
+      "run": "/scratch/juno/jvl210002/bidir/results/2026-09-26/sql/llama31-8b/attrib_roundtrip_s17",
+      "arm": "roundtrip",
+      "domain": "sql",
+      "model": "llama31-8b",
+      "seed": 17,
+      "withdrawn": false,
+      "auxiliary_exposure_verified": true,
+      "eligible_for_analysis": true,
+      "training_summary": "/scratch/juno/jvl210002/bidir/runs/adapters/sql/llama31-8b/roundtrip_r32_s17/training_summary.json"
+    },
+    {
+      "run": "/scratch/juno/jvl210002/bidir/results/2026-09-26/sql/llama31-8b/attrib_roundtrip_s42",
+      "arm": "roundtrip",
+      "domain": "sql",
+      "model": "llama31-8b",
+      "seed": 42,
+      "withdrawn": false,
+      "auxiliary_exposure_verified": true,
+      "eligible_for_analysis": true,
+      "training_summary": "/scratch/juno/jvl210002/bidir/runs/adapters/sql/llama31-8b/roundtrip_r32_s42/training_summary.json"
+    },
+    {
+      "run": "/scratch/juno/jvl210002/bidir/results/2026-09-26/sql/llama32-3b/attrib_roundtrip_s17",
+      "arm": "roundtrip",
+      "domain": "sql",
+      "model": "llama32-3b",
+      "seed": 17,
+      "withdrawn": false,
+      "auxiliary_exposure_verified": true,
+      "eligible_for_analysis": true,
+      "training_summary": "/scratch/juno/jvl210002/bidir/runs/adapters/sql/llama32-3b/roundtrip_r32_s17/training_summary.json"
+    },
+    {
+      "run": "/scratch/juno/jvl210002/bidir/results/2026-09-26/sql/llama32-3b/attrib_roundtrip_s42",
+      "arm": "roundtrip",
+      "domain": "sql",
+      "model": "llama32-3b",
+      "seed": 42,
+      "withdrawn": false,
+      "auxiliary_exposure_verified": true,
+      "eligible_for_analysis": true,
+      "training_summary": "/scratch/juno/jvl210002/bidir/runs/adapters/sql/llama32-3b/roundtrip_r32_s42/training_summary.json"
+    }
+  ],
+  "limitations": "exposure verified; final paired outcome/CI audit pending"
+}

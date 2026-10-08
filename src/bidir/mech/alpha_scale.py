@@ -105,4 +105,5 @@ def main(argv: Optional[list[str]] = None) -> int:
 
 if __name__ == "__main__":
     # See bidir.engine.shutdown_and_exit: vLLM's engine-core child can outlive the interpreter.
+    from bidir import engine as eng  # main() imports it locally; this scope never saw it
     eng.shutdown_and_exit(main())

@@ -99,4 +99,8 @@ def main(argv: Optional[list[str]] = None) -> int:
 
 
 if __name__ == "__main__":
-    sys.exit(main())
+    # NOT sys.exit: this runs a vLLM eval in-process, and the engine-core child can outlive the
+    # interpreter. Five jobs on 2026-09-24 wrote elicitation.json and then held an H100 to the
+    # walltime, recorded as TIMEOUT. See bidir.engine.shutdown_and_exit.
+    from bidir import engine as eng
+    eng.shutdown_and_exit(main())

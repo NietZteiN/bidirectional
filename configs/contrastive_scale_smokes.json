@@ -1,0 +1,26 @@
+{
+  "llama31-8b": [
+    {
+      "job": 448707,
+      "name": "cl_scale_smoke_llama8b",
+      "arm": "cl_fwd"
+    },
+    {
+      "job": 448708,
+      "name": "ce_scale_smoke_llama8b",
+      "arm": "sft_extra_ce"
+    }
+  ],
+  "gemma3-12b": [
+    {
+      "job": 448709,
+      "name": "cl_scale_smoke_gemma12b",
+      "arm": "cl_fwd"
+    },
+    {
+      "job": 448710,
+      "name": "ce_scale_smoke_gemma12b",
+      "arm": "sft_extra_ce"
+    }
+  ]
+}

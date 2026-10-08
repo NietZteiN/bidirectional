@@ -1,0 +1,15 @@
+\begin{table*}[t]
+\centering\small
+\begin{tabular}{llll}
+\toprule
+Registered evaluation & Model/task cells & Training seeds & Campaigns \\
+\midrule
+General probes & 3 & 17,42,1234 & 9 \\
+Prompt/template tests & 4 & 17,42,1234 & 12 \\
+Independent transfer & 2 & 17,42,1234 & 6 \\
+Recipe evaluations & 2 & 17,42,1234 & 6 \\
+\bottomrule
+\end{tabular}
+\caption{Frozen paper-completion panel. Probe corpora retain 541 IFEval prompts and 1319 GSM8K questions; independent transfer retains 1688 OPUS translation pairs. Synthetic magnitude/template tests retain 1000 instances each. Recipe packs train 48 new adapters in isolated directories. Counts are planned workloads and audited corpus sizes, not completed results.}
+\label{tab:paper-finish-protocol}
+\end{table*}

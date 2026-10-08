@@ -369,3 +369,15 @@ def test_gate_write_does_not_touch_another_models_thresholds(tmp_path):
     back = yaml.safe_load(p.read_text())
     assert back["thresholds"]["forward"]["comet"] == 0.5, "llama's frozen tau was overwritten"
     assert back["thresholds_by_model"]["gemma3-4b"]["forward"]["comet"] == 0.9
+
+
+def test_replay_matching_after_nearby_pool_exhaustion():
+    from bidir.mixture import nearest_unused_indices
+    # Exhaust a dense neighborhood: the next row must remain globally nearest.
+    lengths=[1]*10+[100]*150+[101]*150
+    chosen=nearest_unused_indices(lengths,[100]*300)
+    assert len(chosen)==len(set(chosen))==300
+    assert [lengths[i] for i in chosen]==[100]*150+[101]*150
+    import pytest
+    with pytest.raises(ValueError,match='exhausted'):
+        nearest_unused_indices([1],[1,1])

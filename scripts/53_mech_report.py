@@ -40,9 +40,12 @@ def read_elicitation() -> dict:
     for f in RESULTS_DIR.glob("*/*/*/*/elicitation.json"):
         d = json.loads(f.read_text())
         domain = f.parent.parent.parent.name
+        model = f.parent.parent.name
+        seed = int(f.parent.name.rsplit("_s", 1)[-1])
+        key = f"{domain}/{model}/s{seed}"
         sft = d.get("systems", {}).get("sft", {})
         if sft.get("recovered_fraction") is not None:
-            out[domain] = {"recovered_fraction": sft["recovered_fraction"],
+            out[key] = {"recovered_fraction": sft["recovered_fraction"],
                            "best_strategy": sft.get("best_strategy"),
                            "prompt_gain_pp": 100 * sft.get("prompt_gain", 0.0)}
     return out
@@ -59,11 +62,14 @@ def read_alpha() -> dict:
         a_max = max(fwd)
         rev0, revmax = rev.get(0.0, 0.0), rev[a_max]
         # The alpha at which reverse has lost half of what it will lose.
+        if revmax >= rev0:
+            continue  # no reverse loss in this measured starting checkpoint
         half = rev0 - 0.5 * (rev0 - revmax)
         a_half_rev = next((a for a in sorted(rev) if rev[a] <= half), a_max)
         fwd_at = fwd.get(a_half_rev, 0.0)
-        fwd_frac = (fwd_at - fwd.get(0.0, 0.0)) / max(1e-9, fwd[a_max] - fwd.get(0.0, 0.0))
-        out[d["domain"]] = {"alpha_half_reverse_loss": a_half_rev,
+        fwd_gain = fwd[a_max] - fwd.get(0.0, 0.0)
+        fwd_frac = (fwd_at - fwd.get(0.0, 0.0)) / fwd_gain if fwd_gain > 0 else None
+        out[f"{d['domain']}/{d['model']}/s{d['seed']}"] = {"alpha_half_reverse_loss": a_half_rev,
                             "forward_progress_there": fwd_frac,
                             "reverse_base": rev0, "reverse_full": revmax}
     return out
@@ -76,15 +82,18 @@ def read_relearn() -> dict:
         if not (run / "trials.jsonl").exists():
             continue
         domain = run.parent.parent.name
+        model = run.parent.name
+        seed = int(run.name.rsplit("_s", 1)[-1])
+        key = (domain, model, seed)
         acc: dict[str, list[float]] = defaultdict(list)
         for t in iter_jsonl(run / "trials.jsonl"):
             if t["direction"] == "reverse" and t.get("strategy") == "simple" and "strict" in t:
                 acc[t["system"]].append(float(t["strict"]))
         for sysname, v in acc.items():
-            curves[domain][sysname] = sum(v) / len(v)
+            curves[key][sysname] = sum(v) / len(v)
     out = {}
-    control = curves.get("fmt_novel", {})
-    for domain, c in curves.items():
+    for (domain, model, seed), c in curves.items():
+        control = curves.get(("fmt_novel", model, seed), {})
         if domain == "fmt_novel":
             continue
         row = {f"relearn{k}": c.get(f"relearn{k}") for k in ks}
@@ -96,7 +105,7 @@ def read_relearn() -> dict:
                       if c.get(f"relearn{k}") is not None and control.get(f"relearn{k}") is not None
                       and c[f"relearn{k}"] > control[f"relearn{k}"]]
             row["outruns_never_had_at_k"] = faster
-        out[domain] = row
+        out[f"{domain}/{model}/s{seed}"] = row
     return out
 
 
@@ -113,13 +122,13 @@ def read_spectral() -> dict:
             return None
         base_rev, un_rev = at("base", "reverse"), at("unrepaired", "reverse")
         un_fwd = at("unrepaired", "forward")
-        best, best_tau = un_rev, None
+        best, best_tau = un_rev, "unrepaired"
         for r in rows:
             if r["direction"] == "reverse" and r["variant"].startswith("dghard") and r["strict"] > (best or 0):
                 best, best_tau = r["strict"], r["variant"]
         fwd_at_best = next((r["strict"] for r in rows
                             if r["direction"] == "forward" and r["variant"] == best_tau), None)
-        out[d["domain"]] = {
+        out[f"{d['domain']}/{d['model']}/s{d['seed']}"] = {
             "base_reverse": base_rev, "sft_reverse": un_rev, "best_repaired_reverse": best,
             "best_variant": best_tau, "sft_forward": un_fwd, "forward_at_best": fwd_at_best,
             "lowrank_caveat": d.get("delta_is_lowrank_by_construction", True),
@@ -142,16 +151,19 @@ def main() -> int:
               f"(+{r['prompt_gain_pp']:.2f} pp)")
     if elic:
         mean_rec = sum(r["recovered_fraction"] for r in elic.values()) / len(elic)
-        votes["elicitation"] = "suppressed" if mean_rec > 0.05 else "erased"
+        votes["elicitation"] = "behavioral recovery observed" if mean_rec > 0.05 else "little recovery with tested prompts"
         print(f"  -> mean recovered fraction {mean_rec:.1%}: {votes['elicitation']}")
 
     print("\n=== 2. adapter scaling: is the collapse a cheap direction in weight space? ===")
     for d, r in sorted(alpha.items()):
+        forward = (f"{r['forward_progress_there']:.0%}" if r['forward_progress_there'] is not None
+                   else "undefined (no positive forward gain)")
         print(f"  {d:<12s} half the reverse loss by alpha={r['alpha_half_reverse_loss']:g}, "
-              f"forward only {r['forward_progress_there']:.0%} of the way there")
+              f"forward progress {forward}")
     if alpha:
         cheap = sum(1 for r in alpha.values()
-                    if r["alpha_half_reverse_loss"] <= 0.5 and r["forward_progress_there"] < 0.8)
+                    if r["alpha_half_reverse_loss"] <= 0.5 and r["forward_progress_there"] is not None
+                    and r["forward_progress_there"] < 0.8)
         votes["alpha_scale"] = "suppressed" if cheap > len(alpha) / 2 else "entangled"
         print(f"  -> {cheap}/{len(alpha)} domains show reverse collapsing ahead of forward: "
               f"{votes['alpha_scale']}")
@@ -175,7 +187,7 @@ def main() -> int:
                   f"'fast' is only meaningful against it. {len(relearn)} domain curve(s) on disk.")
         else:
             outrun = sum(1 for r in relearn.values() if r.get("outruns_never_had_at_k"))
-            votes["relearn"] = "suppressed" if outrun > len(relearn) / 2 else "erased"
+            votes["relearn"] = "relearning exceeds matched controls" if outrun > len(relearn) / 2 else "no majority advantage over matched controls"
             print(f"  -> {outrun}/{len(relearn)} domains relearn faster than a capability never had: "
                   f"{votes['relearn']}")
             # WHERE THE EVIDENCE LIVES. The registered vote counts a domain that outruns the
@@ -208,7 +220,7 @@ def main() -> int:
         restored = sum(1 for r in spectral.values()
                        if r["best_repaired_reverse"] is not None and r["sft_reverse"] is not None
                        and r["best_repaired_reverse"] - r["sft_reverse"] > 0.02)
-        votes["spectral"] = "suppressed" if restored > len(spectral) / 2 else "erased"
+        votes["spectral"] = "exploratory reverse recovery" if restored > len(spectral) / 2 else "no majority reverse recovery"
         print(f"  -> {restored}/{len(spectral)} domains recover reverse capability with NO retraining: "
               f"{votes['spectral']}")
 
@@ -230,7 +242,9 @@ def main() -> int:
     out = a.out or (RESULTS_DIR / "mech" / "verdict.json")
     out.parent.mkdir(parents=True, exist_ok=True)
     out.write_text(json.dumps({"elicitation": elic, "alpha_scale": alpha, "relearn": relearn,
-                               "spectral": spectral, "votes": votes}, indent=2))
+                               "spectral": spectral, "votes": votes,
+                               "interpretation": "descriptive instrument summaries; not proof of erasure/suppression; spectral best-tau is exploratory",
+                               "unit": "domain/model/seed; never-had controls matched by model and seed"}, indent=2))
     print(f"\n[mech] wrote {out}")
     return 0
 

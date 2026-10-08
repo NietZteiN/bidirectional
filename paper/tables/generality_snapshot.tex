@@ -1,0 +1,31 @@
+\begin{table*}[t]
+\centering\small
+\begin{tabular}{llllll}
+\toprule
+Task & Model & Seed & Arm & Forward & Reverse \\
+\midrule
+py\_cpp & llama31-8b & 17 & base & 85.9 & 100.0 \\
+py\_cpp & llama31-8b & 17 & sft & 100.0 & 0.0 \\
+py\_cpp & llama31-8b & 17 & mix50 & 100.0 & 48.7 \\
+py\_cpp & llama31-8b & 17 & replay & 100.0 & 97.6 \\
+py\_cpp & llama31-8b & 17 & rev & 0.0 & 0.0 \\
+units & gemma3-12b & 1234 & base & 33.7 & 35.8 \\
+units & gemma3-12b & 1234 & sft & 96.9 & 72.7 \\
+units & gemma3-12b & 1234 & mix50 & 95.1 & 90.7 \\
+units & gemma3-12b & 1234 & replay & 94.8 & 71.9 \\
+units & gemma3-12b & 1234 & rev & 47.3 & 94.7 \\
+units & gemma3-12b & 17 & base & 33.7 & 35.8 \\
+units & gemma3-12b & 17 & sft & 97.4 & 70.0 \\
+units & gemma3-12b & 17 & mix50 & 94.9 & 90.9 \\
+units & gemma3-12b & 17 & replay & 94.0 & 56.6 \\
+units & gemma3-12b & 17 & rev & 44.0 & 95.0 \\
+units & gemma3-12b & 42 & base & 33.7 & 35.8 \\
+units & gemma3-12b & 42 & sft & 97.3 & 73.7 \\
+units & gemma3-12b & 42 & mix50 & 95.7 & 91.3 \\
+units & gemma3-12b & 42 & replay & 95.5 & 72.7 \\
+units & gemma3-12b & 42 & rev & 45.9 & 94.6 \\
+\bottomrule
+\end{tabular}
+\caption{Eligible larger-model generality campaigns: strict success in percent, with all arms and the base evaluated in one fresh pass per model/task/seed. The completed unit-conversion replications improve both directions under SFT and are retained null-collapse boundary cases. Additional eligible campaigns enter this table after validated analysis.}
+\label{tab:generality-snapshot}
+\end{table*}

@@ -47,7 +47,9 @@ from bidir.mixture import load_pairs  # noqa: E402
 
 #: Which continuous metric tau is set on, per domain. Domains whose criterion is exact
 #: (parse + structural equality) have no tau and are absent here.
-TAU_METRIC = {"mt": "comet", "sql": None, "code": None, "fmt": None, "d2t": "chrf2"}
+# D2T uses exact triple-set/round-trip correctness in both directions. chrF++ is
+# forward-only descriptive evidence, so neither direction gets a chrF threshold.
+TAU_METRIC = {"mt": "comet", "sql": None, "code": None, "fmt": None, "d2t": None}
 
 
 def gate_one(a, domain: str, e) -> dict:
@@ -195,6 +197,13 @@ def gate_one(a, domain: str, e) -> dict:
         report["roundtrip_ceiling"] = ceiling
         print(f"  round-trip parser on REFERENCE questions: {ceiling:.4f} (the reverse criterion's ceiling)")
 
+    if domain == "d2t":
+        extracted = mod.roundtrip_triples([i["side_b"] for i in insts], cfg)
+        report["roundtrip_ceiling"] = sum(
+            bool(mod.parse_triples(i["side_a"])) and got == mod.parse_triples(i["side_a"])
+            for got, i in zip(extracted, insts)) / max(1, len(insts))
+        print(f"  extractor on REFERENCE texts: {report['roundtrip_ceiling']:.4f}", flush=True)
+
     dirs = report["directions"].values()
     ok = (all(r["rate"] >= a.min_base_rate for r in dirs)
           and all(r["format_fail"] <= a.max_format_fail for r in dirs)
@@ -299,4 +308,10 @@ if __name__ == "__main__":
     # shutdown_and_exit, not sys.exit: vLLM's engine-core child does not always come back, and
     # job 391263 sat RUNNING for 6m14s on an H200 after printing its last line. Results are
     # already on disk by here; the exit code still reaches the sbatch template's trap.
-    eng.shutdown_and_exit(main())
+    try:
+        rc = main()
+    except BaseException:
+        import traceback
+        traceback.print_exc()
+        rc = 1
+    eng.shutdown_and_exit(rc)

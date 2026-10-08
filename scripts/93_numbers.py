@@ -123,6 +123,25 @@ RESOLVERS: dict[str, Callable[[Ctx], Optional[str]]] = {
 }
 
 
+def _snapshot_number(c: Ctx, key: str) -> Optional[str]:
+    path = PAPER / "EVIDENCE_SNAPSHOT.json"
+    if not path.exists():
+        return None
+    data = json.loads(path.read_text())
+    value = data.get("resolved_numbers", {}).get(key)
+    if value is None:
+        return None
+    c.note(path, *data.get("sources", {}).keys())
+    return str(value)
+
+
+for _key in ("contrastive-completed-cells", "contrastive-planned-cells",
+             "audited-core-cells", "failed-new-domain-gates", "failed-explicit-domain-gates",
+             "audited-fullft-repairs", "core-collapse-cells", "audited-core-campaigns",
+             "core-model-count", "core-domain-count", "fullft-completed-cells", "fullft-planned-cells"):
+    RESOLVERS[_key] = lambda c, key=_key: _snapshot_number(c, key)
+
+
 def main() -> int:
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--check", action="store_true",
@@ -130,7 +149,10 @@ def main() -> int:
     ap.add_argument("--out", type=Path, default=PAPER / "numbers.tex")
     a = ap.parse_args()
 
-    keys = sorted(set(re.findall(r"\\NUM\{([a-z0-9-]+)\}", (PAPER / "main.tex").read_text())))
+    manuscript = "\n".join(path.read_text() for path in
+                           (PAPER / "main.tex", PAPER / "planned_evaluations.tex")
+                           if path.exists())
+    keys = sorted(set(re.findall(r"\\NUM\{([a-z0-9-]+)\}", manuscript)))
     ctx = Ctx()
 
     resolved: dict[str, str] = {}

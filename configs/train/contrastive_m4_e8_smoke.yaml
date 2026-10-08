@@ -1,0 +1,5 @@
+_extends: contrastive_smoke.yaml
+train:
+  auxiliary_microbatch: 4
+  per_device_batch: 1
+  grad_accum: 8

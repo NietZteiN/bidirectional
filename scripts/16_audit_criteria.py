@@ -224,6 +224,7 @@ def main() -> int:
     ap.add_argument("--budget-arms", default="sft,mix5,mix50,rev,replay,flip,fwd2x")
     ap.add_argument("--skip-budget", action="store_true")
     ap.add_argument("--n", type=int, default=40)
+    ap.add_argument("--out", type=Path, default=None)
     a = ap.parse_args()
 
     built = sorted(p.parent.name for p in DATA_DIR.glob("*/build_report.json"))
@@ -292,7 +293,7 @@ def main() -> int:
     else:
         print("  no problems found")
 
-    out = RESULTS_DIR / "audit" / f"criteria_{datetime.now(timezone.utc).strftime('%Y-%m-%d')}.json"
+    out = a.out or (RESULTS_DIR / "audit" / f"criteria_{datetime.now(timezone.utc).strftime('%Y-%m-%d')}.json")
     out.parent.mkdir(parents=True, exist_ok=True)
     out.write_text(json.dumps(report, indent=2, default=str))
     print(f"\n[audit] wrote {out}")
@@ -300,4 +301,11 @@ def main() -> int:
 
 
 if __name__ == "__main__":
-    sys.exit(main())
+    from bidir import engine as eng
+    try:
+        rc = main()
+    except BaseException:
+        import traceback
+        traceback.print_exc()
+        rc = 1
+    eng.shutdown_and_exit(rc)

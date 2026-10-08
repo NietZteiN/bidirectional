@@ -8,6 +8,9 @@ whether the lost capability is erased or merely suppressed.
 
 - **The science:** [`acl2027-directional-collapse-plan.md`](acl2027-directional-collapse-plan.md)
 - **The execution plan:** [`RUN_PLAN.md`](RUN_PLAN.md) — panel, budget, phases, decision gate
+- **Live checklist:** [`TASKS.md`](TASKS.md); [paper-completion queue](docs/PAPER_FINISH_PLAN.md)
+- **Autonomous execution:** [`docs/AUTONOMOUS_PIPELINE.md`](docs/AUTONOMOUS_PIPELINE.md)
+- **Paper draft:** [`paper/main.pdf`](paper/main.pdf) and [build instructions](paper/README.md)
 - **Operating rules:** [`CLAUDE.md`](CLAUDE.md) — compute, environment, and the rules that make
   a result mean something
 - **Related work:** [`RELATED_WORK.md`](RELATED_WORK.md) — what is already claimed and what is
@@ -30,11 +33,16 @@ src/bidir/   schema · arms · mixture · prompts · train · losses · engine �
 scripts/     00_status · 10_build_domain · 15_base_gate · 20_train_pack · 30_determinism_floor
              40_probes · 50_contrasts · 51_tables · 52_figs · 53_mech_report
              slurm/    submit · pipeline_{gate,grid,mech,attrib}
-tests/       121 tests; the ones that load a tokenizer must run under sbatch (see CLAUDE.md §1)
+tests/       regression tests; tokenizer-dependent checks need a compute allocation
+runs/feeder/ controller/supervisor/watchdog source; generated runtime state stays ignored
 ```
 
 `src/bidir/` imports **obtune as a library** — its vLLM engine, chat-template adaptation,
 sandboxed executor and provenance layer — rather than forking it.
+
+Git holds code,configs,tests,protocols,documentation,and the source-backed paper draft.
+Corpora,raw trials,model/adapter weights,caches,and the local evidence bundle use the paths
+documented in [`docs/STORAGE.md`](docs/STORAGE.md); they are outside this Git snapshot.
 
 ## Setup
 

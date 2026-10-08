@@ -48,6 +48,17 @@ class DirectionAccountingMixin:
         super().__init__(*args, **kwargs)
         self.direction_exposure: dict[str, int] = defaultdict(int)
 
+    def _set_signature_columns_if_needed(self):
+        # THE AUXILIARY TEXT MUST SURVIVE TO THE COLLATOR. Trainer keeps only the signature
+        # columns (TRL: input_ids, labels, seq_lengths), so `conflict_*`/`roundtrip_*` were
+        # stripped before AuxiliaryCollator saw them, every batch fell back to plain CE, and the
+        # "unlikelihood" adapters of 2026-09-26 were forward SFT under another name. Every other
+        # column is still removed exactly as in the `ce` arms.
+        super()._set_signature_columns_if_needed()
+        from bidir.collators import AUX_TEXT_FIELDS
+        self._signature_columns = list(self._signature_columns) + [
+            f for f in AUX_TEXT_FIELDS if f not in self._signature_columns]
+
     def _account(self, key: str, labels: torch.Tensor) -> None:
         self.direction_exposure[key] += int((labels != -100).sum().item())
 
@@ -74,7 +85,11 @@ class UnlikelihoodTrainer(DirectionAccountingMixin, SFTTrainer):
         conflict = {k[len("conflict_"):]: inputs.pop(k) for k in list(inputs)
                     if k.startswith("conflict_")}
         labels = inputs.get("labels")
-        out = model(**inputs)
+        # LABELS STAY OUT OF THE FORWARD. TRL >= 1.9 defaults to loss_type="chunked_nll", which
+        # patches the model so that a forward WITH labels skips lm_head and returns logits=None
+        # (2026-09-26: every unlikelihood/roundtrip pack died here). This loss is computed below
+        # from the logits, so the model must run its plain forward.
+        out = model(**{k: v for k, v in inputs.items() if k != "labels"})
         logits, shifted = _shift(out.logits, labels)
         ce = F.cross_entropy(logits.view(-1, logits.size(-1)), shifted.view(-1), ignore_index=-100)
         self._account("forward_ce", shifted)
@@ -112,11 +127,13 @@ class RoundTripTrainer(DirectionAccountingMixin, SFTTrainer):
     """
 
     def __init__(self, *args, roundtrip_lambda: float = 1.0, roundtrip_every: int = 4,
-                 max_new_tokens: int = 256, **kwargs):
+                 roundtrip_max_new_tokens: int = 256, **kwargs):
+        # Named with the `roundtrip_` prefix because train.py forwards every config key that
+        # starts with the loss name; `max_new_tokens` reached SFTTrainer and raised TypeError.
         super().__init__(*args, **kwargs)
         self.roundtrip_lambda = float(roundtrip_lambda)
         self.roundtrip_every = int(roundtrip_every)
-        self.max_new_tokens = int(max_new_tokens)
+        self.max_new_tokens = int(roundtrip_max_new_tokens)
         self._steps = 0
         self._roundtrip_steps = 0
 
@@ -124,7 +141,11 @@ class RoundTripTrainer(DirectionAccountingMixin, SFTTrainer):
         rt_prompt = inputs.pop("roundtrip_prompt_ids", None)
         rt_target = inputs.pop("roundtrip_target_ids", None)
         labels = inputs.get("labels")
-        out = model(**inputs)
+        # LABELS STAY OUT OF THE FORWARD. TRL >= 1.9 defaults to loss_type="chunked_nll", which
+        # patches the model so that a forward WITH labels skips lm_head and returns logits=None
+        # (2026-09-26: every unlikelihood/roundtrip pack died here). This loss is computed below
+        # from the logits, so the model must run its plain forward.
+        out = model(**{k: v for k, v in inputs.items() if k != "labels"})
         logits, shifted = _shift(out.logits, labels)
         loss = F.cross_entropy(logits.view(-1, logits.size(-1)), shifted.view(-1), ignore_index=-100)
         self._account("forward_ce", shifted)
@@ -160,4 +181,102 @@ class RoundTripTrainer(DirectionAccountingMixin, SFTTrainer):
         return r
 
 
-TRAINERS = {"unlikelihood": UnlikelihoodTrainer, "roundtrip": RoundTripTrainer}
+class ContrastiveTrainer(DirectionAccountingMixin, SFTTrainer):
+    """CE + symmetric independently encoded paired InfoNCE; engineering defaults."""
+    def __init__(self,*args,contrastive_lambda=0.1,contrastive_temperature=0.1,**kwargs):
+        super().__init__(*args,**kwargs)
+        self.contrastive_lambda=float(contrastive_lambda)
+        self.contrastive_temperature=float(contrastive_temperature)
+        self._contrastive_gradient_checked=False
+        self._contrastive_pairs=0
+        self._contrastive_side_tokens={"a":0,"b":0}
+
+    def compute_loss(self,model,inputs,return_outputs=False,**kw):
+        from bidir.contrastive import masked_mean,symmetric_nce
+        aux={k:inputs.pop(k) for k in list(inputs) if k.startswith("contrastive_")}
+        required={f"contrastive_{side}_{field}" for side in ("a","b") for field in ("input_ids","attention_mask")}
+        if not required.issubset(aux):
+            raise RuntimeError("contrastive auxiliary fields missing; refusing silent CE fallback")
+        directions=inputs.pop("generation_direction",None)
+        labels=inputs["labels"]
+        ce,out=super().compute_loss(model,inputs,return_outputs=True,**kw)
+        if self.contrastive_lambda == 0:
+            return (ce,out) if return_outputs else ce
+        embeddings=[]
+        batch=inputs["input_ids"].shape[0]
+        for side in ("a","b"):
+            ids=aux[f"contrastive_{side}_input_ids"]
+            mask=aux[f"contrastive_{side}_attention_mask"]
+            # Base transformer avoids allocating vocabulary logits for isolated side encodings.
+            base=model.get_base_model() if hasattr(model,"get_base_model") else model
+            hidden=base.model(input_ids=ids,attention_mask=mask,use_cache=False).last_hidden_state
+            emb=masked_mean(hidden,mask).reshape(batch,5,-1)
+            embeddings.append(emb)
+            if model.training:
+                self._contrastive_side_tokens[side]+=int(mask.sum())
+        a,b=embeddings
+        nce=symmetric_nce(a[:,0],b[:,0],b,a,self.contrastive_temperature)
+        if model.training and not self._contrastive_gradient_checked:
+            params=[p for p in model.parameters() if p.requires_grad]
+            gradients=torch.autograd.grad(nce,params,retain_graph=True,allow_unused=True)
+            norm=sum(float(g.detach().float().abs().sum()) for g in gradients if g is not None)
+            if not norm > 0:
+                raise RuntimeError("contrastive first-batch gradient gate failed")
+            self._contrastive_gradient_checked=True
+            print(f"[contrastive] first-batch auxiliary gradient gate passed: {norm}",flush=True)
+        if model.training:
+            self._contrastive_pairs+=batch
+            if directions is None:
+                raise RuntimeError("generation direction metadata missing")
+            for code,name in ((0,"forward_ce"),(1,"reverse_ce")):
+                self._account(name,labels[directions == code])
+        # Token-normalized CE may already span the accumulation window. Trainer
+        # skips its usual division in that case; independently scale mean NCE.
+        scale = 1
+        if kw.get("num_items_in_batch") is not None and self.model_accepts_loss_kwargs:
+            scale = self.current_gradient_accumulation_steps
+        loss=ce+self.contrastive_lambda*nce/scale
+        self.log({"ce":float(ce.detach()),"contrastive":float(nce.detach())})
+        return (loss,out) if return_outputs else loss
+
+    def exposure_report(self):
+        return {**super().exposure_report(),"contrastive_pairs":self._contrastive_pairs,
+                "contrastive_side_tokens":self._contrastive_side_tokens,
+                "contrastive_gradient_gate_passed":self._contrastive_gradient_checked,
+                "negative_count":4,"contrastive_lambda":self.contrastive_lambda,
+                "contrastive_temperature":self.contrastive_temperature}
+
+
+class ExtraCETrainer(DirectionAccountingMixin,SFTTrainer):
+    """Six independent dropout CE evaluations averaged within each microstep.
+
+    A fixed compute proxy, not an assertion of equal measured GPU time or FLOPs.
+    """
+    def __init__(self,*args,extra_ce_passes=6,**kwargs):
+        super().__init__(*args,**kwargs)
+        self.extra_ce_passes=int(extra_ce_passes)
+        if self.extra_ce_passes < 1:
+            raise ValueError("positive CE pass count required")
+
+    def compute_loss(self,model,inputs,return_outputs=False,**kw):
+        losses=[]
+        labels=inputs["labels"]
+        directions=inputs.pop("generation_direction",None)
+        repeats=self.extra_ce_passes if model.training else 1
+        for _ in range(repeats):
+            loss,out=super().compute_loss(model,dict(inputs),return_outputs=True,**kw)
+            losses.append(loss)
+            if model.training:
+                if directions is None:
+                    raise RuntimeError("generation direction metadata missing")
+                for code,name in ((0,"forward_ce"),(1,"reverse_ce")):
+                    self._account(name,labels[directions == code])
+        loss=sum(losses)/repeats
+        return (loss,out) if return_outputs else loss
+
+    def exposure_report(self):
+        return {**super().exposure_report(),"extra_ce_passes":self.extra_ce_passes,
+                "compute_match":"fixed proxy; actual timings required"}
+
+
+TRAINERS = {"unlikelihood": UnlikelihoodTrainer, "roundtrip": RoundTripTrainer, "contrastive": ContrastiveTrainer, "extra_ce": ExtraCETrainer}

@@ -152,6 +152,8 @@ def build_parser() -> argparse.ArgumentParser:
     ap.add_argument("--split", default="test")
     ap.add_argument("--out", default=None)
     ap.add_argument("--tag", default=None, help="names the result directory; defaults to the arm set")
+    ap.add_argument("--full-checkpoint", action="append", default=[], metavar="NAME=PATH",
+                    help="additional repaired full checkpoint; requires repair_manifest.json")
     return ap
 
 
@@ -165,6 +167,18 @@ def main(argv: Optional[list[str]] = None) -> int:
     dcfg = resolve_thresholds(load_config(f"domains/{args.domain}.yaml"), args.model)
     domain_mod = domains.get(args.domain)
     systems = resolve_systems(args.domain, args.model, arm_names, args.seed, rank=args.rank)
+    full_systems = {n for n in arm_names if arm_registry.resolve(n).full_ft}
+    for item in args.full_checkpoint:
+        name, checkpoint = item.split("=", 1)
+        path = Path(checkpoint)
+        if not name or name in systems:
+            raise ValueError(f"duplicate/empty checkpoint system {name!r}")
+        manifest = json.loads((path / "repair_manifest.json").read_text())
+        if not manifest.get("finished_utc") or not (path / "config.json").exists():
+            raise ValueError(f"incomplete repaired checkpoint: {path}")
+        systems[name] = str(path)
+        arm_names.append(name)
+        full_systems.add(name)
 
     insts = [p.model_dump() for p in load_pairs(args.domain, args.split)]
     if args.limit:
@@ -191,9 +205,18 @@ def main(argv: Optional[list[str]] = None) -> int:
     reqs = build_requests(insts, systems, DIRECTIONS, strategies, domain_mod, shots)
     print(f"[bidir.eval] {len(insts)} instances x {len(systems)} systems -> {len(reqs)} generations", flush=True)
 
-    e = eng.get_engine(args.model, dcfg.get("engine", {}))
-    raw, ntok = eng.generate(e, [r["messages"] for r in reqs], [r["adapter"] for r in reqs],
-                             dcfg.get("sampling", {}))
+    full_checkpoint_campaign = bool(full_systems)
+    checkpoint_reports = None
+    if full_checkpoint_campaign:
+        from bidir.checkpoint_eval import generate_campaign
+        raw, ntok, checkpoint_reports = generate_campaign(
+            args.model, systems, reqs, dcfg.get("engine", {}), dcfg.get("sampling", {}), full_systems)
+        engine_version = checkpoint_reports[0]['engine_version']
+    else:
+        e = eng.get_engine(args.model, dcfg.get("engine", {}))
+        raw, ntok = eng.generate(e, [r["messages"] for r in reqs], [r["adapter"] for r in reqs],
+                                 dcfg.get("sampling", {}))
+        engine_version = e.version()
 
     # Score per (direction, strategy) group: every domain's scorer is a batch call.
     rows: list[dict[str, Any]] = [None] * len(reqs)  # type: ignore[list-item]
@@ -229,7 +252,9 @@ def main(argv: Optional[list[str]] = None) -> int:
     (out_dir / "summary.json").write_text(json.dumps({
         "domain": args.domain, "model": args.model, "seed": args.seed, "arms": arm_names,
         "systems": systems, "n_instances": len(insts), "strategies": strategies,
-        "engine_version": e.version(), "adapter_effectiveness": effect,
+        "engine_version": engine_version, "adapter_effectiveness": effect,
+        "evaluation_layout": "isolated_checkpoint_campaign" if full_checkpoint_campaign else "single_engine_pass",
+        "checkpoint_engines": checkpoint_reports,
         "finished_utc": datetime.now(timezone.utc).isoformat(),
         **prompts.provenance_block(), **summary}, indent=2))
 
@@ -283,4 +308,10 @@ if __name__ == "__main__":
     # shutdown_and_exit, not sys.exit: vLLM's engine-core child does not always come back, and
     # job 391263 sat RUNNING for 6m14s on an H200 after printing its last line. Results are
     # already on disk by here; the exit code still reaches the sbatch template's trap.
-    eng.shutdown_and_exit(main())
+    try:
+        rc = main()
+    except BaseException:
+        import traceback
+        traceback.print_exc()
+        rc = 1
+    eng.shutdown_and_exit(rc)
