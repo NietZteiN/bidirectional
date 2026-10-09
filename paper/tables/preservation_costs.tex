@@ -25,6 +25,13 @@ fmt & gemma3-4b & mix5\_extra\_ce & 194.0 & 306 & 1927882 \\
 units & gemma3-12b & sft & 21.6 & 306 & 788819 \\
 units & gemma3-12b & mix50 & 22.1 & 306 & 788819 \\
 units & gemma3-12b & replay & 21.5 & 306 & 799547 \\
+units & gemma3-12b & sft & 21.6 & 306 & 788819 \\
+units & gemma3-12b & mix5 & 15.6 & 306 & 788819 \\
+units & gemma3-12b & replay & 21.5 & 306 & 799547 \\
+units & gemma3-12b & cl\_fwd & 82.8 & 306 & 788819 \\
+units & gemma3-12b & cl\_mix5 & 83.0 & 306 & 788819 \\
+units & gemma3-12b & sft\_extra\_ce & 166.9 & 306 & 788819 \\
+units & gemma3-12b & mix5\_extra\_ce & 168.0 & 306 & 788819 \\
 \bottomrule
 \end{tabular}
 \caption{Recorded seed-17 trainer runtimes (minutes), optimizer steps, and sequence tokens in the tokenized CE corpus (before epoch repetition). Auxiliary encoded-side exposure remains separately recorded in the analysis; these token counts are not total objective FLOPs. Runtime varies with GPU/training layout and is not a claim of matched wall time. Missing measurements are unavailable, never inferred.}

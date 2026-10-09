@@ -75,6 +75,18 @@ and64GiB unallocated memory,keeps bad-node exclusions,and does not modify runnin
 Every update is recorded in `runs/feeder/h100_overflow_admission.json`;occupied H100s do not
 trigger routing changes. Normal-priority placement still respects Slurm's shared queue.
 
+October9 morning:37/39 production jobs and all13 smokes are complete. All six recipe
+packs/48 adapters and their evaluations are complete. The remaining two units probes
+await seed42/1234 contrastive adapters;those packs and four other contrastive replication
+packs are active,with evaluation dependencies already queued. The draft now includes
+generated prompt/recipe tables with same-campaign differences and descriptive seed ranges,
+including adverse forward costs and recipe-dependent reverse losses. Every displayed
+setting is retained. These ranges do not replace paired intervals or establish equivalence.
+Displayed endpoint means were replayed against the preserved trial hashes for all18
+robustness/recipe campaigns. The completed OPUS gate interpretation is integrated;final
+probe/contribution interpretation remains open. Three visible conclusion placeholders
+remain in the build.
+
 The corrected core inventory has **91 distinct model/task/training-seed cells from 103
 validated campaigns**, with 12 earlier passes retained as superseded. Its descriptive collapse
 threshold is met in 52 latest cells. Selection uses completion time, never effect sign.

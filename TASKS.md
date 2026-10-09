@@ -1,6 +1,6 @@
 # Experiment and task checklist
 
-Updated 2026-10-08 21:15 CDT, reconciled against adapter manifests, result files,
+Updated 2026-10-09 10:05 CDT, reconciled against adapter manifests, result files,
 `95_runner.py --status`, Slurm, and `runs/feeder/STATUS.md`.
 Previous checklist: [September 14 snapshot](archive/task_checklists/TASKS-2026-09-14.md).
 
@@ -28,13 +28,14 @@ Contrastive phase1 has twelve of twelve complete evaluations. Larger-model/new-d
 contrastive extensions and validity-based unit-conversion replications are first priority.
 Original failures and the retained null-collapse pilot are preserved.
 
-## Live to-do checklist — October 8 evening
+## Live to-do checklist — October 9 morning
 
 The controller is healthy: fresh heartbeat, all six stages exit0, no active operational
-alarms or quarantined cells, and CPU-host renewal remains queued. Eight GPUs are active:
-three H200 contrastive packs,three H100 format-recipe packs,and two H200 units-recipe packs.
-Llama8B passes the format gate;Gemma12B fails the unchanged gate. Both small-model probe panels
-and all prompt/template campaigns are complete. The earlier four-job utilization sample was90–100%.
+alarms or quarantined cells, and CPU-host renewal remains queued. Six H200 GPUs are active,
+training contrastive replications for units/Gemma12B,translation/Gemma12B,and format/Llama8B.
+All recipe packs and evaluations are complete. Seven of nine probe campaigns and all
+prompt/template campaigns are complete. Current GPU utilization samples range from62–100%.
+All ready eligible cells are running;the remaining evaluations depend on their adapters.
 The artificial GPU cap remains disabled.
 
 - [x] Original contrastive campaign:12/12 complete, including all five primary contrasts.
@@ -55,16 +56,16 @@ The artificial GPU cap remains disabled.
 - [x] Python/C++ Llama8B seed17 training448716 and fresh evaluation448717 complete;
       validated paired analysis admits seed42/1234 replication independent of effect sign.
       Replications449074→449075 and449076→449077 are complete.
-- [ ] Finish larger-model contrastive seed17 training/evaluation:
+- [x] Finish eligible larger-model contrastive seed17 training/evaluation:
       de→en/Llama8B448932→448933;de→en/Gemma12B448937→448938;
-      units/Gemma12B448939→448940. Llama8B training is complete;its eval awaits capacity.
-      The two Gemma12B packs are running;evals depend on success.
+      units/Gemma12B448939→448940. All three pilots and fmt/Llama8B449065→449066 are complete.
 - [x] Finish fmt feasibility gates449015 (Llama8B) and449016 (Gemma12B), using
-      unchanged1000-row criteria. Llama8B passes;pack449065→449066 is training.
+      unchanged1000-row criteria. Llama8B passes;pack449065→449066 is complete.
       Gemma12B fails with forward format-failure26.1%;tuned runs remain blocked.
 - [ ] Replicate valid larger-model contrastive cells at seeds42/1234 automatically.
-      Original phase12/12 complete;extension0/15 evaluations complete. Of five seed17
-      extension cells,three are training,one awaits evaluation,and one is blocked by the failed format gate.
+      Original phase12/12 complete;extension6/15 evaluations complete. Translation/Llama8B
+      is complete across all three seeds. Six eligible replication packs are running with
+      dependent evaluations queued;fmt/Gemma12B and its two replications remain gate-blocked.
 - [x] Replicate Python/C++ at seeds42/1234 once its seed17 pilot passes validity checks,
       independently of a favorable, adverse or null outcome.
 - [ ] Finish mechanism interpretation, joint forward/reverse contrasts, seed ranges,
@@ -95,8 +96,7 @@ Official review criteria emphasize supported claims, impact and reproducibility:
 - [x] Implement idempotent submission/dependencies, isolated recipe outputs, same-campaign
       coverage/effectiveness checks, current source/data hashes, paired analysis, and archiving.
 - [x] CPU scorer/data preflight and15 targeted tests pass;GPU smokes still require allocation.
-- [ ] Thirteen allocation-local smokes:twelve pass;units/CL probe smoke waits
-      for complete registered contrastive adapters. Pending allocation is not a passing test.
+- [x] All thirteen allocation-local smokes pass,including the units/CL probe smoke.
 - [ ] Automatically admit39 production jobs after matching smokes:9 probe,6 OPUS-transfer,
       12 prompt/template and6 recipe-evaluation campaigns,plus6 training packs/48 adapters.
 - [x] Source-backed preservation figure/cost synthesis added;deduplicate rerun campaigns.
@@ -107,16 +107,23 @@ Official review criteria emphasize supported claims, impact and reproducibility:
       See `runs/feeder/paper_finish_acceleration_20261008.json` for original specifications/updates.
 - [x] Initial local anonymous evidence bundle built;packaged hashes verified and strict means replayed.
       Final refresh and release/reconstruction audit remain pending.
-- [x] Continue pass:24/39 publication production jobs complete;12/13 engineering smokes pass.
-      All12 prompt/template campaigns and six probes complete. Remaining probes await units CL adapters.
+- [x] Morning continue pass:37/39 publication production jobs complete;13/13 engineering smokes pass.
+      All12 prompt/template campaigns and seven probes complete. Two probes await units CL adapters.
       Six OPUS campaigns close as failed echo-validity gates;retain base-only trials and block tuned comparisons.
-      Six recipe packs and their six evaluations are submitted;five packs are running and one awaits capacity.
+      All six recipe packs and their six evaluations are complete,covering48 new recipe adapters.
       Both Python/C++ replication seeds42/1234 have completed training/evaluation.
-- [x] Repair probe-panel lookup in the paper updater;24 validated campaigns now enter synthesis.
+- [x] Repair probe-panel lookup in the paper updater;31 validated evaluation campaigns now enter synthesis.
       Add regression coverage and an idle-H100 fallback for ready jobs blocked by the eight-job pri QoS.
       The fallback requires a physically free GPU,CPU/memory headroom,no dependency,and owned pending work.
       All18 targeted checks and detached-controller debug checks pass.
 - [ ] Finalize scientific claims after completed panels;draft remains visibly incomplete.
+- [x] Integrate completed prompt/template and recipe panels as generated within-campaign
+      changes with descriptive seed ranges. Preserve adverse Python/C++ forward costs and
+      recipe-dependent units reverse loss;the original units null-collapse claim is recipe-scoped.
+      Fill the completed robustness/OPUS interpretation while leaving the incomplete probes
+      and final contribution open. Add source hashes for the paired-analysis inputs.
+      All19 targeted checks pass;the PDF builds with three explicit conclusion placeholders.
+      Displayed endpoint means match the preserved trial hashes for all18 robustness/recipe campaigns.
 
 1. [ ] Integrate the existing audited dose results into a main forward-versus-reverse tradeoff
    figure and paired comparisons. Show base,sft,replay,mix doses and contrastive controls,

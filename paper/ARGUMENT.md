@@ -1,4 +1,4 @@
-# Current story — October 8, 2026
+# Current story — October 9, 2026
 
 The manuscript now follows this spine:
 
@@ -34,6 +34,16 @@ alignment sometimes exceeds the extra-CE proxy on format conversion; effects dif
 models/seeds. Forward-only alignment has no consistent control-relative benefit, and empirical
 zero intervals in translation floor cells cannot establish equivalence. These are interim
 within-cell observations, with forward retention and replication required for interpretation.
+
+October9 completed robustness integration: all prompt/template and recipe campaigns are
+complete. The appendix reports source-generated ranges across seeds, with both directions
+and matched mixtures retained. Translation and format show directional loss under the frozen
+prompt variants. Units remains a null-collapse case under the original recipe, but the higher
+learning-rate recipe includes reverse loss and improvement across seeds; keep that recipe
+qualification in the story. Python/C++ has large seed-dependent forward mixture costs, so
+preservation cannot be described as uniformly inexpensive. All OPUS campaigns fail the
+unchanged echo gate; they establish a criterion boundary and supply no eligible tuned
+transfer comparison. General-ability interpretation awaits the two remaining units probes.
 
 October7 repair validation: the first full-weight projection repair completed and its saved
 weights passed integrity checks. Its fresh paired generation evaluation is complete, improving both forward and reverse

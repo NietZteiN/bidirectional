@@ -31,6 +31,67 @@ def publication_cell(summary):
                 if c['domain']==summary['domain'] and c['model']==summary['model'])
 
 
+def publication_seed_ranges(results, mode):
+    """Summarize within-campaign differences; seed ranges are not confidence intervals."""
+    groups = defaultdict(dict)
+    for result in results:
+        summary = result['summary']
+        if summary['mode'] != mode or not summary.get('eligibility_passed'):
+            continue
+        mix = publication_cell(summary)['mix']
+        if mode == 'recipe':
+            settings = [('original', 'sft', mix)] + [
+                (variant, variant+'__sft', variant+'__'+mix)
+                for variant in suite.plan()['recipe_variants']]
+        else:
+            settings = [('original', 'sft', mix)]
+        prefixes = sorted({endpoint.rsplit('/', 1)[0] for endpoint in summary['means']})
+        for prefix in prefixes:
+            forward = summary['means'][prefix+'/forward']
+            reverse = summary['means'][prefix+'/reverse']
+            for setting, sft, mixed in settings:
+                key = (summary['domain'], summary['model'], prefix, setting)
+                if summary['seed'] in groups[key]:
+                    raise ValueError('duplicate publication campaign for '+str(key))
+                groups[key][summary['seed']] = [
+                    100*(forward[sft]-forward['base']),
+                    100*(reverse[sft]-reverse['base']),
+                    100*(forward[mixed]-forward[sft]),
+                    100*(reverse[mixed]-reverse[sft])]
+    return [dict(domain=key[0], model=key[1], endpoint=key[2], setting=key[3],
+                 seeds=sorted(values), ranges=[(min(v[i] for v in values.values()),
+                                               max(v[i] for v in values.values()))
+                                              for i in range(4)])
+            for key, values in sorted(groups.items())]
+
+
+def publication_range_table(results, mode):
+    rows = publication_seed_ranges(results, mode)
+    labels = {'llama32-3b': 'L3B', 'llama31-8b': 'L8B',
+              'gemma3-4b': 'G4B', 'gemma3-12b': 'G12B'}
+    rendered = []
+    for row in rows:
+        label = row['setting'] if mode == 'recipe' else row['endpoint']
+        rendered.append(' & '.join([
+            row['domain'].replace('_', r'\_')+'/'+labels[row['model']],
+            label.replace('_', r'\_'), str(len(row['seeds'])),
+            *[f'[{lo:+.1f}, {hi:+.1f}]' for lo, hi in row['ranges']]])+r' \\')
+    return ('\\begin{table*}[t]\n\\centering\\footnotesize\n'
+            '\\resizebox{\\textwidth}{!}{\\begin{tabular}{lllrrrr}\n\\toprule\n'
+            'Cell & Setting & Seeds & $\\Delta F_{S-B}$ & $\\Delta R_{S-B}$ & '
+            '$\\Delta F_{M-S}$ & $\\Delta R_{M-S}$ '+r'\\'+'\n\\midrule\n'
+            +'\n'.join(rendered)+'\n\\bottomrule\n\\end{tabular}}\n'
+            +'\\caption{Completed '+mode+' panel: ranges across training seeds of '
+            'within-campaign strict-success changes (percentage points). '
+            '$S$, $B$, and $M$ denote forward SFT, same-pass base, and the registered '
+            'directional mixture. Recipe rows compare matched SFT/mixture variants. '
+            'Mixture doses are 5\\% for translation/format and 50\\% for units/Python--C++; '
+            'L/G identify Llama/Gemma and B denotes billions of parameters. '
+            'Ranges are descriptive seed variation, not confidence intervals; '
+            'per-campaign paired intervals and every control remain in the analysis artifact.}\n'
+            +'\\label{tab:publication-'+mode+'-ranges}\n\\end{table*}\n')
+
+
 def dataset(run):
     rows=[r for r in suite.read_rows(run/'trials.jsonl') if r.get('strategy')=='simple' and r['system'] in ARMS]
     for r in rows:r['endpoint']=r['direction']
@@ -132,14 +193,15 @@ def main():
     publication=list(suite.OUT.glob('*/*/*/*/summary.json'))
     # Only source artifacts, not generated outputs, enter the signature.
     inputs=[Path(__file__),ROOT/'src/bidir/paper_suite.py',suite.PLAN,mf]
-    inputs += [q for p in summaries+publication for q in [p,p.parent/'trials.jsonl'] if q.exists()]
+    inputs += [q for p in summaries+publication for q in [p,p.parent/'trials.jsonl',p.parent/'contrasts.json'] if q.exists()]
     inputs += [p for domain,model in PANEL for p in (RUNS_DIR/'adapters'/domain/model).glob('*/training_summary.json')]
     signature=hashlib.sha256(json.dumps(dict(loaded_generator=LOADED_SOURCE_SHA256,
         files=sorted((str(p),p.stat().st_mtime_ns,p.stat().st_size) for p in inputs))).encode()).hexdigest()
     out=PAPER/'PUBLICATION_ANALYSIS.json'
     old=json.loads(out.read_text()) if out.exists() else {}
     required=['figures/preservation_frontier.pdf','tables/preservation_summary.tex',
-              'tables/preservation_costs.tex','tables/paper_finish_protocol.tex']
+              'tables/preservation_costs.tex','tables/paper_finish_protocol.tex',
+              'tables/publication_recipe_ranges.tex','tables/publication_robust_ranges.tex']
     if old.get('signature')==signature and all((PAPER/name).exists() for name in required):
         print('paper synthesis unchanged');return 0
     spec=importlib.util.spec_from_file_location('publication_planner',ROOT/'scripts/104_paper_finish.py')
@@ -173,6 +235,8 @@ def main():
             results.append(dict(summary=summary,contrasts=json.loads((p.parent/'contrasts.json').read_text())
                                 if (p.parent/'contrasts.json').exists() else None))
             sources[str(p)]=source_hash(p);sources[str(p.parent/'trials.jsonl')]=source_hash(p.parent/'trials.jsonl')
+            if (p.parent/'contrasts.json').exists():
+                sources[str(p.parent/'contrasts.json')]=source_hash(p.parent/'contrasts.json')
     plot(frontiers)
     display=[]
     for f in frontiers:
@@ -262,8 +326,14 @@ def main():
         frontiers=frontiers,publication_results=results,source_sha256=sources,
         inference='paired exploratory within-campaign intervals; seed ranges descriptive; no pooled/equivalence verdict',
         cost_limit='runtime and exposure only where recorded; no invented FLOPs, queue or evaluation time'))
+    for mode in ('recipe', 'robust'):
+        (PAPER/f'tables/publication_{mode}_ranges.tex').write_text(publication_range_table(results, mode))
     atomic_json(PAPER/'PUBLICATION_PROVENANCE.json',dict(source_sha256=sources,signature=signature,
-        artifacts=['figures/preservation_frontier.pdf','figures/preservation_frontier.png','tables/preservation_summary.tex'],
+        artifacts=['figures/preservation_frontier.pdf','figures/preservation_frontier.png',
+                   'tables/preservation_summary.tex','tables/preservation_costs.tex',
+                   'tables/paper_finish_protocol.tex',
+                   *[str(p.relative_to(PAPER)) for p in sorted((PAPER/'tables').glob('publication_*.tex'))],
+                   *(['tables/transfer_boundaries.tex'] if boundary_rows else [])],
         generator_sha256=LOADED_SOURCE_SHA256))
     print('Paper synthesis:',len(frontiers),'frontiers;',len(results),'validated publication campaigns')
     return 0

@@ -41,6 +41,24 @@ def test_publication_reporting_uses_registered_probe_and_null_cell_panels():
             assert synthesis.publication_cell(dict(cell,mode=mode))==cell
 
 
+def test_publication_ranges_keep_same_pass_baselines_and_adverse_seed_outcomes():
+    def campaign(seed, base, sft, mix):
+        return dict(summary=dict(mode='robust', domain='fmt', model='gemma3-4b',
+            seed=seed, eligibility_passed=True, means={
+                'original/primary/forward': dict(base=base, sft=sft, mix5=mix),
+                'original/primary/reverse': dict(base=base, sft=sft, mix5=mix)}))
+    data=[campaign(17, .8, .1, .9), campaign(42, .2, .5, .4)]
+    row=synthesis.publication_seed_ranges(data, 'robust')[0]
+    assert row['seeds']==[17, 42]
+    assert row['ranges'][0]==pytest.approx((-70, 30))
+    assert row['ranges'][2]==pytest.approx((-10, 80))
+    with pytest.raises(ValueError, match='duplicate'):
+        synthesis.publication_seed_ranges(data+[data[0]], 'robust')
+    # A failed eligibility gate cannot become a tuned comparison in the summary.
+    data[1]['summary']['eligibility_passed']=False
+    assert synthesis.publication_seed_ranges(data, 'robust')[0]['seeds']==[17]
+
+
 def test_overlap_rejects_contained_questions_and_reports_source():
     question='What is the product of nine hundred and twenty three with forty seven?'
     index=suite.OverlapIndex([('replay/train', 'Question: '+question+' Answer: 43381')])

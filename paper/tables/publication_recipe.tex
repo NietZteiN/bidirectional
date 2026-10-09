@@ -1,0 +1,82 @@
+\begin{table*}[t]
+\centering\small
+\begin{tabular}{llllll}
+\toprule
+Task & Model & Seed & Endpoint & Contrast & Change [interval] \\
+\midrule
+fmt & llama32-3b & 42 & original/primary/forward & sft vs base & +39.52 [+37.64, +41.48] \\
+fmt & llama32-3b & 42 & original/primary/forward & mix5 vs sft & -0.08 [-0.28, +0.08] \\
+fmt & llama32-3b & 42 & original/primary/forward & lr\_low\_\_sft vs sft & -0.40 [-0.72, -0.16] \\
+fmt & llama32-3b & 42 & original/primary/forward & lr\_high\_\_sft vs sft & -0.04 [-0.28, +0.16] \\
+fmt & llama32-3b & 42 & original/primary/forward & rank\_low\_\_sft vs sft & -0.08 [-0.28, +0.12] \\
+fmt & llama32-3b & 42 & original/primary/forward & rank\_high\_\_sft vs sft & -0.52 [-0.84, -0.24] \\
+fmt & llama32-3b & 42 & original/primary/reverse & sft vs base & -49.80 [-51.64, -47.76] \\
+fmt & llama32-3b & 42 & original/primary/reverse & mix5 vs sft & +93.60 [+92.68, +94.56] \\
+fmt & llama32-3b & 42 & original/primary/reverse & lr\_low\_\_sft vs sft & +7.16 [+6.04, +8.36] \\
+fmt & llama32-3b & 42 & original/primary/reverse & lr\_high\_\_sft vs sft & -1.32 [-1.76, -0.88] \\
+fmt & llama32-3b & 42 & original/primary/reverse & rank\_low\_\_sft vs sft & +4.40 [+3.40, +5.40] \\
+fmt & llama32-3b & 42 & original/primary/reverse & rank\_high\_\_sft vs sft & -1.32 [-1.76, -0.88] \\
+fmt & llama32-3b & 1234 & original/primary/forward & sft vs base & +39.40 [+37.52, +41.36] \\
+fmt & llama32-3b & 1234 & original/primary/forward & mix5 vs sft & +0.12 [-0.08, +0.32] \\
+fmt & llama32-3b & 1234 & original/primary/forward & lr\_low\_\_sft vs sft & -0.68 [-1.08, -0.32] \\
+fmt & llama32-3b & 1234 & original/primary/forward & lr\_high\_\_sft vs sft & +0.12 [-0.12, +0.36] \\
+fmt & llama32-3b & 1234 & original/primary/forward & rank\_low\_\_sft vs sft & -0.92 [-1.36, -0.52] \\
+fmt & llama32-3b & 1234 & original/primary/forward & rank\_high\_\_sft vs sft & -0.12 [-0.40, +0.16] \\
+fmt & llama32-3b & 1234 & original/primary/reverse & sft vs base & -50.36 [-52.16, -48.32] \\
+fmt & llama32-3b & 1234 & original/primary/reverse & mix5 vs sft & +92.24 [+91.16, +93.28] \\
+fmt & llama32-3b & 1234 & original/primary/reverse & lr\_low\_\_sft vs sft & +7.32 [+6.28, +8.36] \\
+fmt & llama32-3b & 1234 & original/primary/reverse & lr\_high\_\_sft vs sft & +1.20 [+0.60, +1.84] \\
+fmt & llama32-3b & 1234 & original/primary/reverse & rank\_low\_\_sft vs sft & -0.04 [-0.44, +0.36] \\
+fmt & llama32-3b & 1234 & original/primary/reverse & rank\_high\_\_sft vs sft & -0.76 [-1.12, -0.44] \\
+fmt & llama32-3b & 17 & original/primary/forward & sft vs base & +39.36 [+37.48, +41.32] \\
+fmt & llama32-3b & 17 & original/primary/forward & mix5 vs sft & +0.20 [-0.04, +0.44] \\
+fmt & llama32-3b & 17 & original/primary/forward & lr\_low\_\_sft vs sft & -0.32 [-0.68, +0.04] \\
+fmt & llama32-3b & 17 & original/primary/forward & lr\_high\_\_sft vs sft & +0.12 [-0.16, +0.36] \\
+fmt & llama32-3b & 17 & original/primary/forward & rank\_low\_\_sft vs sft & -1.12 [-1.60, -0.72] \\
+fmt & llama32-3b & 17 & original/primary/forward & rank\_high\_\_sft vs sft & -0.28 [-0.64, +0.04] \\
+fmt & llama32-3b & 17 & original/primary/reverse & sft vs base & -50.76 [-52.52, -48.80] \\
+fmt & llama32-3b & 17 & original/primary/reverse & mix5 vs sft & +95.72 [+94.92, +96.48] \\
+fmt & llama32-3b & 17 & original/primary/reverse & lr\_low\_\_sft vs sft & +10.12 [+8.92, +11.36] \\
+fmt & llama32-3b & 17 & original/primary/reverse & lr\_high\_\_sft vs sft & -0.36 [-0.64, -0.16] \\
+fmt & llama32-3b & 17 & original/primary/reverse & rank\_low\_\_sft vs sft & +0.32 [+0.00, +0.64] \\
+fmt & llama32-3b & 17 & original/primary/reverse & rank\_high\_\_sft vs sft & -0.28 [-0.56, -0.04] \\
+units & gemma3-12b & 17 & original/primary/forward & sft vs base & +63.60 [+60.60, +66.60] \\
+units & gemma3-12b & 17 & original/primary/forward & mix50 vs sft & -2.30 [-3.70, -1.00] \\
+units & gemma3-12b & 17 & original/primary/forward & lr\_low\_\_sft vs sft & -0.50 [-1.40, +0.30] \\
+units & gemma3-12b & 17 & original/primary/forward & lr\_high\_\_sft vs sft & +0.00 [-0.90, +0.90] \\
+units & gemma3-12b & 17 & original/primary/forward & rank\_low\_\_sft vs sft & -0.10 [-1.00, +0.70] \\
+units & gemma3-12b & 17 & original/primary/forward & rank\_high\_\_sft vs sft & +0.00 [-0.90, +0.80] \\
+units & gemma3-12b & 17 & original/primary/reverse & sft vs base & +34.10 [+31.20, +37.00] \\
+units & gemma3-12b & 17 & original/primary/reverse & mix50 vs sft & +21.20 [+18.70, +23.70] \\
+units & gemma3-12b & 17 & original/primary/reverse & lr\_low\_\_sft vs sft & +3.30 [+2.00, +4.70] \\
+units & gemma3-12b & 17 & original/primary/reverse & lr\_high\_\_sft vs sft & -57.10 [-60.10, -54.10] \\
+units & gemma3-12b & 17 & original/primary/reverse & rank\_low\_\_sft vs sft & +3.50 [+2.20, +4.90] \\
+units & gemma3-12b & 17 & original/primary/reverse & rank\_high\_\_sft vs sft & -20.40 [-23.20, -17.60] \\
+units & gemma3-12b & 42 & original/primary/forward & sft vs base & +63.30 [+60.30, +66.30] \\
+units & gemma3-12b & 42 & original/primary/forward & mix50 vs sft & -1.20 [-2.60, +0.10] \\
+units & gemma3-12b & 42 & original/primary/forward & lr\_low\_\_sft vs sft & -0.20 [-1.10, +0.70] \\
+units & gemma3-12b & 42 & original/primary/forward & lr\_high\_\_sft vs sft & +0.40 [-0.70, +1.50] \\
+units & gemma3-12b & 42 & original/primary/forward & rank\_low\_\_sft vs sft & -0.50 [-1.50, +0.50] \\
+units & gemma3-12b & 42 & original/primary/forward & rank\_high\_\_sft vs sft & +0.10 [-0.70, +0.90] \\
+units & gemma3-12b & 42 & original/primary/reverse & sft vs base & +37.80 [+34.80, +40.80] \\
+units & gemma3-12b & 42 & original/primary/reverse & mix50 vs sft & +17.70 [+15.40, +20.10] \\
+units & gemma3-12b & 42 & original/primary/reverse & lr\_low\_\_sft vs sft & -1.40 [-2.50, -0.30] \\
+units & gemma3-12b & 42 & original/primary/reverse & lr\_high\_\_sft vs sft & -25.70 [-28.60, -23.00] \\
+units & gemma3-12b & 42 & original/primary/reverse & rank\_low\_\_sft vs sft & -0.60 [-1.70, +0.40] \\
+units & gemma3-12b & 42 & original/primary/reverse & rank\_high\_\_sft vs sft & -14.10 [-16.40, -11.90] \\
+units & gemma3-12b & 1234 & original/primary/forward & sft vs base & +63.30 [+60.40, +66.30] \\
+units & gemma3-12b & 1234 & original/primary/forward & mix50 vs sft & -2.10 [-3.40, -0.90] \\
+units & gemma3-12b & 1234 & original/primary/forward & lr\_low\_\_sft vs sft & -0.50 [-1.40, +0.30] \\
+units & gemma3-12b & 1234 & original/primary/forward & lr\_high\_\_sft vs sft & +0.30 [-0.60, +1.20] \\
+units & gemma3-12b & 1234 & original/primary/forward & rank\_low\_\_sft vs sft & +0.30 [-0.40, +1.10] \\
+units & gemma3-12b & 1234 & original/primary/forward & rank\_high\_\_sft vs sft & +1.00 [+0.20, +1.90] \\
+units & gemma3-12b & 1234 & original/primary/reverse & sft vs base & +36.90 [+33.80, +39.90] \\
+units & gemma3-12b & 1234 & original/primary/reverse & mix50 vs sft & +18.10 [+15.80, +20.50] \\
+units & gemma3-12b & 1234 & original/primary/reverse & lr\_low\_\_sft vs sft & -0.80 [-2.10, +0.50] \\
+units & gemma3-12b & 1234 & original/primary/reverse & lr\_high\_\_sft vs sft & -65.10 [-68.00, -62.10] \\
+units & gemma3-12b & 1234 & original/primary/reverse & rank\_low\_\_sft vs sft & -11.30 [-13.60, -9.10] \\
+units & gemma3-12b & 1234 & original/primary/reverse & rank\_high\_\_sft vs sft & -9.00 [-10.90, -7.00] \\
+\bottomrule
+\end{tabular}
+\caption{Completed recipe exploratory strict-success changes in percentage points with paired cluster-bootstrap intervals. No equivalence or across-cell pooling claim.}
+\end{table*}

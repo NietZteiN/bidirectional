@@ -77,7 +77,11 @@ Generate and score the full fresh base first, using the resident engine retained
 systems. Failure of the unchanged eligibility conjunction remains boundary evidence and
 blocks tuned generation. Small smokes establish engineering behavior, not production
 eligibility. Report paired forward/reverse changes only for eligible campaigns.
-\paragraph{Result to fill.} \NUM{transfer-sentence}
+\paragraph{Completed measurements.}
+Every registered production transfer campaign fails the unchanged echo-validity conjunction.
+The base-only boundary trials are retained in Table~\ref{tab:transfer-boundaries}; no tuned
+checkpoint comparison is eligible. These measurements therefore do not establish preservation
+on this independent corpus, and the failed criterion is not evidence of adapter collapse.
 
 \subsection{Prompt and training-recipe robustness}
 \label{app:robustness}
@@ -104,7 +108,18 @@ format conversion/Llama3B and units/Gemma12B, retaining collapse and null cases.
 Store new adapters separately. Regenerate the original arms, base, and all recipe variants
 together in each campaign. Retain every adverse/null outcome and report paired intervals and
 training-seed ranges; no best-recipe selection supports the primary claim.
-\paragraph{Result to fill.} \NUM{robust-sentence}
+\IfFileExists{tables/publication_robust_ranges.tex}{\input{tables/publication_robust_ranges.tex}}{}
+\IfFileExists{tables/publication_recipe_ranges.tex}{\input{tables/publication_recipe_ranges.tex}}{}
+\paragraph{Completed measurements.}
+The frozen prompt panel retains directional loss under forward SFT for translation and format
+conversion; unit conversion remains a null-collapse case under the original recipe
+(Table~\ref{tab:publication-robust-ranges}). Preservation is not uniform across tasks or
+recipes: the Python--C++ mixture has large seed-dependent forward costs, and the higher
+learning-rate unit recipe includes reverse loss as well as improvement
+(Table~\ref{tab:publication-recipe-ranges}). The unit boundary case is therefore scoped to
+the original recipe. Every frozen prompt and recipe is retained; selecting the best variant
+does not support the primary claim. These seed ranges are descriptive, and endpoint scales
+are not pooled into an overall preservation score.
 
 \begin{table*}[t]
 \centering\small
@@ -115,11 +130,11 @@ Deliverable & Required evidence & Current status \\
 Preservation figure & Both directions, intervals, seeds, doses, exposure and measured cost &
 Audited synthesis integrated; interpretation pending \\
 General-ability table & Frozen panel, overlap exclusions, same-pass changes and intervals &
-Registered and smoke-gated; measurements pending \\
+Partial panel complete; unit replications pending \\
 Independent transfer & Corpus/version, eligibility, both directions, failures and hashes &
-Frozen OPUS gates recorded; tuned comparisons conditional \\
+All frozen OPUS gates fail; base-only boundaries retained \\
 Robustness table & Frozen prompts/recipes, both directions, costs and all outcomes &
-Registered panel; measurements pending \\
+All prompt/recipe campaigns complete; scoped results integrated \\
 Reproducibility manifest & Splits/scorers, environment, manifests, trial hashes and analysis commands &
 Local provenance retained; release audit pending \\
 \bottomrule

@@ -7,15 +7,21 @@ Task & Model & Seed & CL-fwd vs extra CE & CL-fwd vs shuffled & CL-mix5 vs extra
 fmt & Gemma 4B & 17 & +0.04 [-0.84, +0.96] & -29.20 [-31.80, -26.72] & -0.08 [-0.72, +0.56] \\
 fmt & Gemma 4B & 42 & -16.04 [-18.00, -14.20] & -19.44 [-21.52, -17.48] & -0.44 [-1.28, +0.44] \\
 fmt & Gemma 4B & 1234 & +8.20 [+6.80, +9.64] & -22.16 [-25.08, -19.24] & -0.60 [-1.24, +0.00] \\
+fmt & llama31-8b & 17 & +2.24 [+1.52, +3.04] & +2.24 [+1.52, +3.04] & +0.44 [-0.16, +1.00] \\
 fmt & Llama 3B & 17 & -0.48 [-0.96, -0.08] & -0.68 [-1.16, -0.24] & +1.76 [+0.56, +2.96] \\
 fmt & Llama 3B & 42 & -1.76 [-2.48, -1.12] & -3.40 [-4.32, -2.52] & +0.64 [-0.44, +1.68] \\
 fmt & Llama 3B & 1234 & -0.36 [-0.88, +0.12] & +0.28 [+0.08, +0.60] & +2.76 [+1.48, +4.00] \\
+mt\_de-en & gemma3-12b & 17 & +0.10 [+0.00, +0.40] & -0.10 [-0.40, +0.00] & +0.49 [-2.17, +2.96] \\
 mt\_de-en & Gemma 4B & 17 & +0.00 [+0.00, +0.00] & +0.00 [+0.00, +0.00] & -0.59 [-2.77, +1.58] \\
 mt\_de-en & Gemma 4B & 42 & +0.00 [+0.00, +0.00] & +0.00 [+0.00, +0.00] & +0.00 [-2.27, +2.27] \\
 mt\_de-en & Gemma 4B & 1234 & +0.00 [+0.00, +0.00] & +0.00 [+0.00, +0.00] & +1.09 [-1.09, +3.36] \\
+mt\_de-en & llama31-8b & 17 & -18.18 [-21.34, -15.12] & +0.00 [+0.00, +0.00] & -1.88 [-5.04, +1.28] \\
+mt\_de-en & llama31-8b & 42 & -14.53 [-17.49, -11.96] & -0.20 [-0.59, +0.00] & -0.40 [-3.26, +2.47] \\
+mt\_de-en & llama31-8b & 1234 & -21.74 [-25.10, -18.38] & -0.10 [-0.49, +0.00] & -1.09 [-4.15, +1.68] \\
 mt\_de-en & Llama 3B & 17 & +0.00 [+0.00, +0.00] & -0.10 [-0.40, +0.00] & +0.69 [-1.68, +3.16] \\
 mt\_de-en & Llama 3B & 42 & +0.00 [+0.00, +0.00] & -0.10 [-0.40, +0.00] & +1.78 [-0.59, +4.25] \\
 mt\_de-en & Llama 3B & 1234 & -0.10 [-0.40, +0.00] & -0.10 [-0.40, +0.00] & -0.69 [-3.26, +1.88] \\
+units & gemma3-12b & 17 & +11.60 [+8.50, +14.90] & -3.80 [-5.60, -2.00] & +0.50 [-1.00, +2.00] \\
 \bottomrule
 \end{tabular}
 \caption{The remaining three registered primary reverse-generation contrasts, in percentage points with 99\% paired cluster-bootstrap intervals. Together with Table~\ref{tab:contrastive-snapshot}, these display all five primary comparisons for every completed cell. Extra CE is an exposure/compute proxy, not matched measured FLOPs. Degenerate zero intervals at an observed generation floor do not establish equivalence. Results remain exploratory; new scale/domain extensions are pending.}
