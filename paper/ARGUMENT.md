@@ -311,3 +311,18 @@ is not a fallback to be improvised after the fact.
   `scripts/52_figs.py`, and `paper/NUMBERS.md` maps each to the runs that produced it.
 - Do not claim every auxiliary-task result on paired data is a directional artifact. We measured
   some; the boundary is what a reviewer will press on.
+
+
+Amendment52 now freezes the explanatory panel in `configs/mechanism_panel.json` and
+`docs/MECHANISM_PLAN.md`: formatting/Llama3B, translation/Llama3B, translation/Gemma4B,
+and the units/Gemma12 reverse-null control, each at three training seeds. Six model/mode
+GPU smokes precede 24 production jobs. Native completion-only likelihood covers eight
+checkpoint arms. Four fixed depth-band removals are compared with global scaling and
+two random controls matched on retained bf16 effective delta-W norm; edit norms are
+reported separately. Validation gradients motivate equal-parameter-norm ephemeral
+steps tested on disjoint held-out pairs. These balanced local steps do not simulate
+the original mix5 budget. All controls, bands, seeds and adverse outcomes are retained.
+
+`paper/MECHANISM_DIAGNOSTICS.json` automatically indexes only proof-valid production
+evidence and its source hashes. Likelihood and generation use separate engines; no
+new mechanism finding is claimed merely because the jobs are registered or submitted.

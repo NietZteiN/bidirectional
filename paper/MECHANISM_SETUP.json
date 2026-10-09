@@ -1,0 +1,71 @@
+{
+  "protocol": "mechanism_explanation_v1",
+  "worker_sha256": "290a371fd930e3e4c429e811dbfb65d41188f12cd7926c8b2644de1631a0564f",
+  "panel_sha256": "cd396cadf1b925e6945cb8f1b1263e0799cb5a9afe8bc534157f0bbe78aee3bd",
+  "cpu_tests_passed": 403,
+  "test_log_sha256": "d76bf4fe63d1f8d943b7186d5578787b869a17421462129f9cef3daa0b491d79",
+  "checkpoint_count": 84,
+  "checkpoint_preflight_sha256": "320c0803f38475a95b14e196b9408718073cda3f09b80cc8019b8466a06478ba",
+  "profiles": [
+    {
+      "domain": "fmt",
+      "model": "llama32-3b",
+      "max_seq_len": 670,
+      "variants_checked": 16
+    },
+    {
+      "domain": "mt_de-en",
+      "model": "llama32-3b",
+      "max_seq_len": 274,
+      "variants_checked": 16
+    },
+    {
+      "domain": "mt_de-en",
+      "model": "gemma3-4b",
+      "max_seq_len": 226,
+      "variants_checked": 16
+    },
+    {
+      "domain": "units",
+      "model": "gemma3-12b",
+      "role": "replicated reverse-null control",
+      "max_seq_len": 126,
+      "variants_checked": 16
+    }
+  ],
+  "smoke_jobs": [
+    {
+      "name": "ev_mx_hf_fmt_llama32-3b_s17_smoke",
+      "job_id": "450241",
+      "state": "submitted"
+    },
+    {
+      "name": "ev_mx_layers_fmt_llama32-3b_s17_smoke",
+      "job_id": "450242",
+      "state": "submitted"
+    },
+    {
+      "name": "ev_mx_hf_mt_de-en_gemma3-4b_s17_smoke",
+      "job_id": "450243",
+      "state": "submitted"
+    },
+    {
+      "name": "ev_mx_layers_mt_de-en_gemma3-4b_s17_smoke",
+      "job_id": "450244",
+      "state": "submitted"
+    },
+    {
+      "name": "ev_mx_hf_units_gemma3-12b_s17_smoke",
+      "job_id": "450245",
+      "state": "submitted"
+    },
+    {
+      "name": "ev_mx_layers_units_gemma3-12b_s17_smoke",
+      "job_id": "450246",
+      "state": "submitted"
+    }
+  ],
+  "production_registered": 24,
+  "production_admission": "automatic after matching proof-valid smoke",
+  "gpu_validation_complete": false
+}

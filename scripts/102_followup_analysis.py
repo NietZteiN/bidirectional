@@ -88,5 +88,7 @@ def main():
             engine_restart_caveat='interpret full-weight differences against measured decoding floor',
             auxiliary_exposure=exposure,contrasts=contrasts))
         count+=1
+    import subprocess
+    subprocess.run([sys.executable,str(ROOT/'scripts/114_mechanism_analysis.py')],cwd=ROOT,check=True,timeout=300)
     print(f'followup analysis: {count} reports refreshed');return 0
 if __name__=='__main__':raise SystemExit(main())

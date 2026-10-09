@@ -2018,3 +2018,24 @@ Archive full trials, oracle/proof reports, data/schema hashes and manifests. Adm
 current source/data hashes and successful status. Scientific failure is a completed diagnostic;
 technical retries remain bounded/quarantined. Retain null/adverse outcomes and failed capability
 gates. This extension adds conditional work beyond the completed original39-job publication panel.
+
+### Amendment52 — explanatory diagnostics, 2026-10-09
+
+Before any new diagnostic outputs, freeze `configs/mechanism_panel.json` and the
+content-hashed subset manifest `data/mechanism_panel/manifest.json`. The complete
+protocol, exclusions, negative-result policy, controls and interpretive limits are in
+`docs/MECHANISM_PLAN.md`. Four fixed cells × three existing training seeds × two worker
+modes give 24 production jobs, after six model/mode smokes. The units/Gemma12 reverse-null
+cell is mandatory. Reusing original corpora/checkpoints does not count as independent
+new-domain generality evidence.
+
+The tests jointly measure (1) gold/copy/shuffled-target likelihood against generation,
+(2) fixed-depth LoRA interventions against controls matched on retained actual delta-W
+norm, and (3) validation gradient conflicts with equal-norm ephemeral held-out local
+updates. All predetermined bands, random controls, candidates and step sizes must be
+reported. No best-layer, best-step, best-seed or favorable-only selection. Mean-gradient
+updates use a 50/50 combination, not a simulated mix5 training budget. Local LoRA geometry
+and restricted-candidate likelihood cannot establish retained internal knowledge.
+New tasks use a separate result namespace and cannot silently replace original results.
+Production admission requires full proof-valid engineering smokes independent of the
+scientific outcome. Original new-domain/contrastive priority remains first.

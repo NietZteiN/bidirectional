@@ -534,7 +534,7 @@ The cluster has `PriorityWeightQOS=0`; this QoS raises concurrency, not queue pr
       first-token agreement is not output-mode probability; same-input sensitivity uses an
       invalid-direction input; the never-had task is model/seed matched but task-different.
       LoRA leaves base weights fixed, and original diagnostics lack paired trial uncertainty.
-- [ ] Freeze and test a separate explanatory panel on existing collapse cells plus the units
+- [x] Freeze and test a separate explanatory panel on existing collapse cells plus the units
       null cell, preserving current new-domain/contrastive production priority.
 - [ ] Compare correct reverse-answer likelihood/ranking with free generation and output errors
       for base/SFT/replay/mixed-direction/contrastive/control checkpoints.
@@ -611,3 +611,22 @@ seed-42 collapse; label each curve using that seed's observed loss.
 - `/scratch/juno/jvl210002/bidir/runs`: adapters, full-FT checkpoints, and manifests.
 
 This checklist is a dated snapshot. Live queue state can change after it is written.
+
+## Explanatory diagnostics — Amendment52
+
+Live per-job checklist: `runs/feeder/mechanism_status.json`; fixed design:
+[docs/MECHANISM_PLAN.md](docs/MECHANISM_PLAN.md).
+
+- [x] Register a fixed four-cell panel at seeds 17/42/1234, including the units reverse-null control.
+- [x] Freeze evaluation subsets outside the earlier 200-pair exploratory mechanism slice.
+- [x] Implement native completion likelihood, actual delta-W norm controls, validation gradients,
+  and reversible equal-norm held-out local updates in an isolated result namespace.
+- [x] Pass CPU verification (403 tests) and native-tokenizer/checkpoint preflight (84 adapters); enable the tested scheduler.
+- [x] Submit six GPU engineering smokes (450241–450246); verify idempotent queue admission.
+- [ ] Complete six GPU engineering smokes; retain technical failures and scientific nulls.
+- [ ] Complete 12 likelihood/gradient production jobs and 12 controlled layer/generation jobs.
+- [ ] Summarize all fixed contrasts with paired uncertainty; distinguish evidence for selection,
+  selective layers and local interference from evidence for preserved internal knowledge.
+- [ ] Integrate diagnostic findings and failed hypotheses into the paper after full proof validation.
+- [ ] Conditional follow-up: shuffled reverse-CE correspondence control if the registered
+  diagnostics and existing contrastive controls leave that attribution unresolved.

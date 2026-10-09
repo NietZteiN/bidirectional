@@ -1,0 +1,14 @@
+{
+  "protocol": "mechanism_explanation_v1", "amendment": 52,
+  "cells": [{"domain":"fmt","model":"llama32-3b"}, {"domain":"mt_de-en","model":"llama32-3b"}, {"domain":"mt_de-en","model":"gemma3-4b"}, {"domain":"units","model":"gemma3-12b","role":"replicated reverse-null control"}],
+  "seeds": [17,42,1234], "smoke_cells": [0,2,3], "modes": ["hf","layers"],
+  "systems": ["base","sft","replay","mix5","cl_fwd","cl_mix5","sft_extra_ce","mix5_extra_ce"],
+  "gradient_systems": ["sft","replay","mix5"], "generation_systems": ["base","sft","replay","mix5"],
+  "selection_seed": 52017, "exclude_test_prefix": 200, "generation_n": 512,
+  "likelihood_n": 128, "calibration_n": 16, "step_test_n": 32,
+  "smoke_generation_n": 16, "smoke_likelihood_n": 4, "smoke_calibration_n": 2, "smoke_step_test_n": 4,
+  "quartiles": 4, "random_layer_seeds": [101,202], "step_fractions": [0.0001,0.0005],
+  "step_directions": ["forward","reverse","mixed","random"],
+  "max_seq_len": 4096, "rank": 32, "norm_rtol": 0.002, "bootstrap_reps": 2000,
+  "interpretation": "Descriptive fixed panel; no selection of best layer, candidate, step, cell or seed on outcomes. Local LoRA gradient geometry is parameterization-dependent. Layer controls match retained delta-W norm, not both retained and edit norms. Candidate likelihood is not a measure of stored knowledge."
+}

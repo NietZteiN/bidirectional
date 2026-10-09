@@ -814,6 +814,11 @@ def main() -> int:
     if a.dry_run:repair_cmd.append('--dry-run')
     if not a.force_arm:
         subprocess.run(repair_cmd,cwd=ROOT,check=True,timeout=180)
+    mechanism_planner=ROOT/'scripts/112_mechanism_queue.py'
+    if mechanism_planner.exists() and not a.force_arm:
+        mechanism_cmd=[sys.executable,str(mechanism_planner),'--max-new',str(max(0,free-launched))]
+        if a.dry_run:mechanism_cmd.append('--dry-run')
+        subprocess.run(mechanism_cmd,cwd=ROOT,check=True,timeout=180)
     # Paper-completion tasks follow the higher-priority registered domain/objective work.
     # Subprocesses reload the planner each controller pass without restarting active jobs.
     paper_planner=ROOT/'scripts/104_paper_finish.py'

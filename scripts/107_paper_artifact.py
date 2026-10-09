@@ -49,12 +49,12 @@ def selected_paths():
     paths.update((ROOT/'tests').glob('*.py'))
     for name in ['CLAUDE.md','PREREGISTRATION.md','RUN_PLAN.md','TASKS.md','scripts/env.sh','pytest.ini',
                  'docs/PAPER_FINISH_PLAN.md','docs/AUTONOMOUS_PIPELINE.md','paper/README.md','paper/ARGUMENT.md',
-                 'docs/GATE_REPAIR_PLAN.md',
+                 'docs/GATE_REPAIR_PLAN.md','docs/MECHANISM_PLAN.md',
                  'env/extras.txt','paper/main.tex','paper/planned_evaluations.tex','paper/refs.bib',
                  'paper/numbers.tex','paper/numbers_provenance.json','paper/check_arr.py','paper/Makefile',
                  'paper/acl.sty','paper/acl_natbib.bst','paper/page_limit.txt','paper/evidence_snapshot.tex',
                  'paper/PROVENANCE.json','paper/PUBLICATION_PROVENANCE.json',
-                 'paper/MECHANISM_REVIEW.json',
+                 'paper/MECHANISM_REVIEW.json','paper/MECHANISM_DIAGNOSTICS.json','paper/MECHANISM_SETUP.json',
                  'runs/feeder/paper_finish_preflight.json','runs/feeder/paper_finish_status.json',
                  'runs/feeder/h100_overflow_admission.json']:
         paths.add(ROOT/name)
@@ -69,6 +69,11 @@ def selected_paths():
     paths.update(RESULTS_DIR.glob('*/*/*/*/WITHDRAWN.txt'))
     paths.update(suite.OUT.rglob('*.json'))
     paths.update(suite.OUT.rglob('trials.jsonl'))
+    paths.update((RESULTS_DIR/'mechanism_explanation_v1').rglob('*.json'))
+    paths.update((RESULTS_DIR/'mechanism_explanation_v1').rglob('*.jsonl'))
+    paths.update((ROOT/'data/mechanism_panel').glob('*.json'))
+    paths.update((ROOT/'runs/feeder').glob('mechanism*.json'))
+    paths.update((ROOT/'runs/status').glob('ev_mx_*.json'))
     paths.update((RESULTS_DIR/'gate_repair_v1').rglob('*.json'))
     paths.update((RESULTS_DIR/'gate_repair_v1').rglob('trials.jsonl'))
     paths.update((ROOT/'data').glob('*_v2/*.json'))
@@ -86,7 +91,7 @@ def selected_paths():
 def build():
     paths=selected_paths();fingerprints=[]
     for p in paths:
-        if p.name in {'paper_finish_status.json','gate_repair_status.json'}:
+        if p.name in {'paper_finish_status.json','gate_repair_status.json','mechanism_status.json'}:
             status=json.loads(p.read_text())
             fingerprints.append((str(p),json.dumps(status.get('items',[]),sort_keys=True)))
         else:fingerprints.append((str(p),p.stat().st_mtime_ns,p.stat().st_size))
