@@ -304,6 +304,17 @@ and has produced \NUM{audited-fullft-repairs} checkpoint passing saved-weight au
 The completed fresh generation campaign improves forward and reverse success relative to the
 original full-SFT checkpoint. This single exploratory repair does not establish a general remedy.
 
+\paragraph{Explanatory hypothesis and tests.}
+Forward-only updates may bias task-conditioned output selection and interfere with reverse
+generation; correctly reversed pairs may preserve that conditioning. Existing recovery
+instruments do not uniquely identify this mechanism. Exploratory layer interventions motivate
+comparison with global scaling and random removals matched for update norm, retaining both
+directions. Reverse-answer likelihood versus free generation and controlled gradient
+interventions would distinguish competing accounts. Direction probes must control input
+language/format cues. The never-had task differs from the recovered tasks, and LoRA leaves
+base weights unchanged by construction; neither observation alone establishes retained
+internal knowledge. These explanatory checks remain planned, with null cells retained.
+
 \section{Consequences for attribution}
 \label{sec:attrib}
 We distinguish exposure to both paired sides from an objective-specific generation benefit.

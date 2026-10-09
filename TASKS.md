@@ -1,6 +1,6 @@
 # Experiment and task checklist
 
-Updated 2026-10-09 13:25 CDT, reconciled against adapter manifests, result files,
+Updated 2026-10-09 13:32 CDT, reconciled against adapter manifests, result files,
 `95_runner.py --status`, Slurm, and `runs/feeder/STATUS.md`.
 Previous checklist: [September 14 snapshot](archive/task_checklists/TASKS-2026-09-14.md).
 
@@ -523,6 +523,30 @@ The cluster has `PriorityWeightQOS=0`; this QoS raises concurrency, not queue pr
 - [x] Fmt seed 1234: training and evaluation complete (438905 → 438906).
 
 ## Mechanism experiments
+
+- [x] Review existing explanatory instruments against their implementations and refresh the
+      descriptive report (`runs/feeder/mechanism_explanation_20261009.json`). Results disagree:
+      prompt/relearning recovery exists, while scaling and spectral summaries do not support
+      a universal suppression account. No pooled vote establishes causality.
+- [x] Identify a concrete causal lead: format/Llama3B middle-to-late layer ablation restores
+      some reverse behavior with forward performance retained (successful job425259).
+- [x] Record limits: direction probes confound instruction with input language/format;
+      first-token agreement is not output-mode probability; same-input sensitivity uses an
+      invalid-direction input; the never-had task is model/seed matched but task-different.
+      LoRA leaves base weights fixed, and original diagnostics lack paired trial uncertainty.
+- [ ] Freeze and test a separate explanatory panel on existing collapse cells plus the units
+      null cell, preserving current new-domain/contrastive production priority.
+- [ ] Compare correct reverse-answer likelihood/ranking with free generation and output errors
+      for base/SFT/replay/mixed-direction/contrastive/control checkpoints.
+- [ ] Rerun fixed layer interventions with per-instance trials, both directions, equal-norm
+      global scaling and random-removal controls; retain all bands and adverse outcomes.
+      Match the actual weight delta (LoRA BA), not separate factor norms.
+- [ ] Measure local forward/reverse gradient conflict and verify its predicted effect using
+      controlled small updates; calibrate and evaluate on disjoint pairs.
+- [ ] If needed, test correct reversed-pair correspondence against shuffled reverse targets
+      at matched exposure/steps; existing shuffled contrastive pairs test a different objective.
+- [ ] Add pair-grouped, input-controlled probes and seed replication before making a routing
+      claim. Integrate the causal tests with hypothesis-specific, falsifiable conclusions.
 
 - [x] P4 Llama 3B seed-17 relearning: 6/6 planned cells complete, plus the model-matched
       never-had control and its relearning ladder.

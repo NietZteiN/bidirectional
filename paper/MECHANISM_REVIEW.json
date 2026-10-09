@@ -1,0 +1,111 @@
+{
+  "reviewed_utc": "2026-10-09T18:31:32.156191+00:00",
+  "status": "exploratory existing-artifact review; causal controls and full audit pending",
+  "descriptive_report_command": "python scripts/53_mech_report.py --out runs/feeder/mechanism_explanation_20261009.json",
+  "inventory": {
+    "elicitation": 13,
+    "alpha_scale": 13,
+    "relearn": 26,
+    "spectral": 13
+  },
+  "inventories_are_not_validated_campaign_counts": true,
+  "layer_ablation_lead": {
+    "source": "/scratch/juno/jvl210002/bidir/results/mech/layer_ablate/fmt__llama32-3b__sft_s17/ablation.json",
+    "source_sha256": "623c4a7c85e78b9577ef0ab5ebeb9a85dbd9b9d6fd5c98d9003aa8892eb748cf",
+    "successful_status": "runs/status/m4_ablate_fmt_llama32-3b.425259.json",
+    "status_sha256": "a1fe55390609b0d38b3ae0f757c01966a621c9f6959f73e32cca912aaaabaf8b",
+    "domain": "fmt",
+    "model": "llama32-3b",
+    "seed": 17,
+    "n_instances": 200,
+    "bands": [
+      "0-6",
+      "7-13",
+      "14-20",
+      "21-27"
+    ],
+    "rows": [
+      {
+        "ablated": "none",
+        "direction": "forward",
+        "strict": 0.99,
+        "echo": 0.0
+      },
+      {
+        "ablated": "all",
+        "direction": "forward",
+        "strict": 0.35,
+        "echo": 0.0
+      },
+      {
+        "ablated": "0-6",
+        "direction": "forward",
+        "strict": 0.93,
+        "echo": 0.0
+      },
+      {
+        "ablated": "7-13",
+        "direction": "forward",
+        "strict": 0.975,
+        "echo": 0.0
+      },
+      {
+        "ablated": "14-20",
+        "direction": "forward",
+        "strict": 0.99,
+        "echo": 0.0
+      },
+      {
+        "ablated": "21-27",
+        "direction": "forward",
+        "strict": 0.995,
+        "echo": 0.0
+      },
+      {
+        "ablated": "none",
+        "direction": "reverse",
+        "strict": 0.0,
+        "echo": 0.995
+      },
+      {
+        "ablated": "all",
+        "direction": "reverse",
+        "strict": 0.28,
+        "echo": 0.0
+      },
+      {
+        "ablated": "0-6",
+        "direction": "reverse",
+        "strict": 0.0,
+        "echo": 0.99
+      },
+      {
+        "ablated": "7-13",
+        "direction": "reverse",
+        "strict": 0.0,
+        "echo": 0.755
+      },
+      {
+        "ablated": "14-20",
+        "direction": "reverse",
+        "strict": 0.225,
+        "echo": 0.0
+      },
+      {
+        "ablated": "21-27",
+        "direction": "reverse",
+        "strict": 0.11,
+        "echo": 0.775
+      }
+    ]
+  },
+  "limitations": [
+    "Single seed and selected existing cell; exploratory.",
+    "Original layer diagnostic stores aggregate rates; per-instance paired uncertainty requires a rerun.",
+    "Equal-update-norm scaling/random-removal controls are missing.",
+    "Direction probe confounds direction labels with input language/format.",
+    "Never-had control matches model/seed but uses a different task.",
+    "LoRA leaves original base weights fixed; recovery is not proof of retained internal knowledge.",
+    "Existing instruments disagree; do not pool votes or seeds without starting collapse."
+  ]
+}

@@ -43,7 +43,43 @@ learning-rate recipe includes reverse loss and improvement across seeds; keep th
 qualification in the story. Python/C++ has large seed-dependent forward mixture costs, so
 preservation cannot be described as uniformly inexpensive. All OPUS campaigns fail the
 unchanged echo gate; they establish a criterion boundary and supply no eligible tuned
-transfer comparison. General-ability interpretation awaits the two remaining units probes.
+transfer comparison. All nine general-ability campaigns are now complete; interpretation remains pending.
+
+October9 mechanism review: we have stronger evidence about recoverability than about why
+a small reverse dose preserves it. Existing prompt recovery, model/seed-matched relearning,
+adapter scaling and spectral interventions disagree. The model/seed-matched never-had
+control is an invented format task, so cross-task difficulty limits the learning-curve inference.
+Do not treat the aggregate report's votes as a causal finding or pool seeds that did not collapse.
+The source-signed exploratory lead and its limitations are retained in
+[MECHANISM_REVIEW.json](MECHANISM_REVIEW.json).
+
+The format/Llama3B layer-ablation diagnostic is a useful lead: removing a middle-to-late
+LoRA band restores some reverse success while retaining forward performance. Its source is
+`results/mech/layer_ablate/fmt__llama32-3b__sft_s17/ablation.json`, with successful status
+`runs/status/m4_ablate_fmt_llama32-3b.425259.json`. This is one200-pair exploratory diagnostic
+with aggregate metrics; uncertainty and controls must be rerun with per-instance trials.
+The direction probe remains decodable, but paired directions also differ in input language/
+format; high probe accuracy alone does not show that the instruction is being used. Identical
+first tokens do not identify an output mode. The same-input instruction-sensitivity diagnostic
+also creates inputs invalid for one instruction and does not uniformly support ignoring direction.
+
+Working hypothesis: forward-only updates can bias task-conditioned output selection and
+interfere with reverse generation; a small dose of correct reversed pairs may maintain that
+conditioning. This is a hypothesis, not an established internal mechanism. LoRA preserves
+base weights by construction, so recovering their behavior alone is weak evidence of retained
+knowledge; full-weight checks matter. The replicated units null and recipe sensitivity limit
+any claim of inevitable collapse or a universal suppression mechanism.
+
+The next explanatory checks should distinguish hypotheses rather than add more recovery
+instruments: (1) correct reverse-answer likelihood/ranking versus free generation, with
+copy/wrong-format candidates and matched base/SFT/replay/mix/CL controls; (2) fixed layer
+interventions against equal-update-norm global scaling and random removals, reporting both
+directions and every intervention; (3) forward/reverse gradient conflict and small controlled
+updates on calibration data, evaluated on disjoint held-out pairs; (4) correctly paired reverse
+supervision versus same-exposure shuffled targets if the existing objective controls leave
+correspondence unresolved. Keep an explicit null cell and training-seed replications. Probes
+need pair-grouped splits and input-only controls before instruction-routing claims. New runs
+need a frozen separate exploratory protocol, tested workers and successful engineering proofs.
 
 October7 repair validation: the first full-weight projection repair completed and its saved
 weights passed integrity checks. Its fresh paired generation evaluation is complete, improving both forward and reverse
