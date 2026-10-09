@@ -1,0 +1,46 @@
+\begin{table*}[t]
+\centering\small
+\begin{tabular}{llllll}
+\toprule
+Task & Model & Seed & Endpoint & Contrast & Change [interval] \\
+\midrule
+fmt & gemma3-4b & 17 & gsm8k & sft vs base & -56.56 [-59.21, -53.83] \\
+fmt & gemma3-4b & 17 & gsm8k & mix5 vs sft & +21.76 [+19.56, +23.96] \\
+fmt & gemma3-4b & 17 & gsm8k & replay vs sft & +46.02 [+43.14, +48.90] \\
+fmt & gemma3-4b & 17 & ifeval & sft vs base & +0.55 [-2.96, +4.07] \\
+fmt & gemma3-4b & 17 & ifeval & mix5 vs sft & -2.96 [-5.91, -0.18] \\
+fmt & gemma3-4b & 17 & ifeval & replay vs sft & -5.36 [-10.17, -0.92] \\
+fmt & gemma3-4b & 42 & gsm8k & sft vs base & -36.54 [-39.50, -33.74] \\
+fmt & gemma3-4b & 42 & gsm8k & mix5 vs sft & +0.53 [-1.21, +2.35] \\
+fmt & gemma3-4b & 42 & gsm8k & replay vs sft & +28.05 [+25.02, +31.01] \\
+fmt & gemma3-4b & 42 & ifeval & sft vs base & -0.55 [-3.88, +2.77] \\
+fmt & gemma3-4b & 42 & ifeval & mix5 vs sft & +0.92 [-1.66, +3.51] \\
+fmt & gemma3-4b & 42 & ifeval & replay vs sft & -8.32 [-12.76, -3.70] \\
+fmt & gemma3-4b & 1234 & gsm8k & sft vs base & -36.32 [-39.27, -33.51] \\
+fmt & gemma3-4b & 1234 & gsm8k & mix5 vs sft & +4.02 [+2.20, +5.76] \\
+fmt & gemma3-4b & 1234 & gsm8k & replay vs sft & +24.72 [+21.68, +27.67] \\
+fmt & gemma3-4b & 1234 & ifeval & sft vs base & -1.29 [-4.81, +2.03] \\
+fmt & gemma3-4b & 1234 & ifeval & mix5 vs sft & -1.66 [-4.25, +1.11] \\
+fmt & gemma3-4b & 1234 & ifeval & replay vs sft & -4.07 [-8.87, +0.18] \\
+mt\_de-en & llama32-3b & 42 & gsm8k & sft vs base & +8.72 [+5.46, +11.68] \\
+mt\_de-en & llama32-3b & 42 & gsm8k & mix5 vs sft & +1.44 [-0.53, +3.34] \\
+mt\_de-en & llama32-3b & 42 & gsm8k & replay vs sft & -0.15 [-3.19, +2.81] \\
+mt\_de-en & llama32-3b & 42 & ifeval & sft vs base & -9.61 [-13.49, -5.73] \\
+mt\_de-en & llama32-3b & 42 & ifeval & mix5 vs sft & -0.37 [-3.51, +2.59] \\
+mt\_de-en & llama32-3b & 42 & ifeval & replay vs sft & +0.18 [-3.88, +4.25] \\
+mt\_de-en & llama32-3b & 17 & gsm8k & sft vs base & +6.90 [+3.87, +9.86] \\
+mt\_de-en & llama32-3b & 17 & gsm8k & mix5 vs sft & +1.36 [-0.53, +3.11] \\
+mt\_de-en & llama32-3b & 17 & gsm8k & replay vs sft & +10.61 [+7.88, +13.42] \\
+mt\_de-en & llama32-3b & 17 & ifeval & sft vs base & -10.54 [-14.42, -6.47] \\
+mt\_de-en & llama32-3b & 17 & ifeval & mix5 vs sft & +4.44 [+1.29, +7.58] \\
+mt\_de-en & llama32-3b & 17 & ifeval & replay vs sft & +1.48 [-2.78, +5.73] \\
+mt\_de-en & llama32-3b & 1234 & gsm8k & sft vs base & +6.60 [+3.49, +9.78] \\
+mt\_de-en & llama32-3b & 1234 & gsm8k & mix5 vs sft & -2.65 [-4.47, -0.76] \\
+mt\_de-en & llama32-3b & 1234 & gsm8k & replay vs sft & -13.72 [-16.76, -10.77] \\
+mt\_de-en & llama32-3b & 1234 & ifeval & sft vs base & -10.91 [-14.60, -6.84] \\
+mt\_de-en & llama32-3b & 1234 & ifeval & mix5 vs sft & +3.33 [+0.18, +6.47] \\
+mt\_de-en & llama32-3b & 1234 & ifeval & replay vs sft & +2.96 [-1.11, +7.02] \\
+\bottomrule
+\end{tabular}
+\caption{Completed probes exploratory strict-success changes in percentage points with paired cluster-bootstrap intervals. No equivalence or across-cell pooling claim.}
+\end{table*}

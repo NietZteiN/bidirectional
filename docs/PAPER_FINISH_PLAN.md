@@ -65,6 +65,16 @@ Original specifications and update commands are in `runs/feeder/paper_finish_acc
 At17:16 CDT,seven GPUs were active. Slurm's first widened-smoke prediction moved from tomorrow
 11:32 to today17:38;these are tentative scheduler predictions,not guaranteed allocations.
 
+October8 evening:24/39 production campaigns have closed and12/13 engineering smokes pass.
+All six OPUS campaigns stop at the unchanged echo-validity gate;their base-only boundary
+trials are retained and tuned comparisons remain blocked. The updater now handles the
+singular `probe_panel` configuration key when processing completed `probes` campaigns.
+When the eight-job `juno-pri` QoS blocks ready work,an idle H100 may admit one owned pending
+job under the uncapped `normal` QoS. This requires a free physical GPU,at least eight CPUs
+and64GiB unallocated memory,keeps bad-node exclusions,and does not modify running jobs.
+Every update is recorded in `runs/feeder/h100_overflow_admission.json`;occupied H100s do not
+trigger routing changes. Normal-priority placement still respects Slurm's shared queue.
+
 The corrected core inventory has **91 distinct model/task/training-seed cells from 103
 validated campaigns**, with 12 earlier passes retained as superseded. Its descriptive collapse
 threshold is met in 52 latest cells. Selection uses completion time, never effect sign.

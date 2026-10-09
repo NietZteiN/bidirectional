@@ -67,6 +67,7 @@ PATTERNS = [
     (ROOT / "data", "paper_finish/*.jsonl"),
     (RUNS_DIR, "paper_finish_v1/*/*/*/resolved_recipe.json"),
     (ROOT / "runs", "feeder/paper_finish*.json"),
+    (ROOT / "runs", "feeder/h100_overflow_admission.json"),
     (RESULTS_DIR, "gate_verdict.json"),
     (RUNS_DIR, "*/*/*/*/run_manifest.json"),
     (RUNS_DIR, "*/*/*/*/training_summary.json"),

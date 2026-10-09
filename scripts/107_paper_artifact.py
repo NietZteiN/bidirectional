@@ -53,7 +53,8 @@ def selected_paths():
                  'paper/numbers.tex','paper/numbers_provenance.json','paper/check_arr.py','paper/Makefile',
                  'paper/acl.sty','paper/acl_natbib.bst','paper/page_limit.txt','paper/evidence_snapshot.tex',
                  'paper/PROVENANCE.json','paper/PUBLICATION_PROVENANCE.json',
-                 'runs/feeder/paper_finish_preflight.json','runs/feeder/paper_finish_status.json']:
+                 'runs/feeder/paper_finish_preflight.json','runs/feeder/paper_finish_status.json',
+                 'runs/feeder/h100_overflow_admission.json']:
         paths.add(ROOT/name)
     paths.update((ROOT/'paper/tables').glob('*.tex'))
     paths.update((ROOT/'paper/figures').glob('*.pdf'))

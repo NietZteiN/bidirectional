@@ -5,6 +5,7 @@ import fcntl
 import importlib.util
 import json
 import os
+import re
 from pathlib import Path
 import subprocess
 import sys
@@ -24,6 +25,55 @@ def name(mode,cell,seed,smoke=False):
 def read(path):
     try:return json.loads(Path(path).read_text())
     except (OSError,ValueError):return {}
+
+
+def scheduler_fields(text):
+    return dict(re.findall(r'(\w+)=(\S+)',text))
+
+
+def spare_h100_slots(text):
+    node=scheduler_fields(text)
+    if any(bad in node.get('State','') for bad in ('DOWN','DRAIN','MAINT')):return 0
+    count=lambda key:int((re.search(r'(?:^|,)gres/gpu=(\d+)',node.get(key,'')) or [None,'0'])[1])
+    if int(node.get('CPUEfctv',0))-int(node.get('CPUAlloc',0))<8:return 0
+    if int(node.get('RealMemory',0))-int(node.get('AllocMem',0))<64*1024:return 0
+    return max(0,count('CfgTRES')-count('AllocTRES'))
+
+
+def admit_h100_overflow():
+    """Use an idle H100 under its uncapped normal QoS when the pri pool is full."""
+    queue=subprocess.run(['squeue','-h','-u',os.environ['USER'],'-t','PENDING',
+                          '-o','%i|%j|%P|%q|%r|%E|%Z'],capture_output=True,text=True,
+                         check=True,timeout=30).stdout
+    rows=[line.split('|') for line in queue.splitlines() if len(line.split('|'))==7]
+    candidates=[r for r in rows if r[3]=='juno-pri' and r[4]=='QOSMaxJobsPerUserLimit'
+                and r[5] in ('','(null)') and r[6]==str(ROOT)
+                and 'h100' in r[2].split(',') and r[1].startswith(('tr_','ev_'))]
+    if not candidates:return
+    spare=0
+    for node in ('g-04-02','g-05-01'):
+        record=subprocess.run(['scontrol','show','node',node,'-o'],capture_output=True,text=True,
+                              check=True,timeout=30).stdout
+        spare+=spare_h100_slots(record)
+    spare-=sum(r[3]=='normal' and r[2]=='h100' and r[5] in ('','(null)') and r[6]==str(ROOT) for r in rows)
+    journal=ROOT/'runs/feeder/h100_overflow_admission.json';history=read(journal).get('changes',[])
+    for jid,job_name,*_ in sorted(candidates,key=lambda r:int(r[0]))[:max(0,spare)]:
+        before=subprocess.run(['scontrol','show','job',jid,'-o'],capture_output=True,text=True,
+                              check=True,timeout=30).stdout
+        fields=scheduler_fields(before)
+        if (fields.get('JobState')!='PENDING' or fields.get('WorkDir')!=str(ROOT)
+            or fields.get('JobName')!=job_name or fields.get('Dependency')!='(null)'
+            or fields.get('Reason')!='QOSMaxJobsPerUserLimit'):continue
+        excluded=set(fields.get('ExcNodeList','').split(','))-{'','(null)'}
+        excluded.update({'g-06-01','g-08-06'})
+        cmd=['scontrol','update',f'JobId={jid}','Partition=h100','QOS=normal',
+             'ExcNodeList='+','.join(sorted(excluded))]
+        result=subprocess.run(cmd,capture_output=True,text=True,timeout=30)
+        history.append(dict(updated_utc=datetime.now(timezone.utc).isoformat(),job_id=jid,
+            before=before,command=cmd,exit_code=result.returncode,stderr=result.stderr))
+        atomic_json(journal,dict(changes=history))
+        if result.returncode:raise RuntimeError(result.stderr)
+        print('H100 overflow admission:',jid,job_name,flush=True)
 
 
 def worker_code_hash():
@@ -159,6 +209,7 @@ def main():
     with lock.open('a') as f:
         try:fcntl.flock(f,fcntl.LOCK_EX|fcntl.LOCK_NB)
         except BlockingIOError:print('paper finish scheduling already active');return 0
+        if not args.dry_run:admit_h100_overflow()
         schedule(args.max_new,args.dry_run)
     if not args.dry_run:
         subprocess.run([sys.executable,str(ROOT/'scripts/106_paper_synthesis.py')],cwd=ROOT,check=True,timeout=120)

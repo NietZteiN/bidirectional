@@ -1,6 +1,6 @@
 {
   "generated_by": "scripts/99_paper_evidence.py",
-  "updated_utc": "2026-10-08T22:20:36.799879+00:00",
+  "updated_utc": "2026-10-09T02:14:40.997585+00:00",
   "artifacts": {
     "tables/core_inventory.tex": {
       "evidence": "EVIDENCE_SNAPSHOT.json",
@@ -179,6 +179,8 @@
         "/scratch/juno/jvl210002/bidir/results/2026-10-08/mt_zh-en/llama32-3b/fullft_campaign_s17/trials.jsonl": "d03fd172e5816c68fb3324ff478002f32cf327559ab989fdcd13e58746445d7a",
         "/scratch/juno/jvl210002/bidir/results/2026-10-08/py_cpp/llama31-8b/generality_scale_pilot_s17/followup_contrasts.json": "82bad38d49753ad1876eb99b6ac80d25aefa10820df2adb9d4e1678c182ec2ea",
         "/scratch/juno/jvl210002/bidir/results/2026-10-08/py_cpp/llama31-8b/generality_scale_pilot_s17/trials.jsonl": "f180075581dc0ee593ffaf5da3458b7df150f4fb74908b9e9064b83935505892",
+        "/scratch/juno/jvl210002/bidir/results/2026-10-08/py_cpp/llama31-8b/generality_scale_pilot_s42/followup_contrasts.json": "56793b09327a4b9d684a0ac4f650e31c541b5456cada32c66ccec10a1a9fb491",
+        "/scratch/juno/jvl210002/bidir/results/2026-10-08/py_cpp/llama31-8b/generality_scale_pilot_s42/trials.jsonl": "4d308ddda270af2697dad2529135c660bf8cfb412c718dc598b42f4b5b9a2669",
         "/scratch/juno/jvl210002/bidir/results/2026-10-08/sql/llama32-3b/fullft_campaign_s17/followup_contrasts.json": "9d0a83d35364a54a07356fe02adcd6aeab20eca097e2eee1060727cd83682add",
         "/scratch/juno/jvl210002/bidir/results/2026-10-08/sql/llama32-3b/fullft_campaign_s17/trials.jsonl": "f15a2d5f538dbd7c71d6b37bafbf7b75ca1893fd0f0d2b80338322ec81097343",
         "/scratch/juno/jvl210002/bidir/results/2026-10-08/units/gemma3-12b/generality_scale_pilot_s1234/followup_contrasts.json": "1165431e24433787fe32b794de338ea262add4ff0ecc667b1d8d6049d8cf457f",
@@ -186,7 +188,9 @@
         "/scratch/juno/jvl210002/bidir/results/2026-10-08/units/gemma3-12b/generality_scale_pilot_s17/followup_contrasts.json": "aae1cacf88738557f6e587e9ca33e992977e55cb9e83624593b36f60738b3e7b",
         "/scratch/juno/jvl210002/bidir/results/2026-10-08/units/gemma3-12b/generality_scale_pilot_s17/trials.jsonl": "ac0488e953e3f87a8cdd02bc3075c0746beb5d9b8cc01790c6e93c6975e1dcb8",
         "/scratch/juno/jvl210002/bidir/results/2026-10-08/units/gemma3-12b/generality_scale_pilot_s42/followup_contrasts.json": "b18cb0f8132646f8b6c905ddc7e18782760d41250034bf800f288eb2e45c3ee8",
-        "/scratch/juno/jvl210002/bidir/results/2026-10-08/units/gemma3-12b/generality_scale_pilot_s42/trials.jsonl": "b7ae01f069aad682e6dbea6f2970aec51f1fdff524feafd589f054025dd8d516"
+        "/scratch/juno/jvl210002/bidir/results/2026-10-08/units/gemma3-12b/generality_scale_pilot_s42/trials.jsonl": "b7ae01f069aad682e6dbea6f2970aec51f1fdff524feafd589f054025dd8d516",
+        "/scratch/juno/jvl210002/bidir/results/2026-10-09/py_cpp/llama31-8b/generality_scale_pilot_s1234/followup_contrasts.json": "ae6edfe5691bdb5e4696cbdebb150a18b36a89b3eb2420a921f1e01c85da32e3",
+        "/scratch/juno/jvl210002/bidir/results/2026-10-09/py_cpp/llama31-8b/generality_scale_pilot_s1234/trials.jsonl": "79f5a2c76f3fe4c5240626f1ad4a4870b4d92ed666ec8e8613502ef6ec1724a5"
       }
     },
     "tables/contrastive_snapshot.tex": {
@@ -366,6 +370,8 @@
         "/scratch/juno/jvl210002/bidir/results/2026-10-08/mt_zh-en/llama32-3b/fullft_campaign_s17/trials.jsonl": "d03fd172e5816c68fb3324ff478002f32cf327559ab989fdcd13e58746445d7a",
         "/scratch/juno/jvl210002/bidir/results/2026-10-08/py_cpp/llama31-8b/generality_scale_pilot_s17/followup_contrasts.json": "82bad38d49753ad1876eb99b6ac80d25aefa10820df2adb9d4e1678c182ec2ea",
         "/scratch/juno/jvl210002/bidir/results/2026-10-08/py_cpp/llama31-8b/generality_scale_pilot_s17/trials.jsonl": "f180075581dc0ee593ffaf5da3458b7df150f4fb74908b9e9064b83935505892",
+        "/scratch/juno/jvl210002/bidir/results/2026-10-08/py_cpp/llama31-8b/generality_scale_pilot_s42/followup_contrasts.json": "56793b09327a4b9d684a0ac4f650e31c541b5456cada32c66ccec10a1a9fb491",
+        "/scratch/juno/jvl210002/bidir/results/2026-10-08/py_cpp/llama31-8b/generality_scale_pilot_s42/trials.jsonl": "4d308ddda270af2697dad2529135c660bf8cfb412c718dc598b42f4b5b9a2669",
         "/scratch/juno/jvl210002/bidir/results/2026-10-08/sql/llama32-3b/fullft_campaign_s17/followup_contrasts.json": "9d0a83d35364a54a07356fe02adcd6aeab20eca097e2eee1060727cd83682add",
         "/scratch/juno/jvl210002/bidir/results/2026-10-08/sql/llama32-3b/fullft_campaign_s17/trials.jsonl": "f15a2d5f538dbd7c71d6b37bafbf7b75ca1893fd0f0d2b80338322ec81097343",
         "/scratch/juno/jvl210002/bidir/results/2026-10-08/units/gemma3-12b/generality_scale_pilot_s1234/followup_contrasts.json": "1165431e24433787fe32b794de338ea262add4ff0ecc667b1d8d6049d8cf457f",
@@ -373,7 +379,9 @@
         "/scratch/juno/jvl210002/bidir/results/2026-10-08/units/gemma3-12b/generality_scale_pilot_s17/followup_contrasts.json": "aae1cacf88738557f6e587e9ca33e992977e55cb9e83624593b36f60738b3e7b",
         "/scratch/juno/jvl210002/bidir/results/2026-10-08/units/gemma3-12b/generality_scale_pilot_s17/trials.jsonl": "ac0488e953e3f87a8cdd02bc3075c0746beb5d9b8cc01790c6e93c6975e1dcb8",
         "/scratch/juno/jvl210002/bidir/results/2026-10-08/units/gemma3-12b/generality_scale_pilot_s42/followup_contrasts.json": "b18cb0f8132646f8b6c905ddc7e18782760d41250034bf800f288eb2e45c3ee8",
-        "/scratch/juno/jvl210002/bidir/results/2026-10-08/units/gemma3-12b/generality_scale_pilot_s42/trials.jsonl": "b7ae01f069aad682e6dbea6f2970aec51f1fdff524feafd589f054025dd8d516"
+        "/scratch/juno/jvl210002/bidir/results/2026-10-08/units/gemma3-12b/generality_scale_pilot_s42/trials.jsonl": "b7ae01f069aad682e6dbea6f2970aec51f1fdff524feafd589f054025dd8d516",
+        "/scratch/juno/jvl210002/bidir/results/2026-10-09/py_cpp/llama31-8b/generality_scale_pilot_s1234/followup_contrasts.json": "ae6edfe5691bdb5e4696cbdebb150a18b36a89b3eb2420a921f1e01c85da32e3",
+        "/scratch/juno/jvl210002/bidir/results/2026-10-09/py_cpp/llama31-8b/generality_scale_pilot_s1234/trials.jsonl": "79f5a2c76f3fe4c5240626f1ad4a4870b4d92ed666ec8e8613502ef6ec1724a5"
       }
     },
     "tables/contrastive_controls.tex": {
@@ -553,6 +561,8 @@
         "/scratch/juno/jvl210002/bidir/results/2026-10-08/mt_zh-en/llama32-3b/fullft_campaign_s17/trials.jsonl": "d03fd172e5816c68fb3324ff478002f32cf327559ab989fdcd13e58746445d7a",
         "/scratch/juno/jvl210002/bidir/results/2026-10-08/py_cpp/llama31-8b/generality_scale_pilot_s17/followup_contrasts.json": "82bad38d49753ad1876eb99b6ac80d25aefa10820df2adb9d4e1678c182ec2ea",
         "/scratch/juno/jvl210002/bidir/results/2026-10-08/py_cpp/llama31-8b/generality_scale_pilot_s17/trials.jsonl": "f180075581dc0ee593ffaf5da3458b7df150f4fb74908b9e9064b83935505892",
+        "/scratch/juno/jvl210002/bidir/results/2026-10-08/py_cpp/llama31-8b/generality_scale_pilot_s42/followup_contrasts.json": "56793b09327a4b9d684a0ac4f650e31c541b5456cada32c66ccec10a1a9fb491",
+        "/scratch/juno/jvl210002/bidir/results/2026-10-08/py_cpp/llama31-8b/generality_scale_pilot_s42/trials.jsonl": "4d308ddda270af2697dad2529135c660bf8cfb412c718dc598b42f4b5b9a2669",
         "/scratch/juno/jvl210002/bidir/results/2026-10-08/sql/llama32-3b/fullft_campaign_s17/followup_contrasts.json": "9d0a83d35364a54a07356fe02adcd6aeab20eca097e2eee1060727cd83682add",
         "/scratch/juno/jvl210002/bidir/results/2026-10-08/sql/llama32-3b/fullft_campaign_s17/trials.jsonl": "f15a2d5f538dbd7c71d6b37bafbf7b75ca1893fd0f0d2b80338322ec81097343",
         "/scratch/juno/jvl210002/bidir/results/2026-10-08/units/gemma3-12b/generality_scale_pilot_s1234/followup_contrasts.json": "1165431e24433787fe32b794de338ea262add4ff0ecc667b1d8d6049d8cf457f",
@@ -560,7 +570,9 @@
         "/scratch/juno/jvl210002/bidir/results/2026-10-08/units/gemma3-12b/generality_scale_pilot_s17/followup_contrasts.json": "aae1cacf88738557f6e587e9ca33e992977e55cb9e83624593b36f60738b3e7b",
         "/scratch/juno/jvl210002/bidir/results/2026-10-08/units/gemma3-12b/generality_scale_pilot_s17/trials.jsonl": "ac0488e953e3f87a8cdd02bc3075c0746beb5d9b8cc01790c6e93c6975e1dcb8",
         "/scratch/juno/jvl210002/bidir/results/2026-10-08/units/gemma3-12b/generality_scale_pilot_s42/followup_contrasts.json": "b18cb0f8132646f8b6c905ddc7e18782760d41250034bf800f288eb2e45c3ee8",
-        "/scratch/juno/jvl210002/bidir/results/2026-10-08/units/gemma3-12b/generality_scale_pilot_s42/trials.jsonl": "b7ae01f069aad682e6dbea6f2970aec51f1fdff524feafd589f054025dd8d516"
+        "/scratch/juno/jvl210002/bidir/results/2026-10-08/units/gemma3-12b/generality_scale_pilot_s42/trials.jsonl": "b7ae01f069aad682e6dbea6f2970aec51f1fdff524feafd589f054025dd8d516",
+        "/scratch/juno/jvl210002/bidir/results/2026-10-09/py_cpp/llama31-8b/generality_scale_pilot_s1234/followup_contrasts.json": "ae6edfe5691bdb5e4696cbdebb150a18b36a89b3eb2420a921f1e01c85da32e3",
+        "/scratch/juno/jvl210002/bidir/results/2026-10-09/py_cpp/llama31-8b/generality_scale_pilot_s1234/trials.jsonl": "79f5a2c76f3fe4c5240626f1ad4a4870b4d92ed666ec8e8613502ef6ec1724a5"
       }
     },
     "tables/domain_gates_snapshot.tex": {
@@ -740,6 +752,8 @@
         "/scratch/juno/jvl210002/bidir/results/2026-10-08/mt_zh-en/llama32-3b/fullft_campaign_s17/trials.jsonl": "d03fd172e5816c68fb3324ff478002f32cf327559ab989fdcd13e58746445d7a",
         "/scratch/juno/jvl210002/bidir/results/2026-10-08/py_cpp/llama31-8b/generality_scale_pilot_s17/followup_contrasts.json": "82bad38d49753ad1876eb99b6ac80d25aefa10820df2adb9d4e1678c182ec2ea",
         "/scratch/juno/jvl210002/bidir/results/2026-10-08/py_cpp/llama31-8b/generality_scale_pilot_s17/trials.jsonl": "f180075581dc0ee593ffaf5da3458b7df150f4fb74908b9e9064b83935505892",
+        "/scratch/juno/jvl210002/bidir/results/2026-10-08/py_cpp/llama31-8b/generality_scale_pilot_s42/followup_contrasts.json": "56793b09327a4b9d684a0ac4f650e31c541b5456cada32c66ccec10a1a9fb491",
+        "/scratch/juno/jvl210002/bidir/results/2026-10-08/py_cpp/llama31-8b/generality_scale_pilot_s42/trials.jsonl": "4d308ddda270af2697dad2529135c660bf8cfb412c718dc598b42f4b5b9a2669",
         "/scratch/juno/jvl210002/bidir/results/2026-10-08/sql/llama32-3b/fullft_campaign_s17/followup_contrasts.json": "9d0a83d35364a54a07356fe02adcd6aeab20eca097e2eee1060727cd83682add",
         "/scratch/juno/jvl210002/bidir/results/2026-10-08/sql/llama32-3b/fullft_campaign_s17/trials.jsonl": "f15a2d5f538dbd7c71d6b37bafbf7b75ca1893fd0f0d2b80338322ec81097343",
         "/scratch/juno/jvl210002/bidir/results/2026-10-08/units/gemma3-12b/generality_scale_pilot_s1234/followup_contrasts.json": "1165431e24433787fe32b794de338ea262add4ff0ecc667b1d8d6049d8cf457f",
@@ -747,7 +761,9 @@
         "/scratch/juno/jvl210002/bidir/results/2026-10-08/units/gemma3-12b/generality_scale_pilot_s17/followup_contrasts.json": "aae1cacf88738557f6e587e9ca33e992977e55cb9e83624593b36f60738b3e7b",
         "/scratch/juno/jvl210002/bidir/results/2026-10-08/units/gemma3-12b/generality_scale_pilot_s17/trials.jsonl": "ac0488e953e3f87a8cdd02bc3075c0746beb5d9b8cc01790c6e93c6975e1dcb8",
         "/scratch/juno/jvl210002/bidir/results/2026-10-08/units/gemma3-12b/generality_scale_pilot_s42/followup_contrasts.json": "b18cb0f8132646f8b6c905ddc7e18782760d41250034bf800f288eb2e45c3ee8",
-        "/scratch/juno/jvl210002/bidir/results/2026-10-08/units/gemma3-12b/generality_scale_pilot_s42/trials.jsonl": "b7ae01f069aad682e6dbea6f2970aec51f1fdff524feafd589f054025dd8d516"
+        "/scratch/juno/jvl210002/bidir/results/2026-10-08/units/gemma3-12b/generality_scale_pilot_s42/trials.jsonl": "b7ae01f069aad682e6dbea6f2970aec51f1fdff524feafd589f054025dd8d516",
+        "/scratch/juno/jvl210002/bidir/results/2026-10-09/py_cpp/llama31-8b/generality_scale_pilot_s1234/followup_contrasts.json": "ae6edfe5691bdb5e4696cbdebb150a18b36a89b3eb2420a921f1e01c85da32e3",
+        "/scratch/juno/jvl210002/bidir/results/2026-10-09/py_cpp/llama31-8b/generality_scale_pilot_s1234/trials.jsonl": "79f5a2c76f3fe4c5240626f1ad4a4870b4d92ed666ec8e8613502ef6ec1724a5"
       }
     },
     "tables/fullft_snapshot.tex": {
@@ -927,6 +943,8 @@
         "/scratch/juno/jvl210002/bidir/results/2026-10-08/mt_zh-en/llama32-3b/fullft_campaign_s17/trials.jsonl": "d03fd172e5816c68fb3324ff478002f32cf327559ab989fdcd13e58746445d7a",
         "/scratch/juno/jvl210002/bidir/results/2026-10-08/py_cpp/llama31-8b/generality_scale_pilot_s17/followup_contrasts.json": "82bad38d49753ad1876eb99b6ac80d25aefa10820df2adb9d4e1678c182ec2ea",
         "/scratch/juno/jvl210002/bidir/results/2026-10-08/py_cpp/llama31-8b/generality_scale_pilot_s17/trials.jsonl": "f180075581dc0ee593ffaf5da3458b7df150f4fb74908b9e9064b83935505892",
+        "/scratch/juno/jvl210002/bidir/results/2026-10-08/py_cpp/llama31-8b/generality_scale_pilot_s42/followup_contrasts.json": "56793b09327a4b9d684a0ac4f650e31c541b5456cada32c66ccec10a1a9fb491",
+        "/scratch/juno/jvl210002/bidir/results/2026-10-08/py_cpp/llama31-8b/generality_scale_pilot_s42/trials.jsonl": "4d308ddda270af2697dad2529135c660bf8cfb412c718dc598b42f4b5b9a2669",
         "/scratch/juno/jvl210002/bidir/results/2026-10-08/sql/llama32-3b/fullft_campaign_s17/followup_contrasts.json": "9d0a83d35364a54a07356fe02adcd6aeab20eca097e2eee1060727cd83682add",
         "/scratch/juno/jvl210002/bidir/results/2026-10-08/sql/llama32-3b/fullft_campaign_s17/trials.jsonl": "f15a2d5f538dbd7c71d6b37bafbf7b75ca1893fd0f0d2b80338322ec81097343",
         "/scratch/juno/jvl210002/bidir/results/2026-10-08/units/gemma3-12b/generality_scale_pilot_s1234/followup_contrasts.json": "1165431e24433787fe32b794de338ea262add4ff0ecc667b1d8d6049d8cf457f",
@@ -934,7 +952,9 @@
         "/scratch/juno/jvl210002/bidir/results/2026-10-08/units/gemma3-12b/generality_scale_pilot_s17/followup_contrasts.json": "aae1cacf88738557f6e587e9ca33e992977e55cb9e83624593b36f60738b3e7b",
         "/scratch/juno/jvl210002/bidir/results/2026-10-08/units/gemma3-12b/generality_scale_pilot_s17/trials.jsonl": "ac0488e953e3f87a8cdd02bc3075c0746beb5d9b8cc01790c6e93c6975e1dcb8",
         "/scratch/juno/jvl210002/bidir/results/2026-10-08/units/gemma3-12b/generality_scale_pilot_s42/followup_contrasts.json": "b18cb0f8132646f8b6c905ddc7e18782760d41250034bf800f288eb2e45c3ee8",
-        "/scratch/juno/jvl210002/bidir/results/2026-10-08/units/gemma3-12b/generality_scale_pilot_s42/trials.jsonl": "b7ae01f069aad682e6dbea6f2970aec51f1fdff524feafd589f054025dd8d516"
+        "/scratch/juno/jvl210002/bidir/results/2026-10-08/units/gemma3-12b/generality_scale_pilot_s42/trials.jsonl": "b7ae01f069aad682e6dbea6f2970aec51f1fdff524feafd589f054025dd8d516",
+        "/scratch/juno/jvl210002/bidir/results/2026-10-09/py_cpp/llama31-8b/generality_scale_pilot_s1234/followup_contrasts.json": "ae6edfe5691bdb5e4696cbdebb150a18b36a89b3eb2420a921f1e01c85da32e3",
+        "/scratch/juno/jvl210002/bidir/results/2026-10-09/py_cpp/llama31-8b/generality_scale_pilot_s1234/trials.jsonl": "79f5a2c76f3fe4c5240626f1ad4a4870b4d92ed666ec8e8613502ef6ec1724a5"
       }
     },
     "tables/generality_snapshot.tex": {
@@ -1114,6 +1134,8 @@
         "/scratch/juno/jvl210002/bidir/results/2026-10-08/mt_zh-en/llama32-3b/fullft_campaign_s17/trials.jsonl": "d03fd172e5816c68fb3324ff478002f32cf327559ab989fdcd13e58746445d7a",
         "/scratch/juno/jvl210002/bidir/results/2026-10-08/py_cpp/llama31-8b/generality_scale_pilot_s17/followup_contrasts.json": "82bad38d49753ad1876eb99b6ac80d25aefa10820df2adb9d4e1678c182ec2ea",
         "/scratch/juno/jvl210002/bidir/results/2026-10-08/py_cpp/llama31-8b/generality_scale_pilot_s17/trials.jsonl": "f180075581dc0ee593ffaf5da3458b7df150f4fb74908b9e9064b83935505892",
+        "/scratch/juno/jvl210002/bidir/results/2026-10-08/py_cpp/llama31-8b/generality_scale_pilot_s42/followup_contrasts.json": "56793b09327a4b9d684a0ac4f650e31c541b5456cada32c66ccec10a1a9fb491",
+        "/scratch/juno/jvl210002/bidir/results/2026-10-08/py_cpp/llama31-8b/generality_scale_pilot_s42/trials.jsonl": "4d308ddda270af2697dad2529135c660bf8cfb412c718dc598b42f4b5b9a2669",
         "/scratch/juno/jvl210002/bidir/results/2026-10-08/sql/llama32-3b/fullft_campaign_s17/followup_contrasts.json": "9d0a83d35364a54a07356fe02adcd6aeab20eca097e2eee1060727cd83682add",
         "/scratch/juno/jvl210002/bidir/results/2026-10-08/sql/llama32-3b/fullft_campaign_s17/trials.jsonl": "f15a2d5f538dbd7c71d6b37bafbf7b75ca1893fd0f0d2b80338322ec81097343",
         "/scratch/juno/jvl210002/bidir/results/2026-10-08/units/gemma3-12b/generality_scale_pilot_s1234/followup_contrasts.json": "1165431e24433787fe32b794de338ea262add4ff0ecc667b1d8d6049d8cf457f",
@@ -1121,7 +1143,9 @@
         "/scratch/juno/jvl210002/bidir/results/2026-10-08/units/gemma3-12b/generality_scale_pilot_s17/followup_contrasts.json": "aae1cacf88738557f6e587e9ca33e992977e55cb9e83624593b36f60738b3e7b",
         "/scratch/juno/jvl210002/bidir/results/2026-10-08/units/gemma3-12b/generality_scale_pilot_s17/trials.jsonl": "ac0488e953e3f87a8cdd02bc3075c0746beb5d9b8cc01790c6e93c6975e1dcb8",
         "/scratch/juno/jvl210002/bidir/results/2026-10-08/units/gemma3-12b/generality_scale_pilot_s42/followup_contrasts.json": "b18cb0f8132646f8b6c905ddc7e18782760d41250034bf800f288eb2e45c3ee8",
-        "/scratch/juno/jvl210002/bidir/results/2026-10-08/units/gemma3-12b/generality_scale_pilot_s42/trials.jsonl": "b7ae01f069aad682e6dbea6f2970aec51f1fdff524feafd589f054025dd8d516"
+        "/scratch/juno/jvl210002/bidir/results/2026-10-08/units/gemma3-12b/generality_scale_pilot_s42/trials.jsonl": "b7ae01f069aad682e6dbea6f2970aec51f1fdff524feafd589f054025dd8d516",
+        "/scratch/juno/jvl210002/bidir/results/2026-10-09/py_cpp/llama31-8b/generality_scale_pilot_s1234/followup_contrasts.json": "ae6edfe5691bdb5e4696cbdebb150a18b36a89b3eb2420a921f1e01c85da32e3",
+        "/scratch/juno/jvl210002/bidir/results/2026-10-09/py_cpp/llama31-8b/generality_scale_pilot_s1234/trials.jsonl": "79f5a2c76f3fe4c5240626f1ad4a4870b4d92ed666ec8e8613502ef6ec1724a5"
       }
     },
     "figures/directional_loss_snapshot.pdf": {
@@ -1301,6 +1325,8 @@
         "/scratch/juno/jvl210002/bidir/results/2026-10-08/mt_zh-en/llama32-3b/fullft_campaign_s17/trials.jsonl": "d03fd172e5816c68fb3324ff478002f32cf327559ab989fdcd13e58746445d7a",
         "/scratch/juno/jvl210002/bidir/results/2026-10-08/py_cpp/llama31-8b/generality_scale_pilot_s17/followup_contrasts.json": "82bad38d49753ad1876eb99b6ac80d25aefa10820df2adb9d4e1678c182ec2ea",
         "/scratch/juno/jvl210002/bidir/results/2026-10-08/py_cpp/llama31-8b/generality_scale_pilot_s17/trials.jsonl": "f180075581dc0ee593ffaf5da3458b7df150f4fb74908b9e9064b83935505892",
+        "/scratch/juno/jvl210002/bidir/results/2026-10-08/py_cpp/llama31-8b/generality_scale_pilot_s42/followup_contrasts.json": "56793b09327a4b9d684a0ac4f650e31c541b5456cada32c66ccec10a1a9fb491",
+        "/scratch/juno/jvl210002/bidir/results/2026-10-08/py_cpp/llama31-8b/generality_scale_pilot_s42/trials.jsonl": "4d308ddda270af2697dad2529135c660bf8cfb412c718dc598b42f4b5b9a2669",
         "/scratch/juno/jvl210002/bidir/results/2026-10-08/sql/llama32-3b/fullft_campaign_s17/followup_contrasts.json": "9d0a83d35364a54a07356fe02adcd6aeab20eca097e2eee1060727cd83682add",
         "/scratch/juno/jvl210002/bidir/results/2026-10-08/sql/llama32-3b/fullft_campaign_s17/trials.jsonl": "f15a2d5f538dbd7c71d6b37bafbf7b75ca1893fd0f0d2b80338322ec81097343",
         "/scratch/juno/jvl210002/bidir/results/2026-10-08/units/gemma3-12b/generality_scale_pilot_s1234/followup_contrasts.json": "1165431e24433787fe32b794de338ea262add4ff0ecc667b1d8d6049d8cf457f",
@@ -1308,9 +1334,11 @@
         "/scratch/juno/jvl210002/bidir/results/2026-10-08/units/gemma3-12b/generality_scale_pilot_s17/followup_contrasts.json": "aae1cacf88738557f6e587e9ca33e992977e55cb9e83624593b36f60738b3e7b",
         "/scratch/juno/jvl210002/bidir/results/2026-10-08/units/gemma3-12b/generality_scale_pilot_s17/trials.jsonl": "ac0488e953e3f87a8cdd02bc3075c0746beb5d9b8cc01790c6e93c6975e1dcb8",
         "/scratch/juno/jvl210002/bidir/results/2026-10-08/units/gemma3-12b/generality_scale_pilot_s42/followup_contrasts.json": "b18cb0f8132646f8b6c905ddc7e18782760d41250034bf800f288eb2e45c3ee8",
-        "/scratch/juno/jvl210002/bidir/results/2026-10-08/units/gemma3-12b/generality_scale_pilot_s42/trials.jsonl": "b7ae01f069aad682e6dbea6f2970aec51f1fdff524feafd589f054025dd8d516"
+        "/scratch/juno/jvl210002/bidir/results/2026-10-08/units/gemma3-12b/generality_scale_pilot_s42/trials.jsonl": "b7ae01f069aad682e6dbea6f2970aec51f1fdff524feafd589f054025dd8d516",
+        "/scratch/juno/jvl210002/bidir/results/2026-10-09/py_cpp/llama31-8b/generality_scale_pilot_s1234/followup_contrasts.json": "ae6edfe5691bdb5e4696cbdebb150a18b36a89b3eb2420a921f1e01c85da32e3",
+        "/scratch/juno/jvl210002/bidir/results/2026-10-09/py_cpp/llama31-8b/generality_scale_pilot_s1234/trials.jsonl": "79f5a2c76f3fe4c5240626f1ad4a4870b4d92ed666ec8e8613502ef6ec1724a5"
       }
     }
   },
-  "input_signature": "aa1092c2fc3b864cdfc25427ece42e38aa4b40391ad5e81802b381474032dd73"
+  "input_signature": "a1201baf4dd4617b8da0fc06bfa1a0214724f561fc2fb12d36cc86a3078f9ecb"
 }

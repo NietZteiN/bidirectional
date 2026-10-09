@@ -24,6 +24,13 @@ ARMS=['base','sft','replay','mix1','mix5','mix10','mix25','mix50','rev','cl_fwd'
 def source_hash(path):return hashlib.sha256(Path(path).read_bytes()).hexdigest()
 
 
+def publication_cell(summary):
+    mode=summary['mode']
+    key=('probe' if mode=='probes' else mode)+'_panel'
+    return next(c for c in suite.plan()[key]
+                if c['domain']==summary['domain'] and c['model']==summary['model'])
+
+
 def dataset(run):
     rows=[r for r in suite.read_rows(run/'trials.jsonl') if r.get('strategy')=='simple' and r['system'] in ARMS]
     for r in rows:r['endpoint']=r['direction']
@@ -161,8 +168,7 @@ def main():
         summary=json.loads(p.read_text())
         if summary.get('engineering_smoke') or summary.get('mode')=='train':continue
         mode=summary['mode']
-        cell=next(c for c in suite.plan()[mode+'_panel']
-                  if c['domain']==summary['domain'] and c['model']==summary['model'])
+        cell=publication_cell(summary)
         if planner.completed(mode,cell,summary['seed']):
             results.append(dict(summary=summary,contrasts=json.loads((p.parent/'contrasts.json').read_text())
                                 if (p.parent/'contrasts.json').exists() else None))
@@ -215,6 +221,25 @@ def main():
         +'Counts are planned workloads and audited corpus sizes, not completed results.}\n'
         +'\\label{tab:paper-finish-protocol}\n\\end{table*}\n')
     (PAPER/'tables/paper_finish_protocol.tex').write_text(protocol)
+    boundary_rows=[]
+    for result in results:
+        summary=result['summary']
+        if summary['mode']!='transfer':continue
+        for endpoint,gate in sorted(summary.get('gate',{}).items()):
+            boundary_rows.append(' & '.join([summary['model'].replace('_',r'\_'),str(summary['seed']),
+                endpoint.rsplit('/',1)[-1],f"{100*gate['rate']:.1f}",
+                f"{100*gate['format_fail']:.1f}",f"{100*gate['echo_probe_strict']:.1f}",
+                'pass' if summary['eligibility_passed'] else 'blocked'])+r' \\')
+    if boundary_rows:
+        (PAPER/'tables/transfer_boundaries.tex').write_text(
+            '\\begin{table*}[t]\n\\centering\\small\n\\begin{tabular}{lllllll}\n\\toprule\n'
+            +'Model & Seed & Direction & Base (\\%) & Format failure (\\%) & Echo (\\%) & Campaign '+r'\\'+'\n\\midrule\n'
+            +'\n'.join(boundary_rows)+'\n\\bottomrule\n\\end{tabular}\n'
+            +'\\caption{Completed OPUS transfer eligibility measurements with unchanged thresholds. '
+            'Each campaign requires both directions to satisfy the frozen rate, format-failure, and '
+            'echo conjunction. Failed campaigns preserve base-only trials and do not generate tuned '
+            'comparisons; an echo failure is a criterion-validity boundary, not evidence of adapter collapse.}\n'
+            +'\\label{tab:transfer-boundaries}\n\\end{table*}\n')
     for mode in ('probes','transfer','robust','recipe'):
         selected=[r for r in results if r['summary']['mode']==mode and r['summary'].get('eligibility_passed')]
         if not selected:continue

@@ -17,6 +17,28 @@ worker=module('paper_worker_test','105_paper_worker.py')
 planner=module('paper_planner_test','104_paper_finish.py')
 evidence=module('paper_evidence_test','99_paper_evidence.py')
 runner=module('paper_runner_test','95_runner.py')
+synthesis=module('paper_synthesis_test','106_paper_synthesis.py')
+
+
+def test_overflow_requires_real_free_gpu_cpu_memory_and_healthy_node():
+    node='NodeName=g-04-02 State=MIXED CPUEfctv=64 CPUAlloc=32 RealMemory=512000 AllocMem=299008 CfgTRES=cpu=64,gres/gpu=4 AllocTRES=cpu=32,gres/gpu=3'
+    assert planner.spare_h100_slots(node)==1
+    assert planner.spare_h100_slots(node.replace('AllocTRES=cpu=32,gres/gpu=3','AllocTRES=cpu=32,gres/gpu=4'))==0
+    assert planner.spare_h100_slots(node.replace('State=MIXED','State=MIXED+DRAIN'))==0
+    assert planner.spare_h100_slots(node.replace('CPUAlloc=32','CPUAlloc=60'))==0
+    assert planner.spare_h100_slots(node.replace('AllocMem=299008','AllocMem=500000'))==0
+
+
+def test_publication_reporting_uses_registered_probe_and_null_cell_panels():
+    probe=dict(mode='probes',domain='units',model='gemma3-12b')
+    robust=dict(probe,mode='robust')
+    recipe=dict(probe,mode='recipe')
+    assert synthesis.publication_cell(probe)['mix']=='mix5'
+    assert synthesis.publication_cell(robust)['mix']=='mix50'
+    assert synthesis.publication_cell(recipe)['mix']=='mix50'
+    for mode,key in [('probes','probe'),('robust','robust'),('transfer','transfer'),('recipe','recipe')]:
+        for cell in suite.plan()[key+'_panel']:
+            assert synthesis.publication_cell(dict(cell,mode=mode))==cell
 
 
 def test_overlap_rejects_contained_questions_and_reports_source():

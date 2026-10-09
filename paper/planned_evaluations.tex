@@ -58,6 +58,7 @@ are not subtracted as if interchangeable.
 
 \subsection{Independent real-data transfer}
 \label{app:independent-transfer}
+\IfFileExists{tables/transfer_boundaries.tex}{\input{tables/transfer_boundaries.tex}}{}
 
 Existing German-to-English checkpoints are evaluated on the independently sourced OPUS-100
 German--English test split.\footnote{\url{https://huggingface.co/datasets/Helsinki-NLP/opus-100}.}
@@ -116,7 +117,7 @@ Audited synthesis integrated; interpretation pending \\
 General-ability table & Frozen panel, overlap exclusions, same-pass changes and intervals &
 Registered and smoke-gated; measurements pending \\
 Independent transfer & Corpus/version, eligibility, both directions, failures and hashes &
-Registered OPUS protocol; measurements pending \\
+Frozen OPUS gates recorded; tuned comparisons conditional \\
 Robustness table & Frozen prompts/recipes, both directions, costs and all outcomes &
 Registered panel; measurements pending \\
 Reproducibility manifest & Splits/scorers, environment, manifests, trial hashes and analysis commands &

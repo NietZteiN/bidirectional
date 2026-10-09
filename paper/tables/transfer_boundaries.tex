@@ -1,0 +1,23 @@
+\begin{table*}[t]
+\centering\small
+\begin{tabular}{lllllll}
+\toprule
+Model & Seed & Direction & Base (\%) & Format failure (\%) & Echo (\%) & Campaign \\
+\midrule
+gemma3-4b & 1234 & forward & 33.9 & 10.1 & 6.6 & blocked \\
+gemma3-4b & 1234 & reverse & 44.9 & 6.3 & 0.0 & blocked \\
+gemma3-4b & 17 & forward & 33.9 & 10.0 & 6.6 & blocked \\
+gemma3-4b & 17 & reverse & 44.8 & 6.3 & 0.0 & blocked \\
+gemma3-4b & 42 & forward & 33.9 & 10.1 & 6.6 & blocked \\
+gemma3-4b & 42 & reverse & 44.8 & 6.3 & 0.0 & blocked \\
+llama32-3b & 1234 & forward & 33.7 & 10.6 & 6.8 & blocked \\
+llama32-3b & 1234 & reverse & 53.0 & 6.8 & 0.0 & blocked \\
+llama32-3b & 42 & forward & 33.7 & 10.6 & 6.8 & blocked \\
+llama32-3b & 42 & reverse & 52.9 & 6.8 & 0.0 & blocked \\
+llama32-3b & 17 & forward & 33.7 & 10.6 & 6.8 & blocked \\
+llama32-3b & 17 & reverse & 52.8 & 6.8 & 0.0 & blocked \\
+\bottomrule
+\end{tabular}
+\caption{Completed OPUS transfer eligibility measurements with unchanged thresholds. Each campaign requires both directions to satisfy the frozen rate, format-failure, and echo conjunction. Failed campaigns preserve base-only trials and do not generate tuned comparisons; an echo failure is a criterion-validity boundary, not evidence of adapter collapse.}
+\label{tab:transfer-boundaries}
+\end{table*}
