@@ -1,0 +1,2 @@
+_extends: py_cpp.yaml
+# Amendment51: signed decimal L/LL literals, same bounded arithmetic semantics.

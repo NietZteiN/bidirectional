@@ -145,7 +145,7 @@ collapse} is a fall in reverse-direction success after fine-tuning on forward-di
 alone, measured against the untouched model.
 
 Every domain has a strict per-instance criterion with an automatic check
-(\S\ref{sec:setup}). Two failure modes are tracked separately and never counted as success:
+(\S\ref{sec:setup}). Two failure modes are tracked separately:
 
 \begin{description}
 \item[Echo] the output reproduces its own input. This is not hygiene. In JSON-to-YAML
@@ -155,6 +155,12 @@ Every domain has a strict per-instance criterion with an automatic check
   them measures the criterion rather than the capability.
 \item[Off-target] the output is in the wrong language, format, or notation.
 \end{description}
+
+Reverse strict success excludes both failure modes. The original translation forward
+predicate combines target-language and quality checks but does not explicitly exclude echoes;
+its forward-retention interpretation has this limitation. The versioned transfer diagnostic
+in Amendment51 adds echo exclusion in both directions and retains the original failed gates.
+Serialization strict scoring excludes echoes in both directions.
 
 Thresholds for continuous criteria are fixed from the \emph{untouched} model's own score
 distribution before any fine-tuned model is scored, and are recorded with the date and quantile

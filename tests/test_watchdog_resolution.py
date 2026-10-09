@@ -1,6 +1,7 @@
 import importlib.util
 import json
 from pathlib import Path
+import pytest
 
 spec = importlib.util.spec_from_file_location('watchdog',
     Path(__file__).resolve().parents[1] / 'runs/feeder/watchdog.py')
@@ -8,14 +9,14 @@ watchdog = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(watchdog)
 
 
-def test_later_success_clears_alarm_and_preserves_failure_evidence(tmp_path, monkeypatch):
+@pytest.mark.parametrize('name',['ev_fmt_gemma3-4b_s17_contrastive_pilot','gr_gate_gemma3-12b'])
+def test_later_success_clears_alarm_and_preserves_failure_evidence(tmp_path, monkeypatch, name):
     monkeypatch.setattr(watchdog, 'ROOT', tmp_path)
     monkeypatch.setattr(watchdog, 'QUAR', tmp_path / 'quarantine')
     monkeypatch.setattr(watchdog, 'FAILURES', tmp_path / 'failures')
     monkeypatch.setattr(watchdog, 'EVENTS', tmp_path / 'events')
     status_dir = tmp_path / 'runs/status'
     status_dir.mkdir(parents=True)
-    name = 'ev_fmt_gemma3-4b_s17_contrastive_pilot'
     failure = dict(id='100', name=name, why='quarantined')
     state = {'code_failures': [failure]}
     jobs = [('101', name, 'COMPLETED')]

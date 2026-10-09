@@ -1965,3 +1965,56 @@ CPU synthesis joins existing dose data and measured cost records without inventi
 FLOPs/timing, then produces figure/table provenance and a local anonymous reproducibility
 bundle. Citation/claim review remains distinct from job completion. No external publication
 or submission is authorized by this amendment.
+
+### Amendment51 — isolated blocked-cell repairs, 2026-10-09
+
+User authorized investigation and repair of remaining blocked cells. Inspection of originals
+informs this exploratory extension; do not describe selection as prospective confirmation.
+Freeze `configs/gate_repair.json` and `docs/GATE_REPAIR_PLAN.md` before new GPU execution.
+Original data, scorers, gates, failures and trials stay intact. Revised cells receive distinct
+domain IDs, adapter paths and `gate_repair_v1` diagnostics/transfer outputs.
+
+Register four variants at Llama3B/Gemma4B/Llama8B/Gemma12B: bounded C++ signed L/LL
+literals with compiler/interpreter agreement on33 inputs (`py_cpp_typed_v2`); explicit
+XML root/item/scalar contract (`fmt_contract_v2`); exact conversion/format contract
+(`units_contract_v2`); assignment-order and minterm contract (`logic_contract_v2`).
+Only the C++ bounded grammar changes among their task scorers. Require40 compute-local
+gold strict1.0 and echo/empty/garbage strict0.0 per direction, then seed17 fresh base gates
+on1000 sampled test pairs. Keep rate≥.10 and format-failure≤.15 per direction unchanged.
+Do not force a pass for genuine task incapability.
+
+Passing variants receive base/sft/rev/mix50/replay paired pilots; independently valid seed17
+campaigns admit42/1234 regardless of favorable, adverse or null effects. Except
+fmt_contract_v2/Gemma12B, which receives the existing ten-system contrastive panel at
+three seeds with unchanged five primary contrasts, λ=.1, temperature=.1 and four negatives.
+Require matching two-step real-model objective and extra-CE trainer smokes before production.
+The original fmt training-only negative pool must match versioned paired content exactly;
+versioned pair IDs determine the schedule. Isolate this alias in new trainer processes and
+record worker/data/negative-pool/adapter-manifest hashes. No competing four-arm pack writes
+those adapters. Other domain pilots retain the frozen original recipe.
+
+Run unchanged automata, diacritics, fmt_det75/50/25 and coverage at Llama8B/Gemma12B,
+retaining original oracle gold≥.95 and negatives≤.02, original scorers and the same base-gate
+thresholds. Test1000 pairs or all pairs if fewer. Passing cells admit the same four-arm,
+three-seed workflow. The underdetermined fmt_det00 inverse remains blocked.
+
+For OPUS, register `mt_noecho_v2`, rejecting echoes in BOTH directions while retaining all
+Amendment50 corpus/sampling/threshold/system choices. Run new engineering smokes and all
+three seeds at Llama3B/Gemma4B with fresh same-pass base eligibility before tuned generation.
+Preserve all six failed original OOD gates and report any revised failures base-only.
+
+For WebNLG register `d2t_schema_v2`: frozen Granite extractor with352 exact predicate
+labels derived only from original training data; canonicalize entity Unicode diacritics and
+predicate whitespace mechanically, with exact triple-set matching. Never supply instance
+gold triples or test-derived labels to the extractor. Its40-reference full oracle must pass
+gold1.0/negative0.0 in both directions before the Llama3B1000-pair base gate; only a passing
+base gate admits three-seed four-arm pilots. Preserve the failed original frozen-extractor
+oracle. Scorer changes and repaired results stay labeled; no pooled cross-version contrasts.
+Canonical triple-set overlap is audited: train/test and val/test are disjoint. Two training/
+validation content duplicates are recorded; pair IDs remain disjoint and there is no
+validation checkpoint selection.
+
+Archive full trials, oracle/proof reports, data/schema hashes and manifests. Admission requires
+current source/data hashes and successful status. Scientific failure is a completed diagnostic;
+technical retries remain bounded/quarantined. Retain null/adverse outcomes and failed capability
+gates. This extension adds conditional work beyond the completed original39-job publication panel.

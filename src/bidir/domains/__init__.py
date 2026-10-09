@@ -28,6 +28,11 @@ from types import ModuleType
 #: cell name -> (module, subtask filter). A "cell" is one (domain, direction-of-training)
 #: unit: mt_en-de and mt_de-en share a module and differ in which side is `side_a`.
 CELLS: dict[str, tuple[str, dict]] = {
+    "py_cpp_typed_v2": ("bidir.domains.py_cpp_typed_v2", {}),
+    "fmt_contract_v2": ("bidir.domains.fmt_contract_v2", {}),
+    "logic_contract_v2": ("bidir.domains.logic_contract_v2", {}),
+    "units_contract_v2": ("bidir.domains.units_contract_v2", {}),
+    "d2t_schema_v2": ("bidir.domains.d2t_schema_v2", {}),
     "units_explicit": ("bidir.domains.units_explicit", {}),
     "logic_explicit": ("bidir.domains.logic_explicit", {}),
     "py_cpp_explicit": ("bidir.domains.py_cpp_explicit", {}),

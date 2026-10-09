@@ -1,6 +1,6 @@
 # Experiment and task checklist
 
-Updated 2026-10-09 10:05 CDT, reconciled against adapter manifests, result files,
+Updated 2026-10-09 13:25 CDT, reconciled against adapter manifests, result files,
 `95_runner.py --status`, Slurm, and `runs/feeder/STATUS.md`.
 Previous checklist: [September 14 snapshot](archive/task_checklists/TASKS-2026-09-14.md).
 
@@ -28,14 +28,14 @@ Contrastive phase1 has twelve of twelve complete evaluations. Larger-model/new-d
 contrastive extensions and validity-based unit-conversion replications are first priority.
 Original failures and the retained null-collapse pilot are preserved.
 
-## Live to-do checklist — October 9 morning
+## Live to-do checklist — October 9 afternoon
 
 The controller is healthy: fresh heartbeat, all six stages exit0, no active operational
-alarms or quarantined cells, and CPU-host renewal remains queued. Six H200 GPUs are active,
-training contrastive replications for units/Gemma12B,translation/Gemma12B,and format/Llama8B.
-All recipe packs and evaluations are complete. Seven of nine probe campaigns and all
-prompt/template campaigns are complete. Current GPU utilization samples range from62–100%.
-All ready eligible cells are running;the remaining evaluations depend on their adapters.
+alarms or quarantined cells, and CPU-host renewal remains queued. Four existing H200 GPUs
+train contrastive replications for translation/Gemma12B and format/Llama8B.
+All39 original publication production jobs and13/13 smokes are complete, including all
+nine probe campaigns. Units/Gemma12B contrastive replication is complete at all three seeds.
+Versioned blocked-cell diagnostics are newly registered and enter automatic admission below.
 The artificial GPU cap remains disabled.
 
 - [x] Original contrastive campaign:12/12 complete, including all five primary contrasts.
@@ -63,8 +63,8 @@ The artificial GPU cap remains disabled.
       unchanged1000-row criteria. Llama8B passes;pack449065→449066 is complete.
       Gemma12B fails with forward format-failure26.1%;tuned runs remain blocked.
 - [ ] Replicate valid larger-model contrastive cells at seeds42/1234 automatically.
-      Original phase12/12 complete;extension6/15 evaluations complete. Translation/Llama8B
-      is complete across all three seeds. Six eligible replication packs are running with
+      Original phase12/12 complete;extension8/15 evaluations complete. Translation/Llama8B
+      and units/Gemma12B are complete across all three seeds. Four eligible replication packs run with
       dependent evaluations queued;fmt/Gemma12B and its two replications remain gate-blocked.
 - [x] Replicate Python/C++ at seeds42/1234 once its seed17 pilot passes validity checks,
       independently of a favorable, adverse or null outcome.
@@ -73,6 +73,38 @@ The artificial GPU cap remains disabled.
 - [ ] Blocked:original small-model generality cells,failed larger-model logic/units cells,
       D2T frozen-extractor scoring, and failed-gate invertibility/coverage experiments.
       They receive no tuned runs under the current criteria.
+
+## First-priority blocked-cell repair extension — Amendment51
+
+This is an exploratory extension after inspecting failures. Original failed gates stay
+unchanged; see [docs/GATE_REPAIR_PLAN.md](docs/GATE_REPAIR_PLAN.md).
+
+- [x] Register four isolated repairs: signed C++ literals, serialization contract, exact
+      unit-conversion contract and Boolean assignment/minterm contract. Prepare eval-disjoint splits.
+- [x] Compute-local40-case gold/echo/empty/garbage oracles pass exactly in both directions
+      for all four new cells. Valid observed C++ literal output now compiles and matches all33 inputs;
+      unsafe syntax, wrong behavior and overflow remain rejected.
+- [x] Implement source/data/trial/status admission proofs and bounded watchdog quarantine.
+      Automatic passing-cell pilots and42/1234 replication depend on validity, not effect sign.
+- [x] Deploy tested repair admission:390 regression tests pass;182 data/repair checks pass.
+      Eleven GPU diagnostics submitted (450183–450193), currently awaiting shared cluster
+      allocation. Four existing contrastive packs keep running;artificial caps remain disabled.
+      The detached controller and renewal checks pass after deployment.
+- [x] Extend verified spare-H100 QoS fallback to repair diagnostics and prevent status-only
+      timestamps from rebuilding the4.7 GB review bundle. All18 routing/bundle checks pass.
+- [x] Register versioned Gemma12B format contrastive runs and isolated training-only negative
+      alias with checked identical paired content; no competing pilot writes the same adapters.
+- [ ] Complete four model gate packs, covering16 repaired domain/model combinations.
+- [ ] Complete unchanged legacy feasibility gates: six domains at each of Llama8B/Gemma12B.
+- [ ] Complete WebNLG train-schema extractor oracle; admit Llama3B base gate only on success.
+- [ ] Complete the two revised Gemma12B format objective/control GPU trainer smokes.
+- [ ] Complete stricter OPUS engineering smokes and six fresh production campaigns; retain
+      failed new gates as boundaries and any eligible same-pass tuned comparisons separately.
+- [ ] Run every admitted new/legacy domain pilot, then two valid replications; failed gates
+      remain blocked. Four-arm pilots use base/sft/rev/mix50/replay; Gemma12B format uses the
+      existing ten-system contrastive panel at all three seeds.
+- [ ] Integrate new outcomes after validity/paired analysis, including adverse/null results.
+      Existing39-job publication completion does not certify this new conditional work complete.
 
 ## Publication priorities — EACL/NAACL assessment, October 8
 
@@ -97,7 +129,7 @@ Official review criteria emphasize supported claims, impact and reproducibility:
       coverage/effectiveness checks, current source/data hashes, paired analysis, and archiving.
 - [x] CPU scorer/data preflight and15 targeted tests pass;GPU smokes still require allocation.
 - [x] All thirteen allocation-local smokes pass,including the units/CL probe smoke.
-- [ ] Automatically admit39 production jobs after matching smokes:9 probe,6 OPUS-transfer,
+- [x] Complete39 production jobs after matching smokes:9 probe,6 OPUS-transfer,
       12 prompt/template and6 recipe-evaluation campaigns,plus6 training packs/48 adapters.
 - [x] Source-backed preservation figure/cost synthesis added;deduplicate rerun campaigns.
 - [x] Detached controller debug checks pass;GPU caps remain disabled and P1 work continues.
@@ -107,8 +139,8 @@ Official review criteria emphasize supported claims, impact and reproducibility:
       See `runs/feeder/paper_finish_acceleration_20261008.json` for original specifications/updates.
 - [x] Initial local anonymous evidence bundle built;packaged hashes verified and strict means replayed.
       Final refresh and release/reconstruction audit remain pending.
-- [x] Morning continue pass:37/39 publication production jobs complete;13/13 engineering smokes pass.
-      All12 prompt/template campaigns and seven probes complete. Two probes await units CL adapters.
+- [x] Afternoon continue pass:39/39 publication production jobs complete;13/13 engineering smokes pass.
+      All12 prompt/template campaigns and all nine probes are complete.
       Six OPUS campaigns close as failed echo-validity gates;retain base-only trials and block tuned comparisons.
       All six recipe packs and their six evaluations are complete,covering48 new recipe adapters.
       Both Python/C++ replication seeds42/1234 have completed training/evaluation.

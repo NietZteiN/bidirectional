@@ -1,0 +1,3 @@
+_extends: fmt.yaml
+n_test: 1000
+# Amendment51: explicit XML root/list and JSON scalar-type contract.

@@ -1,5 +1,6 @@
 """Guard against contaminated probes, incomplete pairing and unsafe automatic admission."""
 import importlib.util
+import json
 from pathlib import Path
 import pytest
 from bidir import paper_suite as suite
@@ -27,6 +28,49 @@ def test_overflow_requires_real_free_gpu_cpu_memory_and_healthy_node():
     assert planner.spare_h100_slots(node.replace('State=MIXED','State=MIXED+DRAIN'))==0
     assert planner.spare_h100_slots(node.replace('CPUAlloc=32','CPUAlloc=60'))==0
     assert planner.spare_h100_slots(node.replace('AllocMem=299008','AllocMem=500000'))==0
+
+
+@pytest.mark.parametrize('name',['tr_repair_pack','gr_gate_gemma3-4b'])
+def test_overflow_admits_owned_ready_repair_jobs_only(tmp_path,monkeypatch,name):
+    from types import SimpleNamespace
+    monkeypatch.setattr(planner,'ROOT',tmp_path)
+    (tmp_path/'runs/feeder').mkdir(parents=True)
+    updates=[]
+    node='State=MIXED CPUEfctv=64 CPUAlloc=32 RealMemory=512000 AllocMem=299008 CfgTRES=cpu=64,gres/gpu=4 AllocTRES=cpu=32,gres/gpu=3'
+    def run(argv,**kwargs):
+        if argv[0]=='squeue':
+            return SimpleNamespace(stdout=(f'100|{name}|h100,h200|juno-pri|QOSMaxJobsPerUserLimit|(null)|{tmp_path}\n'
+                f'101|gr_dependent|h100,h200|juno-pri|QOSMaxJobsPerUserLimit|afterok:1|{tmp_path}\n'
+                '102|gr_foreign|h100,h200|juno-pri|QOSMaxJobsPerUserLimit|(null)|/another/project\n'))
+        if argv[1:3]==['show','node']:
+            return SimpleNamespace(stdout=node if argv[3]=='g-04-02' else node.replace('gres/gpu=3','gres/gpu=4'))
+        if argv[1:3]==['show','job']:
+            assert argv[3]=='100'
+            return SimpleNamespace(stdout=f'JobState=PENDING WorkDir={tmp_path} JobName={name} Dependency=(null) Reason=QOSMaxJobsPerUserLimit ExcNodeList=(null)')
+        updates.append(argv)
+        return SimpleNamespace(returncode=0,stderr='')
+    monkeypatch.setattr(planner.subprocess,'run',run)
+    planner.admit_h100_overflow()
+    assert len(updates)==1
+    assert 'JobId=100' in updates[0] and 'Partition=h100' in updates[0] and 'QOS=normal' in updates[0]
+
+
+def test_repair_status_heartbeat_does_not_rebuild_evidence_bundle(tmp_path,monkeypatch):
+    spec=importlib.util.spec_from_file_location('artifact',ROOT/'scripts/107_paper_artifact.py')
+    artifact=importlib.util.module_from_spec(spec);spec.loader.exec_module(artifact)
+    status=tmp_path/'gate_repair_status.json'
+    status.write_text(json.dumps(dict(updated_utc='first',items=[dict(state='submitted')])))
+    monkeypatch.setattr(artifact,'ROOT',tmp_path)
+    monkeypatch.setattr(artifact,'BUNDLE',tmp_path/'bundle')
+    monkeypatch.setattr(artifact,'selected_paths',lambda:[status])
+    artifact.build()
+    manifest=artifact.BUNDLE/'MANIFEST.json';before=manifest.read_bytes()
+    status.write_text(json.dumps(dict(updated_utc='second',items=[dict(state='submitted')])))
+    artifact.build()
+    assert manifest.read_bytes()==before
+    status.write_text(json.dumps(dict(updated_utc='third',items=[dict(state='complete')])))
+    artifact.build()
+    assert manifest.read_bytes()!=before
 
 
 def test_publication_reporting_uses_registered_probe_and_null_cell_panels():

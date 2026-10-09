@@ -1,0 +1,3 @@
+_extends: d2t.yaml
+# Amendment51: train-only relation vocabulary, schema-guided Granite extractor.
+roundtrip_max_tokens: 512

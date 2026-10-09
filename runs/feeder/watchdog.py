@@ -166,7 +166,7 @@ def handle(st: dict, jid: str, name: str, state: str, subs: dict) -> None:
         requeue(new)
         event(f"retry {n + 1}/{MAX_RETRY}  {name} ({jid}) after {state}")
         return
-    if name.startswith(("tr_", "ev_")):               # a runner job: the runner resubmits it
+    if name.startswith(("tr_", "ev_", "gr_")):       # a runner job: the runner resubmits it
         key = name.split("_", 1)[1]
         if state == "TIMEOUT":
             c = st["runner_timeout"][key] = st["runner_timeout"].get(key, 0) + 1
@@ -227,7 +227,7 @@ def resolve_runner_failures(st: dict, ours: list) -> None:
     quarantined = {line.split()[0] for line in QUAR.read_text().splitlines() if line.strip()} if QUAR.exists() else set()
     for failure in st['code_failures']:
         name = failure['name']
-        if failure.get('resolved_by') or not name.startswith(('tr_', 'ev_')):
+        if failure.get('resolved_by') or not name.startswith(('tr_', 'ev_', 'gr_')):
             continue
         if name.split('_', 1)[1] in quarantined:
             continue

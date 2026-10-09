@@ -35,7 +35,8 @@ def main():
     for summary_file in sorted(RESULTS_DIR.glob('*/*/*/*/summary.json')):
         run=summary_file.parent;tag=run.name.rsplit('_s',1)[0]
         if not (tag in ['fullft_campaign','fullft_projection_repair','explicit_domain_pilot',
-                        'generality_scale_pilot','d2t_repaired_pilot']
+                        'generality_scale_pilot','d2t_repaired_pilot',
+                        'repair_domain_pilot','repair_legacy_pilot']
                 or tag.startswith('attrib_')):continue
         if (run/'WITHDRAWN.txt').exists():continue
         summary=json.loads(summary_file.read_text());domain=summary['domain'];model=summary['model'];seed=summary['seed']

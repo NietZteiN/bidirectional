@@ -48,7 +48,7 @@ def admit_h100_overflow():
     rows=[line.split('|') for line in queue.splitlines() if len(line.split('|'))==7]
     candidates=[r for r in rows if r[3]=='juno-pri' and r[4]=='QOSMaxJobsPerUserLimit'
                 and r[5] in ('','(null)') and r[6]==str(ROOT)
-                and 'h100' in r[2].split(',') and r[1].startswith(('tr_','ev_'))]
+                and 'h100' in r[2].split(',') and r[1].startswith(('tr_','ev_','gr_'))]
     if not candidates:return
     spare=0
     for node in ('g-04-02','g-05-01'):

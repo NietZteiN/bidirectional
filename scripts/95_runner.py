@@ -56,6 +56,7 @@ sys.path.insert(0, str(ROOT / "src"))
 from bidir import arms as A  # noqa: E402
 from bidir.config import DATA_DIR, RESULTS_DIR, RUNS_DIR  # noqa: E402
 from bidir.train import adapter_dir  # noqa: E402
+from bidir import gate_repair as repair  # noqa: E402
 
 SUBMIT = ROOT / "scripts" / "slurm" / "submit.py"
 
@@ -81,6 +82,20 @@ OLMO_COLLAPSED = ["mt_de-en", "mt_en-de"]
 #: directory, and MUST differ between tiers -- a mechanism eval scores a different arm set, and
 #: writing it to the main tag would replace a 12-arm result with a 6-arm one.
 PLAN = [
+    ("Priority1 repaired contrastive pilots", [repair.plan()['contrastive_cell']],
+     [repair.plan()['contrastive_model']], [17,42,1234], "contrastive_pilot", "contrastive_pilot"),
+    *[("Priority1 repaired domain pilots", [cell for cell in repair.plan()['cells']
+        if (cell,model)!=(repair.plan()['contrastive_cell'],repair.plan()['contrastive_model'])],
+       [model], [17], "domain_pilot", "repair_domain_pilot") for model in repair.plan()['models']],
+    *[("Priority1 repaired domain replications", [cell for cell in repair.plan()['cells']
+        if (cell,model)!=(repair.plan()['contrastive_cell'],repair.plan()['contrastive_model'])],
+       [model], [42,1234], "domain_pilot", "repair_domain_pilot") for model in repair.plan()['models']],
+    ("Priority1 legacy feasibility pilots", repair.plan()['legacy_cells'], repair.plan()['legacy_models'],
+     [17], "domain_pilot", "repair_legacy_pilot"),
+    ("Priority1 legacy feasibility replications", repair.plan()['legacy_cells'], repair.plan()['legacy_models'],
+     [42, 1234], "domain_pilot", "repair_legacy_pilot"),
+    ("D2T schema repair pilot", ['d2t_schema_v2'], [repair.plan()['d2t_model']], [17,42,1234],
+     "domain_pilot", "repair_domain_pilot"),
     ("Priority1 larger-model contrastive extension", ["fmt", "mt_de-en"],
      ["llama31-8b", "gemma3-12b"], [17, 42, 1234], "contrastive_pilot", "contrastive_pilot"),
     ("Priority1 numerical-domain contrastive extension", ["units"],
@@ -180,7 +195,7 @@ NO_A30 = {"code", "sql", "d2t", "coverage", "exec", "relation",
 
 #: Cells whose eval scores a second neural metric (COMET) and therefore needs room for it.
 #: 6 h rather than 3: 12 arms x 1,012 instances x 2 directions is 24k generations plus scoring.
-SLOW_EVAL = {"mt_en-de", "mt_de-en", "mt_en-zh", "mt_zh-en", "d2t"}
+SLOW_EVAL = {"mt_en-de", "mt_de-en", "mt_en-zh", "mt_zh-en", "d2t", "d2t_schema_v2"}
 #: Needs the 141 GB card: two models resident at once.
 NEEDS_H200 = {"d2t"}
 
@@ -270,18 +285,21 @@ def control_gate_ok(domain: str, model: str) -> bool | None:
     return None
 
 
-def generality_replication_valid(cell, model):
+def generality_replication_valid(cell, model, tag='generality_scale_pilot'):
     """Require a complete valid seed17 campaign, including null/adverse effects."""
     from bidir.pipeline_state import evaluation_succeeded
     required = {'base', 'sft', 'rev', 'mix50', 'replay'}
-    name = 'ev_' + job_key(cell, model, 17, 'generality_scale_pilot')
-    for path in RESULTS_DIR.glob(f'*/{cell}/{model}/generality_scale_pilot_s17/followup_contrasts.json'):
+    name = 'ev_' + job_key(cell, model, 17, tag)
+    for path in RESULTS_DIR.glob(f'*/{cell}/{model}/{tag}_s17/followup_contrasts.json'):
         try:
             report = json.loads(path.read_text())
             summary = json.loads((path.parent / 'summary.json').read_text())
+            expected_n = 1000
+            if tag in ['repair_domain_pilot','repair_legacy_pilot']:
+                expected_n = sum(1 for line in (DATA_DIR/cell/'test.jsonl').open() if line.strip())
             if (report['domain'] != cell or report['model'] != model or report['seed'] != 17
                     or set(report['means']) != required or set(summary['arms']) != required
-                    or summary['n_instances'] != 1000
+                    or summary['n_instances'] != expected_n
                     or report.get('evaluation_layout') != 'single_engine_pass'
                     or (path.parent / 'WITHDRAWN.txt').exists()
                     or report['trial_sha256'] != hashlib.sha256((path.parent / 'trials.jsonl').read_bytes()).hexdigest()
@@ -308,6 +326,13 @@ def contrastive_replication_valid(cell,model):
             return False
         for arm in ("cl_fwd","cl_mix5","cl_shuffled","sft_extra_ce","mix5_extra_ce"):
             out=adapter_dir(cell,model,arm,32,17)
+            if cell==repair.plan()['contrastive_cell']:
+                proof=json.loads((out/'repair_training_protocol.json').read_text())
+                if (proof['worker_sha256']!=repair.code_hash()
+                    or proof['data_sha256']!=repair.data_hash(cell)
+                    or proof['negative_pool_sha256']!=repair.sha(DATA_DIR/'fmt/train.jsonl')
+                    or proof['manifest_sha256']!=repair.sha(out/'run_manifest.json')):
+                    return False
             summary=json.loads((out/"training_summary.json").read_text())
             exposure=summary["direction_exposure"]
             if summary["effective_batch"]!=64 or summary["steps"]<=0:
@@ -325,6 +350,8 @@ def contrastive_replication_valid(cell,model):
 
 def contrastive_smokes_ready(model=None, cell=None):
     """All prerequisite trainer paths must finish successfully before pilot admission."""
+    if cell==repair.plan()['contrastive_cell'] and not repair.contrastive_smokes_ready(cell,model):
+        return False
     checks = [
         (440645,"cl_accum_smoke_llama","llama32-3b","cl_fwd"),
         (440646,"ce_proxy_smoke_llama","llama32-3b","sft_extra_ce"),
@@ -370,6 +397,9 @@ def contrastive_smokes_ready(model=None, cell=None):
 
 
 def gate_passed(domain: str, model: str) -> bool | None:
+    if (domain in repair.plan()['cells'] or domain=='d2t_schema_v2'
+        or (domain in repair.plan()['legacy_cells'] and model in repair.plan()['legacy_models'])):
+        return repair.gate_passed(domain,model)
     # Defence in depth: dumps now live in a `failures/` subdirectory, but this glob is what
     # decides whether a cell is allowed to run, so it also refuses anything without a verdict
     # rather than trusting the newest filename.
@@ -476,7 +506,7 @@ def partition_for(cell: str) -> str:
     drops the h200 option rather than refusing, so this never costs a cell an h100 it could have
     had.
     """
-    if cell in NEEDS_H200:
+    if cell in NEEDS_H200 or cell=='d2t_schema_v2':
         return "h200"
     if cell in NO_A30:
         return "h100,h200"
@@ -641,7 +671,7 @@ def main() -> int:
         for model in models:
             for seed in seeds:
                 for cell in cells:
-                    if tag == 'generality_scale_pilot' and seed != 17 and not generality_replication_valid(cell,model):
+                    if tag in ['generality_scale_pilot','repair_domain_pilot','repair_legacy_pilot'] and seed != 17 and not generality_replication_valid(cell,model,tag):
                         blocked.append((label,cell,model,'seed17 validity incomplete'))
                         continue
                     if tier == "contrastive_pilot" and seed != 17 and not contrastive_replication_valid(cell,model):
@@ -750,6 +780,8 @@ def main() -> int:
             # what we ASKED for.
             pack = ["scripts/20_train_pack.py", "--domain", cell, "--model", model,
                     "--seed", str(seed), "--arms", ",".join(todo)]
+            if cell==repair.plan()['contrastive_cell'] and tier=='contrastive_pilot':
+                pack[0]='scripts/110_gate_repair_train.py'
             if a.force_arm:
                 pack.append("--force")        # retrain over the stale adapter; nothing is deleted
             # Seed17 contrastive packs peaked below 15 GiB host RSS on both models;
@@ -778,6 +810,10 @@ def main() -> int:
         launched += 1
 
     print(f"[runner] launched {launched} cell(s); {n_cells + launched}/{a.max_inflight} in flight")
+    repair_cmd=[sys.executable,str(ROOT/'scripts/108_gate_repair.py'),'--max-new',str(max(0,free-launched))]
+    if a.dry_run:repair_cmd.append('--dry-run')
+    if not a.force_arm:
+        subprocess.run(repair_cmd,cwd=ROOT,check=True,timeout=180)
     # Paper-completion tasks follow the higher-priority registered domain/objective work.
     # Subprocesses reload the planner each controller pass without restarting active jobs.
     paper_planner=ROOT/'scripts/104_paper_finish.py'
