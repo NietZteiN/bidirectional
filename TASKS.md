@@ -97,9 +97,14 @@ unchanged; see [docs/GATE_REPAIR_PLAN.md](docs/GATE_REPAIR_PLAN.md).
 - [ ] Complete four model gate packs, covering16 repaired domain/model combinations.
 - [ ] Complete unchanged legacy feasibility gates: six domains at each of Llama8B/Gemma12B.
 - [ ] Complete WebNLG train-schema extractor oracle; admit Llama3B base gate only on success.
-- [ ] Complete the two revised Gemma12B format objective/control GPU trainer smokes.
-- [ ] Complete stricter OPUS engineering smokes and six fresh production campaigns; retain
-      failed new gates as boundaries and any eligible same-pass tuned comparisons separately.
+- [x] Complete the two revised Gemma12B format objective/control GPU trainer smokes
+      (450190/450191): both completed two real training steps with proof-valid receipts.
+      Production still requires the model/domain feasibility gate.
+- [x] Complete stricter OPUS engineering smokes (450192/450193): both pass eligibility,
+      paired coverage and adapter-effectiveness checks. Smoke outcomes are not production findings.
+- [x] Queue all six stricter OPUS production campaigns (450425–450430), three seeds per model.
+- [ ] Complete the six fresh OPUS production campaigns; retain failed new gates as boundaries
+      and any eligible same-pass tuned comparisons separately.
 - [ ] Run every admitted new/legacy domain pilot, then two valid replications; failed gates
       remain blocked. Four-arm pilots use base/sft/rev/mix50/replay; Gemma12B format uses the
       existing ten-system contrastive panel at all three seeds.
