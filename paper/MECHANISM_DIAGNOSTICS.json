@@ -118,7 +118,10 @@
       "mode": "hf",
       "smoke": false,
       "name": "ev_mx_hf_mt_de-en_gemma3-4b_s17",
-      "state": "awaiting proof-valid result"
+      "state": "awaiting proof-valid result",
+      "implementation": "mechanism_text_graph_v2",
+      "execution_name": "ev_mx2_hf_mt_de-en_gemma3-4b_s17",
+      "result_dir": "/scratch/juno/jvl210002/bidir/results/mechanism_text_graph_v2/mt_de-en/gemma3-4b/s17/production"
     },
     {
       "domain": "mt_de-en",
@@ -136,7 +139,10 @@
       "mode": "hf",
       "smoke": false,
       "name": "ev_mx_hf_mt_de-en_gemma3-4b_s42",
-      "state": "awaiting proof-valid result"
+      "state": "awaiting proof-valid result",
+      "implementation": "mechanism_text_graph_v2",
+      "execution_name": "ev_mx2_hf_mt_de-en_gemma3-4b_s42",
+      "result_dir": "/scratch/juno/jvl210002/bidir/results/mechanism_text_graph_v2/mt_de-en/gemma3-4b/s42/production"
     },
     {
       "domain": "mt_de-en",
@@ -154,7 +160,10 @@
       "mode": "hf",
       "smoke": false,
       "name": "ev_mx_hf_mt_de-en_gemma3-4b_s1234",
-      "state": "awaiting proof-valid result"
+      "state": "awaiting proof-valid result",
+      "implementation": "mechanism_text_graph_v2",
+      "execution_name": "ev_mx2_hf_mt_de-en_gemma3-4b_s1234",
+      "result_dir": "/scratch/juno/jvl210002/bidir/results/mechanism_text_graph_v2/mt_de-en/gemma3-4b/s1234/production"
     },
     {
       "domain": "mt_de-en",
@@ -173,7 +182,10 @@
       "mode": "hf",
       "smoke": false,
       "name": "ev_mx_hf_units_gemma3-12b_s17",
-      "state": "awaiting proof-valid result"
+      "state": "awaiting proof-valid result",
+      "implementation": "mechanism_text_graph_v2",
+      "execution_name": "ev_mx2_hf_units_gemma3-12b_s17",
+      "result_dir": "/scratch/juno/jvl210002/bidir/results/mechanism_text_graph_v2/units/gemma3-12b/s17/production"
     },
     {
       "domain": "units",
@@ -193,7 +205,10 @@
       "mode": "hf",
       "smoke": false,
       "name": "ev_mx_hf_units_gemma3-12b_s42",
-      "state": "awaiting proof-valid result"
+      "state": "awaiting proof-valid result",
+      "implementation": "mechanism_text_graph_v2",
+      "execution_name": "ev_mx2_hf_units_gemma3-12b_s42",
+      "result_dir": "/scratch/juno/jvl210002/bidir/results/mechanism_text_graph_v2/units/gemma3-12b/s42/production"
     },
     {
       "domain": "units",
@@ -213,7 +228,10 @@
       "mode": "hf",
       "smoke": false,
       "name": "ev_mx_hf_units_gemma3-12b_s1234",
-      "state": "awaiting proof-valid result"
+      "state": "awaiting proof-valid result",
+      "implementation": "mechanism_text_graph_v2",
+      "execution_name": "ev_mx2_hf_units_gemma3-12b_s1234",
+      "result_dir": "/scratch/juno/jvl210002/bidir/results/mechanism_text_graph_v2/units/gemma3-12b/s1234/production"
     },
     {
       "domain": "units",
@@ -228,7 +246,7 @@
   ],
   "source_sha256": {},
   "panel_sha256": "cd396cadf1b925e6945cb8f1b1263e0799cb5a9afe8bc534157f0bbe78aee3bd",
-  "analyzer_sha256": "391d22225d4ab3d6f0e89ab9c080ac00cb313e5aa944b851d29d9699b7c4941c",
+  "analyzer_sha256": "42716ca471c344a0dc3d8b6cec740fa9729f8a073f2fbe00932cee15c299b92c",
   "interpretation": "Descriptive fixed panel; no selection of best layer, candidate, step, cell or seed on outcomes. Local LoRA gradient geometry is parameterization-dependent. Layer controls match retained delta-W norm, not both retained and edit norms. Candidate likelihood is not a measure of stored knowledge.",
   "multiplicity": "Descriptive unadjusted paired intervals; no best-band/step/seed selection or pooled mechanism verdict."
 }

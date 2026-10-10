@@ -326,3 +326,12 @@ the original mix5 budget. All controls, bands, seeds and adverse outcomes are re
 `paper/MECHANISM_DIAGNOSTICS.json` automatically indexes only proof-valid production
 evidence and its source hashes. Likelihood and generation use separate engines; no
 new mechanism finding is claimed merely because the jobs are registered or submitted.
+
+
+Amendment53 repairs the Gemma HF diagnostic after strict autograd exposed disconnected
+vision factors in the legacy adapters. All42 fixed-panel Gemma checkpoints have exactly
+zero vision B factors, so the existing layer delta-norm controls remain valid. Local
+gradients and equal-norm updates now use text LoRA factors only, with strict checks
+retained for disconnected text parameters. Two revised GPU smokes precede the six Gemma
+HF production slots; they are still pending validation. Preserve the failed original
+attempts and do not interpret an implementation failure as a scientific null.

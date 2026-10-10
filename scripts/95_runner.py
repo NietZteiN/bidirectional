@@ -799,6 +799,9 @@ def main() -> int:
         extra = ["sft"] if tier == "relearn" else []
         arms = ",".join(["base"] + extra + resolvable(cell, model, tier))
         ev_time = "06:00:00" if cell in SLOW_EVAL else "03:00:00"
+        # Completed repair pilots took 6–14min. Keep >=4x margin and fit backfill windows.
+        if tag in ['repair_domain_pilot','repair_legacy_pilot']:ev_time='01:00:00'
+        if cell==repair.plan()['contrastive_cell'] and tier=='contrastive_pilot':ev_time='02:00:00'
         if cell == 'units' and model == 'gemma3-12b':
             ev_time = '01:00:00' if tier == 'contrastive_pilot' else '00:30:00'
         ev = submit("ev_" + job_key(cell, model, seed, tag),

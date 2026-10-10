@@ -2039,3 +2039,30 @@ and restricted-candidate likelihood cannot establish retained internal knowledge
 New tasks use a separate result namespace and cannot silently replace original results.
 Production admission requires full proof-valid engineering smokes independent of the
 scientific outcome. Original new-domain/contrastive priority remains first.
+
+
+### Amendment53 — Gemma text-graph gradient diagnostic repair, 2026-10-10
+
+The Amendment52 Gemma HF smokes failed before producing gradient/step results because
+legacy checkpoints contain vision-tower LoRA factors unused by text-only inputs. The
+watchdog quarantined both cells after three attempts. Actual checkpoint inspection
+finds vision LoRA B exactly zero in all42 Gemma checkpoints in the fixed diagnostic
+panel; consequently those branches contribute zero effective delta-W and the passed
+layer norm/generation proofs remain valid. This is a diagnostic implementation defect,
+not evidence for or against directional collapse. Preserve every failed receipt/output.
+
+The revised `mechanism_text_graph_v2` worker projects the gradient parameter enumeration
+onto text LoRA factors, freezes only factors under exact `vision_tower` or
+`multi_modal_projector` path components, and keeps strict autograd checks for every text
+factor. Do not use `allow_unused=True` to ignore arbitrary disconnected parameters.
+Normalize all gradient/random local updates within this text subspace; report excluded
+names/parameter counts. The frozen data, checkpoints, candidates, gradient objectives,
+step fractions and evaluation counts remain those of Amendment52. No training adapter
+is modified. The original worker and its four passed smoke proofs stay immutable.
+
+Two revised Gemma HF smokes and their six production jobs use new Slurm names and a
+separate result namespace, replacing the six originally blocked Gemma HF production
+slots in the24-job explanatory panel. Admission/analysis require revised source/data/
+trial hashes and matching successful revised smoke status. Old failures are superseded
+implementation attempts, never relabelled as successes or merged as scientific results.
+New-domain and contrastive priority remains first.

@@ -1,0 +1,33 @@
+{
+  "protocol": "mechanism_text_graph_v2",
+  "worker_sha256": "5167177876d18268d6c8217b276c759745e3f712b6379451104bc1f488a6e3af",
+  "panel_sha256": "cd396cadf1b925e6945cb8f1b1263e0799cb5a9afe8bc534157f0bbe78aee3bd",
+  "tests_passed": 36,
+  "test_log_sha256": "0837f14657e9ce5b57c785e4d6d1b038d0e36ee8db54e2ad0f8fde4e7d518c8e",
+  "vision_audit_sha256": "f8ce0cc7f70672202f5defb525f0518d966b0c7c6960a93e9a299000c8816326",
+  "vision_checkpoints": 42,
+  "all_vision_delta_zero": true,
+  "preserved_smokes": [
+    "ev_mx_hf_fmt_llama32-3b_s17_smoke",
+    "ev_mx_layers_fmt_llama32-3b_s17_smoke",
+    "ev_mx_layers_mt_de-en_gemma3-4b_s17_smoke",
+    "ev_mx_layers_units_gemma3-12b_s17_smoke"
+  ],
+  "failed_original_jobs": [
+    450243,
+    450245,
+    450683,
+    450684,
+    450688,
+    450692
+  ],
+  "gpu_validation_complete": false,
+  "production_count": 6,
+  "production_admission": "after two revised matching GPU smokes",
+  "change": "Exclude known inactive vision factors from local text-gradient/update coordinates; strict text autograd preserved.",
+  "smoke_jobs": [
+    450875,
+    450876
+  ],
+  "smoke_time_limit": "00:20:00"
+}

@@ -106,3 +106,20 @@ and smoke submissions; the live status file is authoritative for changing queue 
 Initial verification: 403 tests passed, 84 checkpoint hashes matched, all four tokenizer
 profiles and 64 seed-17 layer variants passed. GPU smokes were submitted as 450241–450246
 and were pending scheduler priority; this does not constitute GPU validation.
+
+
+## Amendment53: Gemma text graph repair
+
+The Gemma HF smokes failed on unused vision factors; they remain in the failure record.
+All42 Gemma diagnostic checkpoints have exactly-zero vision LoRA B factors, so their
+vision delta-W is zero and the passed layer proofs stay valid. The revised worker
+`116_mechanism_text_graph_worker.py` calls the unchanged registered HF implementation
+under an explicit text-parameter projection. Only known vision/projector LoRA factors
+are frozen/excluded; disconnected text factors still raise an error. Random and gradient
+steps are normalized within that text subspace. Checkpoint weights stay unchanged.
+
+Revised outputs live in `$BIDIR_OUT/results/mechanism_text_graph_v2`; the two smokes and
+six production jobs use `ev_mx2_hf_` names and an independent tested enablement marker.
+The scheduler and collector route those eight Gemma HF entries to revised proof checks.
+The panel still contains24 production jobs, not30. Original layer and Llama HF jobs
+keep their existing namespace, source proofs and queue positions.

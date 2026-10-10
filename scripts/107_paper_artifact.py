@@ -54,9 +54,9 @@ def selected_paths():
                  'paper/numbers.tex','paper/numbers_provenance.json','paper/check_arr.py','paper/Makefile',
                  'paper/acl.sty','paper/acl_natbib.bst','paper/page_limit.txt','paper/evidence_snapshot.tex',
                  'paper/PROVENANCE.json','paper/PUBLICATION_PROVENANCE.json',
-                 'paper/MECHANISM_REVIEW.json','paper/MECHANISM_DIAGNOSTICS.json','paper/MECHANISM_SETUP.json',
+                 'paper/MECHANISM_REVIEW.json','paper/MECHANISM_DIAGNOSTICS.json','paper/MECHANISM_SETUP.json','paper/MECHANISM_TEXT_GRAPH_REPAIR.json',
                  'runs/feeder/paper_finish_preflight.json','runs/feeder/paper_finish_status.json',
-                 'runs/feeder/h100_overflow_admission.json']:
+                 'runs/feeder/h100_overflow_admission.json','runs/feeder/repair_backfill_admission.json']:
         paths.add(ROOT/name)
     paths.update((ROOT/'paper/tables').glob('*.tex'))
     paths.update((ROOT/'paper/figures').glob('*.pdf'))
@@ -69,6 +69,9 @@ def selected_paths():
     paths.update(RESULTS_DIR.glob('*/*/*/*/WITHDRAWN.txt'))
     paths.update(suite.OUT.rglob('*.json'))
     paths.update(suite.OUT.rglob('trials.jsonl'))
+    paths.update((RESULTS_DIR/'mechanism_text_graph_v2').rglob('*.json'))
+    paths.update((RESULTS_DIR/'mechanism_text_graph_v2').rglob('*.jsonl'))
+    paths.update((ROOT/'runs/status').glob('ev_mx2_*.json'))
     paths.update((RESULTS_DIR/'mechanism_explanation_v1').rglob('*.json'))
     paths.update((RESULTS_DIR/'mechanism_explanation_v1').rglob('*.jsonl'))
     paths.update((ROOT/'data/mechanism_panel').glob('*.json'))

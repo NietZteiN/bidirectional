@@ -5,15 +5,19 @@ from pathlib import Path
 import sys
 ROOT=Path(__file__).resolve().parents[1]
 sys.path.insert(0,str(ROOT/'src'))
-from bidir import mechanism_suite as mx
+from bidir import mechanism_suite as mx, mechanism_text_graph as text_graph
 from bidir.pipeline_state import atomic_json
+
+
+def result_path(job):return text_graph.output(job) if text_graph.applies(job) else mx.output(job)
+def is_complete(job):return text_graph.completed(job) if text_graph.applies(job) else mx.completed(job)
 
 
 def read_rows(path):return [json.loads(line) for line in path.read_text().splitlines() if line]
 
 
 def likelihood_report(job):
-    cfg=mx.plan();out=mx.output(job);rows=read_rows(out/'likelihood.jsonl')
+    cfg=mx.plan();out=result_path(job);rows=read_rows(out/'likelihood.jsonl')
     ids=[i['pair_id'] for i in mx.selected(job['domain'])[:cfg['likelihood_n']]]
     lookup={(r['system'],r['direction'],r['pair_id'],r['candidate']):r for r in rows}
     if len(lookup)!=len(rows) or len(rows)!=len(cfg['systems'])*2*len(ids)*3:
@@ -63,10 +67,11 @@ def main():
     records=[];source_sha={};complete=0
     for job in mx.items():
         if job['smoke']:continue
-        valid=mx.completed(job)
-        record=dict(job,state='complete' if valid else 'awaiting proof-valid result')
+        valid=is_complete(job)
+        record=dict(job,state='complete' if valid else 'awaiting proof-valid result',
+                    **(text_graph.public_status(job) if text_graph.applies(job) else {}))
         if valid:
-            complete+=1;out=mx.output(job);summary=json.loads((out/'summary.json').read_text())
+            complete+=1;out=result_path(job);summary=json.loads((out/'summary.json').read_text())
             for filename in ['summary.json',*summary['file_sha256']]:source_sha[str(out/filename)]=mx.sha(out/filename)
             cache=out/'explanatory_analysis.json'
             signature=dict(summary_sha256=mx.sha(out/'summary.json'),analyzer_sha256=mx.sha(__file__),

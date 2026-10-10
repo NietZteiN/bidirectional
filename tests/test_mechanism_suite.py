@@ -144,19 +144,26 @@ def test_production_refuses_missing_or_stale_smoke(monkeypatch,tmp_path):
     with pytest.raises(ValueError,match='matching full smoke'):w.frozen_job(args)
 
 
-def test_entire_hf_smoke_exercises_real_peft_gradients_and_restores_checkpoints(tmp_path,monkeypatch):
+@pytest.mark.parametrize('with_vision',[False,True])
+def test_entire_hf_smoke_exercises_real_peft_gradients_and_restores_checkpoints(tmp_path,monkeypatch,with_vision):
     from transformers import GPT2Config,GPT2LMHeadModel,AutoModelForCausalLM,AutoTokenizer
     from peft import LoraConfig,get_peft_model
     w=worker();cfg=mx.plan()
     tiny_config=GPT2Config(n_layer=1,n_head=2,n_embd=8,n_positions=32,vocab_size=20,
                            resid_pdrop=0.,embd_pdrop=0.,attn_pdrop=0.)
-    torch.manual_seed(9);initial=GPT2LMHeadModel(tiny_config)
+    def plain():
+        model=GPT2LMHeadModel(tiny_config)
+        if with_vision:
+            model.vision_tower=torch.nn.Module()
+            model.vision_tower.q_proj=torch.nn.Linear(8,8,bias=False)
+        return model
+    torch.manual_seed(9);initial=plain()
     initial_state={k:v.detach().clone() for k,v in initial.state_dict().items()}
     def fresh(*args,**kwargs):
-        model=GPT2LMHeadModel(tiny_config);model.load_state_dict(initial_state);return model
+        model=plain();model.load_state_dict(initial_state);return model
     inventory={}
     for index,arm in enumerate(cfg['systems'][1:]):
-        model=get_peft_model(fresh(),LoraConfig(r=2,lora_alpha=4,target_modules=['c_attn'],task_type='CAUSAL_LM'))
+        model=get_peft_model(fresh(),LoraConfig(r=2,lora_alpha=4,target_modules=['c_attn','q_proj'] if with_vision else ['c_attn'],task_type='CAUSAL_LM'))
         with torch.no_grad():
             for name,p in model.named_parameters():
                 if 'lora_B' in name:p.normal_(std=.03*(index+1))
@@ -170,7 +177,15 @@ def test_entire_hf_smoke_exercises_real_peft_gradients_and_restores_checkpoints(
     monkeypatch.setattr(w.prompts,'build_messages',lambda *a,**kw:[dict(role='user',content='x')])
     monkeypatch.setattr(mx,'selected',lambda domain,split='test':instances if split=='test' else instances[4:])
     job=mx.items()[0];out=tmp_path/'output';out.mkdir()
-    result=w.hf(job,inventory,out)
+    if with_vision:
+        from bidir import mechanism_text_graph as fix
+        with pytest.raises(RuntimeError,match='not have been used in the graph'):
+            w.hf(job,inventory,out)
+        with fix.text_only_peft() as captures:
+            result=w.hf(job,inventory,out)
+            excluded=[(n,p) for params in captures for n,p in params() if fix.excluded(n)]
+            assert excluded and all(not p.requires_grad for n,p in excluded)
+    else:result=w.hf(job,inventory,out)
     assert result['candidate_rows']==8*2*4*3
     assert result['gradient_states']==3
     assert result['step_rows']==3*4*2*2*4
@@ -215,3 +230,80 @@ def test_layer_smoke_checks_paired_coverage_and_accepts_negative_controls(tmp_pa
     with pytest.raises(ValueError,match='effectiveness guard'):
         w.layers(job,{a:dict(path='/'+a) for a in ['sft','replay','mix5']},tmp_path)
     assert (tmp_path/'trials.jsonl').exists()
+
+
+def test_text_projection_does_not_hide_unconnected_language_parameters():
+    from bidir import mechanism_text_graph as fix
+    class Toy(torch.nn.Module):
+        def __init__(self):
+            super().__init__()
+            self.text=torch.nn.Module();self.text.lora_A=torch.nn.Parameter(torch.ones(2))
+            self.dead_language=torch.nn.Module();self.dead_language.lora_A=torch.nn.Parameter(torch.ones(2))
+            self.vision_tower=torch.nn.Module();self.vision_tower.lora_A=torch.nn.Parameter(torch.ones(2))
+        def set_adapter(self,name):
+            for p in self.parameters():p.requires_grad_(True)
+    model=Toy();fix.project_text_graph(model);model.set_adapter('sft')
+    assert not model.vision_tower.lora_A.requires_grad
+    active=list(model.named_parameters())
+    assert [n for n,p in active]==['text.lora_A','dead_language.lora_A']
+    with pytest.raises(RuntimeError,match='not have been used in the graph'):
+        torch.autograd.grad(model.text.lora_A.sum(),[p for n,p in active])
+    assert not fix.excluded('base_model.model.language_model.layers.0.q_proj.lora_A.sft.weight')
+    assert not fix.excluded('base_model.model.vision_tower_like.q_proj.lora_A.sft.weight')
+
+
+def test_revised_gemma_routing_keeps_original_layer_and_llama_jobs():
+    from bidir import mechanism_text_graph as fix
+    jobs=mx.items();repaired=[j for j in jobs if fix.applies(j)]
+    assert len(repaired)==8 and sum(j['smoke'] for j in repaired)==2
+    assert all(fix.name(j).startswith('ev_mx2_hf_') for j in repaired)
+    assert all('mechanism_text_graph_v2' in str(fix.output(j)) for j in repaired)
+    assert all(not fix.applies(j) for j in jobs if j['mode']=='layers' or j['model']=='llama32-3b')
+
+
+def test_real_tiny_gemma_text_forward_excludes_only_disconnected_vision_adapters():
+    from transformers import Gemma3Config,Gemma3TextConfig,Gemma3ForConditionalGeneration,SiglipVisionConfig
+    from peft import LoraConfig,get_peft_model
+    from bidir import mechanism_text_graph as fix
+    text=Gemma3TextConfig(vocab_size=20,hidden_size=16,intermediate_size=32,num_hidden_layers=2,
+        num_attention_heads=2,num_key_value_heads=1,head_dim=8,max_position_embeddings=64,
+        sliding_window=8,layer_types=['sliding_attention','full_attention'])
+    vision=SiglipVisionConfig(hidden_size=16,intermediate_size=32,num_hidden_layers=1,
+        num_attention_heads=2,image_size=4,patch_size=2)
+    base=Gemma3ForConditionalGeneration(Gemma3Config(text_config=text.to_dict(),vision_config=vision.to_dict(),
+        image_token_index=19,mm_tokens_per_image=4))
+    model=get_peft_model(base,LoraConfig(r=2,lora_alpha=4,
+        target_modules=['q_proj','k_proj','v_proj','o_proj','gate_proj','up_proj','down_proj'],task_type='CAUSAL_LM'))
+    model.eval();w=worker();encoded=([2,4,5,6],[-100,-100,5,6])
+    parameters=[p for n,p in model.named_parameters() if p.requires_grad]
+    loss,_,_=w.token_loss(model,encoded,True)
+    with pytest.raises(RuntimeError,match='not have been used in the graph'):
+        torch.autograd.grad(loss,parameters)
+    original=fix.project_text_graph(model);model.set_adapter('default')
+    assert any(fix.excluded(n) for n,p in original())
+    assert all(not p.requires_grad for n,p in original() if fix.excluded(n))
+    parameters=[p for n,p in model.named_parameters() if p.requires_grad]
+    loss,_,_=w.token_loss(model,encoded,True)
+    gradients=torch.autograd.grad(loss,parameters)
+    assert all(torch.isfinite(g).all() for g in gradients)
+    assert any(g.abs().sum()>0 for g in gradients)
+
+
+def test_analysis_routes_revised_gemma_and_keeps_completion_counter_distinct(tmp_path,monkeypatch):
+    from bidir import mechanism_text_graph as fix
+    spec=importlib.util.spec_from_file_location('repaired_mechanism_analysis',mx.ROOT/'scripts/114_mechanism_analysis.py')
+    analysis=importlib.util.module_from_spec(spec);spec.loader.exec_module(analysis)
+    monkeypatch.setattr(analysis,'ROOT',tmp_path);(tmp_path/'paper').mkdir()
+    data=tmp_path/'data';data.mkdir();(data/'manifest.json').write_text('{}')
+    monkeypatch.setattr(mx,'DATA',data);monkeypatch.setattr(fix,'OUT',tmp_path/'results')
+    job=next(j for j in mx.items() if fix.applies(j) and not j['smoke'])
+    out=fix.output(job);out.mkdir(parents=True);(out/'summary.json').write_text(json.dumps(dict(file_sha256={})))
+    monkeypatch.setattr(analysis,'is_complete',lambda candidate:candidate==job)
+    monkeypatch.setattr(analysis,'likelihood_report',lambda candidate:dict(revised=fix.applies(candidate)))
+    monkeypatch.setattr(mx,'completed',lambda candidate:False)
+    assert analysis.main()==0
+    document=json.loads((tmp_path/'paper/MECHANISM_DIAGNOSTICS.json').read_text())
+    assert document['production_complete']==1 and document['production_total']==24
+    result=next(i for i in document['items'] if i['name']==job['name'])
+    assert result['implementation']==fix.PROTOCOL
+    assert json.loads(Path(result['analysis']).read_text())['result']['revised']

@@ -1,6 +1,6 @@
 # Experiment and task checklist
 
-Updated 2026-10-09 13:32 CDT, reconciled against adapter manifests, result files,
+Updated 2026-10-10 11:20 CDT, reconciled against adapter manifests, result files,
 `95_runner.py --status`, Slurm, and `runs/feeder/STATUS.md`.
 Previous checklist: [September 14 snapshot](archive/task_checklists/TASKS-2026-09-14.md).
 
@@ -28,15 +28,21 @@ Contrastive phase1 has twelve of twelve complete evaluations. Larger-model/new-d
 contrastive extensions and validity-based unit-conversion replications are first priority.
 Original failures and the retained null-collapse pilot are preserved.
 
-## Live to-do checklist — October 9 afternoon
+## Live to-do checklist — October 10
 
-The controller is healthy: fresh heartbeat, all six stages exit0, no active operational
-alarms or quarantined cells, and CPU-host renewal remains queued. Four existing H200 GPUs
-train contrastive replications for translation/Gemma12B and format/Llama8B.
-All39 original publication production jobs and13/13 smokes are complete, including all
-nine probe campaigns. Units/Gemma12B contrastive replication is complete at all three seeds.
-Versioned blocked-cell diagnostics are newly registered and enter automatic admission below.
-The artificial GPU cap remains disabled.
+The controller renewed automatically onto CPU host job448535; successor450812 is queued.
+The active training/evaluation pipeline is healthy and refills work after logout. Four
+original contrastive evaluations finished overnight, bringing that registered panel to
+24/27; the three original fmt/Gemma12B cells remain gate-blocked. The versioned format
+contract passes the new Gemma12B gate and its contrastive pilot is training.
+New-domain and legacy replication packs run on both H200 and H100, with artificial
+GPU caps disabled. All six stricter OPUS production evaluations are complete.
+
+Mechanism validation is 4/6: all three layer smokes and the Llama HF smoke pass. Both
+Gemma HF smokes failed on unused vision-adapter gradients and were quarantined after
+three attempts. Amendment53 isolates a tested text-graph repair; original failures
+and passed proofs are preserved. No new mechanism production finding is claimed yet.
+D2T's train-schema extractor still fails its gold oracle, so that base gate stays blocked.
 
 - [x] Original contrastive campaign:12/12 complete, including all five primary contrasts.
 - [x] Main grid:91 distinct audited model/task/seed cells across five models and eleven orientations,
@@ -62,10 +68,10 @@ The artificial GPU cap remains disabled.
 - [x] Finish fmt feasibility gates449015 (Llama8B) and449016 (Gemma12B), using
       unchanged1000-row criteria. Llama8B passes;pack449065→449066 is complete.
       Gemma12B fails with forward format-failure26.1%;tuned runs remain blocked.
-- [ ] Replicate valid larger-model contrastive cells at seeds42/1234 automatically.
-      Original phase12/12 complete;extension8/15 evaluations complete. Translation/Llama8B
-      and units/Gemma12B are complete across all three seeds. Four eligible replication packs run with
-      dependent evaluations queued;fmt/Gemma12B and its two replications remain gate-blocked.
+- [x] Complete all eligible original larger-model contrastive replications at seeds42/1234.
+      Original phase12/12 and extension12/15 evaluations complete (24/27 overall).
+      The three original fmt/Gemma12B cells remain failed-gate boundaries; the versioned
+      fmt-contract contrastive pilot is a separately registered diagnostic.
 - [x] Replicate Python/C++ at seeds42/1234 once its seed17 pilot passes validity checks,
       independently of a favorable, adverse or null outcome.
 - [ ] Finish mechanism interpretation, joint forward/reverse contrasts, seed ranges,
@@ -87,26 +93,33 @@ unchanged; see [docs/GATE_REPAIR_PLAN.md](docs/GATE_REPAIR_PLAN.md).
 - [x] Implement source/data/trial/status admission proofs and bounded watchdog quarantine.
       Automatic passing-cell pilots and42/1234 replication depend on validity, not effect sign.
 - [x] Deploy tested repair admission:390 regression tests pass;182 data/repair checks pass.
-      Eleven GPU diagnostics submitted (450183–450193), currently awaiting shared cluster
-      allocation. Four existing contrastive packs keep running;artificial caps remain disabled.
+      Eleven GPU diagnostics submitted (450183–450193) and completed; scientific failures
+      remain boundaries. New admitted pilots/replications run; artificial caps remain disabled.
       The detached controller and renewal checks pass after deployment.
 - [x] Extend verified spare-H100 QoS fallback to repair diagnostics and prevent status-only
       timestamps from rebuilding the4.7 GB review bundle. All18 routing/bundle checks pass.
 - [x] Register versioned Gemma12B format contrastive runs and isolated training-only negative
       alias with checked identical paired content; no competing pilot writes the same adapters.
-- [ ] Complete four model gate packs, covering16 repaired domain/model combinations.
-- [ ] Complete unchanged legacy feasibility gates: six domains at each of Llama8B/Gemma12B.
-- [ ] Complete WebNLG train-schema extractor oracle; admit Llama3B base gate only on success.
+- [x] Complete four model gate packs: five of16 repaired domain/model gates pass
+      (Gemma12B: typed C++, format contract, units contract; Llama8B: typed C++, format contract).
+      All four logic-contract gates and all repaired small-model gates fail and remain blocked.
+- [x] Complete unchanged legacy gates: three of12 pass (Llama8B fmt_det75/50/25);
+      other legacy/model combinations remain blocked.
+- [x] Complete WebNLG train-schema extractor oracle: forward gold1/40 (2.5%) fails.
+- [ ] Blocked: admit the Llama3B D2T base gate only after a valid extractor oracle.
 - [x] Complete the two revised Gemma12B format objective/control GPU trainer smokes
       (450190/450191): both completed two real training steps with proof-valid receipts.
-      Production still requires the model/domain feasibility gate.
+      Gemma12B format-contract feasibility now passes; pilot450539→450540 is admitted.
 - [x] Complete stricter OPUS engineering smokes (450192/450193): both pass eligibility,
       paired coverage and adapter-effectiveness checks. Smoke outcomes are not production findings.
 - [x] Queue all six stricter OPUS production campaigns (450425–450430), three seeds per model.
-- [ ] Complete the six fresh OPUS production campaigns; retain failed new gates as boundaries
-      and any eligible same-pass tuned comparisons separately.
-- [ ] Run every admitted new/legacy domain pilot, then two valid replications; failed gates
-      remain blocked. Four-arm pilots use base/sft/rev/mix50/replay; Gemma12B format uses the
+- [x] Shorten pending repair replication evals to1h (>4x observed6–14min runtimes),
+      revised format CL eval to2h and revised HF smokes to20min for backfill; no running job altered.
+- [x] Complete all six fresh OPUS production campaigns (450425–450430); paired evidence
+      and adverse/null outcomes stay separate from the original transfer namespace.
+- [x] Complete four new-domain seed17 pilots and three legacy invertibility seed17 pilots.
+- [ ] Finish their14 replication evaluations at seeds42/1234 and the new Gemma12B format
+      contrastive pilot, then its valid seed replications; failed gates remain blocked. Four-arm pilots use base/sft/rev/mix50/replay; Gemma12B format uses the
       existing ten-system contrastive panel at all three seeds.
 - [ ] Integrate new outcomes after validity/paired analysis, including adverse/null results.
       Existing39-job publication completion does not certify this new conditional work complete.
@@ -628,7 +641,13 @@ Live per-job checklist: `runs/feeder/mechanism_status.json`; fixed design:
   and reversible equal-norm held-out local updates in an isolated result namespace.
 - [x] Pass CPU verification (403 tests) and native-tokenizer/checkpoint preflight (84 adapters); enable the tested scheduler.
 - [x] Submit six GPU engineering smokes (450241–450246); verify idempotent queue admission.
-- [ ] Complete six GPU engineering smokes; retain technical failures and scientific nulls.
+- [x] Complete four original GPU smokes: all three layer modes and Llama HF.
+- [x] Reproduce the Gemma unused-vision failure on a tiny real Gemma model, pass36 focused
+      tests plus two collector-routing tests, and audit exactly-zero vision deltas in42 checkpoints.
+- [x] Queue repaired Gemma HF smokes450875/450876 in a separate source-signed namespace;
+      their six production slots admit automatically after matching revised smoke validity.
+- [ ] Complete the two revised Gemma text-gradient GPU smokes (Amendment53); preserve
+      six original failed jobs/quarantines and validate the repaired implementation separately.
 - [ ] Complete 12 likelihood/gradient production jobs and 12 controlled layer/generation jobs.
 - [ ] Summarize all fixed contrasts with paired uncertainty; distinguish evidence for selection,
   selective layers and local interference from evidence for preserved internal knowledge.
