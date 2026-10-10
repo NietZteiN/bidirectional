@@ -2094,3 +2094,29 @@ Pending selected diagnostics are cancelled at the deadline; already-running sele
 jobs finish under bounded walltime. Analysis, preservation of evidence and paper refresh
 continue. The snapshot explicitly distinguishes valid, failed, deferred and unresolved
 work. See docs/PAPER_SPRINT_PLAN.md for the delivery scope and limitations.
+
+
+### Amendment55 — reopen registered background campaign, 2026-10-10
+
+After the five-diagnostic sprint and draft delivery at commit34de8d0, the user requests
+running everything else in the background. Disable the Amendment54 admission guard and
+resume all unfinished previously registered eligible jobs, including training-seed
+replications. This operational reversal supersedes the sprint's no-new-replication rule
+and admission deadline; the completed sprint snapshot and its original scope remain
+historical. No result, gate, scorer, sample size, checkpoint, control or proof is changed.
+
+Resume the remaining19 Amendment52/53 explanatory jobs; the repaired-format Gemma12B
+contrastive seed17 pack followed by seeds42/1234 after seed17 validity; eligible repaired
+new-domain replications; and gate-passing legacy/invertibility pilots. Existing planners
+skip completed work and resume fully saved training arms. Original priority-one domain
+and contrastive work stays ahead of explanatory diagnostics. Retain null/adverse results
+and every fixed band, candidate and local step. Failed capability gates and D2T extractor
+oracles remain scientific/admission boundaries; quarantine and bounded retries persist.
+This does not automatically authorize unregistered protocols for undeveloped catalogue
+tasks. Background details and live checkpoints are in docs/BACKGROUND_RUN_PLAN.md.
+
+Operational backfill amendment: all fixed HF diagnostics retain the sprint's two-hour
+production reservations and H100/H200 eligibility after the four seed17 full runs
+completed in under ten minutes, including Gemma12B on H100. Layer jobs retain original
+validated partitions/bounds. Samples, controls and checkpoints are unchanged; pending
+updates preserve their original Slurm specifications in background_resume.json.

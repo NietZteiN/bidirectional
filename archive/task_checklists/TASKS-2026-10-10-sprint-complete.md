@@ -1,39 +1,16 @@
 # Experiment and task checklist
 
-Updated October 10, 2026, 18:37 CDT. Background campaign reopened by user request, Amendment55.
-The completed sprint draft is frozen at Git commit34de8d0; its
-[completion checklist](archive/task_checklists/TASKS-2026-10-10-sprint-complete.md) and
-[receipts](paper/SPRINT_COMPLETION.json) remain historical evidence.
+Updated October 10, 2026, 18:23 CDT. All five diagnostics complete and proof-valid.
+Active scope: user-directed 24-hour paper sprint, Amendment54.
+The full earlier checklist is preserved in [the pre-sprint snapshot](archive/task_checklists/TASKS-2026-10-10-before-sprint.md).
 
-## Active background queue
+## Current priority: distinct evidence and paper integration
 
-Resume all unfinished previously registered eligible experiments, including replications.
-New-domain and contrastive work retains first priority. Completed adapters are reused;
-training packs resume only missing arms. Engineering proofs, capability gates, quarantine,
-bounded retries, same-pass base comparisons and null/adverse reporting remain enforced.
-The detached Slurm controller and CPU-host renewal continue after logout.
-
-- [x] Reopen the original campaign by disabling the completed sprint's admission guard.
-- [ ] Finish the remaining19 registered explanatory production jobs across all three seeds,
-      both modes and the mandatory units null control. The original panel remains24 jobs.
-- [ ] Finish repaired-format Gemma12B contrastive seed17, then automatically admit42/1234
-      only after a proof-valid seed17 evaluation, regardless of measured effect sign.
-- [ ] Finish eight ready repaired-domain seed42/1234 evaluations: typed Python/C++ at
-      Llama8B/Gemma12B, formatting contract at Llama8B and units contract at Gemma12B.
-- [ ] Resume six missing invertibility-ladder training/evaluation packs at Llama8B,
-      covering fmt_det75/50/25 and seeds42/1234; retain fully saved arms.
-- [ ] Collect checked contrasts, preserve trials and refresh the working paper evidence.
-- [x] Verify a complete healthy controller pass, detached stdin and CPU-host renewal.
-      All five health checks and43 distinct targeted regression tests pass. Initial admission queues
-      41 GPU jobs across34 experiment cells; Slurm priority/dependencies currently govern starts.
-
-Live states: [mechanism scheduler](runs/feeder/mechanism_status.json),
-[repair scheduler](runs/feeder/gate_repair_status.json), and
-[controller status](runs/feeder/STATUS.md). See [background plan](docs/BACKGROUND_RUN_PLAN.md).
-Failed capability gates, the failed D2T extractor oracle and unimplemented/unregistered
-new task proposals remain blocked/design work; reopening admission does not make them
-runnable or scientific successes. Catalogue-wide new task construction and new scorer
-protocols require implementation and registration before GPU admission.
+No additional training seeds or replication campaigns. Reuse completed new-domain,
+contrastive, preservation, robustness and probe evidence. Five fixed seed-17 explanation
+jobs address different questions; required Gemma engineering smokes passed before production.
+Unrun work is deferred, not relabelled complete. Completed adverse, null and failed-gate
+results remain in the paper. See [the sprint plan](docs/PAPER_SPRINT_PLAN.md).
 
 ## Evidence already available
 
@@ -52,10 +29,10 @@ protocols require implementation and registration before GPU admission.
 - [x] All six stricter OPUS transfer production evaluations; failed eligibility retained.
 - [x] Cancel 37 out-of-scope jobs, including four active training packs. Completed and partial
       artifacts remain on disk; cancellation does not count as a scientific failure.
-- [x] Enforce the exact sprint allowlist through delivery; Amendment55 explicitly reopens
-      the registered background campaign. The completed sprint deadline is historical.
+- [x] Enforce an exact job allowlist in all automatic planners and the central submitter.
+      Replications cannot be silently requeued. Admission stops at the sprint deadline.
 
-## Completed sprint GPU work: five production diagnostics
+## Completed GPU work: five production diagnostics
 
 All use unchanged Amendment52 data, sample sizes, checkpoints and controls. Gemma HF uses
 Amendment53 text-graph repair. Training seed17 is fixed throughout; no new model training.
@@ -71,10 +48,9 @@ Amendment53 text-graph repair. Training seed17 is fixed throughout; no new model
 
 Live states:[mechanism scheduler](runs/feeder/mechanism_status.json).
 Proof-valid counts:[paper diagnostic report](paper/MECHANISM_DIAGNOSTICS.json), sprint subsection.
-The sprint snapshot contains five proof-valid production jobs. Amendment55 resumes the
- other19; the full registered production denominator remains24.
+The original24-job denominator remains historical; the active scope has five production jobs.
 
-## Completed sprint CPU/paper delivery — commit34de8d0
+## CPU/paper delivery
 
 - [x] Integrate all five proof-valid diagnostic findings, including the Gemma likelihood
       counterexample, units null, near-zero gradients and all layer-control outcomes.
@@ -93,16 +69,17 @@ The sprint snapshot contains five proof-valid production jobs. Amendment55 resum
       deadline, with completed, failed, deferred and unresolved work explicit.
       A queue delay or failed smoke is reported as such, never filled with an invented finding.
 
-## Still blocked or requiring implementation
+## Deferred beyond this sprint
 
-- D2T extractor/scoring repair and tasks whose unchanged base gates failed.
-- New independent task construction, shuffled reverse-CE correspondence follow-up and
-  extra probes without a complete registered/tested worker and admission path.
+- Seeds42/1234 for repaired domains, the invertibility ladder and explanatory diagnostics.
+- Unfinished repaired-format Gemma12B contrastive pilot and both future replication packs.
+- Translation/Gemma and units layer-generation panels; translation/Llama layer panel.
+- D2T extractor/scoring repair, remaining failed-gate tasks, new task construction,
+      shuffled reverse-CE follow-up, and extra probes.
 
-The former sprint deferrals (registered seeds, contrastive packs and layer panels) now
-belong to the active background queue above. Configs/paper_sprint.json remains disabled
-under explicit user authorization. All experiment artifacts are retained. The immutable
-sprint receipts describe delivery at34de8d0; subsequent results update the working evidence.
+Disabling or editing configs/paper_sprint.json is an explicit future scope change. No
+experiment artifacts are deleted by this sprint. The detached controller, analysis,
+archiving and paper snapshots continue after logout.
 
 ## Interpretation retained in this delivery
 

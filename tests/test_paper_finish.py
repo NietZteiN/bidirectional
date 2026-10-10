@@ -21,6 +21,27 @@ runner=module('paper_runner_test','95_runner.py')
 synthesis=module('paper_synthesis_test','106_paper_synthesis.py')
 
 
+def test_full_runner_queue_still_refreshes_overflow_planners_and_analysis(monkeypatch):
+    from types import SimpleNamespace
+    calls=[]
+    monkeypatch.setattr(runner.sys,'argv',['runner','--max-inflight','1'])
+    monkeypatch.setattr(runner,'_pg',lambda:SimpleNamespace())
+    monkeypatch.setattr(runner,'PLAN',[])
+    monkeypatch.setattr(runner,'squeue_ours',lambda:[('ev_existing_cell','PENDING')])
+    def forbidden(*args,**kwargs):
+        pytest.fail('a full queue must not submit additional cells')
+    monkeypatch.setattr(runner,'submit',forbidden)
+    def run(argv,**kwargs):
+        calls.append(argv)
+        return SimpleNamespace(returncode=0,stdout='',stderr='')
+    monkeypatch.setattr(runner.subprocess,'run',run)
+    assert runner.main()==0
+    for script in ['108_gate_repair.py','112_mechanism_queue.py','104_paper_finish.py']:
+        command=next(c for c in calls if Path(c[1]).name==script)
+        assert command[command.index('--max-new')+1]=='0'
+    assert any(Path(c[1]).name=='55_contrastive_analysis.py' for c in calls)
+
+
 def test_probe_table_keeps_adverse_seeds_and_separate_endpoints():
     comparisons=[('sft','base'),('mix5','sft'),('replay','sft')]
     results=[dict(summary=dict(mode='probes',eligibility_passed=True,domain='fmt',

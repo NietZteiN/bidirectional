@@ -1,7 +1,7 @@
 {
   "protocol": "paper_sprint_24h_v1",
   "amendment": 54,
-  "enabled": true,
+  "enabled": false,
   "started_utc": "2026-10-10T16:48:14.672677+00:00",
   "finish_by_utc": "2026-10-11T16:48:14.672677+00:00",
   "production_jobs": [
@@ -21,5 +21,8 @@
     "ev_mx2_hf_units_gemma3-12b_s17_smoke"
   ],
   "reason": "User requests no further replication, minimal distinct experiments, and a paper snapshot within 24 hours. Reuse completed breadth and contrastive evidence; retain fixed seed17 explanation cells and the units null control. No favorable-outcome selection.",
-  "deferred": "All other new training/evaluation/repair jobs, including new seeds and the unfinished repaired Gemma format contrastive campaign. Completed artifacts are retained."
+  "deferred": "All other new training/evaluation/repair jobs, including new seeds and the unfinished repaired Gemma format contrastive campaign. Completed artifacts are retained.",
+  "resumed_utc": "2026-10-10T23:36:08.393046+00:00",
+  "resume_amendment": 55,
+  "resume_reason": "User requests running everything else in the background after completed draft delivery. Resume all previously registered eligible work, including replications; retain original gates, smoke proofs, failure limits and completed results."
 }

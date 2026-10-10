@@ -1,3 +1,8 @@
+> Current scheduling scope, October10: Amendment55 reopens all unfinished registered
+> eligible work in the background, including replications, after the completed sprint.
+> Sprint limits below are historical; commit34de8d0 preserves that draft and receipts.
+> See [background plan](../docs/BACKGROUND_RUN_PLAN.md).
+
 # Current delivery scope — October10, 2026
 
 The [24-hour paper sprint](../docs/PAPER_SPRINT_PLAN.md) stops additional training and

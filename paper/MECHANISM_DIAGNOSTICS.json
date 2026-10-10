@@ -30,7 +30,7 @@
       "mode": "hf",
       "smoke": false,
       "name": "ev_mx_hf_fmt_llama32-3b_s42",
-      "state": "deferred by user 24-hour scope"
+      "state": "awaiting proof-valid result"
     },
     {
       "domain": "fmt",
@@ -39,7 +39,7 @@
       "mode": "layers",
       "smoke": false,
       "name": "ev_mx_layers_fmt_llama32-3b_s42",
-      "state": "deferred by user 24-hour scope"
+      "state": "awaiting proof-valid result"
     },
     {
       "domain": "fmt",
@@ -48,7 +48,7 @@
       "mode": "hf",
       "smoke": false,
       "name": "ev_mx_hf_fmt_llama32-3b_s1234",
-      "state": "deferred by user 24-hour scope"
+      "state": "awaiting proof-valid result"
     },
     {
       "domain": "fmt",
@@ -57,7 +57,7 @@
       "mode": "layers",
       "smoke": false,
       "name": "ev_mx_layers_fmt_llama32-3b_s1234",
-      "state": "deferred by user 24-hour scope"
+      "state": "awaiting proof-valid result"
     },
     {
       "domain": "mt_de-en",
@@ -76,7 +76,7 @@
       "mode": "layers",
       "smoke": false,
       "name": "ev_mx_layers_mt_de-en_llama32-3b_s17",
-      "state": "deferred by user 24-hour scope"
+      "state": "awaiting proof-valid result"
     },
     {
       "domain": "mt_de-en",
@@ -85,7 +85,7 @@
       "mode": "hf",
       "smoke": false,
       "name": "ev_mx_hf_mt_de-en_llama32-3b_s42",
-      "state": "deferred by user 24-hour scope"
+      "state": "awaiting proof-valid result"
     },
     {
       "domain": "mt_de-en",
@@ -94,7 +94,7 @@
       "mode": "layers",
       "smoke": false,
       "name": "ev_mx_layers_mt_de-en_llama32-3b_s42",
-      "state": "deferred by user 24-hour scope"
+      "state": "awaiting proof-valid result"
     },
     {
       "domain": "mt_de-en",
@@ -103,7 +103,7 @@
       "mode": "hf",
       "smoke": false,
       "name": "ev_mx_hf_mt_de-en_llama32-3b_s1234",
-      "state": "deferred by user 24-hour scope"
+      "state": "awaiting proof-valid result"
     },
     {
       "domain": "mt_de-en",
@@ -112,7 +112,7 @@
       "mode": "layers",
       "smoke": false,
       "name": "ev_mx_layers_mt_de-en_llama32-3b_s1234",
-      "state": "deferred by user 24-hour scope"
+      "state": "awaiting proof-valid result"
     },
     {
       "domain": "mt_de-en",
@@ -134,7 +134,7 @@
       "mode": "layers",
       "smoke": false,
       "name": "ev_mx_layers_mt_de-en_gemma3-4b_s17",
-      "state": "deferred by user 24-hour scope"
+      "state": "awaiting proof-valid result"
     },
     {
       "domain": "mt_de-en",
@@ -143,7 +143,7 @@
       "mode": "hf",
       "smoke": false,
       "name": "ev_mx_hf_mt_de-en_gemma3-4b_s42",
-      "state": "deferred by user 24-hour scope",
+      "state": "awaiting proof-valid result",
       "implementation": "mechanism_text_graph_v2",
       "execution_name": "ev_mx2_hf_mt_de-en_gemma3-4b_s42",
       "result_dir": "/scratch/juno/jvl210002/bidir/results/mechanism_text_graph_v2/mt_de-en/gemma3-4b/s42/production"
@@ -155,7 +155,7 @@
       "mode": "layers",
       "smoke": false,
       "name": "ev_mx_layers_mt_de-en_gemma3-4b_s42",
-      "state": "deferred by user 24-hour scope"
+      "state": "awaiting proof-valid result"
     },
     {
       "domain": "mt_de-en",
@@ -164,7 +164,7 @@
       "mode": "hf",
       "smoke": false,
       "name": "ev_mx_hf_mt_de-en_gemma3-4b_s1234",
-      "state": "deferred by user 24-hour scope",
+      "state": "awaiting proof-valid result",
       "implementation": "mechanism_text_graph_v2",
       "execution_name": "ev_mx2_hf_mt_de-en_gemma3-4b_s1234",
       "result_dir": "/scratch/juno/jvl210002/bidir/results/mechanism_text_graph_v2/mt_de-en/gemma3-4b/s1234/production"
@@ -176,7 +176,7 @@
       "mode": "layers",
       "smoke": false,
       "name": "ev_mx_layers_mt_de-en_gemma3-4b_s1234",
-      "state": "deferred by user 24-hour scope"
+      "state": "awaiting proof-valid result"
     },
     {
       "domain": "units",
@@ -200,7 +200,7 @@
       "mode": "layers",
       "smoke": false,
       "name": "ev_mx_layers_units_gemma3-12b_s17",
-      "state": "deferred by user 24-hour scope"
+      "state": "awaiting proof-valid result"
     },
     {
       "domain": "units",
@@ -210,7 +210,7 @@
       "mode": "hf",
       "smoke": false,
       "name": "ev_mx_hf_units_gemma3-12b_s42",
-      "state": "deferred by user 24-hour scope",
+      "state": "awaiting proof-valid result",
       "implementation": "mechanism_text_graph_v2",
       "execution_name": "ev_mx2_hf_units_gemma3-12b_s42",
       "result_dir": "/scratch/juno/jvl210002/bidir/results/mechanism_text_graph_v2/units/gemma3-12b/s42/production"
@@ -223,7 +223,7 @@
       "mode": "layers",
       "smoke": false,
       "name": "ev_mx_layers_units_gemma3-12b_s42",
-      "state": "deferred by user 24-hour scope"
+      "state": "awaiting proof-valid result"
     },
     {
       "domain": "units",
@@ -233,7 +233,7 @@
       "mode": "hf",
       "smoke": false,
       "name": "ev_mx_hf_units_gemma3-12b_s1234",
-      "state": "deferred by user 24-hour scope",
+      "state": "awaiting proof-valid result",
       "implementation": "mechanism_text_graph_v2",
       "execution_name": "ev_mx2_hf_units_gemma3-12b_s1234",
       "result_dir": "/scratch/juno/jvl210002/bidir/results/mechanism_text_graph_v2/units/gemma3-12b/s1234/production"
@@ -246,7 +246,7 @@
       "mode": "layers",
       "smoke": false,
       "name": "ev_mx_layers_units_gemma3-12b_s1234",
-      "state": "deferred by user 24-hour scope"
+      "state": "awaiting proof-valid result"
     }
   ],
   "source_sha256": {
@@ -287,33 +287,5 @@
   "panel_sha256": "cd396cadf1b925e6945cb8f1b1263e0799cb5a9afe8bc534157f0bbe78aee3bd",
   "analyzer_sha256": "ff74a0126fc128669bbb41d11643efcfd905e9cce3264455b6be09767af5c448",
   "interpretation": "Descriptive fixed panel; no selection of best layer, candidate, step, cell or seed on outcomes. Local LoRA gradient geometry is parameterization-dependent. Layer controls match retained delta-W norm, not both retained and edit norms. Candidate likelihood is not a measure of stored knowledge.",
-  "multiplicity": "Descriptive unadjusted paired intervals; no best-band/step/seed selection or pooled mechanism verdict.",
-  "sprint": {
-    "protocol": "paper_sprint_24h_v1",
-    "amendment": 54,
-    "enabled": true,
-    "started_utc": "2026-10-10T16:48:14.672677+00:00",
-    "finish_by_utc": "2026-10-11T16:48:14.672677+00:00",
-    "production_jobs": [
-      "ev_mx_hf_fmt_llama32-3b_s17",
-      "ev_mx_hf_mt_de-en_llama32-3b_s17",
-      "ev_mx_layers_fmt_llama32-3b_s17",
-      "ev_mx2_hf_mt_de-en_gemma3-4b_s17",
-      "ev_mx2_hf_units_gemma3-12b_s17"
-    ],
-    "allowed_jobs": [
-      "ev_mx_hf_fmt_llama32-3b_s17",
-      "ev_mx_hf_mt_de-en_llama32-3b_s17",
-      "ev_mx_layers_fmt_llama32-3b_s17",
-      "ev_mx2_hf_mt_de-en_gemma3-4b_s17",
-      "ev_mx2_hf_units_gemma3-12b_s17",
-      "ev_mx2_hf_mt_de-en_gemma3-4b_s17_smoke",
-      "ev_mx2_hf_units_gemma3-12b_s17_smoke"
-    ],
-    "reason": "User requests no further replication, minimal distinct experiments, and a paper snapshot within 24 hours. Reuse completed breadth and contrastive evidence; retain fixed seed17 explanation cells and the units null control. No favorable-outcome selection.",
-    "deferred": "All other new training/evaluation/repair jobs, including new seeds and the unfinished repaired Gemma format contrastive campaign. Completed artifacts are retained.",
-    "production_total": 5,
-    "production_complete": 5,
-    "table_sha256": "48d34456121ce53ce8ab31183ca57394a08e9b30fc0d949952ed09c8c61440da"
-  }
+  "multiplicity": "Descriptive unadjusted paired intervals; no best-band/step/seed selection or pooled mechanism verdict."
 }

@@ -733,8 +733,8 @@ def main() -> int:
 
     free = max(0, a.max_inflight - n_cells)
     if not free:
-        print(f"[runner] at capacity ({a.max_inflight}); nothing submitted")
-        return 0
+        print(f"[runner] at queue capacity ({a.max_inflight}); "
+              "refreshing existing planners and analyses without new submissions")
 
     launched = 0
     for label, cell, model, seed, todo, evald, tier, tag in todo_list:

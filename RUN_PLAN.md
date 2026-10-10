@@ -1,3 +1,8 @@
+> Current scheduling scope, October10: Amendment55 reopens all unfinished registered
+> eligible work in the background, including replications, after the completed sprint.
+> Sprint limits below are historical; commit34de8d0 preserves that draft and receipts.
+> See [background plan](docs/BACKGROUND_RUN_PLAN.md).
+
 > Active scheduling override, October10: [24-hour paper sprint](docs/PAPER_SPRINT_PLAN.md),
 > Amendment54. No new replication or training; five fixed seed17 diagnostics remain.
 > Earlier grids below are historical/deferred scope. Existing evidence remains retained.

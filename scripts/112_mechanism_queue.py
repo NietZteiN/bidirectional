@@ -17,11 +17,15 @@ from bidir import paper_sprint
 
 def launch(job,dry=False):
     partition='h200' if job['model']=='gemma3-12b' else 'h100,h200'
-    if paper_sprint.plan() and job['mode']=='hf':partition='h100,h200'
+    # Full HF production was validated on H100 for both Gemma sizes during the sprint.
+    # Retain that eligibility after reopening the registered seeds.
+    if job['mode']=='hf':partition='h100,h200'
     duration=('01:30:00' if job['mode']=='hf' else '01:00:00') if job['smoke'] else '08:00:00'
     repaired=text_graph.applies(job)
     if repaired:duration='00:20:00' if job['smoke'] else '04:00:00'
-    if paper_sprint.plan() and job['mode']=='hf' and not job['smoke']:duration='02:00:00'
+    # All four fixed seed17 HF cells finished in under ten minutes. Two hours preserves
+    # generous headroom with unchanged samples/controls and improves backfill eligibility.
+    if job['mode']=='hf' and not job['smoke']:duration='02:00:00'
     job_name=text_graph.name(job) if repaired else job['name']
     worker='scripts/116_mechanism_text_graph_worker.py' if repaired else 'scripts/113_mechanism_worker.py'
     argv=[worker,'--domain',job['domain'],'--model',job['model'],
