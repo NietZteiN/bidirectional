@@ -21,7 +21,7 @@
     450688,
     450692
   ],
-  "gpu_validation_complete": false,
+  "gpu_validation_complete": true,
   "production_count": 6,
   "production_admission": "after two revised matching GPU smokes",
   "change": "Exclude known inactive vision factors from local text-gradient/update coordinates; strict text autograd preserved.",
@@ -29,5 +29,19 @@
     450875,
     450876
   ],
-  "smoke_time_limit": "00:20:00"
+  "smoke_time_limit": "00:20:00",
+  "gpu_validation_checked_utc": "2026-10-10T23:20:09.006054+00:00",
+  "revised_smoke_proofs": [
+    {
+      "name": "ev_mx2_hf_mt_de-en_gemma3-4b_s17_smoke",
+      "summary": "/scratch/juno/jvl210002/bidir/results/mechanism_text_graph_v2/mt_de-en/gemma3-4b/s17/smoke/summary.json",
+      "summary_sha256": "4eeea53025757d64e8c7e1687a28a5a57a070e750f7414e4b27b057391ea90cf"
+    },
+    {
+      "name": "ev_mx2_hf_units_gemma3-12b_s17_smoke",
+      "summary": "/scratch/juno/jvl210002/bidir/results/mechanism_text_graph_v2/units/gemma3-12b/s17/smoke/summary.json",
+      "summary_sha256": "22a94508447a0cac6c6b05aaa9043a2145ab15021ac623d42a0fb56447c56754"
+    }
+  ],
+  "production_scope_note": "Amendment54 admits only the two selected seed17 Gemma production jobs; other original repair jobs are deferred."
 }

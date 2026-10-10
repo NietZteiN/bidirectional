@@ -87,7 +87,8 @@ def main():
         ['Task','Model','Seed',r'$\Delta$ CL-fwd versus SFT',r'$\Delta$ CL-mix5 versus mix5'],rows,
         'Completed exploratory reverse-generation contrasts (percentage points), with 99\\% paired cluster-bootstrap intervals. '
         'Five primary contrasts are adjusted within each cell; no adjustment across cells. '
-        'The original small-model phase is complete; newly registered scale/domain extensions are pending.',
+        'All proof-valid original and scale/domain-extension cells are included; failed-gate cells '
+        'remain eligibility boundaries rather than tuned comparisons.',
         'contrastive-snapshot'))
     (PAPER/'tables/contrastive_controls.tex').write_text(table(
         ['Task','Model','Seed','CL-fwd vs extra CE','CL-fwd vs shuffled','CL-mix5 vs extra CE'],control_rows,

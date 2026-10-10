@@ -306,20 +306,20 @@ The completed fresh generation campaign improves forward and reverse success rel
 original full-SFT checkpoint. This single exploratory repair does not establish a general remedy.
 
 \paragraph{Explanatory hypothesis and tests.}
-Forward-only updates may bias task-conditioned output selection and interfere with reverse
-generation; correctly reversed pairs may preserve that conditioning. Existing recovery
-instruments do not uniquely identify this mechanism. Exploratory layer interventions motivate
-comparison with global scaling and random removals matched for update norm, retaining both
-directions. Reverse-answer likelihood versus free generation and controlled gradient
-interventions would distinguish competing accounts. Direction probes must control input
-language/format cues. The never-had task differs from the recovered tasks, and LoRA leaves
-base weights unchanged by construction; neither observation alone establishes retained
-internal knowledge. A disclosed compute-budget amendment retains five fixed seed-17 diagnostics
-from the registered panel: likelihood and local-update tests on formatting, translation and the
-units null cell, plus all four formatting depth bands and retained-norm-matched controls.
-Matching does not also equalize edit norm. Gemma uses text LoRA factors, excluding inactive
-vision factors. These single-seed tests are exploratory; completed findings and outstanding
-proof checks appear in Appendix~\ref{app:mechanism-sprint}.
+Five completed seed-17 diagnostics test task-conditioned output selection
+(Appendix~\ref{app:mechanism-sprint}). In formatting and translation collapse cells,
+forward SFT reduces reverse gold-over-copy preference and mixed-direction SFT restores it.
+Absolute reverse-answer loss worsens in Llama but improves in Gemma translation despite
+collapsed generation: answer likelihood and generation are distinct. Final-checkpoint
+gradient cosines provide little support for persistent gradient conflict. Local reverse
+updates improve held-out loss even in the units null cell, so improvement alone does not
+diagnose collapse. Formatting middle-band removals recover reverse success beyond scaling
+and random removals matched for retained update norm; all bands and both directions remain
+reported. Edit norms are not also matched. These exploratory findings support selective
+interference in one cell, without establishing stored knowledge or a universal mechanism.
+Direction probes still require input-cue controls; the never-had task differs from the
+recovered tasks, and LoRA preserves base weights by construction. Gemma diagnostics exclude
+inactive vision factors. The budget amendment defers the remaining registered diagnostics.
 
 \section{Consequences for attribution}
 \label{sec:attrib}

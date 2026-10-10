@@ -50,7 +50,7 @@ def selected_paths():
     for name in ['CLAUDE.md','PREREGISTRATION.md','RUN_PLAN.md','TASKS.md','scripts/env.sh','pytest.ini',
                  'docs/PAPER_FINISH_PLAN.md','docs/AUTONOMOUS_PIPELINE.md','paper/README.md','paper/ARGUMENT.md',
                  'docs/GATE_REPAIR_PLAN.md','docs/MECHANISM_PLAN.md',
-                 'docs/PAPER_SPRINT_PLAN.md','runs/feeder/paper_sprint_admission.json',
+                 'docs/PAPER_SPRINT_PLAN.md','paper/SPRINT_COMPLETION.json','runs/feeder/paper_sprint_admission.json',
                  'env/extras.txt','paper/main.tex','paper/planned_evaluations.tex','paper/refs.bib',
                  'paper/numbers.tex','paper/numbers_provenance.json','paper/check_arr.py','paper/Makefile',
                  'paper/acl.sty','paper/acl_natbib.bst','paper/page_limit.txt','paper/evidence_snapshot.tex',

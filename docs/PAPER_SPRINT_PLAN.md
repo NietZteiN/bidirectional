@@ -68,3 +68,23 @@ references and all fonts embedded. Five controller/debug checks pass; 43 distinc
 regression/reporting checks pass across the staged test runs. Archive has zero outstanding
 files. Final interpretation/bundle review follows remaining results; registration and
 format-check success do not establish conference readiness.
+
+## Completed diagnostic checkpoint — October 10, 18:20 CDT
+
+All five selected production diagnostics and both required revised Gemma smokes are
+complete and proof-valid. There are no remaining GPU jobs in the sprint. Gemma4B
+translation job450906 completed in7:31 and Gemma12B units job450907 in9:38. Final
+interpretation retains the Gemma absolute-likelihood counterexample, units null, all
+layer controls and local-step results. Gold/copy rankings report both total and per-token
+NLL for both directions. Final-checkpoint gradients do not establish persistent conflict;
+local reverse updates improve held-out loss even in the null cell. The controller remains
+alive for analysis/archive refreshes, with the scope guard still enabled. Broader registered
+work remains deferred rather than silently resumed. See paper/SPRINT_COMPLETION.json for
+the final delivery receipts after paper and bundle verification.
+
+Final delivery checks pass: eight body pages, seventeen total, no visible placeholders or
+unresolved references, all fonts embedded; 25 targeted regression tests and five controller
+checks pass. Archive verification finds zero outstanding files. The evidence bundle's
+packaged hashes verify and all219 strict-mean replay reports complete. Completion receipts
+record the five production proofs, two revised smoke proofs, source hashes and retained
+limitations. The scope guard remains enabled after delivery.

@@ -76,11 +76,16 @@ def test_collector_keeps_historical_denominator_and_only_renders_proof_valid_res
         metric='gold_delta_nll_per_token', mean=mean, ci95=[mean-.1, mean+.1])
         for direction in ['forward','reverse']
         for system,reference,mean in [('sft','base',.3),('mix5','sft',-.2)]],
-        gradient_states=[dict(system=arm,cosine=-.3) for arm in ['sft','replay','mix5']])
+        gradient_states=[dict(system=arm,cosine=-.3) for arm in ['sft','replay','mix5']],
+        systems=[dict(system=arm,direction=direction,gold_beats_echo_nll_total=.25,
+            gold_beats_echo_nll_per_token=.75) for arm in ['base','sft','mix5']
+            for direction in ['forward','reverse']])
     analysis = tmp_path/'analysis.json'; analysis.write_text(json.dumps(dict(result=result)))
     record.update(state='complete', analysis=str(analysis))
     collector.sprint_tables(document)
     content = table.read_text()
     assert '+0.300' in content and '-0.200' in content
     assert 'forward' in content and 'reverse' in content
+    assert content.count('0.250 / 0.750') == 6
+    assert 'sprint-candidates' in content
     assert document['sprint']['production_complete'] == 1

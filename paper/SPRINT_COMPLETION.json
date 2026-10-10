@@ -1,0 +1,136 @@
+{
+  "protocol": "paper_sprint_24h_v1",
+  "amendment": 54,
+  "status": "completed scoped paper sprint",
+  "frozen_utc": "2026-10-10T23:23:00.800766+00:00",
+  "deadline_utc": "2026-10-11T16:48:14.672677+00:00",
+  "completed_before_deadline": true,
+  "gpu_production_complete": 5,
+  "gpu_production_scope": 5,
+  "original_registered_production": 24,
+  "deferred_diagnostics": [
+    "ev_mx_hf_fmt_llama32-3b_s42",
+    "ev_mx_layers_fmt_llama32-3b_s42",
+    "ev_mx_hf_fmt_llama32-3b_s1234",
+    "ev_mx_layers_fmt_llama32-3b_s1234",
+    "ev_mx_layers_mt_de-en_llama32-3b_s17",
+    "ev_mx_hf_mt_de-en_llama32-3b_s42",
+    "ev_mx_layers_mt_de-en_llama32-3b_s42",
+    "ev_mx_hf_mt_de-en_llama32-3b_s1234",
+    "ev_mx_layers_mt_de-en_llama32-3b_s1234",
+    "ev_mx_layers_mt_de-en_gemma3-4b_s17",
+    "ev_mx2_hf_mt_de-en_gemma3-4b_s42",
+    "ev_mx_layers_mt_de-en_gemma3-4b_s42",
+    "ev_mx2_hf_mt_de-en_gemma3-4b_s1234",
+    "ev_mx_layers_mt_de-en_gemma3-4b_s1234",
+    "ev_mx_layers_units_gemma3-12b_s17",
+    "ev_mx2_hf_units_gemma3-12b_s42",
+    "ev_mx_layers_units_gemma3-12b_s42",
+    "ev_mx2_hf_units_gemma3-12b_s1234",
+    "ev_mx_layers_units_gemma3-12b_s1234"
+  ],
+  "production_proofs": [
+    {
+      "name": "ev_mx_hf_fmt_llama32-3b_s17",
+      "domain": "fmt",
+      "model": "llama32-3b",
+      "seed": 17,
+      "mode": "hf",
+      "status": "runs/status/ev_mx_hf_fmt_llama32-3b_s17.450677.json",
+      "status_sha256": "af120827a8dc2efac62d2e76cc341a227858b4b07b62fc0829a85ca2a90b1f4f",
+      "analysis": "/scratch/juno/jvl210002/bidir/results/mechanism_explanation_v1/fmt/llama32-3b/s17/hf/production/explanatory_analysis.json",
+      "analysis_sha256": "84aad5d39f59eeaf3d2bd1308214425e05bd59f5ebc8e9b71af4b4d08367376b"
+    },
+    {
+      "name": "ev_mx_layers_fmt_llama32-3b_s17",
+      "domain": "fmt",
+      "model": "llama32-3b",
+      "seed": 17,
+      "mode": "layers",
+      "status": "runs/status/ev_mx_layers_fmt_llama32-3b_s17.450443.json",
+      "status_sha256": "f84717dd7dea4b64c8405b28a13db2cc84818f3eb8444dfba07dc992e278abe3",
+      "analysis": "/scratch/juno/jvl210002/bidir/results/mechanism_explanation_v1/fmt/llama32-3b/s17/layers/production/explanatory_analysis.json",
+      "analysis_sha256": "a92768d894b1a393d6e23d291ce3a2f8ac3cc4185ad3d22b3f562718f65ffdcb"
+    },
+    {
+      "name": "ev_mx_hf_mt_de-en_llama32-3b_s17",
+      "domain": "mt_de-en",
+      "model": "llama32-3b",
+      "seed": 17,
+      "mode": "hf",
+      "status": "runs/status/ev_mx_hf_mt_de-en_llama32-3b_s17.450680.json",
+      "status_sha256": "8dda09eb50c034f42507e78ba320d8e3ee8f038b7768ae384b50f90d0dff3b0b",
+      "analysis": "/scratch/juno/jvl210002/bidir/results/mechanism_explanation_v1/mt_de-en/llama32-3b/s17/hf/production/explanatory_analysis.json",
+      "analysis_sha256": "97f2242a962158ff0ac58f4a2894638c7f81f0bfa5745725bfd5b74e684afc73"
+    },
+    {
+      "name": "ev_mx2_hf_mt_de-en_gemma3-4b_s17",
+      "domain": "mt_de-en",
+      "model": "gemma3-4b",
+      "seed": 17,
+      "mode": "hf",
+      "status": "runs/status/ev_mx2_hf_mt_de-en_gemma3-4b_s17.450906.json",
+      "status_sha256": "669979cbd67b135e561fc5ff7e3c80a543218fd5db62d1ccaea0f4c1201665df",
+      "analysis": "/scratch/juno/jvl210002/bidir/results/mechanism_text_graph_v2/mt_de-en/gemma3-4b/s17/production/explanatory_analysis.json",
+      "analysis_sha256": "9e48cc7531d5abc0c0b78c7396eb77fc78b42de64408531a874ab888a5ab4c3d"
+    },
+    {
+      "name": "ev_mx2_hf_units_gemma3-12b_s17",
+      "domain": "units",
+      "model": "gemma3-12b",
+      "seed": 17,
+      "mode": "hf",
+      "status": "runs/status/ev_mx2_hf_units_gemma3-12b_s17.450907.json",
+      "status_sha256": "6e193bc4c9d952a1d6420e46d1a52061b4bffedea878f2fd0983edf5df408524",
+      "analysis": "/scratch/juno/jvl210002/bidir/results/mechanism_text_graph_v2/units/gemma3-12b/s17/production/explanatory_analysis.json",
+      "analysis_sha256": "8d0af6128907b7ab908733301195e90bfca8b5a4cfe4b79225a030eb621a5c2d"
+    }
+  ],
+  "required_smoke_proofs": [
+    {
+      "name": "ev_mx2_hf_mt_de-en_gemma3-4b_s17_smoke",
+      "summary": "/scratch/juno/jvl210002/bidir/results/mechanism_text_graph_v2/mt_de-en/gemma3-4b/s17/smoke/summary.json",
+      "summary_sha256": "4eeea53025757d64e8c7e1687a28a5a57a070e750f7414e4b27b057391ea90cf"
+    },
+    {
+      "name": "ev_mx2_hf_units_gemma3-12b_s17_smoke",
+      "summary": "/scratch/juno/jvl210002/bidir/results/mechanism_text_graph_v2/units/gemma3-12b/s17/smoke/summary.json",
+      "summary_sha256": "22a94508447a0cac6c6b05aaa9043a2145ab15021ac623d42a0fb56447c56754"
+    }
+  ],
+  "sources": {
+    "configs/paper_sprint.json": "38454fda1c720e7ee579057eb6eafb86c6306f99aaf649452981dadf3f1302d8",
+    "paper/MECHANISM_DIAGNOSTICS.json": "5e09a2e6aacd613e4aa0e32215e6f07c4a4f028d10246e89b76aefeb4f8f5bbf",
+    "paper/main.tex": "343a2327462ed926214d2d52721d6cae5879cd7d7d38046acfd9b95ec676c47e",
+    "paper/main.pdf": "8d2ba5d9fb5702bdcbe6aadf52ef2f35e24f25594bd56aa9c75d66e2c2874ebe",
+    "paper/tables/mechanism_sprint.tex": "48d34456121ce53ce8ab31183ca57394a08e9b30fc0d949952ed09c8c61440da"
+  },
+  "checks": {
+    "strict_format_passed": true,
+    "body_pages": 8,
+    "total_pages": 17,
+    "abstract_words": 183,
+    "visible_placeholders": 0,
+    "unresolved_references": false,
+    "unembedded_fonts": 0,
+    "targeted_regression_tests_passed": 25,
+    "archive_outstanding_files": 0,
+    "strict_mean_replay_reports": 219,
+    "controller_checks": {
+      "fresh_heartbeat": true,
+      "supervisor_matches_controller": true,
+      "stages_ok": true,
+      "renewal_successor": true,
+      "logout_detached": true
+    },
+    "packaged_files": 1506
+  },
+  "autonomous_controller": "Retained with sprint scope guard enabled; no new seeds or deferred experiments admitted.",
+  "retained_limits": [
+    "Single training-seed diagnostics are exploratory; pair intervals do not establish seed stability.",
+    "Gemma translation improves absolute reverse-answer likelihood despite collapsed generation.",
+    "Units null and adverse forward/control findings retained; no universal collapse or mechanism claim.",
+    "Remaining original failed gates and unrun experiments retain their original status.",
+    "Working draft, not submitted. External artifact release still needs the recorded dataset-license and historical-code review."
+  ]
+}

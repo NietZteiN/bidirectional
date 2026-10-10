@@ -7,6 +7,11 @@ detached controller rebuilds the draft as validated results arrive. The original
 registration is retained as deferred scope. This is a reviewed draft target, not an
 automatic conference submission or proof of a general causal mechanism.
 
+All five selected diagnostics and both revised Gemma smokes are complete and proof-valid.
+The draft integrates likelihood, gold/copy ranking, gradient and matched layer-control
+results, including the Gemma counterexample and units null. Final delivery receipts live
+in [SPRINT_COMPLETION.json](SPRINT_COMPLETION.json); the broader unrun panel stays deferred.
+
 # ACL ARR LaTeX folder
 
 **Directional Collapse in Fine-Tuning: Preserving the Way Back** — an ARR **long paper**, with a **8-page main-content limit**.
@@ -41,7 +46,7 @@ See [ARGUMENT.md](ARGUMENT.md) for the argument and drafting decisions.
 
 This is an evidence-backed working draft. The sprint fills the contribution, dose and probe
 interpretation from audited evidence, and the collector reports diagnostic progress explicitly.
-The strict format check passes; scientific review and remaining diagnostics are separate. Transfer, probes, prompts/templates and recipe sensitivity
+The strict format check passes; scientific review and deferred diagnostics are separate. Transfer, probes, prompts/templates and recipe sensitivity
 were separately registered in Amendment 50 and admitted to the autonomous smoke-gated queue.
 Pending allocation is not a successful GPU test. `refs.bib` is a local snapshot of
 `../papers/references.bib`; keep it current when adding citations. Older ACM files under

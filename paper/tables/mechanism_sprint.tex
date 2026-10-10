@@ -1,8 +1,9 @@
 \section{Budget-limited explanatory diagnostics}
 \label{app:mechanism-sprint}
 Amendment54 limits new compute to five fixed seed-17 diagnostics and required engineering smokes. The original 24-job panel remains registered; unrun jobs are deferred. Selection uses the time budget and distinct scientific questions, not new diagnostic outcomes. Completed earlier seeds are retained. These single-seed analyses are exploratory; paired intervals measure test-pair uncertainty, not training-seed stability. All candidates, controls, bands and local steps remain in the evidence bundle.
-Proof-valid diagnostic jobs at this snapshot: 3 of 5.
+Proof-valid diagnostic jobs at this snapshot: 5 of 5.
 In the completed Llama formatting and translation diagnostics, forward SFT lowers gold completion loss in the forward direction and raises it in reverse; mixed-direction SFT lowers reverse loss relative to SFT with small mean forward changes (Table~\ref{tab:sprint-likelihood}). The local SFT gradient cosines are near zero (Table~\ref{tab:sprint-gradients}); these checkpoints provide little support for a simple persistent gradient-conflict account. Gradients at these final checkpoints do not reconstruct interference along the training trajectory. This descriptive evidence concerns answer likelihood and does not establish stored knowledge.
+The Gemma translation diagnostic differs: reverse gold completion loss improves relative to base despite collapsed free generation. Absolute answer loss therefore does not uniformly track collapse. In the three collapse cells, per-token gold-over-copy preference falls under forward SFT and recovers under mixed-direction SFT; the units null cell retains strong preference (Table~\ref{tab:sprint-candidates}). Total and per-token rankings are reported together because candidate lengths differ. Translation has multiple valid answers; a restricted candidate ranking is neither correctness nor a measure of retained knowledge. At the SFT checkpoint, both tested reverse and mixed local-step sizes lower reverse held-out loss in every cell, including the null cell; this is not a collapse-specific signature or a demonstrated generation repair. All checkpoint states, update directions, step sizes and both endpoints are retained in the bundle. Formatting middle-band removals improve reverse success beyond all matched controls with small forward changes, whereas the earliest band harms forward performance without consistent reverse recovery (Table~\ref{tab:sprint-layer-controls}). This supports depth selectivity in one cell, with unadjusted intervals across multiple interventions, rather than a universal causal mechanism.
 \begin{table*}[t]
 \centering\small
 \begin{tabular}{lllll}
@@ -13,6 +14,10 @@ fmt & llama32-3b & forward & -0.117 [-0.132, -0.101] & +0.000 [-0.000, +0.001] \
 fmt & llama32-3b & reverse & +0.121 [+0.104, +0.139] & -0.288 [-0.331, -0.247] \\
 mt\_de-en & llama32-3b & forward & -0.277 [-0.336, -0.220] & +0.004 [-0.003, +0.012] \\
 mt\_de-en & llama32-3b & reverse & +0.103 [+0.075, +0.131] & -0.181 [-0.206, -0.155] \\
+mt\_de-en & gemma3-4b & forward & -2.352 [-2.547, -2.168] & -0.002 [-0.012, +0.008] \\
+mt\_de-en & gemma3-4b & reverse & -1.008 [-1.122, -0.893] & -0.419 [-0.459, -0.378] \\
+units & gemma3-12b & forward & -2.587 [-2.829, -2.358] & +0.016 [-0.005, +0.053] \\
+units & gemma3-12b & reverse & -2.612 [-2.832, -2.405] & -0.381 [-0.503, -0.273] \\
 \bottomrule
 \end{tabular}
 \caption{Gold completion NLL per token, paired differences with descriptive 95\% bootstrap intervals on 128 fixed pairs. Negative values favor the first system. Candidate likelihood does not establish generation correctness or stored knowledge. All seeds here are 17.}
@@ -26,10 +31,31 @@ Task & Model & SFT & Replay & mix5 \\
 \midrule
 fmt & llama32-3b & -0.018 & +0.004 & +0.010 \\
 mt\_de-en & llama32-3b & -0.000 & +0.048 & +0.059 \\
+mt\_de-en & gemma3-4b & +0.021 & +0.012 & +0.031 \\
+units & gemma3-12b & -0.013 & +0.009 & -0.026 \\
 \bottomrule
 \end{tabular}
 \caption{Forward/reverse validation-gradient cosine on 16 pairs in local LoRA A/B coordinates. Gemma excludes inactive vision factors. These coordinate-dependent quantities do not by themselves establish interference or causality.}
 \label{tab:sprint-gradients}
+\end{table*}
+\begin{table*}[t]
+\centering\small
+\begin{tabular}{llllll}
+\toprule
+Task & Model & Direction & Base & SFT & mix5 \\
+\midrule
+fmt & llama32-3b & forward & 0.695 / 0.719 & 1.000 / 1.000 & 1.000 / 1.000 \\
+fmt & llama32-3b & reverse & 0.750 / 0.672 & 0.000 / 0.008 & 1.000 / 1.000 \\
+mt\_de-en & llama32-3b & forward & 0.344 / 0.195 & 0.484 / 0.234 & 0.445 / 0.242 \\
+mt\_de-en & llama32-3b & reverse & 0.062 / 0.180 & 0.000 / 0.000 & 0.320 / 0.562 \\
+mt\_de-en & gemma3-4b & forward & 0.375 / 0.289 & 0.461 / 0.398 & 0.359 / 0.273 \\
+mt\_de-en & gemma3-4b & reverse & 0.406 / 0.586 & 0.000 / 0.000 & 0.430 / 0.562 \\
+units & gemma3-12b & forward & 0.828 / 0.875 & 1.000 / 1.000 & 0.992 / 1.000 \\
+units & gemma3-12b & reverse & 0.586 / 0.547 & 1.000 / 0.977 & 1.000 / 1.000 \\
+\bottomrule
+\end{tabular}
+\caption{Fraction of 128 fixed pairs where gold completion NLL is strictly lower than copied-input NLL: total / per-token ranking. Candidate lengths differ, so these rankings need not agree. Both directions and the same focal systems as the likelihood contrasts are shown; all eight systems and shuffled-target candidates remain in the bundle. Single training seed17.}
+\label{tab:sprint-candidates}
 \end{table*}
 \begin{table*}[t]
 \centering\small

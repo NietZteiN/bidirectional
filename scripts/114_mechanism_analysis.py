@@ -82,7 +82,7 @@ def sprint_tables(document):
         'These single-seed analyses are exploratory; paired intervals measure test-pair uncertainty, '
         'not training-seed stability. All candidates, controls, bands and local steps remain in the evidence bundle.',
         f"Proof-valid diagnostic jobs at this snapshot: {document['sprint']['production_complete']} of {len(selected)}."]
-    hf_rows=[];gradient_rows=[];layer_rows=[]
+    hf_rows=[];candidate_rows=[];gradient_rows=[];layer_rows=[]
     for record in selected:
         if record['state']!='complete':continue
         result=json.loads(Path(record['analysis']).read_text())['result']
@@ -92,6 +92,11 @@ def sprint_tables(document):
                 lookup={(c['system'],c['reference']):c for c in result['contrasts']
                     if c['direction']==direction and c['metric']=='gold_delta_nll_per_token'}
                 hf_rows.append(cell+[direction,interval(lookup[('sft','base')]),interval(lookup[('mix5','sft')])])
+                candidates={r['system']:r for r in result['systems'] if r['direction']==direction}
+                candidate_rows.append(cell+[direction]+[
+                    f"{candidates[arm]['gold_beats_echo_nll_total']:.3f} / "
+                    f"{candidates[arm]['gold_beats_echo_nll_per_token']:.3f}"
+                    for arm in ['base','sft','mix5']])
             states={r['system']:r for r in result['gradient_states']}
             gradient_rows.append(cell+[f"{states[a]['cosine']:+.3f}" for a in ['sft','replay','mix5']])
         else:
@@ -109,6 +114,24 @@ def sprint_tables(document):
             'simple persistent gradient-conflict account. Gradients at these final checkpoints '
             'do not reconstruct interference along the training trajectory. This descriptive '
             'evidence concerns answer likelihood and does not establish stored knowledge.')
+    if document['sprint']['production_complete']==len(selected) and len(selected)==5:
+        text.append('The Gemma translation diagnostic differs: reverse gold completion loss '
+            'improves relative to base despite collapsed free generation. Absolute answer loss '
+            'therefore does not uniformly track collapse. In the three collapse cells, '
+            'per-token gold-over-copy preference falls under forward SFT and recovers under '
+            'mixed-direction SFT; the units null cell retains strong preference '
+            '(Table~\\ref{tab:sprint-candidates}). Total and per-token rankings are reported '
+            'together because candidate lengths differ. Translation has multiple valid answers; '
+            'a restricted candidate ranking is neither correctness nor a measure of retained knowledge. '
+            'At the SFT checkpoint, both tested reverse and mixed local-step sizes lower reverse '
+            'held-out loss in every cell, including the null cell; this is not a collapse-specific '
+            'signature or a demonstrated generation repair. All checkpoint states, update '
+            'directions, step sizes and both endpoints are retained in the bundle. '
+            'Formatting middle-band removals improve reverse success beyond all matched controls '
+            'with small forward changes, whereas the earliest band harms forward performance '
+            'without consistent reverse recovery (Table~\\ref{tab:sprint-layer-controls}). '
+            'This supports depth selectivity in one cell, with unadjusted intervals across '
+            'multiple interventions, rather than a universal causal mechanism.')
     def table(headers,rows,caption,label):
         if not rows:return
         text.extend([r'\begin{table*}[t]',r'\centering\small',r'\begin{tabular}{'+'l'*len(headers)+'}',
@@ -123,6 +146,12 @@ def sprint_tables(document):
         'Forward/reverse validation-gradient cosine on 16 pairs in local LoRA A/B coordinates. '
         'Gemma excludes inactive vision factors. These coordinate-dependent quantities do not '
         'by themselves establish interference or causality.', 'sprint-gradients')
+    table(['Task','Model','Direction','Base','SFT','mix5'],candidate_rows,
+        'Fraction of 128 fixed pairs where gold completion NLL is strictly lower than copied-input '
+        'NLL: total / per-token ranking. Candidate lengths differ, so these rankings need not agree. '
+        'Both directions and the same focal systems as the likelihood contrasts are shown; all '
+        'eight systems and shuffled-target candidates remain in the bundle. Single training seed17.',
+        'sprint-candidates')
     table(['Removed band','Matched control','Direction','Success difference'],layer_rows,
         'All fixed-depth removals versus retained-norm-matched controls for formatting/Llama3B '
         r'(seed17), strict no-echo success differences on 512 pairs with descriptive 95\% paired '

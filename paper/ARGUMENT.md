@@ -13,6 +13,14 @@ controls. Describe new findings as exploratory; preserve all outcomes.19 registe
 mechanism production jobs and the unfinished repaired Gemma-format CL campaign are
 deferred. [Sprint plan](../docs/PAPER_SPRINT_PLAN.md) records the24-hour target.
 
+All five diagnostics are now complete and proof-valid. The draft reports gold/copy
+rankings in both directions, both length conventions, the Gemma absolute-likelihood
+counterexample, the units null control, gradient limits and every layer-control contrast.
+Middle-band formatting recovery supports depth selectivity in one cell. Local reverse
+updates also improve the null cell, so neither local improvement nor final gradient
+geometry identifies a universal cause. Generated tables and the full evidence bundle
+supply the measurements; no favorable outcome is excluded.
+
 The earlier argument and registration history follow; future-tense replication plans
 below are superseded by this scope decision.
 

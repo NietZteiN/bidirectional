@@ -1,6 +1,6 @@
 {
   "protocol": "mechanism_explanation_v1",
-  "production_complete": 3,
+  "production_complete": 5,
   "production_total": 24,
   "items": [
     {
@@ -121,10 +121,11 @@
       "mode": "hf",
       "smoke": false,
       "name": "ev_mx_hf_mt_de-en_gemma3-4b_s17",
-      "state": "awaiting proof-valid result",
+      "state": "complete",
       "implementation": "mechanism_text_graph_v2",
       "execution_name": "ev_mx2_hf_mt_de-en_gemma3-4b_s17",
-      "result_dir": "/scratch/juno/jvl210002/bidir/results/mechanism_text_graph_v2/mt_de-en/gemma3-4b/s17/production"
+      "result_dir": "/scratch/juno/jvl210002/bidir/results/mechanism_text_graph_v2/mt_de-en/gemma3-4b/s17/production",
+      "analysis": "/scratch/juno/jvl210002/bidir/results/mechanism_text_graph_v2/mt_de-en/gemma3-4b/s17/production/explanatory_analysis.json"
     },
     {
       "domain": "mt_de-en",
@@ -185,10 +186,11 @@
       "mode": "hf",
       "smoke": false,
       "name": "ev_mx_hf_units_gemma3-12b_s17",
-      "state": "awaiting proof-valid result",
+      "state": "complete",
       "implementation": "mechanism_text_graph_v2",
       "execution_name": "ev_mx2_hf_units_gemma3-12b_s17",
-      "result_dir": "/scratch/juno/jvl210002/bidir/results/mechanism_text_graph_v2/units/gemma3-12b/s17/production"
+      "result_dir": "/scratch/juno/jvl210002/bidir/results/mechanism_text_graph_v2/units/gemma3-12b/s17/production",
+      "analysis": "/scratch/juno/jvl210002/bidir/results/mechanism_text_graph_v2/units/gemma3-12b/s17/production/explanatory_analysis.json"
     },
     {
       "domain": "units",
@@ -253,23 +255,37 @@
     "/scratch/juno/jvl210002/bidir/results/mechanism_explanation_v1/fmt/llama32-3b/s17/hf/production/steps.jsonl": "434674edf1545ca88a94615e67ee66d902c0b0ab61af44fb70ab24f39b4f50cf",
     "/scratch/juno/jvl210002/bidir/results/mechanism_explanation_v1/fmt/llama32-3b/s17/hf/production/gradients.json": "128cb9d583a3d91533f7410b0d9f6bd0b9408e2ba8cee210aa4ca9c2048e1c15",
     "/scratch/juno/jvl210002/bidir/results/mechanism_explanation_v1/fmt/llama32-3b/s17/hf/production/contrasts.json": "c579309d5826ae5d8eba0a3626d424c5cf524aa3aa19de3443425342c601b609",
-    "/scratch/juno/jvl210002/bidir/results/mechanism_explanation_v1/fmt/llama32-3b/s17/hf/production/explanatory_analysis.json": "252834624f699983eac9779e2f75a8fdc8bb6cfdf572ee968d41b865de50e5eb",
+    "/scratch/juno/jvl210002/bidir/results/mechanism_explanation_v1/fmt/llama32-3b/s17/hf/production/explanatory_analysis.json": "84aad5d39f59eeaf3d2bd1308214425e05bd59f5ebc8e9b71af4b4d08367376b",
     "/scratch/juno/jvl210002/bidir/results/mechanism_explanation_v1/fmt/llama32-3b/s17/layers/production/summary.json": "2fdbdbe5bb03d77df8739b5cb4b8474c717173483e28026f9004f0904bfadbfc",
     "/scratch/juno/jvl210002/bidir/results/mechanism_explanation_v1/fmt/llama32-3b/s17/layers/production/trials.jsonl": "1ff4e5c0f94deffb82fda49944531b2a10c14f3c4b50b4851339d30b6672c0b8",
     "/scratch/juno/jvl210002/bidir/results/mechanism_explanation_v1/fmt/llama32-3b/s17/layers/production/variant_manifest.json": "67f7546131de950881edf9440c6896432ef55b4b9bc0e8bc83f7a2f902dff192",
     "/scratch/juno/jvl210002/bidir/results/mechanism_explanation_v1/fmt/llama32-3b/s17/layers/production/contrasts.json": "8b9392e7fe91a927878d311a0cfab1494efad16cc9c6dc8a3d6f61de8c04099f",
     "/scratch/juno/jvl210002/bidir/results/mechanism_explanation_v1/fmt/llama32-3b/s17/layers/production/oracle.json": "28e0d0f3aae31f6f21114e9377508da80f90f50d10d9049bb4289e2cfbdbeb24",
     "/scratch/juno/jvl210002/bidir/results/mechanism_explanation_v1/fmt/llama32-3b/s17/layers/production/adapter_effectiveness.json": "fca8150321dec35a3e5954acfbddab3b8ece82e97f1ded2004a028bdfbfac0e8",
-    "/scratch/juno/jvl210002/bidir/results/mechanism_explanation_v1/fmt/llama32-3b/s17/layers/production/explanatory_analysis.json": "bc3313277b17cd9515c5348e8ebb747e5cb65cd159faf527a4dfc45f03618405",
+    "/scratch/juno/jvl210002/bidir/results/mechanism_explanation_v1/fmt/llama32-3b/s17/layers/production/explanatory_analysis.json": "a92768d894b1a393d6e23d291ce3a2f8ac3cc4185ad3d22b3f562718f65ffdcb",
     "/scratch/juno/jvl210002/bidir/results/mechanism_explanation_v1/mt_de-en/llama32-3b/s17/hf/production/summary.json": "be645d109d2e46402deef0dace700a902b2c77473ef7eef29d916970cda13fd3",
     "/scratch/juno/jvl210002/bidir/results/mechanism_explanation_v1/mt_de-en/llama32-3b/s17/hf/production/likelihood.jsonl": "771aa081b140644d7c1b98b4309d531ce951cad7a6bc8a5e69ea7c8a36404feb",
     "/scratch/juno/jvl210002/bidir/results/mechanism_explanation_v1/mt_de-en/llama32-3b/s17/hf/production/steps.jsonl": "00bce2afae610815551eabb4a0f72112176f87efcc78fe7a87230b19e8682473",
     "/scratch/juno/jvl210002/bidir/results/mechanism_explanation_v1/mt_de-en/llama32-3b/s17/hf/production/gradients.json": "c2fc80ffa43258c10bd5345c7cc7e14b2f1a3c25e6967a3deb3a510ca33a3618",
     "/scratch/juno/jvl210002/bidir/results/mechanism_explanation_v1/mt_de-en/llama32-3b/s17/hf/production/contrasts.json": "08e7b2f57b70aa53e6ddb795c3094cc9b38aded7f40f9debb371fb125a6b6fb4",
-    "/scratch/juno/jvl210002/bidir/results/mechanism_explanation_v1/mt_de-en/llama32-3b/s17/hf/production/explanatory_analysis.json": "9779205fe45fcd9bb083f949602e9b52defa0070f112d3484fdff393234da3c8"
+    "/scratch/juno/jvl210002/bidir/results/mechanism_explanation_v1/mt_de-en/llama32-3b/s17/hf/production/explanatory_analysis.json": "97f2242a962158ff0ac58f4a2894638c7f81f0bfa5745725bfd5b74e684afc73",
+    "/scratch/juno/jvl210002/bidir/results/mechanism_text_graph_v2/mt_de-en/gemma3-4b/s17/production/summary.json": "8bb990966f7fb027058fd3173fd89625ab848c5b831070dd2a81db1ccf85a204",
+    "/scratch/juno/jvl210002/bidir/results/mechanism_text_graph_v2/mt_de-en/gemma3-4b/s17/production/likelihood.jsonl": "df94c4428e641c8a1f734e59b648d7afb4f9ac304eeeb5b061d211ab5672a072",
+    "/scratch/juno/jvl210002/bidir/results/mechanism_text_graph_v2/mt_de-en/gemma3-4b/s17/production/steps.jsonl": "bdf604a1530a76336387d9e7618d5f3b4bc2b489dd147c930ac57262629498b7",
+    "/scratch/juno/jvl210002/bidir/results/mechanism_text_graph_v2/mt_de-en/gemma3-4b/s17/production/gradients.json": "b6602beefb2906736f0b3665b0a755108a23546b74eb35b952be806e8bda544d",
+    "/scratch/juno/jvl210002/bidir/results/mechanism_text_graph_v2/mt_de-en/gemma3-4b/s17/production/contrasts.json": "ba803218116458a5a4bcb2aa34553f392e9b684d2a6fd14f958a564494addd36",
+    "/scratch/juno/jvl210002/bidir/results/mechanism_text_graph_v2/mt_de-en/gemma3-4b/s17/production/text_graph_projection.json": "678e91b3b9b81beb6ed3e633afa38eae5b9bd03f41e2e376746795efa851995c",
+    "/scratch/juno/jvl210002/bidir/results/mechanism_text_graph_v2/mt_de-en/gemma3-4b/s17/production/explanatory_analysis.json": "9e48cc7531d5abc0c0b78c7396eb77fc78b42de64408531a874ab888a5ab4c3d",
+    "/scratch/juno/jvl210002/bidir/results/mechanism_text_graph_v2/units/gemma3-12b/s17/production/summary.json": "a07d91faa4351bb166f9a3c1f74bcbc42d4ba9e8f7453cd5a3e1465db91f4bcd",
+    "/scratch/juno/jvl210002/bidir/results/mechanism_text_graph_v2/units/gemma3-12b/s17/production/likelihood.jsonl": "6a1f837d07df0e4772361c2e2ad0b438a55c7ffb5eb55e566609255e4f2783f2",
+    "/scratch/juno/jvl210002/bidir/results/mechanism_text_graph_v2/units/gemma3-12b/s17/production/steps.jsonl": "b9108526f6407cffa4bc743bd6801275f659dae7962b58c2746ce371f604a05d",
+    "/scratch/juno/jvl210002/bidir/results/mechanism_text_graph_v2/units/gemma3-12b/s17/production/gradients.json": "78234fdd17e19b32a656688fe707a18b8ee67f30a190e4bfe4d030277f66efdf",
+    "/scratch/juno/jvl210002/bidir/results/mechanism_text_graph_v2/units/gemma3-12b/s17/production/contrasts.json": "90a909a5ba01f4cf05149ebb63b464dcc3a635e336921f41fbc5c15bcc62fcc0",
+    "/scratch/juno/jvl210002/bidir/results/mechanism_text_graph_v2/units/gemma3-12b/s17/production/text_graph_projection.json": "678e91b3b9b81beb6ed3e633afa38eae5b9bd03f41e2e376746795efa851995c",
+    "/scratch/juno/jvl210002/bidir/results/mechanism_text_graph_v2/units/gemma3-12b/s17/production/explanatory_analysis.json": "8d0af6128907b7ab908733301195e90bfca8b5a4cfe4b79225a030eb621a5c2d"
   },
   "panel_sha256": "cd396cadf1b925e6945cb8f1b1263e0799cb5a9afe8bc534157f0bbe78aee3bd",
-  "analyzer_sha256": "ba3020a573d33d8183cc2f99c57ae54876924fc19ac1c79766b655cf50953294",
+  "analyzer_sha256": "ff74a0126fc128669bbb41d11643efcfd905e9cce3264455b6be09767af5c448",
   "interpretation": "Descriptive fixed panel; no selection of best layer, candidate, step, cell or seed on outcomes. Local LoRA gradient geometry is parameterization-dependent. Layer controls match retained delta-W norm, not both retained and edit norms. Candidate likelihood is not a measure of stored knowledge.",
   "multiplicity": "Descriptive unadjusted paired intervals; no best-band/step/seed selection or pooled mechanism verdict.",
   "sprint": {
@@ -297,7 +313,7 @@
     "reason": "User requests no further replication, minimal distinct experiments, and a paper snapshot within 24 hours. Reuse completed breadth and contrastive evidence; retain fixed seed17 explanation cells and the units null control. No favorable-outcome selection.",
     "deferred": "All other new training/evaluation/repair jobs, including new seeds and the unfinished repaired Gemma format contrastive campaign. Completed artifacts are retained.",
     "production_total": 5,
-    "production_complete": 3,
-    "table_sha256": "a4ef439d7baf23f449710d52fb51e2a19003fb9d3a10e7fc6ea7ed51eaaaa745"
+    "production_complete": 5,
+    "table_sha256": "48d34456121ce53ce8ab31183ca57394a08e9b30fc0d949952ed09c8c61440da"
   }
 }
