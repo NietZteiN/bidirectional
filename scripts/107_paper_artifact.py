@@ -133,15 +133,36 @@ def build():
         'manifest=json.loads((root/"MANIFEST.json").read_text())\n'
         'bad=[f["path"] for f in manifest["files"] if hashlib.sha256((root/f["path"]).read_bytes()).hexdigest()!=f["packaged_sha256"]]\n'
         'assert not bad, bad\nprint("Verified",len(manifest["files"]),"packaged artifacts")\n')
-    (BUNDLE/'replay_means.py').write_text('from pathlib import Path\nfrom collections import defaultdict\nimport json\n'
-        'root=Path(__file__).resolve().parent\n'
-        'for path in sorted((root/"evidence/results").rglob("trials.jsonl")):\n'
-        '    values=defaultdict(list)\n'
-        '    for line in path.open():\n'
-        '        r=json.loads(line)\n'
-        '        if r.get("strategy","simple")!="simple": continue\n'
-        '        values[(r["system"],r.get("endpoint",r.get("direction")))].append(r["strict"])\n'
-        '    print(json.dumps({"trial_file":str(path.relative_to(root)),"means":{str(k):sum(v)/len(v) for k,v in values.items()}},sort_keys=True))\n')
+    (BUNDLE/'replay_means.py').write_text("""from pathlib import Path
+from collections import defaultdict
+import json
+
+
+def replay_strict(path):
+    values=defaultdict(list)
+    excluded=0
+    for line in path.open():
+        row=json.loads(line)
+        if row.get('strategy','simple')!='simple':
+            excluded+=1
+            continue
+        endpoint=row.get('endpoint',row.get('direction'))
+        system=row.get('system')
+        if system is None and 'gate_repair_v1' in path.parts and any(
+                bucket in path.parts for bucket in ('gates','legacy','d2t_gates')):
+            system='base_gate/'+row['cell']+'/'+row['model']
+        if system is None or endpoint is None or 'strict' not in row:
+            raise ValueError('Unsupported strict trial schema: '+str(path))
+        values[(system,endpoint)].append(row['strict'])
+    return dict(means={str(k):sum(v)/len(v) for k,v in values.items()},
+                counts={str(k):len(v) for k,v in values.items()},excluded_nonprimary_rows=excluded)
+
+
+if __name__=='__main__':
+    root=Path(__file__).resolve().parent
+    for path in sorted((root/'evidence/results').rglob('trials.jsonl')):
+        print(json.dumps(dict(trial_file=str(path.relative_to(root)),**replay_strict(path)),sort_keys=True))
+""")
     print('Built local evidence bundle:',len(records),'files;',sum(r['bytes'] for r in records),'bytes')
     return 0
 

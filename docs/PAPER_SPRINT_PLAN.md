@@ -64,7 +64,7 @@ and formatting layers 7:29. Both revised Gemma smokes pass (1:38 and 2:01); thei
 production jobs 450906/450907 are queued. Pending HF reservations are two hours, with
 all frozen sample sizes retained. The strict draft format check passes with eight body
 pages, 16 total pages, 183 abstract words, no unfilled visible placeholders, no unresolved
-references and all fonts embedded. Five controller/debug checks pass; 42 distinct targeted
+references and all fonts embedded. Five controller/debug checks pass; 43 distinct targeted
 regression/reporting checks pass across the staged test runs. Archive has zero outstanding
 files. Final interpretation/bundle review follows remaining results; registration and
 format-check success do not establish conference readiness.

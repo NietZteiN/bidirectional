@@ -88,6 +88,26 @@ def test_repair_status_heartbeat_does_not_rebuild_evidence_bundle(tmp_path,monke
     assert manifest.read_bytes()!=before
 
 
+def test_bundle_replay_distinguishes_gate_rows_from_adapter_trials(tmp_path,monkeypatch):
+    artifact=module('sprint_artifact_replay','107_paper_artifact.py')
+    monkeypatch.setattr(artifact,'ROOT',tmp_path)
+    monkeypatch.setattr(artifact,'BUNDLE',tmp_path/'bundle')
+    monkeypatch.setattr(artifact,'selected_paths',lambda:[])
+    artifact.build()
+    spec=importlib.util.spec_from_file_location('bundle_replay',artifact.BUNDLE/'replay_means.py')
+    replay=importlib.util.module_from_spec(spec);spec.loader.exec_module(replay)
+    path=tmp_path/'gate_repair_v1/gates/toy/trials.jsonl';path.parent.mkdir(parents=True)
+    path.write_text(json.dumps(dict(cell='fmt',model='toy',direction='reverse',strict=1))+'\n')
+    report=replay.replay_strict(path)
+    assert report['means'][str(('base_gate/fmt/toy','reverse'))]==1
+    normal=tmp_path/'trials.jsonl'
+    normal.write_text(json.dumps(dict(system='sft',direction='reverse',strict=0))+'\n')
+    assert replay.replay_strict(normal)['means'][str(('sft','reverse'))]==0
+    normal.write_text(json.dumps(dict(direction='reverse',strict=1))+'\n')
+    with pytest.raises(ValueError,match='Unsupported strict trial schema'):
+        replay.replay_strict(normal)
+
+
 def test_publication_reporting_uses_registered_probe_and_null_cell_panels():
     probe=dict(mode='probes',domain='units',model='gemma3-12b')
     robust=dict(probe,mode='robust')
