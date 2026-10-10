@@ -57,6 +57,7 @@ from bidir import arms as A  # noqa: E402
 from bidir.config import DATA_DIR, RESULTS_DIR, RUNS_DIR  # noqa: E402
 from bidir.train import adapter_dir  # noqa: E402
 from bidir import gate_repair as repair  # noqa: E402
+from bidir import paper_sprint  # noqa: E402
 
 SUBMIT = ROOT / "scripts" / "slurm" / "submit.py"
 
@@ -671,6 +672,8 @@ def main() -> int:
         for model in models:
             for seed in seeds:
                 for cell in cells:
+                    if not paper_sprint.allowed('ev_' + job_key(cell, model, seed, tag)):
+                        continue
                     if tag in ['generality_scale_pilot','repair_domain_pilot','repair_legacy_pilot'] and seed != 17 and not generality_replication_valid(cell,model,tag):
                         blocked.append((label,cell,model,'seed17 validity incomplete'))
                         continue

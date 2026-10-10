@@ -1,3 +1,12 @@
+# Current delivery scope — October10, 2026
+
+The [24-hour paper sprint](../docs/PAPER_SPRINT_PLAN.md) stops additional training and
+replication, retains completed evidence and five fixed seed17 explanatory diagnostics.
+The collector generates source-backed diagnostic and general-ability summaries; the
+detached controller rebuilds the draft as validated results arrive. The original larger
+registration is retained as deferred scope. This is a reviewed draft target, not an
+automatic conference submission or proof of a general causal mechanism.
+
 # ACL ARR LaTeX folder
 
 **Directional Collapse in Fine-Tuning: Preserving the Way Back** — an ARR **long paper**, with a **8-page main-content limit**.
@@ -30,9 +39,9 @@ byte for byte; their SHA-256 hashes are recorded in `check_arr.py`.
 
 See [ARGUMENT.md](ARGUMENT.md) for the argument and drafting decisions.
 
-This is an evidence-backed working draft with completed campaign tables and visible placeholders
-for pending analyses and proposed extensions. The format check permits these while drafting;
-the submission check rejects them. Transfer, probes, prompts/templates and recipe sensitivity
+This is an evidence-backed working draft. The sprint fills the contribution, dose and probe
+interpretation from audited evidence, and the collector reports diagnostic progress explicitly.
+The strict format check passes; scientific review and remaining diagnostics are separate. Transfer, probes, prompts/templates and recipe sensitivity
 were separately registered in Amendment 50 and admitted to the autonomous smoke-gated queue.
 Pending allocation is not a successful GPU test. `refs.bib` is a local snapshot of
 `../papers/references.bib`; keep it current when adding citations. Older ACM files under

@@ -1,3 +1,7 @@
+> Active scheduling override, October10: [24-hour paper sprint](docs/PAPER_SPRINT_PLAN.md),
+> Amendment54. No new replication or training; five fixed seed17 diagnostics remain.
+> Earlier grids below are historical/deferred scope. Existing evidence remains retained.
+
 # Run plan — Directional collapse (ACL 2027)
 
 ## Active priority override — 2026-10-03

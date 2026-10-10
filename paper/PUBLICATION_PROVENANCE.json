@@ -279,6 +279,9 @@
     "/scratch/juno/jvl210002/bidir/results/paper_finish_v1/probes/fmt__gemma3-4b/s1234/probes/summary.json": "7e5659610287c278ba89a5dfa76d246804c65b2d46f9d9fd0aae98f5c09bfb2c",
     "/scratch/juno/jvl210002/bidir/results/paper_finish_v1/probes/fmt__gemma3-4b/s1234/probes/trials.jsonl": "783efa2e2481c5e595f48b645ecfd4341a2beb9667ceb88beeb6f2958f35e08a",
     "/scratch/juno/jvl210002/bidir/results/paper_finish_v1/probes/fmt__gemma3-4b/s1234/probes/contrasts.json": "9114198641fd0f52570de2019968f2cf7dbf99e85581d982f44cfe0b9ca5db2e",
+    "/scratch/juno/jvl210002/bidir/results/paper_finish_v1/probes/units__gemma3-12b/s1234/probes/summary.json": "803316ff49e0a2b32e0ee6e5253b2c8e38c1dc21cb98765bb0d6c3bc330bf7c3",
+    "/scratch/juno/jvl210002/bidir/results/paper_finish_v1/probes/units__gemma3-12b/s1234/probes/trials.jsonl": "50a278e7238d34ff4822a82a1fb07b8b5bdfba6be288e056f21f0062016a19e4",
+    "/scratch/juno/jvl210002/bidir/results/paper_finish_v1/probes/units__gemma3-12b/s1234/probes/contrasts.json": "df4c7d9e2f1db85b4d067ae65886f3f6436e7ba9fe997e84b61e0cbc78dfe1be",
     "/scratch/juno/jvl210002/bidir/results/paper_finish_v1/probes/units__gemma3-12b/s42/probes/summary.json": "1f1c21614ec320e4d61a982eed6259a17d1253dc1c82b9d3dac8e6ea1c7fc578",
     "/scratch/juno/jvl210002/bidir/results/paper_finish_v1/probes/units__gemma3-12b/s42/probes/trials.jsonl": "976961146109dfbc8bc0de5d40c07170de25b110a44f6c54d16a4375a75a4304",
     "/scratch/juno/jvl210002/bidir/results/paper_finish_v1/probes/units__gemma3-12b/s42/probes/contrasts.json": "154aea51846932b9bcad176f2e1ff019b933a9e5619510f0ea1b1582214e7075",
@@ -295,13 +298,14 @@
     "/scratch/juno/jvl210002/bidir/results/paper_finish_v1/probes/mt_de-en__llama32-3b/s1234/probes/trials.jsonl": "6c9115d73f00bcd3a0218967428fb3ea30ad131cb8b637b6dc04b8b158255824",
     "/scratch/juno/jvl210002/bidir/results/paper_finish_v1/probes/mt_de-en__llama32-3b/s1234/probes/contrasts.json": "6d11238c3264fce9af2783c172a63c1039dbc1a0eb4014722c51caf8fc1a9d1e"
   },
-  "signature": "209fa17520aa20f592ec93ebc197a34b818ab48077bf5ffe5079013f809fae9b",
+  "signature": "2eddf95724001d151123dea1fe8128282303973723a578866906392139547660",
   "artifacts": [
     "figures/preservation_frontier.pdf",
     "figures/preservation_frontier.png",
     "tables/preservation_summary.tex",
     "tables/preservation_costs.tex",
     "tables/paper_finish_protocol.tex",
+    "tables/publication_probe_ranges.tex",
     "tables/publication_probes.tex",
     "tables/publication_recipe.tex",
     "tables/publication_recipe_ranges.tex",
@@ -309,5 +313,5 @@
     "tables/publication_robust_ranges.tex",
     "tables/transfer_boundaries.tex"
   ],
-  "generator_sha256": "8e76e1198e4fa0e28de5f48c8c0cd477e9c8008cac7020537085bc8e0a2e9d89"
+  "generator_sha256": "552ec9663f966c4d5f9bf14d05236db07e48f150511fe822ae198c2ae6be6a1c"
 }

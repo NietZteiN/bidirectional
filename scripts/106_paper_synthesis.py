@@ -98,6 +98,35 @@ def dataset(run):
     return rows
 
 
+def publication_probe_table(results):
+    """Keep strict endpoints separate and retain adverse training-seed outcomes."""
+    groups=defaultdict(dict)
+    comparisons=[('sft','base'),('mix5','sft'),('replay','sft')]
+    labels={'llama32-3b':'Llama3B','gemma3-4b':'Gemma4B','gemma3-12b':'Gemma12B'}
+    for result in results:
+        summary=result['summary']
+        if summary['mode']!='probes' or not summary.get('eligibility_passed'):continue
+        for endpoint in ['gsm8k','ifeval']:
+            contrasts={(c['a'],c['b']):c['delta_pp'] for c in result['contrasts']['contrasts']
+                       if c['endpoint']==endpoint}
+            key=(summary['domain'],summary['model'],endpoint)
+            if summary['seed'] in groups[key]:raise ValueError('duplicate probe campaign')
+            groups[key][summary['seed']]=[contrasts[pair] for pair in comparisons]
+    rows=[]
+    for (domain,model,endpoint),seeds in sorted(groups.items()):
+        intervals=[f"[{min(v[i] for v in seeds.values()):+.1f}, {max(v[i] for v in seeds.values()):+.1f}]"
+                   for i in range(len(comparisons))]
+        rows.append(' & '.join([domain.replace('_',r'\_')+'/'+labels[model],endpoint,str(len(seeds)),*intervals])+r' \\')
+    return ('\\begin{table*}[t]\n\\centering\\small\n\\begin{tabular}{llllll}\n\\toprule\n'
+        +r'Cell & Endpoint & Seeds & SFT--base & mix5--SFT & Replay--SFT \\'+'\n\\midrule\n'
+        +'\n'.join(rows)+'\n\\bottomrule\n\\end{tabular}\n'
+        +'\\caption{Strict general-ability endpoint changes: descriptive minimum/maximum across '
+        'all completed training seeds, in percentage points. Each difference uses its own fresh '
+        'campaign baseline. These ranges are not confidence intervals. Per-seed paired intervals, '
+        'all objective controls and overlap exclusions remain in the evidence artifact; endpoints '
+        'are not pooled.}\\label{tab:publication-probe-ranges}\n\\end{table*}\n')
+
+
 def frontier_run(run,summary):
     import numpy as np
     rows=dataset(run);systems={r['system']:None for r in rows}
@@ -201,7 +230,8 @@ def main():
     old=json.loads(out.read_text()) if out.exists() else {}
     required=['figures/preservation_frontier.pdf','tables/preservation_summary.tex',
               'tables/preservation_costs.tex','tables/paper_finish_protocol.tex',
-              'tables/publication_recipe_ranges.tex','tables/publication_robust_ranges.tex']
+              'tables/publication_recipe_ranges.tex','tables/publication_robust_ranges.tex',
+              'tables/publication_probe_ranges.tex']
     if old.get('signature')==signature and all((PAPER/name).exists() for name in required):
         print('paper synthesis unchanged');return 0
     spec=importlib.util.spec_from_file_location('publication_planner',ROOT/'scripts/104_paper_finish.py')
@@ -328,6 +358,7 @@ def main():
         cost_limit='runtime and exposure only where recorded; no invented FLOPs, queue or evaluation time'))
     for mode in ('recipe', 'robust'):
         (PAPER/f'tables/publication_{mode}_ranges.tex').write_text(publication_range_table(results, mode))
+    (PAPER/'tables/publication_probe_ranges.tex').write_text(publication_probe_table(results))
     atomic_json(PAPER/'PUBLICATION_PROVENANCE.json',dict(source_sha256=sources,signature=signature,
         artifacts=['figures/preservation_frontier.pdf','figures/preservation_frontier.png',
                    'tables/preservation_summary.tex','tables/preservation_costs.tex',

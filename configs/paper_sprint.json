@@ -1,0 +1,25 @@
+{
+  "protocol": "paper_sprint_24h_v1",
+  "amendment": 54,
+  "enabled": true,
+  "started_utc": "2026-10-10T16:48:14.672677+00:00",
+  "finish_by_utc": "2026-10-11T16:48:14.672677+00:00",
+  "production_jobs": [
+    "ev_mx_hf_fmt_llama32-3b_s17",
+    "ev_mx_hf_mt_de-en_llama32-3b_s17",
+    "ev_mx_layers_fmt_llama32-3b_s17",
+    "ev_mx2_hf_mt_de-en_gemma3-4b_s17",
+    "ev_mx2_hf_units_gemma3-12b_s17"
+  ],
+  "allowed_jobs": [
+    "ev_mx_hf_fmt_llama32-3b_s17",
+    "ev_mx_hf_mt_de-en_llama32-3b_s17",
+    "ev_mx_layers_fmt_llama32-3b_s17",
+    "ev_mx2_hf_mt_de-en_gemma3-4b_s17",
+    "ev_mx2_hf_units_gemma3-12b_s17",
+    "ev_mx2_hf_mt_de-en_gemma3-4b_s17_smoke",
+    "ev_mx2_hf_units_gemma3-12b_s17_smoke"
+  ],
+  "reason": "User requests no further replication, minimal distinct experiments, and a paper snapshot within 24 hours. Reuse completed breadth and contrastive evidence; retain fixed seed17 explanation cells and the units null control. No favorable-outcome selection.",
+  "deferred": "All other new training/evaluation/repair jobs, including new seeds and the unfinished repaired Gemma format contrastive campaign. Completed artifacts are retained."
+}

@@ -1,0 +1,68 @@
+\section{Budget-limited explanatory diagnostics}
+\label{app:mechanism-sprint}
+Amendment54 limits new compute to five fixed seed-17 diagnostics and required engineering smokes. The original 24-job panel remains registered; unrun jobs are deferred. Selection uses the time budget and distinct scientific questions, not new diagnostic outcomes. Completed earlier seeds are retained. These single-seed analyses are exploratory; paired intervals measure test-pair uncertainty, not training-seed stability. All candidates, controls, bands and local steps remain in the evidence bundle.
+Proof-valid diagnostic jobs at this snapshot: 3 of 5.
+In the completed Llama formatting and translation diagnostics, forward SFT lowers gold completion loss in the forward direction and raises it in reverse; mixed-direction SFT lowers reverse loss relative to SFT with small mean forward changes (Table~\ref{tab:sprint-likelihood}). The local SFT gradient cosines are near zero (Table~\ref{tab:sprint-gradients}); these checkpoints provide little support for a simple persistent gradient-conflict account. Gradients at these final checkpoints do not reconstruct interference along the training trajectory. This descriptive evidence concerns answer likelihood and does not establish stored knowledge.
+\begin{table*}[t]
+\centering\small
+\begin{tabular}{lllll}
+\toprule
+Task & Model & Direction & SFT minus base & mix5 minus SFT \\
+\midrule
+fmt & llama32-3b & forward & -0.117 [-0.132, -0.101] & +0.000 [-0.000, +0.001] \\
+fmt & llama32-3b & reverse & +0.121 [+0.104, +0.139] & -0.288 [-0.331, -0.247] \\
+mt\_de-en & llama32-3b & forward & -0.277 [-0.336, -0.220] & +0.004 [-0.003, +0.012] \\
+mt\_de-en & llama32-3b & reverse & +0.103 [+0.075, +0.131] & -0.181 [-0.206, -0.155] \\
+\bottomrule
+\end{tabular}
+\caption{Gold completion NLL per token, paired differences with descriptive 95\% bootstrap intervals on 128 fixed pairs. Negative values favor the first system. Candidate likelihood does not establish generation correctness or stored knowledge. All seeds here are 17.}
+\label{tab:sprint-likelihood}
+\end{table*}
+\begin{table*}[t]
+\centering\small
+\begin{tabular}{lllll}
+\toprule
+Task & Model & SFT & Replay & mix5 \\
+\midrule
+fmt & llama32-3b & -0.018 & +0.004 & +0.010 \\
+mt\_de-en & llama32-3b & -0.000 & +0.048 & +0.059 \\
+\bottomrule
+\end{tabular}
+\caption{Forward/reverse validation-gradient cosine on 16 pairs in local LoRA A/B coordinates. Gemma excludes inactive vision factors. These coordinate-dependent quantities do not by themselves establish interference or causality.}
+\label{tab:sprint-gradients}
+\end{table*}
+\begin{table*}[t]
+\centering\small
+\begin{tabular}{llll}
+\toprule
+Removed band & Matched control & Direction & Success difference \\
+\midrule
+band0\_remove & band0\_scale & forward & -0.043 [-0.062, -0.025] \\
+band0\_remove & band0\_scale & reverse & -0.006 [-0.014, +0.000] \\
+band0\_remove & band0\_random101 & forward & -0.039 [-0.057, -0.021] \\
+band0\_remove & band0\_random101 & reverse & -0.014 [-0.023, -0.004] \\
+band0\_remove & band0\_random202 & forward & -0.037 [-0.055, -0.020] \\
+band0\_remove & band0\_random202 & reverse & +0.000 [+0.000, +0.000] \\
+band1\_remove & band1\_scale & forward & -0.010 [-0.021, +0.000] \\
+band1\_remove & band1\_scale & reverse & +0.096 [+0.070, +0.121] \\
+band1\_remove & band1\_random101 & forward & -0.008 [-0.018, +0.000] \\
+band1\_remove & band1\_random101 & reverse & +0.094 [+0.068, +0.119] \\
+band1\_remove & band1\_random202 & forward & -0.008 [-0.018, +0.000] \\
+band1\_remove & band1\_random202 & reverse & +0.100 [+0.074, +0.125] \\
+band2\_remove & band2\_scale & forward & -0.002 [-0.012, +0.006] \\
+band2\_remove & band2\_scale & reverse & +0.084 [+0.061, +0.107] \\
+band2\_remove & band2\_random101 & forward & +0.000 [-0.010, +0.010] \\
+band2\_remove & band2\_random101 & reverse & +0.082 [+0.057, +0.107] \\
+band2\_remove & band2\_random202 & forward & +0.002 [-0.008, +0.012] \\
+band2\_remove & band2\_random202 & reverse & +0.088 [+0.062, +0.113] \\
+band3\_remove & band3\_scale & forward & +0.002 [+0.000, +0.006] \\
+band3\_remove & band3\_scale & reverse & +0.037 [+0.021, +0.055] \\
+band3\_remove & band3\_random101 & forward & +0.006 [+0.000, +0.014] \\
+band3\_remove & band3\_random101 & reverse & +0.033 [+0.018, +0.051] \\
+band3\_remove & band3\_random202 & forward & +0.008 [+0.002, +0.016] \\
+band3\_remove & band3\_random202 & reverse & +0.043 [+0.025, +0.061] \\
+\bottomrule
+\end{tabular}
+\caption{All fixed-depth removals versus retained-norm-matched controls for formatting/Llama3B (seed17), strict no-echo success differences on 512 pairs with descriptive 95\% paired intervals. Retained and edit norms are both recorded; only retained norms are matched. No best band or control is selected.}
+\label{tab:sprint-layer-controls}
+\end{table*}

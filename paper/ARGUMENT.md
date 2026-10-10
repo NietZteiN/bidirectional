@@ -1,3 +1,21 @@
+# Active drafting scope — October10, 2026
+
+Use the completed evidence to tell the story: one-way fine-tuning can damage an existing
+reverse capability; ordinary reversed-pair SFT is the essential controlled baseline;
+objective-specific gains must survive directional/exposure controls; failed gates, units
+null results and recipe/forward-cost sensitivity limit generality. The paper already has
+substantial seed coverage. No new seed training is required in this sprint.
+
+Amendment54 keeps five fixed seed17 explanation jobs and the two revised Gemma smokes.
+The selected jobs test likelihood/gradient geometry in two domains and two families,
+retain the units null control, and test all formatting layer bands against matched
+controls. Describe new findings as exploratory; preserve all outcomes.19 registered
+mechanism production jobs and the unfinished repaired Gemma-format CL campaign are
+deferred. [Sprint plan](../docs/PAPER_SPRINT_PLAN.md) records the24-hour target.
+
+The earlier argument and registration history follow; future-tense replication plans
+below are superseded by this scope decision.
+
 # Current story — October 9, 2026
 
 The manuscript now follows this spine:

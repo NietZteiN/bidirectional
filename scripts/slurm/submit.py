@@ -154,6 +154,12 @@ def build_script(argv, *, job_name, partition, gres, cpus, mem, time, dependency
 
 
 def submit(script: str, name: str, dry_run: bool) -> str | None:
+    sys.path.insert(0, str(ROOT / 'src'))
+    from bidir.paper_sprint import deferred_reason
+    reason = deferred_reason(name)
+    if reason:
+        print(f'{name}: {reason}', file=sys.stderr)
+        return None
     SLURM_DIR.mkdir(parents=True, exist_ok=True)
     SLURM_LOGS.mkdir(parents=True, exist_ok=True)
     path = SLURM_DIR / f"{name}.sbatch"

@@ -21,6 +21,21 @@ runner=module('paper_runner_test','95_runner.py')
 synthesis=module('paper_synthesis_test','106_paper_synthesis.py')
 
 
+def test_probe_table_keeps_adverse_seeds_and_separate_endpoints():
+    comparisons=[('sft','base'),('mix5','sft'),('replay','sft')]
+    results=[dict(summary=dict(mode='probes',eligibility_passed=True,domain='fmt',
+        model='gemma3-4b',seed=seed),contrasts=dict(contrasts=[dict(a=a,b=b,
+        endpoint=endpoint,delta_pp=delta if endpoint=='gsm8k' else 3)
+        for endpoint in ['gsm8k','ifeval'] for a,b in comparisons]))
+        for seed,delta in [(17,20),(42,-40)]]
+    text=synthesis.publication_probe_table(results)
+    assert '[-40.0, +20.0]' in text
+    assert '[+3.0, +3.0]' in text
+    assert 'gsm8k & 2' in text and 'ifeval & 2' in text
+    with pytest.raises(ValueError,match='duplicate probe'):
+        synthesis.publication_probe_table(results+[results[0]])
+
+
 def test_overflow_requires_real_free_gpu_cpu_memory_and_healthy_node():
     node='NodeName=g-04-02 State=MIXED CPUEfctv=64 CPUAlloc=32 RealMemory=512000 AllocMem=299008 CfgTRES=cpu=64,gres/gpu=4 AllocTRES=cpu=32,gres/gpu=3'
     assert planner.spare_h100_slots(node)==1

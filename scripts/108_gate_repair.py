@@ -13,6 +13,7 @@ ROOT=Path(__file__).resolve().parents[1]
 sys.path.insert(0,str(ROOT/'src'))
 from bidir import gate_repair as repair, paper_suite as suite
 from bidir.pipeline_state import atomic_json
+from bidir import paper_sprint
 
 
 def items():
@@ -101,6 +102,7 @@ def main():
         for item in items():
             state='ready';job=live.get(item['name'])
             if completed(item):state='complete'
+            elif paper_sprint.deferred_reason(item['name']):state=paper_sprint.deferred_reason(item['name'])
             elif job:state='submitted'
             elif item['mode']=='d2t_gate':
                 oracle=dict(mode='d2t',model='granite',name='gr_d2t_schema_oracle')

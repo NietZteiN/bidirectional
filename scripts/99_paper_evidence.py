@@ -41,6 +41,9 @@ def main():
         tracked.update(RESULTS_DIR.glob(pattern))
     tracked.update(STATUS.glob('*.json'))
     tracked.update([Path(__file__),PAPER/'main.tex',ROOT/'scripts/93_numbers.py'])
+    for path in [PAPER/'MECHANISM_DIAGNOSTICS.json',ROOT/'configs/paper_sprint.json',
+                 PAPER/'tables/mechanism_sprint.tex']:
+        if path.exists():tracked.add(path)
     if (PAPER/'planned_evaluations.tex').exists():
         tracked.add(PAPER/'planned_evaluations.tex')
     if (PAPER/'PUBLICATION_ANALYSIS.json').exists():

@@ -1,3 +1,8 @@
+> Amendment54 operational override: [24-hour sprint](PAPER_SPRINT_PLAN.md).
+> Five fixed seed17 production diagnostics remain;19 are deferred. The frozen panel,
+> sample sizes, controls and source proofs below stay unchanged. Report active5-job
+> progress separately from the original24-job registration.
+
 # Explanatory diagnostics — Amendment52
 
 Protocol: `mechanism_explanation_v1`. Source: `configs/mechanism_panel.json`.

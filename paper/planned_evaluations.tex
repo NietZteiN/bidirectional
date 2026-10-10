@@ -4,9 +4,9 @@
 \label{app:planned-evaluations}
 
 This appendix records frozen exploratory additions registered before their measurements.
-Existing new-domain and contrastive campaigns retain priority. Allocation-local smokes precede
+Amendment54 freezes new training and replication for a 24-hour paper sprint. Allocation-local smokes precede
 automatic admission of each new production workload. Registration and queue admission do not
-establish completed results. Visible red markers reserve conclusions to write after analysis.
+establish completed results. The sprint retains completed evidence and five fixed diagnostic jobs.
 Failed gates and the replicated Gemma12B unit-conversion null-collapse result remain visible.
 \IfFileExists{tables/paper_finish_protocol.tex}{\input{tables/paper_finish_protocol.tex}}{}
 
@@ -31,7 +31,12 @@ GPU-type, queue-time, or exposure records remain unavailable. Additional CE is t
 proxy; corpus token counts alone do not establish matched objective FLOPs or wall time.
 \IfFileExists{tables/preservation_summary.tex}{\input{tables/preservation_summary.tex}}{}
 \IfFileExists{tables/preservation_costs.tex}{\input{tables/preservation_costs.tex}}{}
-\paragraph{Result to fill.} \NUM{dose-sentence}
+\paragraph{Scoped finding.} On the representative translation campaign, reversed-pair SFT
+preserves reverse behavior with nearly unchanged forward task performance relative to forward
+SFT (Table~\ref{tab:preservation-summary}). Generic replay recovers less reverse performance
+in that campaign. The units case improves both ways under ordinary SFT; robustness results
+show that preservation and forward costs depend on task and recipe. Recorded budgets support
+within-recipe comparisons, not matched wall-time claims across different objectives.
 
 \subsection{General ability and overlap controls}
 \label{app:general-probes}
@@ -54,7 +59,14 @@ Report strict IFEval and strict GSM8K endpoints separately; loose instruction ch
 numeric extraction remain secondary. Pair endpoint changes within each campaign and show seed
 variation. A concentration claim is scoped to this declared panel; unrelated benchmark scales
 are not subtracted as if interchangeable.
-\paragraph{Result to fill.} \NUM{probe-sentence}
+\IfFileExists{tables/publication_probe_ranges.tex}{\input{tables/publication_probe_ranges.tex}}{}
+\paragraph{Scoped finding.} General retention depends on the endpoint and task
+(Table~\ref{tab:publication-probe-ranges}). Formatting/Gemma4B loses numerical reasoning
+under forward SFT while instruction-following changes are small; replay recovers more of
+that reasoning endpoint than mixed-direction SFT. Translation/Llama3B loses instruction
+following while improving numerical reasoning. Reverse-task recovery therefore does not
+establish general-ability preservation, and the evidence does not support a universal
+disproportionate-loss claim across benchmarks.
 
 \subsection{Independent real-data transfer}
 \label{app:independent-transfer}
@@ -163,7 +175,12 @@ compute controls for objective attribution, and limits revealed by gates and nul
 Generality, disproportionate loss, inexpensive preservation, and recovery are separate claims
 with separate evidence requirements. A favorable contrastive result supports a scoped
 objective contribution; a null or generation-floor result does not establish equivalence.
-\paragraph{Final contribution wording to fill.} \NUM{claim-sentence}
+\paragraph{Supported contribution.} The study tests preservation of an existing reverse
+capability using ordinary supervised training with direction and exposure controls. Its
+contribution is the audited comparison of both task directions, objective attribution
+against matched baselines, and explicit limits from failed gates, null cells and sensitivity
+to training recipes. Exploratory recovery diagnostics qualify hypotheses about accessibility;
+they do not establish a universal internal mechanism.
 
 The local reproducibility package includes permitted corpora or versioned reconstruction
 recipes; overlap and scorer audits; manifests and environment settings; irreproducible

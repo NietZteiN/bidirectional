@@ -63,11 +63,12 @@ forward optimization. Recovery experiments distinguish behavioral loss from evid
 persistent capability. Extensions to cross-language code translation, Boolean reasoning, and
 unit conversion retain failed small-model gates. Larger-model unit-conversion replications improve
 both directions under forward-only training, providing a boundary case to collapse.
-The initial contrastive campaign is complete; registered scale and domain extensions continue.
+Completed contrastive comparisons retain directional, extra-compute, and shuffled-pair controls.
 The methodological contribution is a testable comparison: evaluate both task directions, and
 compare proposed bidirectional objectives with ordinary supervised fine-tuning that accounts
-for directional information and computational cost. Quantitative conclusions remain pending
-integration and validation of the completed experiments.
+for directional information and computational cost. Forward-only contrastive alignment shows
+no consistent advantage over additional-compute and shuffled-pair controls; mixed-direction
+benefits vary across tasks and models.
 \end{abstract}
 
 \section{Introduction}
@@ -216,21 +217,21 @@ are not independent observations.}
 
 \paragraph{Generic replay as a control.} Every valid main pass includes generic replay where
 registered. Its contrast with reversed-pair SFT tests directional content beyond general rehearsal.
-Aggregate contrasts and their intervals remain to be integrated.
+The fixed-panel comparisons retain task-specific costs and gains.
 \paragraph{Instruction-following retention.} General-ability probe artifacts are retained;
-their overlap and comparability audit remains pending. The draft analysis pairs changes in
+their overlap exclusions are recorded before generation. The completed analysis pairs changes in
 inverse success with changes in instruction following and general reasoning on a fixed panel
 (Appendix~\ref{app:general-probes}). Probe instances must be checked against task training,
-replay, and filler data. No preservation or disproportionate-loss claim is made from task
-scores alone.
+replay, and filler data. Endpoint-specific changes preclude a universal preservation or
+disproportionate-loss claim from task scores alone.
 \paragraph{Moderators.} Model family, size, task orientation, and starting capability are
 reported separately. Seed ranges will accompany partial-collapse claims.
 
 \section{Preserving the reverse direction with existing pairs}
 \label{sec:dose}
 The registered dose ladder tests whether a small share of reversed pairs preserves reverse
-success. Main-grid evaluations are complete for eligible cells; the final dose analysis must
-combine reverse recovery, forward retention, seed ranges, and realized budgets.
+success. Main-grid evaluations are complete for eligible cells; the fixed reporting panel
+combines reverse recovery, forward retention, seed ranges, and realized budgets.
 
 \paragraph{Where the knee is.} We define the knee as the smallest dose whose reverse success
 reaches $90\%$ of \textsc{mix50}'s in that cell. A point estimate alone does not establish
@@ -313,12 +314,12 @@ directions. Reverse-answer likelihood versus free generation and controlled grad
 interventions would distinguish competing accounts. Direction probes must control input
 language/format cues. The never-had task differs from the recovered tasks, and LoRA leaves
 base weights unchanged by construction; neither observation alone establishes retained
-internal knowledge. Amendment52 registers a fixed four-cell, three-seed panel with null cells retained,
-likelihood and held-out local update tests, and four depth bands compared with
-controls matched on retained effective update norm. Matching does not also equalize
-the edit norm. Gemma gradient interventions use text LoRA factors, excluding inactive vision factors.
-Engineering smokes gate production; no new diagnostic results are
-claimed until these checks complete.
+internal knowledge. A disclosed compute-budget amendment retains five fixed seed-17 diagnostics
+from the registered panel: likelihood and local-update tests on formatting, translation and the
+units null cell, plus all four formatting depth bands and retained-norm-matched controls.
+Matching does not also equalize edit norm. Gemma uses text LoRA factors, excluding inactive
+vision factors. These single-seed tests are exploratory; completed findings and outstanding
+proof checks appear in Appendix~\ref{app:mechanism-sprint}.
 
 \section{Consequences for attribution}
 \label{sec:attrib}
@@ -422,12 +423,11 @@ both directions. These controls test the scope of an objective-specific gain wit
 that auxiliary objectives are universally unnecessary.
 
 \section{Conclusion}
-Paired training data makes direction a variable that can be changed without collecting new
-pairs. Evaluating only the trained direction leaves its inverse unchecked. Our study is
-organized around preservation, boundary conditions, and objective attribution: how much can
-ordinary reversed-pair SFT accomplish, and what do more elaborate methods contribute beyond
-that baseline? The final conclusions will follow the audited generation results, including
-null effects and failed eligibility gates.
+One-way fine-tuning can impair an existing reverse capability. Reversing a share of existing
+pairs supplies the essential ordinary-SFT baseline for preserving it. Objective-specific gains
+must survive directional and additional-compute controls. Failed gates, unit-conversion null
+results, and task/recipe sensitivity bound that claim; exploratory diagnostics do not identify
+a universal mechanism.
 
 % ---------------------------------------------------------------------------
 % ARR requires a Limitations section. It is unnumbered and does not count against the page
@@ -461,14 +461,14 @@ the D2T measurement is still undergoing validation.
 the translation cells cover two
 language pairs, both with English on one side. Synthetic task variants do not establish natural
 code or unrestricted reasoning generality, and reused semantic corpora are not independent evidence.
-Independent real-data transfer and alternate-prompt/training-recipe tests are drafted in
-Appendices~\ref{app:independent-transfer} and~\ref{app:robustness}; they have no measured
-results yet.
+Independent transfer retains failed eligibility boundaries; completed prompt and training-recipe
+tests retain adverse and null findings (Appendices~\ref{app:independent-transfer} and~\ref{app:robustness}).
 
 % Acknowledgments belong only in the camera-ready version.
 \bibliography{refs}
 
 \appendix
 \input{planned_evaluations}
+\IfFileExists{tables/mechanism_sprint.tex}{\input{tables/mechanism_sprint.tex}}{}
 
 \end{document}

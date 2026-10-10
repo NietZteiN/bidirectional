@@ -12,13 +12,16 @@ ROOT=Path(__file__).resolve().parents[1]
 sys.path.insert(0,str(ROOT/'src'))
 from bidir import mechanism_suite as mx, mechanism_text_graph as text_graph
 from bidir.pipeline_state import atomic_json
+from bidir import paper_sprint
 
 
 def launch(job,dry=False):
     partition='h200' if job['model']=='gemma3-12b' else 'h100,h200'
+    if paper_sprint.plan() and job['mode']=='hf':partition='h100,h200'
     duration=('01:30:00' if job['mode']=='hf' else '01:00:00') if job['smoke'] else '08:00:00'
     repaired=text_graph.applies(job)
     if repaired:duration='00:20:00' if job['smoke'] else '04:00:00'
+    if paper_sprint.plan() and job['mode']=='hf' and not job['smoke']:duration='02:00:00'
     job_name=text_graph.name(job) if repaired else job['name']
     worker='scripts/116_mechanism_text_graph_worker.py' if repaired else 'scripts/113_mechanism_worker.py'
     argv=[worker,'--domain',job['domain'],'--model',job['model'],
@@ -31,7 +34,8 @@ def launch(job,dry=False):
     if dry:return 'DRY'
     jid=next(line.split()[1] for line in result.stdout.splitlines() if line.startswith('submitted '))
     # Explicitly put explanatory diagnostics behind the user's priority-one domain/CL panel.
-    subprocess.run(['scontrol','update','JobId='+jid,'Nice=1000'],check=True,capture_output=True,timeout=30)
+    nice='0' if paper_sprint.plan() else '1000'
+    subprocess.run(['scontrol','update','JobId='+jid,'Nice='+nice],check=True,capture_output=True,timeout=30)
     return jid
 
 
@@ -66,6 +70,14 @@ def main():
             complete=text_graph.completed if repaired else mx.completed
             jid=live.get(job_name);state='ready'
             if complete(job):state='complete'
+            elif paper_sprint.deferred_reason(job_name):
+                state=paper_sprint.deferred_reason(job_name)
+                if jid and not args.dry_run:
+                    # Pending work cannot start after the sprint deadline. Running selected
+                    # diagnostics retain their bounded walltime and finish writing evidence.
+                    pending=subprocess.run(['squeue','-h','-j',jid,'-t','PENDING','-o','%i'],
+                        capture_output=True,text=True,check=True,timeout=30).stdout.strip()
+                    if pending:subprocess.run(['scancel',jid],check=True,timeout=30)
             elif jid:state='submitted'
             elif job_name.split('_',1)[1] in blocked:state='quarantined'
             elif repaired and not (ROOT/'runs/feeder/mechanism_text_graph.enabled').exists():state='awaiting tested text-graph repair'

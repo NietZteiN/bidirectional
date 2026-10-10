@@ -13,7 +13,7 @@ from datetime import datetime,timezone
 
 ROOT=Path(__file__).resolve().parents[1]
 sys.path.insert(0,str(ROOT/'src'))
-from bidir import paper_suite as suite
+from bidir import paper_suite as suite, paper_sprint
 from bidir.pipeline_state import atomic_json,evaluation_succeeded
 
 
@@ -168,6 +168,7 @@ def schedule(max_new=4,dry=False):
     for mode,cell,seed,smoke in all_items:
         job_name=name(mode,cell,seed,smoke);state='ready';dep=None
         if completed(mode,cell,seed,smoke):state='complete'
+        elif paper_sprint.deferred_reason(job_name):state=paper_sprint.deferred_reason(job_name)
         elif job_name in live:state='submitted'
         elif job_name.split('_',1)[1] in quarantined:state='quarantined'
         elif not smoke and not enabled:state='awaiting debug enablement'

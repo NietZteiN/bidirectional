@@ -2066,3 +2066,31 @@ slots in the24-job explanatory panel. Admission/analysis require revised source/
 trial hashes and matching successful revised smoke status. Old failures are superseded
 implementation attempts, never relabelled as successes or merged as scientific results.
 New-domain and contrastive priority remains first.
+
+
+### Amendment54 — user-directed 24-hour paper sprint, 2026-10-10
+
+The user changes the resource/scope objective to no new replication and a minimal set
+of distinct experiments, targeting a paper snapshot within24 hours. This is a disclosed
+post-registration budget change after earlier results, not an outcome-driven exclusion
+of new diagnostic measurements. Completed seeds, null/adverse findings, failed gates and
+cancelled-job artifacts remain retained. Cancelled work is neither scientific failure nor
+completion. The unfinished repaired-format Gemma12 contrastive campaign is deferred;
+existing original contrastive results retain their full control comparisons.
+
+The operational allowlist in configs/paper_sprint.json retains five seed17 production jobs:
+HF likelihood/gradient/local-step diagnostics for fmt/Llama3B, mt_de-en/Llama3B,
+mt_de-en/Gemma4B, and the mandatory units/Gemma12 null control; plus controlled layer
+interventions for fmt/Llama3B. Two revised Gemma engineering smokes still gate admission.
+No original sample sizes, candidates, systems, bands, random controls, local step sizes,
+checkpoints or completion proofs are changed. All predetermined within-job results must
+be reported. Single-seed explanatory findings are exploratory and cannot establish
+training-seed stability or a general mechanism. Other19 original production diagnostics
+remain registered but deferred; do not change24 to5 in the historical completion count.
+
+The admission deadline is 2026-10-11T16:48:14.672677+00:00. Autonomous planners and the central
+submitter reject non-allowlisted work and any new submission at/after the deadline.
+Pending selected diagnostics are cancelled at the deadline; already-running selected
+jobs finish under bounded walltime. Analysis, preservation of evidence and paper refresh
+continue. The snapshot explicitly distinguishes valid, failed, deferred and unresolved
+work. See docs/PAPER_SPRINT_PLAN.md for the delivery scope and limitations.
