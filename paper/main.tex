@@ -46,22 +46,15 @@
 \maketitle
 
 \begin{abstract}
-Training on one direction of a paired task can improve forward performance while damaging
-an existing ability to perform the backward task. We study this tradeoff across code
-transformation, format conversion, translation, semantic parsing, factual relations,
-execution prediction, and algebra. Our preservation baseline replaces a small fraction of
-forward training pairs with their reversals, using ordinary cross-entropy from the outset.
-In formatting, $1\%$ reversal yields \NUM{main-fmt-mix1-backward}\% backward success
-versus \NUM{main-fmt-sft-backward}\% after forward-only training, while forward success
-is \NUM{main-fmt-mix1-forward}\% versus \NUM{main-fmt-sft-forward}\%.
-Code, translation, and semantic parsing also show substantial backward benefits, with
-varying forward costs and required doses. Replacement fixes training-example counts and
-optimizer steps and requires no new paired corpus. Comparisons against contrastive and
-other auxiliary objectives test what those objectives add beyond directional supervision;
-mixed-direction losses sometimes add benefits. Likelihood and layer-intervention diagnostics
-suggest output-selection interference as a supporting explanation. Adverse algebra doses
-and a repeated unit-conversion null delimit the result. Small-dose reversed-pair SFT is a
-necessary baseline for attributing preservation to specialized objectives.
+Fine-tuning a language model to perform a task in one direction can improve that task
+while weakening its ability to work in the reverse direction. We study this tradeoff
+across several domains and test a simple way to preserve both abilities: replace a small
+share of training examples with their reversed pairs. In several settings, this change
+preserves much of the reverse-task performance while retaining most forward gains,
+without adding training examples or optimizer steps. The benefit and required proportion
+vary by task. Comparisons with contrastive and other auxiliary objectives show that
+reversed-pair training is an essential baseline for evaluating specialized preservation
+methods.
 \end{abstract}
 
 \section{Introduction}
