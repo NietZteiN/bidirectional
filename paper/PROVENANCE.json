@@ -1,6 +1,6 @@
 {
   "generated_by": "scripts/99_paper_evidence.py",
-  "updated_utc": "2026-10-11T01:46:47.858174+00:00",
+  "updated_utc": "2026-10-11T01:48:00.133714+00:00",
   "artifacts": {
     "tables/core_inventory.tex": {
       "evidence": "EVIDENCE_SNAPSHOT.json",
@@ -1718,5 +1718,5 @@
       }
     }
   },
-  "input_signature": "dd92f4e618a3653231c597e41f3fa791e09a1052a66226702d9f8fba33850b75"
+  "input_signature": "a9bef4b855fc1844fe2e20e4648fdf096a834362b02e2a8c3f17599c3fb1b8b7"
 }

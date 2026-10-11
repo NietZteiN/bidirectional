@@ -103,7 +103,7 @@ def render(core, contrastive, auxiliary):
              r'success at most half the same-pass base (a descriptive threshold). ')
     primary = '\n'.join([r'\begin{table*}[!t]',r'\centering\footnotesize',
         grid(core,CORE_ARMS,['Base','SFT',r'1\%',r'5\%',r'10\%',r'25\%',r'50\%',
-                            'Replay','Rev.','Fwd2$\times$','Flip','Multi'],dose_groups=True),
+                            'Replay','Rev.',r'Fwd2$\times$','Flip','Multi'],dose_groups=True),
         r'\caption{'+intro+r'Llama 3.2-3B, fixed seed 17, all eleven audited task orientations. '
         r'Dose columns replace that share of forward pairs with their reversals, keeping '
         r'instances and steps fixed. Replay replaces $50\%$ with generic instructions; '
