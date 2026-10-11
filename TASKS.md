@@ -1,7 +1,9 @@
 # Experiment and task checklist
 
-Updated October 10, 2026. Amendment57 prioritizes calculating every missing table entry.
-The table-completion controller is active; the 32 earlier experiment jobs remain held.
+Updated October 11, 2026. All seven prioritized table-completion campaigns are finished:
+all twelve missing arm/task/model combinations are measured, with no missing numeric
+table entries. The final SQL evaluation completed at 09:19 CDT and the paper refreshed.
+The detached controller is healthy and idle; the 32 earlier experiment jobs remain held.
 The completed sprint draft is frozen at Git commit34de8d0; its
 [completion checklist](archive/task_checklists/TASKS-2026-10-10-sprint-complete.md) and
 [receipts](paper/bidir/SPRINT_COMPLETION.json) remain historical evidence.
@@ -14,21 +16,24 @@ The completed sprint draft is frozen at Git commit34de8d0; its
       including the six previously omitted null/adverse cells; label them descriptively.
 - [x] Register seven seed17 campaigns covering twelve missing arm combinations and
       24 main-table forward/backward percentages. Queue first GPU checks for all seven.
-- [ ] Evaluate saved relation/Llama3B mix1/mix5/mix10 adapters together with every
+- [x] Evaluate saved relation/Llama3B mix1/mix5/mix10 adapters together with every
       displayed control and a fresh base; refresh both primary and legacy tables.
-- [ ] Train execution/Llama3B mix1/mix5/mix10 after valid GPU checks, then evaluate
+- [x] Train execution/Llama3B mix1/mix5/mix10 after valid GPU checks, then evaluate
       all twelve main-grid arms together. Below-batch doses remain exploratory.
-- [ ] Train and evaluate code/Llama3B unlikelihood and round-trip; translation/Llama3B
+- [x] Train and evaluate code/Llama3B unlikelihood and round-trip; translation/Llama3B
       and Llama8B round-trip; SQL/Llama3B and Llama8B unlikelihood. Keep same-pass controls.
 - [x] Keep CFT code-specific, as requested. Mark its four translation/SQL combinations
       as not applicable; no cross-domain CFT variant is queued.
-- [ ] Finish all eligible production table cells and verify the remaining-gap audit.
+- [x] Finish all eligible production table cells and verify the remaining-gap audit:
+      zero pending campaign arms and zero missing numeric fields.
 - [x] Run the detached controller in exclusive table mode after logout/renewal;
       skip broad scheduling and old shell-queue launches while this priority is active.
 - [x] Pass 43 targeted regression tests and all five detached-controller health checks;
       rebuild the eight-body-page draft with resolved numeric macros and references.
-      GPU checks are queued, not yet validated. The gap report distinguishes missing
-      arm combinations from duplicate positions in the primary and appendix tables.
+      All seven initial GPU checks and subsequent production phases passed. The final
+      PDF has seven body pages, 26 total pages and a 126-word abstract. The full suite
+      passed 441 tests after the manuscript-folder move; final numerical and controller
+      checks cover the completed results.
 
 See [table completion plan](docs/TABLE_COMPLETION_PLAN.md). Current job/phase progress:
 [table scheduler](runs/feeder/table_completion_status.json). New results enter the paper

@@ -1,5 +1,6 @@
-> Current scope, October 10: Amendment57 calculates the missing numerical table entries first.
-> The exclusive table-completion controller is active; the 32 earlier jobs remain held.
+> Current status, October 11: all seven prioritized table-completion campaigns are finished;
+> all twelve missing comparisons are measured and no numeric table entries remain missing.
+> The final SQL evaluation completed at 09:19 CDT. The 32 earlier jobs remain held.
 > See [table completion plan](../../docs/TABLE_COMPLETION_PLAN.md) and
 > [remaining table gaps](TABLE_COMPLETION_AUDIT.json).
 > Amendment 55's resumed campaign and the completed sprint remain historical records.

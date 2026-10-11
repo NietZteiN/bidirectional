@@ -1,11 +1,11 @@
 # Results progress — October 11, 2026 morning CDT
 
-Six of the seven prioritized table-completion campaigns finished overnight.
-Eleven of twelve missing arm/task/model combinations are now reported, and the
-primary base/SFT/1%/5% table is fully populated. SQL/Llama3B unlikelihood is the
-only missing combination; its full evaluation is running as job 451562 after a
-diagnosed host-memory failure and an increase from 64 to 128 GiB. No scientific
-setting changed. Earlier unrelated jobs remain held.
+All seven prioritized table-completion campaigns are finished, filling all twelve
+missing arm/task/model combinations. There are zero pending campaign arms and zero
+missing numeric table fields. Final SQL/Llama3B evaluation 451562 completed at
+09:19 CDT with exit code zero, in 48 minutes 34 seconds. Its successful retry used
+128 GiB of host memory after the earlier 64 GiB failure; no scientific setting changed.
+The paper has refreshed with its results. The 32 earlier unrelated jobs remain held.
 
 ## Newly completed objective comparisons
 
@@ -29,6 +29,19 @@ on Llama8B, the 5% mixture scores 73.5%/69.9%, compared with 72.4%/40.6% for
 round-trip and 74.1%/0.1% for unlikelihood. Corresponding Llama3B backward scores
 are 68.5%, 67.1% and 0.0%.
 
+The final SQL/Llama3B comparison is:
+
+| Method | Forward success (%) | Backward success (%) |
+|---|---:|---:|
+| Base | 49.1 | 51.4 |
+| Forward SFT | 62.0 | 24.1 |
+| 5% reversal | 60.8 | 55.4 |
+| Unlikelihood | 62.1 | 3.6 |
+| Round-trip | 61.9 | 48.9 |
+
+Here, 5% reversal preserves backward success with a small forward cost relative to
+SFT. Unlikelihood has the lowest backward success; that negative result is retained.
+
 ## Newly completed small-corpus comparisons
 
 Relations: forward/backward success is 86.7%/71.1% for SFT, 88.1%/73.3% for
@@ -38,17 +51,18 @@ experiments show modest gains; they do not reproduce the dramatic directional
 loss in formatting or code.
 
 The refreshed audit independently replays stored binary scores and finds no
-mismatches in 562 printed table percentages or 331 registered numerical values.
-It also verifies 758 source hashes, 21 corpus split sizes and 20 frozen translation
-threshold rows. `RESULTS_PREFLIGHT_2026-10-11.json` binds these checks to the exact
+mismatches in 564 printed table percentages or 333 registered numerical values.
+It also verifies 762 source hashes, 21 corpus split sizes and 20 frozen translation
+threshold rows, replaying 125 distinct stored campaigns. The final
+`TABLE_COMPLETION_PREFLIGHT_2026-10-11.json` binds these checks to the completed
 document/report hashes. Strict PDF checks pass: seven body pages, 26 total pages,
 126-word abstract, embedded fonts and resolved references/numerical macros.
 
-The paper will refresh automatically after the final SQL evaluation succeeds.
-Success remains conditional on the running job finishing; its two missing
-percentages remain dashes until then.
+All five detached-controller health checks pass. No GPU experiment is currently
+running; the CPU controller remains healthy and idle, with the earlier holds intact.
+The full regression suite passed 441 tests after the manuscript-folder move.
 
-## Remaining-time estimate — approximately 08:40 CDT
+## Earlier remaining-time estimate — approximately 08:40 CDT (closed)
 
 Job 451562 has run for about ten minutes. Both generation stages have completed,
 and execution-based SQL scoring is underway. It is still running with its 128 GiB
@@ -61,7 +75,6 @@ the completed SQL run and the current stage; scoring has no per-example progress
 counter and can vary with the generated queries. A further failure would extend
 the estimate. The four-hour Slurm limit is a resource ceiling, not the forecast.
 
-The current PDF already contains all six completed campaigns. Only the two
-SQL/Llama3B unlikelihood percentages await measurement. The automatic controller
-will ingest a successful receipt and rebuild the tables/PDF; the earlier 32 holds
-will remain in place.
+That forecast is now closed: evaluation completed at 09:19 CDT and the controller
+incorporated the final two SQL percentages into the tables/PDF. The earlier 32 holds
+remain in place; their experiments were outside this completion forecast.

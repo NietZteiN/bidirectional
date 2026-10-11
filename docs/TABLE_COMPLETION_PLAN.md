@@ -1,5 +1,11 @@
 # Calculate the missing tables first — Amendment 57
 
+**Completed October 11, 2026, 09:19 CDT.** All seven campaigns finished, filling all
+twelve missing arm/task/model combinations. The paper has zero pending campaign arms
+and zero missing numeric fields. SQL/Llama3B evaluation 451562 completed successfully
+in 48 minutes 34 seconds; its results are incorporated in the tables and PDF. The 32
+earlier jobs remain held. Dated checkpoints below describe earlier states.
+
 The user's clarification supersedes the prose-only interpretation of Amendment56.
 Complete unmeasured numerical table entries first. New table work is authorized; the
 32 previously held jobs remain held so unrelated experiments cannot consume priority.
@@ -78,7 +84,7 @@ unlikelihood remains unreported (two directional percentages).
 - [x] English→German round-trip, Llama3B
 - [x] English→German round-trip, Llama8B
 - [x] SQL unlikelihood, Llama8B
-- [ ] SQL unlikelihood full evaluation, Llama3B: job 451562
+- [x] SQL unlikelihood full evaluation, Llama3B: job 451562 completed at 09:19 CDT
 
 SQL/Llama3B training and generation smoke passed. Full evaluation 451491 exhausted
 64 GiB of host RAM on g-04-02; Slurm recorded an OOM kill, although the worker's
@@ -102,3 +108,13 @@ on successful completion. Six campaigns and eleven missing combinations remain
 complete; one combination/two percentages remain pending. The current paper is
 already updated with every completed campaign. This forecast does not cover the
 32 earlier held jobs, which are outside the active table-completion priority.
+
+## Final completion — October 11, 2026
+
+The SQL retry completed with exit code zero and unchanged experimental settings.
+Forward/backward success is 62.0%/24.1% for SFT, 60.8%/55.4% for 5% reversal,
+62.1%/3.6% for unlikelihood and 61.9%/48.9% for round-trip. The base is 49.1%/51.4%.
+The unfavorable unlikelihood result is retained. The final numerical preflight and
+strict PDF checks verify the completed manuscript; the controller passes all five
+health checks. See [completed results](RESULTS_PROGRESS_2026-10-11.md) and
+[final numerical preflight](TABLE_COMPLETION_PREFLIGHT_2026-10-11.json).

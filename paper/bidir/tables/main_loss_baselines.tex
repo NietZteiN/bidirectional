@@ -50,8 +50,8 @@ Code transformation & L3B & F & 37.7 & 82.1 & \textcolor{blue!60!black}{\textbf{
 Question $\to$ SQL & L8B & F & 62.0 & 71.5 & \textcolor{blue!60!black}{\textbf{71.9}} & \textit{n/a} & 70.2 & 71.1 \\
  &  & B & 54.9 & 51.5 & \textcolor{blue!60!black}{\textbf{57.8}} & \textit{n/a} & 6.5 & 58.6 \\
 \addlinespace[2pt]
-Question $\to$ SQL & L3B & F & 49.1 & 62.3 & \textcolor{blue!60!black}{\textbf{61.0}} & \textit{n/a} & -- & 61.5 \\
- &  & B & 51.5 & \textcolor{red!70!black}{\textbf{23.3}} & \textcolor{blue!60!black}{\textbf{55.2}} & \textit{n/a} & -- & 48.2 \\
+Question $\to$ SQL & L3B & F & 49.1 & 62.0 & \textcolor{blue!60!black}{\textbf{60.8}} & \textit{n/a} & 62.1 & 61.9 \\
+ &  & B & 51.4 & \textcolor{red!70!black}{\textbf{24.1}} & \textcolor{blue!60!black}{\textbf{55.4}} & \textit{n/a} & 3.6 & 48.9 \\
 \bottomrule
 \end{tabular}
 \caption{Strict success (\%); F/B means forward/backward. Colors follow Table~\ref{tab:main-adaptations}. Contrastive and other auxiliary objectives, training seed 17. Each task/model comparison evaluates its own base and adaptations on the same examples. L/G denotes Llama/Gemma; B denotes billions of parameters. The $5\%$ column is ordinary reversed-pair SFT. CL-F/M adds alignment to forward/mixed-direction CE; Shuffle randomizes positive pairs; CE-F+/M+ adds CE as an exposure proxy; CFT is the reconstructed code-equivalence contrastive fine-tuning recipe. Dashes denote objectives not yet evaluated; n/a marks code-equivalence CFT outside code. Paired contrasts and variation across training runs appear in Appendix~\ref{app:complete-main-comparisons}.}\label{tab:main-loss-baselines}

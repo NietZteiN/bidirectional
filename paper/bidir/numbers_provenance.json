@@ -1,5 +1,5 @@
 {
-  "generated_utc": "2026-10-11T14:00:46.124400+00:00",
+  "generated_utc": "2026-10-11T14:21:28.794011+00:00",
   "resolved": {
     "audited-core-cells": {
       "value": "91",
@@ -254,7 +254,9 @@
         "/scratch/juno/jvl210002/bidir/results/2026-10-11/py_cpp_typed_v2/llama31-8b/repair_domain_pilot_s42/followup_contrasts.json",
         "/scratch/juno/jvl210002/bidir/results/2026-10-11/py_cpp_typed_v2/llama31-8b/repair_domain_pilot_s42/trials.jsonl",
         "/scratch/juno/jvl210002/bidir/results/2026-10-11/sql/llama31-8b/attrib_table_fill_s17/followup_contrasts.json",
-        "/scratch/juno/jvl210002/bidir/results/2026-10-11/sql/llama31-8b/attrib_table_fill_s17/trials.jsonl"
+        "/scratch/juno/jvl210002/bidir/results/2026-10-11/sql/llama31-8b/attrib_table_fill_s17/trials.jsonl",
+        "/scratch/juno/jvl210002/bidir/results/2026-10-11/sql/llama32-3b/attrib_table_fill_s17/followup_contrasts.json",
+        "/scratch/juno/jvl210002/bidir/results/2026-10-11/sql/llama32-3b/attrib_table_fill_s17/trials.jsonl"
       ]
     },
     "core-collapse-cells": {
@@ -510,7 +512,9 @@
         "/scratch/juno/jvl210002/bidir/results/2026-10-11/py_cpp_typed_v2/llama31-8b/repair_domain_pilot_s42/followup_contrasts.json",
         "/scratch/juno/jvl210002/bidir/results/2026-10-11/py_cpp_typed_v2/llama31-8b/repair_domain_pilot_s42/trials.jsonl",
         "/scratch/juno/jvl210002/bidir/results/2026-10-11/sql/llama31-8b/attrib_table_fill_s17/followup_contrasts.json",
-        "/scratch/juno/jvl210002/bidir/results/2026-10-11/sql/llama31-8b/attrib_table_fill_s17/trials.jsonl"
+        "/scratch/juno/jvl210002/bidir/results/2026-10-11/sql/llama31-8b/attrib_table_fill_s17/trials.jsonl",
+        "/scratch/juno/jvl210002/bidir/results/2026-10-11/sql/llama32-3b/attrib_table_fill_s17/followup_contrasts.json",
+        "/scratch/juno/jvl210002/bidir/results/2026-10-11/sql/llama32-3b/attrib_table_fill_s17/trials.jsonl"
       ]
     },
     "core-domain-count": {
@@ -766,7 +770,9 @@
         "/scratch/juno/jvl210002/bidir/results/2026-10-11/py_cpp_typed_v2/llama31-8b/repair_domain_pilot_s42/followup_contrasts.json",
         "/scratch/juno/jvl210002/bidir/results/2026-10-11/py_cpp_typed_v2/llama31-8b/repair_domain_pilot_s42/trials.jsonl",
         "/scratch/juno/jvl210002/bidir/results/2026-10-11/sql/llama31-8b/attrib_table_fill_s17/followup_contrasts.json",
-        "/scratch/juno/jvl210002/bidir/results/2026-10-11/sql/llama31-8b/attrib_table_fill_s17/trials.jsonl"
+        "/scratch/juno/jvl210002/bidir/results/2026-10-11/sql/llama31-8b/attrib_table_fill_s17/trials.jsonl",
+        "/scratch/juno/jvl210002/bidir/results/2026-10-11/sql/llama32-3b/attrib_table_fill_s17/followup_contrasts.json",
+        "/scratch/juno/jvl210002/bidir/results/2026-10-11/sql/llama32-3b/attrib_table_fill_s17/trials.jsonl"
       ]
     },
     "main-algebra-base-backward": {

@@ -1,32 +1,7 @@
 {
   "generator_sha256": "acef6dbeabf2d673379d2db38779fea202780df97c5dbc83b1a4d3bbe6ba78bf",
-  "missing_numeric_fields": [
-    {
-      "table": "main_loss_baselines.tex",
-      "row": 53,
-      "column": 8,
-      "source_row": "Question $\\to$ SQL & L3B & F & 49.1 & 62.3 & \\textcolor{blue!60!black}{\\textbf{61.0}} & \\textit{n/a} & -- & 61.5 \\\\"
-    },
-    {
-      "table": "main_loss_baselines.tex",
-      "row": 54,
-      "column": 8,
-      "source_row": " &  & B & 51.5 & \\textcolor{red!70!black}{\\textbf{23.3}} & \\textcolor{blue!60!black}{\\textbf{55.2}} & \\textit{n/a} & -- & 48.2 \\\\"
-    }
-  ],
-  "pending_campaign_arms": [
-    {
-      "table": "main_loss_baselines.tex",
-      "domain": "sql",
-      "model": "llama32-3b",
-      "seed": 17,
-      "arm": "unlikelihood",
-      "directions": [
-        "forward",
-        "reverse"
-      ]
-    }
-  ],
+  "missing_numeric_fields": [],
+  "pending_campaign_arms": [],
   "code_specific_cft_entries": [
     {
       "table": "main_loss_baselines.tex",
