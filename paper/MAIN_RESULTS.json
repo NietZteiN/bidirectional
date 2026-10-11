@@ -1,5 +1,5 @@
 {
-  "signature": "aaeb76ce4a7cebc4877e1be5641d770d68ef81631964a8d7ab345530c4effe22",
+  "signature": "7d4873b22e474deaafa0937ec8e2c8020e77f4e8c91b64f22c0175501912a912",
   "selection": "Llama3B seed 17 all11 orientations; all original seed 17 CL and audited auxiliary cells",
   "core": [
     {
@@ -8,53 +8,53 @@
       "seed": 17,
       "run": "/scratch/juno/jvl210002/bidir/results/2026-09-17/mt_de-en/llama32-3b/small_s17",
       "means": {
-        "rev": {
-          "forward": 0.6353754940711462,
-          "reverse": 0.8517786561264822
-        },
-        "mixedtask": {
-          "forward": 0.6907114624505929,
-          "reverse": 0.7154150197628458
-        },
-        "mix10": {
-          "forward": 0.6620553359683794,
-          "reverse": 0.8280632411067194
-        },
-        "replay": {
-          "forward": 0.6857707509881423,
-          "reverse": 0.5899209486166008
+        "sft": {
+          "forward": 0.6709486166007905,
+          "reverse": 0.0
         },
         "flip": {
           "forward": 0.6442687747035574,
           "reverse": 0.8389328063241107
         },
-        "mix50": {
-          "forward": 0.6739130434782609,
-          "reverse": 0.8290513833992095
+        "replay": {
+          "forward": 0.6857707509881423,
+          "reverse": 0.5899209486166008
         },
-        "fwd2x": {
-          "forward": 0.5780632411067194,
-          "reverse": 0.01383399209486166
+        "mixedtask": {
+          "forward": 0.6907114624505929,
+          "reverse": 0.7154150197628458
         },
         "mix25": {
           "forward": 0.6857707509881423,
           "reverse": 0.8231225296442688
         },
-        "sft": {
-          "forward": 0.6709486166007905,
-          "reverse": 0.0
+        "rev": {
+          "forward": 0.6353754940711462,
+          "reverse": 0.8517786561264822
         },
-        "mix5": {
-          "forward": 0.6739130434782609,
-          "reverse": 0.8201581027667985
+        "fwd2x": {
+          "forward": 0.5780632411067194,
+          "reverse": 0.01383399209486166
+        },
+        "mix1": {
+          "forward": 0.6699604743083004,
+          "reverse": 0.7944664031620553
+        },
+        "mix10": {
+          "forward": 0.6620553359683794,
+          "reverse": 0.8280632411067194
         },
         "base": {
           "forward": 0.7371541501976284,
           "reverse": 0.7924901185770751
         },
-        "mix1": {
-          "forward": 0.6699604743083004,
-          "reverse": 0.7944664031620553
+        "mix5": {
+          "forward": 0.6739130434782609,
+          "reverse": 0.8201581027667985
+        },
+        "mix50": {
+          "forward": 0.6739130434782609,
+          "reverse": 0.8290513833992095
         }
       },
       "trial_sha256": "559b34bf664e8c2a8a6fa8f98442e28b7b1b996dbaab367152707afcba7473d6"
@@ -65,53 +65,53 @@
       "seed": 17,
       "run": "/scratch/juno/jvl210002/bidir/results/2026-09-17/mt_en-de/llama32-3b/small_s17",
       "means": {
-        "rev": {
-          "forward": 0.0,
-          "reverse": 0.6620553359683794
-        },
-        "mixedtask": {
-          "forward": 0.8399209486166008,
-          "reverse": 0.7302371541501976
-        },
-        "mix10": {
-          "forward": 0.8537549407114624,
-          "reverse": 0.6818181818181818
-        },
-        "replay": {
-          "forward": 0.8537549407114624,
-          "reverse": 0.7203557312252964
+        "sft": {
+          "forward": 0.8478260869565217,
+          "reverse": 0.6442687747035574
         },
         "flip": {
           "forward": 0.8478260869565217,
           "reverse": 0.6699604743083004
         },
-        "mix50": {
-          "forward": 0.8458498023715415,
-          "reverse": 0.6778656126482213
+        "replay": {
+          "forward": 0.8537549407114624,
+          "reverse": 0.7203557312252964
         },
-        "fwd2x": {
-          "forward": 0.7776679841897233,
-          "reverse": 0.6442687747035574
+        "mixedtask": {
+          "forward": 0.8399209486166008,
+          "reverse": 0.7302371541501976
         },
         "mix25": {
           "forward": 0.8468379446640316,
           "reverse": 0.6818181818181818
         },
-        "sft": {
-          "forward": 0.8478260869565217,
+        "rev": {
+          "forward": 0.0,
+          "reverse": 0.6620553359683794
+        },
+        "fwd2x": {
+          "forward": 0.7776679841897233,
           "reverse": 0.6442687747035574
         },
-        "mix5": {
-          "forward": 0.8547430830039525,
-          "reverse": 0.6847826086956522
+        "mix1": {
+          "forward": 0.8458498023715415,
+          "reverse": 0.708498023715415
+        },
+        "mix10": {
+          "forward": 0.8537549407114624,
+          "reverse": 0.6818181818181818
         },
         "base": {
           "forward": 0.7924901185770751,
           "reverse": 0.733201581027668
         },
-        "mix1": {
+        "mix5": {
+          "forward": 0.8547430830039525,
+          "reverse": 0.6847826086956522
+        },
+        "mix50": {
           "forward": 0.8458498023715415,
-          "reverse": 0.708498023715415
+          "reverse": 0.6778656126482213
         }
       },
       "trial_sha256": "7c80bed5711e3db0846839056a75908bc8b0d32e418366954d1f6a0f599c5ec6"
@@ -122,53 +122,53 @@
       "seed": 17,
       "run": "/scratch/juno/jvl210002/bidir/results/2026-09-17/mt_en-zh/llama32-3b/small_s17",
       "means": {
-        "rev": {
-          "forward": 0.0,
-          "reverse": 0.7124505928853755
-        },
-        "mixedtask": {
-          "forward": 0.7697628458498024,
-          "reverse": 0.7025691699604744
-        },
-        "mix10": {
-          "forward": 0.7707509881422925,
-          "reverse": 0.6986166007905138
-        },
-        "replay": {
-          "forward": 0.7855731225296443,
-          "reverse": 0.7094861660079052
+        "sft": {
+          "forward": 0.7786561264822134,
+          "reverse": 0.039525691699604744
         },
         "flip": {
           "forward": 0.8043478260869565,
           "reverse": 0.7282608695652174
         },
-        "mix50": {
-          "forward": 0.766798418972332,
-          "reverse": 0.7193675889328063
+        "replay": {
+          "forward": 0.7855731225296443,
+          "reverse": 0.7094861660079052
         },
-        "fwd2x": {
-          "forward": 0.758893280632411,
-          "reverse": 0.09486166007905138
+        "mixedtask": {
+          "forward": 0.7697628458498024,
+          "reverse": 0.7025691699604744
         },
         "mix25": {
           "forward": 0.7855731225296443,
           "reverse": 0.7154150197628458
         },
-        "sft": {
-          "forward": 0.7786561264822134,
-          "reverse": 0.039525691699604744
+        "rev": {
+          "forward": 0.0,
+          "reverse": 0.7124505928853755
         },
-        "mix5": {
-          "forward": 0.7737154150197628,
-          "reverse": 0.682806324110672
+        "fwd2x": {
+          "forward": 0.758893280632411,
+          "reverse": 0.09486166007905138
+        },
+        "mix1": {
+          "forward": 0.7658102766798419,
+          "reverse": 0.6818181818181818
+        },
+        "mix10": {
+          "forward": 0.7707509881422925,
+          "reverse": 0.6986166007905138
         },
         "base": {
           "forward": 0.741106719367589,
           "reverse": 0.7539525691699605
         },
-        "mix1": {
-          "forward": 0.7658102766798419,
-          "reverse": 0.6818181818181818
+        "mix5": {
+          "forward": 0.7737154150197628,
+          "reverse": 0.682806324110672
+        },
+        "mix50": {
+          "forward": 0.766798418972332,
+          "reverse": 0.7193675889328063
         }
       },
       "trial_sha256": "575818e0338439fda9a1431f36d113a1338ed457df8e1e8d413812a354c40dbe"
@@ -179,53 +179,53 @@
       "seed": 17,
       "run": "/scratch/juno/jvl210002/bidir/results/2026-09-18/mt_zh-en/llama32-3b/small_s17",
       "means": {
-        "rev": {
-          "forward": 0.2341897233201581,
-          "reverse": 0.7766798418972332
-        },
-        "mixedtask": {
-          "forward": 0.733201581027668,
-          "reverse": 0.7104743083003953
-        },
-        "mix10": {
-          "forward": 0.7233201581027668,
-          "reverse": 0.8003952569169961
-        },
-        "replay": {
-          "forward": 0.7480237154150198,
-          "reverse": 0.009881422924901186
+        "sft": {
+          "forward": 0.7154150197628458,
+          "reverse": 0.0
         },
         "flip": {
           "forward": 0.7154150197628458,
           "reverse": 0.7608695652173914
         },
-        "mix50": {
-          "forward": 0.7183794466403162,
-          "reverse": 0.7717391304347826
+        "replay": {
+          "forward": 0.7480237154150198,
+          "reverse": 0.009881422924901186
         },
-        "fwd2x": {
-          "forward": 0.6383399209486166,
-          "reverse": 0.0
+        "mixedtask": {
+          "forward": 0.733201581027668,
+          "reverse": 0.7104743083003953
         },
         "mix25": {
           "forward": 0.7223320158102767,
           "reverse": 0.782608695652174
         },
-        "sft": {
-          "forward": 0.7154150197628458,
+        "rev": {
+          "forward": 0.2341897233201581,
+          "reverse": 0.7766798418972332
+        },
+        "fwd2x": {
+          "forward": 0.6383399209486166,
           "reverse": 0.0
         },
-        "mix5": {
-          "forward": 0.7213438735177866,
-          "reverse": 0.7707509881422925
+        "mix1": {
+          "forward": 0.7252964426877471,
+          "reverse": 0.7618577075098815
+        },
+        "mix10": {
+          "forward": 0.7233201581027668,
+          "reverse": 0.8003952569169961
         },
         "base": {
           "forward": 0.7598814229249012,
           "reverse": 0.7401185770750988
         },
-        "mix1": {
-          "forward": 0.7252964426877471,
-          "reverse": 0.7618577075098815
+        "mix5": {
+          "forward": 0.7213438735177866,
+          "reverse": 0.7707509881422925
+        },
+        "mix50": {
+          "forward": 0.7183794466403162,
+          "reverse": 0.7717391304347826
         }
       },
       "trial_sha256": "c2138a20203b908e3ec8b6f0383e8982a64810e3c65e75226f7e7733d9deb7e4"
@@ -236,53 +236,53 @@
       "seed": 17,
       "run": "/scratch/juno/jvl210002/bidir/results/2026-09-17/code/llama32-3b/small_s17",
       "means": {
-        "rev": {
-          "forward": 0.6563106796116505,
-          "reverse": 0.862621359223301
-        },
-        "mixedtask": {
-          "forward": 0.7048543689320388,
-          "reverse": 0.03446601941747573
-        },
-        "mix10": {
-          "forward": 0.8359223300970874,
-          "reverse": 0.7650485436893204
-        },
-        "replay": {
-          "forward": 0.7475728155339806,
-          "reverse": 0.14514563106796116
+        "sft": {
+          "forward": 0.8237864077669903,
+          "reverse": 0.0383495145631068
         },
         "flip": {
           "forward": 0.862621359223301,
           "reverse": 0.8660194174757282
         },
-        "mix50": {
-          "forward": 0.8388349514563107,
-          "reverse": 0.8558252427184466
+        "replay": {
+          "forward": 0.7475728155339806,
+          "reverse": 0.14514563106796116
         },
-        "fwd2x": {
-          "forward": 0.8825242718446602,
-          "reverse": 0.09563106796116505
+        "mixedtask": {
+          "forward": 0.7048543689320388,
+          "reverse": 0.03446601941747573
         },
         "mix25": {
           "forward": 0.8436893203883495,
           "reverse": 0.8029126213592233
         },
-        "sft": {
-          "forward": 0.8237864077669903,
-          "reverse": 0.0383495145631068
+        "rev": {
+          "forward": 0.6563106796116505,
+          "reverse": 0.862621359223301
         },
-        "mix5": {
-          "forward": 0.8427184466019417,
-          "reverse": 0.7524271844660194
+        "fwd2x": {
+          "forward": 0.8825242718446602,
+          "reverse": 0.09563106796116505
+        },
+        "mix1": {
+          "forward": 0.8281553398058252,
+          "reverse": 0.558252427184466
+        },
+        "mix10": {
+          "forward": 0.8359223300970874,
+          "reverse": 0.7650485436893204
         },
         "base": {
           "forward": 0.37475728155339805,
           "reverse": 0.32038834951456313
         },
-        "mix1": {
-          "forward": 0.8281553398058252,
-          "reverse": 0.558252427184466
+        "mix5": {
+          "forward": 0.8427184466019417,
+          "reverse": 0.7524271844660194
+        },
+        "mix50": {
+          "forward": 0.8388349514563107,
+          "reverse": 0.8558252427184466
         }
       },
       "trial_sha256": "a6db0a7b61da0b0d22062f4b5cec46121cdf0e519a97b3fee808511377f0afc6"
@@ -293,53 +293,53 @@
       "seed": 17,
       "run": "/scratch/juno/jvl210002/bidir/results/2026-09-17/sql/llama32-3b/small_s17",
       "means": {
-        "rev": {
-          "forward": 0.4197292069632495,
-          "reverse": 0.5909090909090909
-        },
-        "mixedtask": {
-          "forward": 0.5676982591876208,
-          "reverse": 0.5038684719535783
-        },
-        "mix10": {
-          "forward": 0.6199226305609284,
-          "reverse": 0.5754352030947776
-        },
-        "replay": {
-          "forward": 0.597678916827853,
-          "reverse": 0.17117988394584138
+        "sft": {
+          "forward": 0.6237911025145068,
+          "reverse": 0.23210831721470018
         },
         "flip": {
           "forward": 0.6083172147001934,
           "reverse": 0.5880077369439072
         },
-        "mix50": {
-          "forward": 0.586073500967118,
-          "reverse": 0.5812379110251451
+        "replay": {
+          "forward": 0.597678916827853,
+          "reverse": 0.17117988394584138
         },
-        "fwd2x": {
-          "forward": 0.6112185686653772,
-          "reverse": 0.2727272727272727
+        "mixedtask": {
+          "forward": 0.5676982591876208,
+          "reverse": 0.5038684719535783
         },
         "mix25": {
           "forward": 0.6005802707930368,
           "reverse": 0.5986460348162476
         },
-        "sft": {
-          "forward": 0.6237911025145068,
-          "reverse": 0.23210831721470018
+        "rev": {
+          "forward": 0.4197292069632495,
+          "reverse": 0.5909090909090909
         },
-        "mix5": {
-          "forward": 0.6083172147001934,
-          "reverse": 0.5502901353965184
+        "fwd2x": {
+          "forward": 0.6112185686653772,
+          "reverse": 0.2727272727272727
+        },
+        "mix1": {
+          "forward": 0.6228239845261122,
+          "reverse": 0.48452611218568664
+        },
+        "mix10": {
+          "forward": 0.6199226305609284,
+          "reverse": 0.5754352030947776
         },
         "base": {
           "forward": 0.4951644100580271,
           "reverse": 0.5106382978723404
         },
-        "mix1": {
-          "forward": 0.6228239845261122,
-          "reverse": 0.48452611218568664
+        "mix5": {
+          "forward": 0.6083172147001934,
+          "reverse": 0.5502901353965184
+        },
+        "mix50": {
+          "forward": 0.586073500967118,
+          "reverse": 0.5812379110251451
         }
       },
       "trial_sha256": "8741dcc110e1295156f335209f2b89f6f1fd771d2ac7f247f49380624c727eea"
@@ -350,53 +350,53 @@
       "seed": 17,
       "run": "/scratch/juno/jvl210002/bidir/results/2026-09-17/fmt/llama32-3b/small_s17",
       "means": {
-        "rev": {
-          "forward": 0.252,
-          "reverse": 0.9936
-        },
-        "mixedtask": {
-          "forward": 0.9776,
-          "reverse": 0.4292
-        },
-        "mix10": {
-          "forward": 0.9976,
-          "reverse": 0.9696
-        },
-        "replay": {
-          "forward": 0.9896,
-          "reverse": 0.2464
+        "sft": {
+          "forward": 0.9968,
+          "reverse": 0.004
         },
         "flip": {
           "forward": 0.998,
           "reverse": 0.996
         },
-        "mix50": {
-          "forward": 0.9984,
-          "reverse": 0.996
+        "replay": {
+          "forward": 0.9896,
+          "reverse": 0.2464
         },
-        "fwd2x": {
-          "forward": 0.9904,
-          "reverse": 0.0072
+        "mixedtask": {
+          "forward": 0.9776,
+          "reverse": 0.4292
         },
         "mix25": {
           "forward": 0.9976,
           "reverse": 0.986
         },
-        "sft": {
-          "forward": 0.9968,
-          "reverse": 0.004
+        "rev": {
+          "forward": 0.252,
+          "reverse": 0.9936
         },
-        "mix5": {
-          "forward": 0.9988,
-          "reverse": 0.9616
+        "fwd2x": {
+          "forward": 0.9904,
+          "reverse": 0.0072
+        },
+        "mix1": {
+          "forward": 0.9964,
+          "reverse": 0.902
+        },
+        "mix10": {
+          "forward": 0.9976,
+          "reverse": 0.9696
         },
         "base": {
           "forward": 0.6016,
           "reverse": 0.5108
         },
-        "mix1": {
-          "forward": 0.9964,
-          "reverse": 0.902
+        "mix5": {
+          "forward": 0.9988,
+          "reverse": 0.9616
+        },
+        "mix50": {
+          "forward": 0.9984,
+          "reverse": 0.996
         }
       },
       "trial_sha256": "a0ca6766a80e190fcd26e029ec23a39b30264fa35b4d1cce23c6e81091fc399d"
@@ -407,41 +407,41 @@
       "seed": 17,
       "run": "/scratch/juno/jvl210002/bidir/results/2026-09-17/relation/llama32-3b/small_s17",
       "means": {
-        "rev": {
-          "forward": 0.7925925925925926,
-          "reverse": 0.837037037037037
+        "sft": {
+          "forward": 0.8666666666666667,
+          "reverse": 0.7111111111111111
         },
-        "mixedtask": {
-          "forward": 0.8296296296296296,
-          "reverse": 0.6592592592592592
+        "flip": {
+          "forward": 0.8962962962962963,
+          "reverse": 0.8148148148148148
         },
         "replay": {
           "forward": 0.8814814814814815,
           "reverse": 0.674074074074074
         },
-        "mix50": {
-          "forward": 0.8740740740740741,
-          "reverse": 0.8074074074074075
+        "mix25": {
+          "forward": 0.8666666666666667,
+          "reverse": 0.8
+        },
+        "rev": {
+          "forward": 0.7925925925925926,
+          "reverse": 0.837037037037037
         },
         "fwd2x": {
           "forward": 0.8962962962962963,
           "reverse": 0.5851851851851851
         },
-        "mix25": {
-          "forward": 0.8666666666666667,
-          "reverse": 0.8
-        },
-        "sft": {
-          "forward": 0.8666666666666667,
-          "reverse": 0.7111111111111111
+        "mixedtask": {
+          "forward": 0.8296296296296296,
+          "reverse": 0.6592592592592592
         },
         "base": {
           "forward": 0.7185185185185186,
           "reverse": 0.6518518518518519
         },
-        "flip": {
-          "forward": 0.8962962962962963,
-          "reverse": 0.8148148148148148
+        "mix50": {
+          "forward": 0.8740740740740741,
+          "reverse": 0.8074074074074075
         }
       },
       "trial_sha256": "a2ea81bcbfd86e6e3949d0e19e113b49d3725058fb522a4f5a111175163d5497"
@@ -452,53 +452,53 @@
       "seed": 17,
       "run": "/scratch/juno/jvl210002/bidir/results/2026-09-17/algebra/llama32-3b/small_s17",
       "means": {
-        "rev": {
-          "forward": 0.1456,
-          "reverse": 0.4364
-        },
-        "mixedtask": {
-          "forward": 0.212,
-          "reverse": 0.0604
-        },
-        "mix10": {
-          "forward": 0.2728,
-          "reverse": 0.2532
-        },
-        "replay": {
-          "forward": 0.2584,
-          "reverse": 0.0916
+        "sft": {
+          "forward": 0.2612,
+          "reverse": 0.078
         },
         "flip": {
           "forward": 0.2768,
           "reverse": 0.4492
         },
-        "mix50": {
-          "forward": 0.2484,
-          "reverse": 0.3652
+        "replay": {
+          "forward": 0.2584,
+          "reverse": 0.0916
         },
-        "fwd2x": {
-          "forward": 0.2964,
-          "reverse": 0.0668
+        "mixedtask": {
+          "forward": 0.212,
+          "reverse": 0.0604
         },
         "mix25": {
           "forward": 0.2548,
           "reverse": 0.3104
         },
-        "sft": {
-          "forward": 0.2612,
-          "reverse": 0.078
+        "rev": {
+          "forward": 0.1456,
+          "reverse": 0.4364
         },
-        "mix5": {
-          "forward": 0.2684,
-          "reverse": 0.206
+        "fwd2x": {
+          "forward": 0.2964,
+          "reverse": 0.0668
+        },
+        "mix1": {
+          "forward": 0.2548,
+          "reverse": 0.1456
+        },
+        "mix10": {
+          "forward": 0.2728,
+          "reverse": 0.2532
         },
         "base": {
           "forward": 0.1728,
           "reverse": 0.1472
         },
-        "mix1": {
-          "forward": 0.2548,
-          "reverse": 0.1456
+        "mix5": {
+          "forward": 0.2684,
+          "reverse": 0.206
+        },
+        "mix50": {
+          "forward": 0.2484,
+          "reverse": 0.3652
         }
       },
       "trial_sha256": "69f561bf869247e60edb7f0897a4442cadae6cea46af8c0a5783aefcb960efc1"
@@ -509,53 +509,53 @@
       "seed": 17,
       "run": "/scratch/juno/jvl210002/bidir/results/2026-09-17/algebra_rev/llama32-3b/small_s17",
       "means": {
-        "rev": {
-          "forward": 0.078,
-          "reverse": 0.262
-        },
-        "mixedtask": {
-          "forward": 0.2684,
-          "reverse": 0.2652
-        },
-        "mix10": {
-          "forward": 0.4324,
-          "reverse": 0.18
-        },
-        "replay": {
-          "forward": 0.3688,
-          "reverse": 0.1396
+        "sft": {
+          "forward": 0.4364,
+          "reverse": 0.1468
         },
         "flip": {
           "forward": 0.4468,
           "reverse": 0.2744
         },
-        "mix50": {
-          "forward": 0.3608,
-          "reverse": 0.2492
+        "replay": {
+          "forward": 0.3688,
+          "reverse": 0.1396
         },
-        "fwd2x": {
-          "forward": 0.4964,
-          "reverse": 0.1268
+        "mixedtask": {
+          "forward": 0.2684,
+          "reverse": 0.2652
         },
         "mix25": {
           "forward": 0.4016,
           "reverse": 0.2296
         },
-        "sft": {
-          "forward": 0.4364,
-          "reverse": 0.1468
+        "rev": {
+          "forward": 0.078,
+          "reverse": 0.262
         },
-        "mix5": {
-          "forward": 0.4376,
-          "reverse": 0.158
+        "fwd2x": {
+          "forward": 0.4964,
+          "reverse": 0.1268
+        },
+        "mix1": {
+          "forward": 0.4404,
+          "reverse": 0.1056
+        },
+        "mix10": {
+          "forward": 0.4324,
+          "reverse": 0.18
         },
         "base": {
           "forward": 0.1464,
           "reverse": 0.1736
         },
-        "mix1": {
-          "forward": 0.4404,
-          "reverse": 0.1056
+        "mix5": {
+          "forward": 0.4376,
+          "reverse": 0.158
+        },
+        "mix50": {
+          "forward": 0.3608,
+          "reverse": 0.2492
         }
       },
       "trial_sha256": "c06a1e79a2739a3f113143105beb0ec9005903aafec08793ff5d67cf99eed259"
@@ -566,41 +566,41 @@
       "seed": 17,
       "run": "/scratch/juno/jvl210002/bidir/results/2026-09-26/exec/llama32-3b/small_s17",
       "means": {
-        "rev": {
-          "forward": 0.21,
-          "reverse": 0.3
+        "sft": {
+          "forward": 0.29,
+          "reverse": 0.13
         },
-        "mixedtask": {
-          "forward": 0.245,
-          "reverse": 0.125
+        "flip": {
+          "forward": 0.305,
+          "reverse": 0.29
         },
         "replay": {
           "forward": 0.27,
           "reverse": 0.13
         },
-        "mix50": {
+        "mix25": {
           "forward": 0.295,
-          "reverse": 0.28
+          "reverse": 0.26
+        },
+        "rev": {
+          "forward": 0.21,
+          "reverse": 0.3
         },
         "fwd2x": {
           "forward": 0.315,
           "reverse": 0.125
         },
-        "mix25": {
-          "forward": 0.295,
-          "reverse": 0.26
-        },
-        "sft": {
-          "forward": 0.29,
-          "reverse": 0.13
+        "mixedtask": {
+          "forward": 0.245,
+          "reverse": 0.125
         },
         "base": {
           "forward": 0.265,
           "reverse": 0.165
         },
-        "flip": {
-          "forward": 0.305,
-          "reverse": 0.29
+        "mix50": {
+          "forward": 0.295,
+          "reverse": 0.28
         }
       },
       "trial_sha256": "cbc506f922473353c281b805671dc0c11fe3ea93408ede18d4a43fc3e4d1b3e7"
@@ -613,9 +613,9 @@
       "seed": 17,
       "run": "/scratch/juno/jvl210002/bidir/results/2026-10-09/mt_de-en/gemma3-12b/contrastive_pilot_s17",
       "means": {
-        "rev": {
-          "forward": 0.015810276679841896,
-          "reverse": 0.6640316205533597
+        "sft": {
+          "forward": 0.6689723320158103,
+          "reverse": 0.001976284584980237
         },
         "mix5_extra_ce": {
           "forward": 0.66600790513834,
@@ -625,9 +625,13 @@
           "forward": 0.6729249011857708,
           "reverse": 0.5622529644268774
         },
-        "cl_shuffled": {
-          "forward": 0.6610671936758893,
-          "reverse": 0.0029644268774703555
+        "rev": {
+          "forward": 0.015810276679841896,
+          "reverse": 0.6640316205533597
+        },
+        "cl_mix5": {
+          "forward": 0.6679841897233202,
+          "reverse": 0.6086956521739131
         },
         "sft_extra_ce": {
           "forward": 0.6650197628458498,
@@ -637,21 +641,17 @@
           "forward": 0.6610671936758893,
           "reverse": 0.001976284584980237
         },
-        "sft": {
-          "forward": 0.6689723320158103,
-          "reverse": 0.001976284584980237
-        },
-        "cl_mix5": {
-          "forward": 0.6679841897233202,
-          "reverse": 0.6086956521739131
-        },
-        "mix5": {
-          "forward": 0.6650197628458498,
-          "reverse": 0.6007905138339921
+        "cl_shuffled": {
+          "forward": 0.6610671936758893,
+          "reverse": 0.0029644268774703555
         },
         "base": {
           "forward": 0.7687747035573123,
           "reverse": 0.7203557312252964
+        },
+        "mix5": {
+          "forward": 0.6650197628458498,
+          "reverse": 0.6007905138339921
         }
       },
       "trial_sha256": "ee87b799275f312499f646a165755930b02e8b201bcfa9babc8f4bbfe240c08b"
@@ -662,9 +662,9 @@
       "seed": 17,
       "run": "/scratch/juno/jvl210002/bidir/results/2026-10-04/mt_de-en/gemma3-4b/contrastive_pilot_s17",
       "means": {
-        "rev": {
-          "forward": 0.40019762845849804,
-          "reverse": 0.7677865612648221
+        "sft": {
+          "forward": 0.6768774703557312,
+          "reverse": 0.0
         },
         "mix5_extra_ce": {
           "forward": 0.6669960474308301,
@@ -674,9 +674,13 @@
           "forward": 0.6867588932806324,
           "reverse": 0.7035573122529645
         },
-        "cl_shuffled": {
-          "forward": 0.6709486166007905,
-          "reverse": 0.0
+        "rev": {
+          "forward": 0.40019762845849804,
+          "reverse": 0.7677865612648221
+        },
+        "cl_mix5": {
+          "forward": 0.6936758893280632,
+          "reverse": 0.7450592885375494
         },
         "sft_extra_ce": {
           "forward": 0.6689723320158103,
@@ -686,21 +690,17 @@
           "forward": 0.6719367588932806,
           "reverse": 0.0
         },
-        "sft": {
-          "forward": 0.6768774703557312,
+        "cl_shuffled": {
+          "forward": 0.6709486166007905,
           "reverse": 0.0
-        },
-        "cl_mix5": {
-          "forward": 0.6936758893280632,
-          "reverse": 0.7450592885375494
-        },
-        "mix5": {
-          "forward": 0.6739130434782609,
-          "reverse": 0.7440711462450593
         },
         "base": {
           "forward": 0.7539525691699605,
           "reverse": 0.7579051383399209
+        },
+        "mix5": {
+          "forward": 0.6739130434782609,
+          "reverse": 0.7440711462450593
         }
       },
       "trial_sha256": "61b1018db8d64c8d83d637299ae3381e5d22f0c694b580df7d3230e90fd272a0"
@@ -711,9 +711,9 @@
       "seed": 17,
       "run": "/scratch/juno/jvl210002/bidir/results/2026-10-09/mt_de-en/llama31-8b/contrastive_pilot_s17",
       "means": {
-        "rev": {
-          "forward": 0.04743083003952569,
-          "reverse": 0.7509881422924901
+        "sft": {
+          "forward": 0.642292490118577,
+          "reverse": 0.1650197628458498
         },
         "mix5_extra_ce": {
           "forward": 0.6511857707509882,
@@ -723,9 +723,13 @@
           "forward": 0.6393280632411067,
           "reverse": 0.6432806324110671
         },
-        "cl_shuffled": {
-          "forward": 0.6383399209486166,
-          "reverse": 0.0
+        "rev": {
+          "forward": 0.04743083003952569,
+          "reverse": 0.7509881422924901
+        },
+        "cl_mix5": {
+          "forward": 0.6452569169960475,
+          "reverse": 0.6768774703557312
         },
         "sft_extra_ce": {
           "forward": 0.6284584980237155,
@@ -735,21 +739,17 @@
           "forward": 0.6284584980237155,
           "reverse": 0.0
         },
-        "sft": {
-          "forward": 0.642292490118577,
-          "reverse": 0.1650197628458498
-        },
-        "cl_mix5": {
-          "forward": 0.6452569169960475,
-          "reverse": 0.6768774703557312
-        },
-        "mix5": {
-          "forward": 0.658102766798419,
-          "reverse": 0.6887351778656127
+        "cl_shuffled": {
+          "forward": 0.6383399209486166,
+          "reverse": 0.0
         },
         "base": {
           "forward": 0.7450592885375494,
           "reverse": 0.7302371541501976
+        },
+        "mix5": {
+          "forward": 0.658102766798419,
+          "reverse": 0.6887351778656127
         }
       },
       "trial_sha256": "356bf12646139dc754ebd93f1c50dc93509f9ceb34374139ecdc1e25c5234894"
@@ -760,9 +760,9 @@
       "seed": 17,
       "run": "/scratch/juno/jvl210002/bidir/results/2026-10-04/mt_de-en/llama32-3b/contrastive_pilot_s17",
       "means": {
-        "rev": {
-          "forward": 0.6343873517786561,
-          "reverse": 0.8488142292490118
+        "sft": {
+          "forward": 0.6729249011857708,
+          "reverse": 0.0
         },
         "mix5_extra_ce": {
           "forward": 0.6640316205533597,
@@ -772,9 +772,13 @@
           "forward": 0.6847826086956522,
           "reverse": 0.6096837944664032
         },
-        "cl_shuffled": {
-          "forward": 0.6669960474308301,
-          "reverse": 0.0009881422924901185
+        "rev": {
+          "forward": 0.6343873517786561,
+          "reverse": 0.8488142292490118
+        },
+        "cl_mix5": {
+          "forward": 0.6798418972332015,
+          "reverse": 0.8290513833992095
         },
         "sft_extra_ce": {
           "forward": 0.6699604743083004,
@@ -784,21 +788,17 @@
           "forward": 0.6650197628458498,
           "reverse": 0.0
         },
-        "sft": {
-          "forward": 0.6729249011857708,
-          "reverse": 0.0
-        },
-        "cl_mix5": {
-          "forward": 0.6798418972332015,
-          "reverse": 0.8290513833992095
-        },
-        "mix5": {
-          "forward": 0.6699604743083004,
-          "reverse": 0.8201581027667985
+        "cl_shuffled": {
+          "forward": 0.6669960474308301,
+          "reverse": 0.0009881422924901185
         },
         "base": {
           "forward": 0.7371541501976284,
           "reverse": 0.7974308300395256
+        },
+        "mix5": {
+          "forward": 0.6699604743083004,
+          "reverse": 0.8201581027667985
         }
       },
       "trial_sha256": "db293f7d24a8ac63a298538922c2cb934ce78f5c7066ad01c24015221f4a32e0"
@@ -809,9 +809,9 @@
       "seed": 17,
       "run": "/scratch/juno/jvl210002/bidir/results/2026-10-07/fmt/gemma3-4b/contrastive_pilot_s17",
       "means": {
-        "rev": {
-          "forward": 0.522,
-          "reverse": 1.0
+        "sft": {
+          "forward": 0.9996,
+          "reverse": 0.1868
         },
         "mix5_extra_ce": {
           "forward": 0.9996,
@@ -821,9 +821,13 @@
           "forward": 0.998,
           "reverse": 0.4932
         },
-        "cl_shuffled": {
-          "forward": 0.9988,
-          "reverse": 0.45
+        "rev": {
+          "forward": 0.522,
+          "reverse": 1.0
+        },
+        "cl_mix5": {
+          "forward": 0.9992,
+          "reverse": 0.9904
         },
         "sft_extra_ce": {
           "forward": 0.9988,
@@ -833,21 +837,17 @@
           "forward": 1.0,
           "reverse": 0.158
         },
-        "sft": {
-          "forward": 0.9996,
-          "reverse": 0.1868
-        },
-        "cl_mix5": {
-          "forward": 0.9992,
-          "reverse": 0.9904
-        },
-        "mix5": {
+        "cl_shuffled": {
           "forward": 0.9988,
-          "reverse": 0.9796
+          "reverse": 0.45
         },
         "base": {
           "forward": 0.7828,
           "reverse": 0.7508
+        },
+        "mix5": {
+          "forward": 0.9988,
+          "reverse": 0.9796
         }
       },
       "trial_sha256": "dbe2ec4f2fbc38015eda29730b3c7cae891df99aa826b976df3d8b0973ce23bb"
@@ -858,9 +858,9 @@
       "seed": 17,
       "run": "/scratch/juno/jvl210002/bidir/results/2026-10-09/fmt/llama31-8b/contrastive_pilot_s17",
       "means": {
-        "rev": {
-          "forward": 0.022,
-          "reverse": 0.9992
+        "sft": {
+          "forward": 0.9948,
+          "reverse": 0.0
         },
         "mix5_extra_ce": {
           "forward": 0.9988,
@@ -870,9 +870,13 @@
           "forward": 0.998,
           "reverse": 0.3212
         },
-        "cl_shuffled": {
-          "forward": 0.9968,
-          "reverse": 0.0
+        "rev": {
+          "forward": 0.022,
+          "reverse": 0.9992
+        },
+        "cl_mix5": {
+          "forward": 0.9976,
+          "reverse": 0.9916
         },
         "sft_extra_ce": {
           "forward": 0.9996,
@@ -882,21 +886,17 @@
           "forward": 0.9996,
           "reverse": 0.0224
         },
-        "sft": {
-          "forward": 0.9948,
+        "cl_shuffled": {
+          "forward": 0.9968,
           "reverse": 0.0
-        },
-        "cl_mix5": {
-          "forward": 0.9976,
-          "reverse": 0.9916
-        },
-        "mix5": {
-          "forward": 0.9988,
-          "reverse": 0.9868
         },
         "base": {
           "forward": 0.802,
           "reverse": 0.6904
+        },
+        "mix5": {
+          "forward": 0.9988,
+          "reverse": 0.9868
         }
       },
       "trial_sha256": "c95b643f6249d41661fbfe30f26ced2569aa46f2eece0cfd5383864dbeed59e3"
@@ -907,9 +907,9 @@
       "seed": 17,
       "run": "/scratch/juno/jvl210002/bidir/results/2026-10-04/fmt/llama32-3b/contrastive_pilot_s17",
       "means": {
-        "rev": {
-          "forward": 0.2696,
-          "reverse": 0.9936
+        "sft": {
+          "forward": 0.9972,
+          "reverse": 0.0036
         },
         "mix5_extra_ce": {
           "forward": 0.9972,
@@ -919,9 +919,13 @@
           "forward": 0.9892,
           "reverse": 0.256
         },
-        "cl_shuffled": {
-          "forward": 0.9968,
-          "reverse": 0.008
+        "rev": {
+          "forward": 0.2696,
+          "reverse": 0.9936
+        },
+        "cl_mix5": {
+          "forward": 0.996,
+          "reverse": 0.9596
         },
         "sft_extra_ce": {
           "forward": 0.9924,
@@ -931,21 +935,17 @@
           "forward": 0.9956,
           "reverse": 0.0012
         },
-        "sft": {
-          "forward": 0.9972,
-          "reverse": 0.0036
-        },
-        "cl_mix5": {
-          "forward": 0.996,
-          "reverse": 0.9596
-        },
-        "mix5": {
-          "forward": 0.9988,
-          "reverse": 0.9596
+        "cl_shuffled": {
+          "forward": 0.9968,
+          "reverse": 0.008
         },
         "base": {
           "forward": 0.6064,
           "reverse": 0.5144
+        },
+        "mix5": {
+          "forward": 0.9988,
+          "reverse": 0.9596
         }
       },
       "trial_sha256": "ae31164db135aaf07f8f6f9c299ef79cfa44739f8072f15f3ed847ed8cd65e72"
@@ -956,9 +956,9 @@
       "seed": 17,
       "run": "/scratch/juno/jvl210002/bidir/results/2026-10-09/units/gemma3-12b/contrastive_pilot_s17",
       "means": {
-        "rev": {
-          "forward": 0.441,
-          "reverse": 0.949
+        "sft": {
+          "forward": 0.971,
+          "reverse": 0.698
         },
         "mix5_extra_ce": {
           "forward": 0.971,
@@ -968,9 +968,13 @@
           "forward": 0.94,
           "reverse": 0.565
         },
-        "cl_shuffled": {
-          "forward": 0.975,
-          "reverse": 0.741
+        "rev": {
+          "forward": 0.441,
+          "reverse": 0.949
+        },
+        "cl_mix5": {
+          "forward": 0.965,
+          "reverse": 0.801
         },
         "sft_extra_ce": {
           "forward": 0.974,
@@ -980,21 +984,17 @@
           "forward": 0.976,
           "reverse": 0.703
         },
-        "sft": {
-          "forward": 0.971,
-          "reverse": 0.698
-        },
-        "cl_mix5": {
-          "forward": 0.965,
-          "reverse": 0.801
-        },
-        "mix5": {
-          "forward": 0.97,
-          "reverse": 0.794
+        "cl_shuffled": {
+          "forward": 0.975,
+          "reverse": 0.741
         },
         "base": {
           "forward": 0.337,
           "reverse": 0.358
+        },
+        "mix5": {
+          "forward": 0.97,
+          "reverse": 0.794
         }
       },
       "trial_sha256": "8f9b824783c3cd7d97fce914e32c4839a13deef48669df4aba7c17fb422afa4e"
@@ -1129,6 +1129,166 @@
   ],
   "rejected": [],
   "numbers": {
+    "main-mt-de-en-base-forward": {
+      "value": "73.7",
+      "run": "/scratch/juno/jvl210002/bidir/results/2026-09-17/mt_de-en/llama32-3b/small_s17",
+      "trial_sha256": "559b34bf664e8c2a8a6fa8f98442e28b7b1b996dbaab367152707afcba7473d6"
+    },
+    "main-mt-de-en-base-backward": {
+      "value": "79.2",
+      "run": "/scratch/juno/jvl210002/bidir/results/2026-09-17/mt_de-en/llama32-3b/small_s17",
+      "trial_sha256": "559b34bf664e8c2a8a6fa8f98442e28b7b1b996dbaab367152707afcba7473d6"
+    },
+    "main-mt-de-en-sft-forward": {
+      "value": "67.1",
+      "run": "/scratch/juno/jvl210002/bidir/results/2026-09-17/mt_de-en/llama32-3b/small_s17",
+      "trial_sha256": "559b34bf664e8c2a8a6fa8f98442e28b7b1b996dbaab367152707afcba7473d6"
+    },
+    "main-mt-de-en-sft-backward": {
+      "value": "0.0",
+      "run": "/scratch/juno/jvl210002/bidir/results/2026-09-17/mt_de-en/llama32-3b/small_s17",
+      "trial_sha256": "559b34bf664e8c2a8a6fa8f98442e28b7b1b996dbaab367152707afcba7473d6"
+    },
+    "main-mt-de-en-mix1-forward": {
+      "value": "67.0",
+      "run": "/scratch/juno/jvl210002/bidir/results/2026-09-17/mt_de-en/llama32-3b/small_s17",
+      "trial_sha256": "559b34bf664e8c2a8a6fa8f98442e28b7b1b996dbaab367152707afcba7473d6"
+    },
+    "main-mt-de-en-mix1-backward": {
+      "value": "79.4",
+      "run": "/scratch/juno/jvl210002/bidir/results/2026-09-17/mt_de-en/llama32-3b/small_s17",
+      "trial_sha256": "559b34bf664e8c2a8a6fa8f98442e28b7b1b996dbaab367152707afcba7473d6"
+    },
+    "main-mt-de-en-mix5-forward": {
+      "value": "67.4",
+      "run": "/scratch/juno/jvl210002/bidir/results/2026-09-17/mt_de-en/llama32-3b/small_s17",
+      "trial_sha256": "559b34bf664e8c2a8a6fa8f98442e28b7b1b996dbaab367152707afcba7473d6"
+    },
+    "main-mt-de-en-mix5-backward": {
+      "value": "82.0",
+      "run": "/scratch/juno/jvl210002/bidir/results/2026-09-17/mt_de-en/llama32-3b/small_s17",
+      "trial_sha256": "559b34bf664e8c2a8a6fa8f98442e28b7b1b996dbaab367152707afcba7473d6"
+    },
+    "main-mt-en-de-base-forward": {
+      "value": "79.2",
+      "run": "/scratch/juno/jvl210002/bidir/results/2026-09-17/mt_en-de/llama32-3b/small_s17",
+      "trial_sha256": "7c80bed5711e3db0846839056a75908bc8b0d32e418366954d1f6a0f599c5ec6"
+    },
+    "main-mt-en-de-base-backward": {
+      "value": "73.3",
+      "run": "/scratch/juno/jvl210002/bidir/results/2026-09-17/mt_en-de/llama32-3b/small_s17",
+      "trial_sha256": "7c80bed5711e3db0846839056a75908bc8b0d32e418366954d1f6a0f599c5ec6"
+    },
+    "main-mt-en-de-sft-forward": {
+      "value": "84.8",
+      "run": "/scratch/juno/jvl210002/bidir/results/2026-09-17/mt_en-de/llama32-3b/small_s17",
+      "trial_sha256": "7c80bed5711e3db0846839056a75908bc8b0d32e418366954d1f6a0f599c5ec6"
+    },
+    "main-mt-en-de-sft-backward": {
+      "value": "64.4",
+      "run": "/scratch/juno/jvl210002/bidir/results/2026-09-17/mt_en-de/llama32-3b/small_s17",
+      "trial_sha256": "7c80bed5711e3db0846839056a75908bc8b0d32e418366954d1f6a0f599c5ec6"
+    },
+    "main-mt-en-de-mix1-forward": {
+      "value": "84.6",
+      "run": "/scratch/juno/jvl210002/bidir/results/2026-09-17/mt_en-de/llama32-3b/small_s17",
+      "trial_sha256": "7c80bed5711e3db0846839056a75908bc8b0d32e418366954d1f6a0f599c5ec6"
+    },
+    "main-mt-en-de-mix1-backward": {
+      "value": "70.8",
+      "run": "/scratch/juno/jvl210002/bidir/results/2026-09-17/mt_en-de/llama32-3b/small_s17",
+      "trial_sha256": "7c80bed5711e3db0846839056a75908bc8b0d32e418366954d1f6a0f599c5ec6"
+    },
+    "main-mt-en-de-mix5-forward": {
+      "value": "85.5",
+      "run": "/scratch/juno/jvl210002/bidir/results/2026-09-17/mt_en-de/llama32-3b/small_s17",
+      "trial_sha256": "7c80bed5711e3db0846839056a75908bc8b0d32e418366954d1f6a0f599c5ec6"
+    },
+    "main-mt-en-de-mix5-backward": {
+      "value": "68.5",
+      "run": "/scratch/juno/jvl210002/bidir/results/2026-09-17/mt_en-de/llama32-3b/small_s17",
+      "trial_sha256": "7c80bed5711e3db0846839056a75908bc8b0d32e418366954d1f6a0f599c5ec6"
+    },
+    "main-mt-en-zh-base-forward": {
+      "value": "74.1",
+      "run": "/scratch/juno/jvl210002/bidir/results/2026-09-17/mt_en-zh/llama32-3b/small_s17",
+      "trial_sha256": "575818e0338439fda9a1431f36d113a1338ed457df8e1e8d413812a354c40dbe"
+    },
+    "main-mt-en-zh-base-backward": {
+      "value": "75.4",
+      "run": "/scratch/juno/jvl210002/bidir/results/2026-09-17/mt_en-zh/llama32-3b/small_s17",
+      "trial_sha256": "575818e0338439fda9a1431f36d113a1338ed457df8e1e8d413812a354c40dbe"
+    },
+    "main-mt-en-zh-sft-forward": {
+      "value": "77.9",
+      "run": "/scratch/juno/jvl210002/bidir/results/2026-09-17/mt_en-zh/llama32-3b/small_s17",
+      "trial_sha256": "575818e0338439fda9a1431f36d113a1338ed457df8e1e8d413812a354c40dbe"
+    },
+    "main-mt-en-zh-sft-backward": {
+      "value": "4.0",
+      "run": "/scratch/juno/jvl210002/bidir/results/2026-09-17/mt_en-zh/llama32-3b/small_s17",
+      "trial_sha256": "575818e0338439fda9a1431f36d113a1338ed457df8e1e8d413812a354c40dbe"
+    },
+    "main-mt-en-zh-mix1-forward": {
+      "value": "76.6",
+      "run": "/scratch/juno/jvl210002/bidir/results/2026-09-17/mt_en-zh/llama32-3b/small_s17",
+      "trial_sha256": "575818e0338439fda9a1431f36d113a1338ed457df8e1e8d413812a354c40dbe"
+    },
+    "main-mt-en-zh-mix1-backward": {
+      "value": "68.2",
+      "run": "/scratch/juno/jvl210002/bidir/results/2026-09-17/mt_en-zh/llama32-3b/small_s17",
+      "trial_sha256": "575818e0338439fda9a1431f36d113a1338ed457df8e1e8d413812a354c40dbe"
+    },
+    "main-mt-en-zh-mix5-forward": {
+      "value": "77.4",
+      "run": "/scratch/juno/jvl210002/bidir/results/2026-09-17/mt_en-zh/llama32-3b/small_s17",
+      "trial_sha256": "575818e0338439fda9a1431f36d113a1338ed457df8e1e8d413812a354c40dbe"
+    },
+    "main-mt-en-zh-mix5-backward": {
+      "value": "68.3",
+      "run": "/scratch/juno/jvl210002/bidir/results/2026-09-17/mt_en-zh/llama32-3b/small_s17",
+      "trial_sha256": "575818e0338439fda9a1431f36d113a1338ed457df8e1e8d413812a354c40dbe"
+    },
+    "main-mt-zh-en-base-forward": {
+      "value": "76.0",
+      "run": "/scratch/juno/jvl210002/bidir/results/2026-09-18/mt_zh-en/llama32-3b/small_s17",
+      "trial_sha256": "c2138a20203b908e3ec8b6f0383e8982a64810e3c65e75226f7e7733d9deb7e4"
+    },
+    "main-mt-zh-en-base-backward": {
+      "value": "74.0",
+      "run": "/scratch/juno/jvl210002/bidir/results/2026-09-18/mt_zh-en/llama32-3b/small_s17",
+      "trial_sha256": "c2138a20203b908e3ec8b6f0383e8982a64810e3c65e75226f7e7733d9deb7e4"
+    },
+    "main-mt-zh-en-sft-forward": {
+      "value": "71.5",
+      "run": "/scratch/juno/jvl210002/bidir/results/2026-09-18/mt_zh-en/llama32-3b/small_s17",
+      "trial_sha256": "c2138a20203b908e3ec8b6f0383e8982a64810e3c65e75226f7e7733d9deb7e4"
+    },
+    "main-mt-zh-en-sft-backward": {
+      "value": "0.0",
+      "run": "/scratch/juno/jvl210002/bidir/results/2026-09-18/mt_zh-en/llama32-3b/small_s17",
+      "trial_sha256": "c2138a20203b908e3ec8b6f0383e8982a64810e3c65e75226f7e7733d9deb7e4"
+    },
+    "main-mt-zh-en-mix1-forward": {
+      "value": "72.5",
+      "run": "/scratch/juno/jvl210002/bidir/results/2026-09-18/mt_zh-en/llama32-3b/small_s17",
+      "trial_sha256": "c2138a20203b908e3ec8b6f0383e8982a64810e3c65e75226f7e7733d9deb7e4"
+    },
+    "main-mt-zh-en-mix1-backward": {
+      "value": "76.2",
+      "run": "/scratch/juno/jvl210002/bidir/results/2026-09-18/mt_zh-en/llama32-3b/small_s17",
+      "trial_sha256": "c2138a20203b908e3ec8b6f0383e8982a64810e3c65e75226f7e7733d9deb7e4"
+    },
+    "main-mt-zh-en-mix5-forward": {
+      "value": "72.1",
+      "run": "/scratch/juno/jvl210002/bidir/results/2026-09-18/mt_zh-en/llama32-3b/small_s17",
+      "trial_sha256": "c2138a20203b908e3ec8b6f0383e8982a64810e3c65e75226f7e7733d9deb7e4"
+    },
+    "main-mt-zh-en-mix5-backward": {
+      "value": "77.1",
+      "run": "/scratch/juno/jvl210002/bidir/results/2026-09-18/mt_zh-en/llama32-3b/small_s17",
+      "trial_sha256": "c2138a20203b908e3ec8b6f0383e8982a64810e3c65e75226f7e7733d9deb7e4"
+    },
     "main-code-base-forward": {
       "value": "37.5",
       "run": "/scratch/juno/jvl210002/bidir/results/2026-09-17/code/llama32-3b/small_s17",
@@ -1169,6 +1329,46 @@
       "run": "/scratch/juno/jvl210002/bidir/results/2026-09-17/code/llama32-3b/small_s17",
       "trial_sha256": "a6db0a7b61da0b0d22062f4b5cec46121cdf0e519a97b3fee808511377f0afc6"
     },
+    "main-sql-base-forward": {
+      "value": "49.5",
+      "run": "/scratch/juno/jvl210002/bidir/results/2026-09-17/sql/llama32-3b/small_s17",
+      "trial_sha256": "8741dcc110e1295156f335209f2b89f6f1fd771d2ac7f247f49380624c727eea"
+    },
+    "main-sql-base-backward": {
+      "value": "51.1",
+      "run": "/scratch/juno/jvl210002/bidir/results/2026-09-17/sql/llama32-3b/small_s17",
+      "trial_sha256": "8741dcc110e1295156f335209f2b89f6f1fd771d2ac7f247f49380624c727eea"
+    },
+    "main-sql-sft-forward": {
+      "value": "62.4",
+      "run": "/scratch/juno/jvl210002/bidir/results/2026-09-17/sql/llama32-3b/small_s17",
+      "trial_sha256": "8741dcc110e1295156f335209f2b89f6f1fd771d2ac7f247f49380624c727eea"
+    },
+    "main-sql-sft-backward": {
+      "value": "23.2",
+      "run": "/scratch/juno/jvl210002/bidir/results/2026-09-17/sql/llama32-3b/small_s17",
+      "trial_sha256": "8741dcc110e1295156f335209f2b89f6f1fd771d2ac7f247f49380624c727eea"
+    },
+    "main-sql-mix1-forward": {
+      "value": "62.3",
+      "run": "/scratch/juno/jvl210002/bidir/results/2026-09-17/sql/llama32-3b/small_s17",
+      "trial_sha256": "8741dcc110e1295156f335209f2b89f6f1fd771d2ac7f247f49380624c727eea"
+    },
+    "main-sql-mix1-backward": {
+      "value": "48.5",
+      "run": "/scratch/juno/jvl210002/bidir/results/2026-09-17/sql/llama32-3b/small_s17",
+      "trial_sha256": "8741dcc110e1295156f335209f2b89f6f1fd771d2ac7f247f49380624c727eea"
+    },
+    "main-sql-mix5-forward": {
+      "value": "60.8",
+      "run": "/scratch/juno/jvl210002/bidir/results/2026-09-17/sql/llama32-3b/small_s17",
+      "trial_sha256": "8741dcc110e1295156f335209f2b89f6f1fd771d2ac7f247f49380624c727eea"
+    },
+    "main-sql-mix5-backward": {
+      "value": "55.0",
+      "run": "/scratch/juno/jvl210002/bidir/results/2026-09-17/sql/llama32-3b/small_s17",
+      "trial_sha256": "8741dcc110e1295156f335209f2b89f6f1fd771d2ac7f247f49380624c727eea"
+    },
     "main-fmt-base-forward": {
       "value": "60.2",
       "run": "/scratch/juno/jvl210002/bidir/results/2026-09-17/fmt/llama32-3b/small_s17",
@@ -1208,6 +1408,126 @@
       "value": "96.2",
       "run": "/scratch/juno/jvl210002/bidir/results/2026-09-17/fmt/llama32-3b/small_s17",
       "trial_sha256": "a0ca6766a80e190fcd26e029ec23a39b30264fa35b4d1cce23c6e81091fc399d"
+    },
+    "main-relation-base-forward": {
+      "value": "71.9",
+      "run": "/scratch/juno/jvl210002/bidir/results/2026-09-17/relation/llama32-3b/small_s17",
+      "trial_sha256": "a2ea81bcbfd86e6e3949d0e19e113b49d3725058fb522a4f5a111175163d5497"
+    },
+    "main-relation-base-backward": {
+      "value": "65.2",
+      "run": "/scratch/juno/jvl210002/bidir/results/2026-09-17/relation/llama32-3b/small_s17",
+      "trial_sha256": "a2ea81bcbfd86e6e3949d0e19e113b49d3725058fb522a4f5a111175163d5497"
+    },
+    "main-relation-sft-forward": {
+      "value": "86.7",
+      "run": "/scratch/juno/jvl210002/bidir/results/2026-09-17/relation/llama32-3b/small_s17",
+      "trial_sha256": "a2ea81bcbfd86e6e3949d0e19e113b49d3725058fb522a4f5a111175163d5497"
+    },
+    "main-relation-sft-backward": {
+      "value": "71.1",
+      "run": "/scratch/juno/jvl210002/bidir/results/2026-09-17/relation/llama32-3b/small_s17",
+      "trial_sha256": "a2ea81bcbfd86e6e3949d0e19e113b49d3725058fb522a4f5a111175163d5497"
+    },
+    "main-algebra-base-forward": {
+      "value": "17.3",
+      "run": "/scratch/juno/jvl210002/bidir/results/2026-09-17/algebra/llama32-3b/small_s17",
+      "trial_sha256": "69f561bf869247e60edb7f0897a4442cadae6cea46af8c0a5783aefcb960efc1"
+    },
+    "main-algebra-base-backward": {
+      "value": "14.7",
+      "run": "/scratch/juno/jvl210002/bidir/results/2026-09-17/algebra/llama32-3b/small_s17",
+      "trial_sha256": "69f561bf869247e60edb7f0897a4442cadae6cea46af8c0a5783aefcb960efc1"
+    },
+    "main-algebra-sft-forward": {
+      "value": "26.1",
+      "run": "/scratch/juno/jvl210002/bidir/results/2026-09-17/algebra/llama32-3b/small_s17",
+      "trial_sha256": "69f561bf869247e60edb7f0897a4442cadae6cea46af8c0a5783aefcb960efc1"
+    },
+    "main-algebra-sft-backward": {
+      "value": "7.8",
+      "run": "/scratch/juno/jvl210002/bidir/results/2026-09-17/algebra/llama32-3b/small_s17",
+      "trial_sha256": "69f561bf869247e60edb7f0897a4442cadae6cea46af8c0a5783aefcb960efc1"
+    },
+    "main-algebra-mix1-forward": {
+      "value": "25.5",
+      "run": "/scratch/juno/jvl210002/bidir/results/2026-09-17/algebra/llama32-3b/small_s17",
+      "trial_sha256": "69f561bf869247e60edb7f0897a4442cadae6cea46af8c0a5783aefcb960efc1"
+    },
+    "main-algebra-mix1-backward": {
+      "value": "14.6",
+      "run": "/scratch/juno/jvl210002/bidir/results/2026-09-17/algebra/llama32-3b/small_s17",
+      "trial_sha256": "69f561bf869247e60edb7f0897a4442cadae6cea46af8c0a5783aefcb960efc1"
+    },
+    "main-algebra-mix5-forward": {
+      "value": "26.8",
+      "run": "/scratch/juno/jvl210002/bidir/results/2026-09-17/algebra/llama32-3b/small_s17",
+      "trial_sha256": "69f561bf869247e60edb7f0897a4442cadae6cea46af8c0a5783aefcb960efc1"
+    },
+    "main-algebra-mix5-backward": {
+      "value": "20.6",
+      "run": "/scratch/juno/jvl210002/bidir/results/2026-09-17/algebra/llama32-3b/small_s17",
+      "trial_sha256": "69f561bf869247e60edb7f0897a4442cadae6cea46af8c0a5783aefcb960efc1"
+    },
+    "main-algebra-rev-base-forward": {
+      "value": "14.6",
+      "run": "/scratch/juno/jvl210002/bidir/results/2026-09-17/algebra_rev/llama32-3b/small_s17",
+      "trial_sha256": "c06a1e79a2739a3f113143105beb0ec9005903aafec08793ff5d67cf99eed259"
+    },
+    "main-algebra-rev-base-backward": {
+      "value": "17.4",
+      "run": "/scratch/juno/jvl210002/bidir/results/2026-09-17/algebra_rev/llama32-3b/small_s17",
+      "trial_sha256": "c06a1e79a2739a3f113143105beb0ec9005903aafec08793ff5d67cf99eed259"
+    },
+    "main-algebra-rev-sft-forward": {
+      "value": "43.6",
+      "run": "/scratch/juno/jvl210002/bidir/results/2026-09-17/algebra_rev/llama32-3b/small_s17",
+      "trial_sha256": "c06a1e79a2739a3f113143105beb0ec9005903aafec08793ff5d67cf99eed259"
+    },
+    "main-algebra-rev-sft-backward": {
+      "value": "14.7",
+      "run": "/scratch/juno/jvl210002/bidir/results/2026-09-17/algebra_rev/llama32-3b/small_s17",
+      "trial_sha256": "c06a1e79a2739a3f113143105beb0ec9005903aafec08793ff5d67cf99eed259"
+    },
+    "main-algebra-rev-mix1-forward": {
+      "value": "44.0",
+      "run": "/scratch/juno/jvl210002/bidir/results/2026-09-17/algebra_rev/llama32-3b/small_s17",
+      "trial_sha256": "c06a1e79a2739a3f113143105beb0ec9005903aafec08793ff5d67cf99eed259"
+    },
+    "main-algebra-rev-mix1-backward": {
+      "value": "10.6",
+      "run": "/scratch/juno/jvl210002/bidir/results/2026-09-17/algebra_rev/llama32-3b/small_s17",
+      "trial_sha256": "c06a1e79a2739a3f113143105beb0ec9005903aafec08793ff5d67cf99eed259"
+    },
+    "main-algebra-rev-mix5-forward": {
+      "value": "43.8",
+      "run": "/scratch/juno/jvl210002/bidir/results/2026-09-17/algebra_rev/llama32-3b/small_s17",
+      "trial_sha256": "c06a1e79a2739a3f113143105beb0ec9005903aafec08793ff5d67cf99eed259"
+    },
+    "main-algebra-rev-mix5-backward": {
+      "value": "15.8",
+      "run": "/scratch/juno/jvl210002/bidir/results/2026-09-17/algebra_rev/llama32-3b/small_s17",
+      "trial_sha256": "c06a1e79a2739a3f113143105beb0ec9005903aafec08793ff5d67cf99eed259"
+    },
+    "main-exec-base-forward": {
+      "value": "26.5",
+      "run": "/scratch/juno/jvl210002/bidir/results/2026-09-26/exec/llama32-3b/small_s17",
+      "trial_sha256": "cbc506f922473353c281b805671dc0c11fe3ea93408ede18d4a43fc3e4d1b3e7"
+    },
+    "main-exec-base-backward": {
+      "value": "16.5",
+      "run": "/scratch/juno/jvl210002/bidir/results/2026-09-26/exec/llama32-3b/small_s17",
+      "trial_sha256": "cbc506f922473353c281b805671dc0c11fe3ea93408ede18d4a43fc3e4d1b3e7"
+    },
+    "main-exec-sft-forward": {
+      "value": "29.0",
+      "run": "/scratch/juno/jvl210002/bidir/results/2026-09-26/exec/llama32-3b/small_s17",
+      "trial_sha256": "cbc506f922473353c281b805671dc0c11fe3ea93408ede18d4a43fc3e4d1b3e7"
+    },
+    "main-exec-sft-backward": {
+      "value": "13.0",
+      "run": "/scratch/juno/jvl210002/bidir/results/2026-09-26/exec/llama32-3b/small_s17",
+      "trial_sha256": "cbc506f922473353c281b805671dc0c11fe3ea93408ede18d4a43fc3e4d1b3e7"
     }
   },
   "source_sha256": {
@@ -1270,6 +1590,6 @@
     "/scratch/juno/jvl210002/bidir/runs/adapters/mt_en-de/llama32-3b/unlikelihood_r32_s17/training_summary.json": "83406a6cc032e2737b36e92d66907be12bf9caac9466c44839ee6728a14823ab",
     "/scratch/juno/jvl210002/bidir/runs/adapters/mt_en-de/llama32-3b/unlikelihood_r32_s17/run_manifest.json": "dab5b716af0e5d01900a224ec4dcee2be34d28dbb063fbe0cb6af8a7cc0a0a68"
   },
-  "generator_sha256": "334c7a0f2d6908f16c0ab99daa519b39a4f55116bb5ddbb086dc8df5264f32e0",
+  "generator_sha256": "ad74e616a37c1dbc34d6a60a11a23fca75bd17d8df73fa24bba4e0b5f9658261",
   "interpretation": "Descriptive per-pass rates; no pooled seeds, best-seed selection, cross-pass subtraction or significance from highlighting."
 }

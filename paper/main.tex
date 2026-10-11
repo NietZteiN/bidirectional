@@ -47,40 +47,45 @@
 
 \begin{abstract}
 Forward-only supervised fine-tuning can improve a trained mapping while damaging its
-backward counterpart, even when the base model already performs both. We study this
-tradeoff across translation, code transformation, semantic parsing, and formal tasks.
-Our central result is that a small amount of backward supervision can suffice: replacing
-just $1\%$ of forward training pairs with their reversals restores formatting backward
-success from \NUM{main-fmt-sft-backward}\% to \NUM{main-fmt-mix1-backward}\%, while
-forward success remains \NUM{main-fmt-mix1-forward}\% versus
-\NUM{main-fmt-sft-forward}\% under forward-only SFT in a fixed Llama3B comparison.
-The intervention uses ordinary cross-entropy, no new paired data, and the same number of
-training instances and optimizer steps. We compare all dose rungs with generic replay,
-longer forward training, reverse-only training, contrastive learning, and other auxiliary
-objectives. Forward-only auxiliary objectives often fail to preserve backward generation;
-mixed-direction objectives sometimes improve on reversed-pair SFT. Task-dependent costs
-and unit-conversion null results limit generality. Recovery diagnostics support selective
-interference in one cell, rather than universal memory erasure. These results make
-small-dose reversed-pair SFT a necessary baseline before adding objective complexity.
+backward counterpart. An apparent loss-based remedy may also change the directional
+information supplied during training, confounding objective and data effects. We test
+whether preservation requires a specialized loss or simply a small dose of backward
+examples across code transformation, format conversion, translation, semantic parsing,
+and algebra. Replacing just $1\%$ of forward pairs with their reversals restores formatting
+backward success from \NUM{main-fmt-sft-backward}\% to \NUM{main-fmt-mix1-backward}\%,
+while forward success remains \NUM{main-fmt-mix1-forward}\% versus
+\NUM{main-fmt-sft-forward}\% in a fixed Llama3B comparison. Ordinary cross-entropy
+requires no new paired data and matches training instances and optimizer steps.
+Small-dose recovery also appears in code, translation, and semantic parsing, with
+task-dependent costs. Directional and extra-CE controls separate this baseline from
+contrastive and other auxiliary objectives; mixed-direction losses sometimes add value.
+Candidate-ranking and layer-intervention diagnostics support output-selection interference
+as an explanatory hypothesis, without establishing a universal mechanism. Adverse dose
+results, failed task gates, and a replicated unit-conversion null bound generality.
+Small-dose reversed-pair SFT is therefore a necessary baseline for attributing preservation
+to a new objective.
 \end{abstract}
 
 \section{Introduction}
 \label{sec:intro}
+\IfFileExists{tables/main_adaptations.tex}{\input{tables/main_adaptations.tex}}{}
 
-Fine-tuning should improve a task without unnecessarily sacrificing capabilities the model
-already has. A paired dataset makes this concern concrete: translation can run in either
-language direction, a code transformation can be undone, and a question--SQL pair supports
-both parsing and verbalization. Training on one direction can improve that mapping while
-making the opposite direction fail. A forward-only evaluation would report success and
-miss the loss.
+\paragraph{Paired data carries a direction.}
+A translation pair supports either language direction; a code transformation can be undone;
+and a question--SQL pair supports both parsing and verbalization. These tasks use the same
+pair but ask the model to generate different sides. Fine-tuning on one direction can improve
+that mapping while making the backward task fail, even when the base model already performs
+both. A forward-only evaluation would report success and miss the loss.
 
-Prior work establishes directional degradation in code transformation
+Prior work establishes this degradation in code transformation
 \citep{nikiema2025contrastive} and translation \citep{zhu2024finetuning}.
-We ask a practical question: \emph{if we want to keep the backward task, how much backward
-training is needed, and does it require a new loss?} Our answer starts with changing the
-training inputs, rather than the objective. Each example already supplies a backward target;
-we replace a small fraction of forward pairs with their reversals and train with ordinary
-cross-entropy.
+An auxiliary loss can appear to repair it while also introducing different paired examples
+or directional information. Matching total instances, tokens, or compute does not by itself
+hold that information fixed. We treat direction as an experimental factor: first ask what
+ordinary cross-entropy achieves with backward examples, then test what an auxiliary objective
+adds. The practical question is \emph{how little backward training is needed to keep the
+backward task?} Every existing pair already supplies a target; replacing a small fraction
+with reversed pairs requires no new paired corpus.
 
 \paragraph{The problem and the simple intervention.}
 Table~\ref{tab:main-adaptations} puts base, forward-only SFT, and every registered adaptation
@@ -104,15 +109,16 @@ is that small-dose SFT is an essential baseline, not that auxiliary objectives n
 Replacement matches instances and optimizer steps; realized token exposure and runtime
 are audited separately.
 
-\paragraph{What the comparison establishes.}
-We contribute a task-by-adaptation account of directional loss and preservation, a low-dose
-ordinary-SFT baseline, and objective comparisons that retain directional and compute controls.
-We also test whether lost behavior can be recovered. The evidence supports selective
-interference in a formatting cell but does not identify a universal internal cause. It
-should not be reduced to memorization or permanent erasure: behavioral failure alone
-establishes neither. Failed new-domain gates, replicated unit-conversion null results,
-and recipe-dependent forward costs bound the practical claim. The broader model/seed audit
-and uncertainty accompany the compact main tables in the appendix and source evidence.
+\paragraph{From a code-specific attribution problem to a broader preservation test.}
+We ask three linked questions: does the problem and fix extend across task families;
+how small can the backward dose be; and what changes in the model's behavior when the fix
+works? The main table tests code, serialization, translation, semantic parsing, and formal
+reasoning under the same directional intervention. The diagnostic evidence then examines
+answer competition and selective update interference. We distinguish these explanations
+from claims about memorization or permanent erasure, which backward failure alone cannot
+establish. Failed new-domain gates, replicated unit-conversion nulls, and recipe-dependent
+forward costs bound the claim. Model/seed coverage and paired uncertainty accompany the
+compact main tables in the appendix and source evidence.
 
 \section{Directional collapse, defined}
 \label{sec:defined}
@@ -175,7 +181,6 @@ all arm definitions and realized direction/token counts remain in the run manife
 
 \section{Forward gains can hide backward losses}
 \label{sec:general}
-\IfFileExists{tables/main_adaptations.tex}{\input{tables/main_adaptations.tex}}{}
 Table~\ref{tab:main-adaptations} is the reference comparison: one fixed model and training
 seed, all eleven audited task orientations, and every registered main-grid adaptation.
 Paired forward/backward rows make the tradeoff visible without pooling tasks or choosing
@@ -208,6 +213,22 @@ success changes from \NUM{main-code-sft-forward}\% to \NUM{main-code-mix1-forwar
 Generic replay and doubled forward training do not provide comparable backward recovery
 in these same passes (Table~\ref{tab:main-adaptations}). The contrast is particularly useful:
 more forward optimization is not a substitute for correct backward targets.
+
+\paragraph{Does it work outside code and formatting?}
+In English-to-Chinese translation, $1\%$ reversal raises backward success from
+\NUM{main-mt-en-zh-sft-backward}\% to \NUM{main-mt-en-zh-mix1-backward}\%; forward
+success changes from \NUM{main-mt-en-zh-sft-forward}\% to
+\NUM{main-mt-en-zh-mix1-forward}\%, exposing a retention cost. In question-to-SQL
+semantic parsing, backward success rises from \NUM{main-sql-sft-backward}\% to
+\NUM{main-sql-mix1-backward}\% at $1\%$, and \NUM{main-sql-mix5-backward}\% at $5\%$;
+forward success at $1\%$ is \NUM{main-sql-mix1-forward}\% versus
+\NUM{main-sql-sft-forward}\% for SFT. For expansion-to-factorization algebra, $1\%$
+reversal raises backward success from \NUM{main-algebra-sft-backward}\% to
+\NUM{main-algebra-mix1-backward}\%, close to the base's
+\NUM{main-algebra-base-backward}\%. Thus the pattern spans linguistic, executable,
+structured-output and symbolic tasks; the opposite algebra orientation retains its adverse
+low-dose result. These are fixed reference-cell comparisons, not evidence of equal effects
+across fields or training seeds.
 
 The full dose ladder also shows why these examples cannot justify a universal $1\%$ rule.
 Some tasks need higher doses; algebra includes an adverse low-dose result. We define the
@@ -254,46 +275,57 @@ support tuned-model comparisons; their descriptive base results remain separate.
 unlimited search, whereas a determined inverse can remain computationally difficult. Failed
 gates do not distinguish these explanations by themselves.
 
-\section{Is the reverse capability still accessible?}
+\section{Why can backward examples help?}
 \label{sec:mechanism}
 
-Four instruments, reported as separate verdicts rather than averaged: they measure different
-things, and a disagreement between them is a finding rather than noise.
+\paragraph{Different conditionals, identical underlying pairs.}
+Forward CE trains the target $y$ given forward instruction $I_F$ and input $x$; it supplies
+no direct penalty for an incorrect backward answer given $I_B$ and $y$. Let $\ell_\theta$
+be target-completion cross-entropy. Partition the original pairs into unreversed $F_\rho$ and
+reversed $B_\rho$, where $|B_\rho|/|D|$ is the realized backward share. At the pair-distribution level, replacement has the schematic objective
+\begin{equation}
+\begin{aligned}
+\mathcal L_\rho = \frac{1}{|D|}\Big[&
+\sum_{(x,y)\in F_\rho}\ell_\theta(y\mid I_F,x)\\
+&+\sum_{(x,y)\in B_\rho}\ell_\theta(x\mid I_B,y)\Big].
+\end{aligned}
+\end{equation}
+The relation between $x$ and $y$ is unchanged; the requested conditional changes.
+Our hypothesis is that backward examples maintain the appropriate task-conditioned output
+selection, counteracting a bias induced by forward-only updates. If the base already performs
+the inverse, a small dose may suffice to maintain that conditioning. This predicts preservation
+from ordinary CE without requiring a special alignment loss. It does not predict that every
+inverse is learnable or every model must collapse.
 
-\paragraph{Elicitation.} The audited reports include both prompt recovery and little recovery
-under tested prompts. Best-prompt summaries are exploratory; behavioral recovery does not
-prove a specific internal mechanism.
-\paragraph{Adapter scaling.} Scaling curves retain forward and reverse success together.
-Forward-progress ratios are undefined when the full update has no positive forward gain,
-and a curve without reverse loss cannot locate a collapse threshold.
-\paragraph{Relearning against a never-had control.} Relearning curves are matched to the
-never-had control by model and seed. A small-sample recovery advantage is descriptive evidence
-of accessible capability; its uncertainty and starting loss must accompany the comparison.
-This is also where the contrast with the reversal curse \citep{berglund2024reversal} becomes
-experimental rather than rhetorical: that literature describes capabilities never acquired, and
-our never-had control is that case, constructed.
-\paragraph{Update repair.} LoRA spectral sweeps are exploratory median-relative filters on
-an already low-rank update, with no full-rank noise bulk. Selecting a best threshold on test
-success is exploratory. Full-FT projection repair uses a separately registered fixed threshold
-and has produced \NUM{audited-fullft-repairs} checkpoint passing saved-weight audits.
-The completed fresh generation campaign improves forward and reverse success relative to the
-original full-SFT checkpoint. This single exploratory repair does not establish a general remedy.
+\paragraph{Evidence for output-selection interference.}
+Five completed seed-17 diagnostics test this account (Appendix~\ref{app:mechanism-sprint}).
+In formatting and translation collapse cells, forward SFT reduces preference for correct
+backward answers over copied inputs; mixed-direction SFT restores that preference.
+Gemma translation is particularly informative: absolute backward-answer loss improves
+relative to base despite collapsed generation. Correct-answer likelihood alone therefore
+fails to explain the behavior; relative output preference is a candidate explanation. Formatting
+middle-band removals recover backward success beyond scaling and random removals matched
+for retained update norm, with small forward changes. All bands and both directions remain
+reported, and edit norms are not also matched. This supports selective interference in one
+cell, not a universal causal account.
 
-\paragraph{Explanatory hypothesis and tests.}
-Five completed seed-17 diagnostics test task-conditioned output selection
-(Appendix~\ref{app:mechanism-sprint}). In formatting and translation collapse cells,
-forward SFT reduces reverse gold-over-copy preference and mixed-direction SFT restores it.
-Absolute reverse-answer loss worsens in Llama but improves in Gemma translation despite
-collapsed generation: answer likelihood and generation are distinct. Final-checkpoint
-gradient cosines provide little support for persistent gradient conflict. Local reverse
-updates improve held-out loss even in the units null cell, so improvement alone does not
-diagnose collapse. Formatting middle-band removals recover reverse success beyond scaling
-and random removals matched for retained update norm; all bands and both directions remain
-reported. Edit norms are not also matched. These exploratory findings support selective
-interference in one cell, without establishing stored knowledge or a universal mechanism.
-Direction probes still require input-cue controls; the never-had task differs from the
-recovered tasks, and LoRA preserves base weights by construction. Gemma diagnostics exclude
-inactive vision factors. The remaining registered diagnostics are running in the background; their pending status supplies no evidence.
+\paragraph{What the diagnostics rule out or leave open.}
+Final-checkpoint gradient cosines provide little support for persistent gradient conflict.
+Local backward updates improve held-out loss even in the units null cell, so improvement
+alone is not a collapse-specific signature or a demonstrated generation repair. Total and
+per-token candidate rankings are both reported; candidate lengths and valid alternative
+translations limit their interpretation. Direction probes still need input-cue controls.
+Gemma diagnostics exclude inactive vision factors. Further registered diagnostics are
+running; pending results supply no evidence.
+
+\paragraph{Recovery checks remain complementary.}
+Prompt elicitation, adapter scaling, and model/seed-matched relearning against a never-had
+control give separate verdicts. The never-had control uses a different invented-format task,
+and LoRA retains base weights by construction; neither behavioral recovery nor relearning
+alone proves stored knowledge. Spectral sweeps are exploratory. The separately registered
+full-weight projection repair has \NUM{audited-fullft-repairs} saved checkpoint passing
+weight audits; its fresh campaign improves both directions. This is a scoped repair result,
+not a general remedy or an identified internal cause.
 
 \section{Consequences for attribution}
 \label{sec:attrib}
@@ -316,9 +348,10 @@ model--task--seed cells. Appendix~\ref{app:complete-main-comparisons} retains ev
 registered primary contrast, per-seed uncertainty and exposure control.
 
 Forward-only contrastive alignment provides no consistent benefit over extra-CE or shuffled
-controls. In the reference code cell, conflict-aware fine-tuning falls well short of $5\%$
-reversed-pair SFT on backward generation; forward-only unlikelihood also fails to preserve
-backward translation in the audited cells. This supports trying backward examples before
+controls. In the reference code cell, the reconstructed code-equivalence CFT recipe falls well short of $5\%$
+reversed-pair SFT on backward generation. CFT trains equivalence judgments with CE; it is
+distinct from the representation-alignment arms. Forward-only unlikelihood also fails to
+preserve backward translation in the audited cells. This supports trying backward examples before
 adding an auxiliary objective. It does not establish that every loss baseline is inferior:
 mixed-direction alignment sometimes beats $5\%$ SFT, and round-trip training wins backward
 success in one SQL cell while trading forward performance. Extra-CE controls match an
@@ -395,13 +428,14 @@ both directions. These controls test the scope of an objective-specific gain wit
 that auxiliary objectives are universally unnecessary.
 
 \section{Conclusion}
-Forward-only SFT can improve the trained task while damaging an existing backward task.
-Small-dose reversed-pair SFT directly addresses that failure with ordinary cross-entropy:
-$1\%$ reversal gives substantial backward recovery with little forward change in the
-reference formatting and code cells. The complete tables retain harder tradeoffs, nulls,
-and objective-specific gains. Evaluate both directions and establish this simple baseline
-before attributing preservation to a more complex loss. Recovery evidence motivates
-selective interference as a hypothesis, without proving memory erasure or a universal cause.
+Forward-only SFT can improve a trained mapping while damaging an existing backward task.
+Changing data direction supplies a simple preservation baseline: small reversed-pair doses
+recover backward behavior across code, formatting, translation, semantic parsing, and
+selected algebra orientations using ordinary CE. The required dose and forward cost vary;
+nulls and auxiliary-objective gains remain visible. Candidate competition and selective
+layer interventions suggest output-selection interference as a hypothesis to test further.
+The practical rule is to evaluate both directions and hold directional information explicit
+before attributing preservation to a new loss.
 
 % ---------------------------------------------------------------------------
 % ARR requires a Limitations section. It is unnumbered and does not count against the page

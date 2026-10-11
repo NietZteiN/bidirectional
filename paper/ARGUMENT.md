@@ -3,6 +3,44 @@
 > Sprint limits below are historical; commit34de8d0 preserves that draft and receipts.
 > See [background plan](../docs/BACKGROUND_RUN_PLAN.md).
 
+# Workshop framing and the current extension — October 10, 2026
+
+The framing source is our local non-archival ATTRIB/NeurIPS workshop draft,
+[“Attributing Gains in Paired Training: Objective or Data Direction?”](../papers/theflipflip_workshop2026.tex)
+(the accompanying [PDF](../papers/theflipflip_workshop2026.pdf) retains the earlier
+“The Free Flip” title). Treat it as a workshop draft, not a
+verified acceptance or a newly established result. Its introduction and decomposition
+sections supply the conceptual starting point: an auxiliary method can change both the
+objective and directional exposure; matching total instances/tokens/compute does not
+resolve that confound. The practical direction-matched control is also a remedy.
+
+The current paper extends this starting point along three questions:
+
+1. **Across fields:** show the same replacement intervention on code, formatting,
+   translation, SQL/semantic parsing and algebra, with all task orientations and both
+   directions visible. Use the 1% formatting/code examples plus source-generated
+   translation, SQL and algebra rates; retain opposite-orientation adverse results and
+   the replicated units null. Task families are not independent replicas of one effect.
+2. **How much input:** establish the full dose/forward-cost curve, rather than carry over
+   the workshop's half-reversal result or imply that 1% works uniformly.
+3. **Why it can help:** write the forward/backward conditional CE objective explicitly.
+   The hypothesis is that small backward supervision maintains task-conditioned output
+   selection. Gold-versus-copy rankings and matched layer removals support this account
+   in selected cells; Gemma absolute-NLL and units local-update controls limit competing
+   explanations. No universal memory-erasure or persistent-gradient-conflict claim.
+
+CFT denotes the reconstructed contrastive fine-tuning recipe using code-equivalence
+judgments, not conflict-aware fine-tuning; distinguish it from paired embedding alignment.
+
+The workshop's numerical decomposition and older model/corpus results are not copied into
+the current tables. Its stronger “all recovery belongs to direction,” uniform-free-cost,
+disproportionate-general-loss and universal-invertibility claims are not inherited.
+Current mixed-direction contrastive wins and task-specific forward costs stay in the
+argument. The manuscript uses this framing directly; it does not fabricate a bibliographic
+entry or public publication status for the local anonymous workshop draft. All new prose
+rates come from `MAIN_RESULTS.json` and the existing audited campaigns, with within-pass
+comparisons only. The background queue remains active under Amendment 55.
+
 # Current paper story — October 10, 2026
 
 Forward-only SFT can improve the trained task while damaging its backward counterpart.

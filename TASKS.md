@@ -76,6 +76,10 @@ The sprint snapshot contains five proof-valid production jobs. Amendment55 resum
 
 ## Current manuscript revision — October 10
 
+- [x] Build from the local ATTRIB/NeurIPS workshop's objective-versus-data-direction
+      framing; extend the argument across fields, doses and explanatory diagnostics.
+- [x] Add source-generated translation, semantic-parsing and algebra examples, and
+      state the conditional-CE/output-selection hypothesis with counterevidence explicit.
 - [x] Center abstract, introduction and conclusion on forward gains/backward loss and
       small-dose reversed-pair SFT, with measured 1% formatting/code examples.
 - [x] Add compact percentage main tables: all eleven reference task orientations and
@@ -85,7 +89,7 @@ The sprint snapshot contains five proof-valid production jobs. Amendment55 resum
       adverse dose effects, units nulls and loss-baseline wins.
 - [x] Keep model/seed counts and paired uncertainty in the appendix/source audit.
 - [x] Verify source integrity and controller regressions (32 targeted tests); rebuild
-      the seven-page main draft, 168-word abstract, with all numbers resolved.
+      the seven-page main draft, 175-word abstract, with all numbers resolved.
 
 ## Completed sprint CPU/paper delivery — commit34de8d0
 

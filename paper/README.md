@@ -11,6 +11,14 @@ cross-entropy. Lead with the fixed-seed formatting and code examples: 1% reversa
 substantial backward recovery with little forward change. Use source-generated numbers;
 do not claim a universal 1% optimum or universal superiority over auxiliary losses.
 
+The framing builds from our local [ATTRIB/NeurIPS workshop draft](../papers/theflipflip_workshop2026.tex):
+objective changes and data direction must be separated. The extension now makes three
+questions explicit: transfer across task families, the required backward dose, and why
+backward examples can help. The main text reports source-generated translation, SQL and
+algebra examples alongside code/formatting and connects candidate-ranking and matched
+layer interventions to a scoped output-selection hypothesis. See the workshop-framing
+section of [ARGUMENT.md](ARGUMENT.md) for the provenance and limits of this extension.
+
 The main presentation now has two percentage tables:
 
 - Table 1: all eleven Llama3B seed-17 task orientations, forward/backward rows, base,
