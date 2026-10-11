@@ -79,7 +79,7 @@ layer controls and local-step results. Gold/copy rankings report both total and 
 NLL for both directions. Final-checkpoint gradients do not establish persistent conflict;
 local reverse updates improve held-out loss even in the null cell. The controller remains
 alive for analysis/archive refreshes, with the scope guard still enabled. Broader registered
-work remains deferred rather than silently resumed. See paper/SPRINT_COMPLETION.json for
+work remains deferred rather than silently resumed. See paper/bidir/SPRINT_COMPLETION.json for
 the final delivery receipts after paper and bundle verification.
 
 Final delivery checks pass: eight body pages, seventeen total, no visible placeholders or

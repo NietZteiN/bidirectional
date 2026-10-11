@@ -1,10 +1,10 @@
 {
-  "generated_utc": "2026-10-11T11:13:39.440594+00:00",
+  "generated_utc": "2026-10-11T14:00:46.124400+00:00",
   "resolved": {
     "audited-core-cells": {
       "value": "91",
       "sources": [
-        "/work/jvl210002/migration/bidirectional/paper/EVIDENCE_SNAPSHOT.json",
+        "/work/jvl210002/migration/bidirectional/paper/bidir/EVIDENCE_SNAPSHOT.json",
         "/scratch/juno/jvl210002/bidir/results/2026-10-04/fmt/llama32-3b/contrastive_pilot_s17/contrastive_contrasts.json",
         "/scratch/juno/jvl210002/bidir/results/2026-10-04/fmt/llama32-3b/contrastive_pilot_s17/trials.jsonl",
         "/scratch/juno/jvl210002/bidir/results/2026-10-04/mt_de-en/gemma3-4b/contrastive_pilot_s17/contrastive_contrasts.json",
@@ -260,7 +260,7 @@
     "core-collapse-cells": {
       "value": "52",
       "sources": [
-        "/work/jvl210002/migration/bidirectional/paper/EVIDENCE_SNAPSHOT.json",
+        "/work/jvl210002/migration/bidirectional/paper/bidir/EVIDENCE_SNAPSHOT.json",
         "/scratch/juno/jvl210002/bidir/results/2026-10-04/fmt/llama32-3b/contrastive_pilot_s17/contrastive_contrasts.json",
         "/scratch/juno/jvl210002/bidir/results/2026-10-04/fmt/llama32-3b/contrastive_pilot_s17/trials.jsonl",
         "/scratch/juno/jvl210002/bidir/results/2026-10-04/mt_de-en/gemma3-4b/contrastive_pilot_s17/contrastive_contrasts.json",
@@ -516,7 +516,7 @@
     "core-domain-count": {
       "value": "11",
       "sources": [
-        "/work/jvl210002/migration/bidirectional/paper/EVIDENCE_SNAPSHOT.json",
+        "/work/jvl210002/migration/bidirectional/paper/bidir/EVIDENCE_SNAPSHOT.json",
         "/scratch/juno/jvl210002/bidir/results/2026-10-04/fmt/llama32-3b/contrastive_pilot_s17/contrastive_contrasts.json",
         "/scratch/juno/jvl210002/bidir/results/2026-10-04/fmt/llama32-3b/contrastive_pilot_s17/trials.jsonl",
         "/scratch/juno/jvl210002/bidir/results/2026-10-04/mt_de-en/gemma3-4b/contrastive_pilot_s17/contrastive_contrasts.json",
@@ -772,7 +772,7 @@
     "main-algebra-base-backward": {
       "value": "14.7",
       "sources": [
-        "/work/jvl210002/migration/bidirectional/paper/MAIN_RESULTS.json",
+        "/work/jvl210002/migration/bidirectional/paper/bidir/MAIN_RESULTS.json",
         "/scratch/juno/jvl210002/bidir/results/2026-09-17/algebra/llama32-3b/small_s17/trials.jsonl",
         "/scratch/juno/jvl210002/bidir/results/2026-09-17/algebra/llama32-3b/small_s17/summary.json"
       ]
@@ -780,7 +780,7 @@
     "main-algebra-mix1-backward": {
       "value": "14.6",
       "sources": [
-        "/work/jvl210002/migration/bidirectional/paper/MAIN_RESULTS.json",
+        "/work/jvl210002/migration/bidirectional/paper/bidir/MAIN_RESULTS.json",
         "/scratch/juno/jvl210002/bidir/results/2026-09-17/algebra/llama32-3b/small_s17/trials.jsonl",
         "/scratch/juno/jvl210002/bidir/results/2026-09-17/algebra/llama32-3b/small_s17/summary.json"
       ]
@@ -788,7 +788,7 @@
     "main-algebra-rev-mix1-backward": {
       "value": "10.6",
       "sources": [
-        "/work/jvl210002/migration/bidirectional/paper/MAIN_RESULTS.json",
+        "/work/jvl210002/migration/bidirectional/paper/bidir/MAIN_RESULTS.json",
         "/scratch/juno/jvl210002/bidir/results/2026-09-17/algebra_rev/llama32-3b/small_s17/trials.jsonl",
         "/scratch/juno/jvl210002/bidir/results/2026-09-17/algebra_rev/llama32-3b/small_s17/summary.json"
       ]
@@ -796,7 +796,7 @@
     "main-algebra-rev-mix5-backward": {
       "value": "15.8",
       "sources": [
-        "/work/jvl210002/migration/bidirectional/paper/MAIN_RESULTS.json",
+        "/work/jvl210002/migration/bidirectional/paper/bidir/MAIN_RESULTS.json",
         "/scratch/juno/jvl210002/bidir/results/2026-09-17/algebra_rev/llama32-3b/small_s17/trials.jsonl",
         "/scratch/juno/jvl210002/bidir/results/2026-09-17/algebra_rev/llama32-3b/small_s17/summary.json"
       ]
@@ -804,7 +804,7 @@
     "main-algebra-rev-sft-backward": {
       "value": "14.7",
       "sources": [
-        "/work/jvl210002/migration/bidirectional/paper/MAIN_RESULTS.json",
+        "/work/jvl210002/migration/bidirectional/paper/bidir/MAIN_RESULTS.json",
         "/scratch/juno/jvl210002/bidir/results/2026-09-17/algebra_rev/llama32-3b/small_s17/trials.jsonl",
         "/scratch/juno/jvl210002/bidir/results/2026-09-17/algebra_rev/llama32-3b/small_s17/summary.json"
       ]
@@ -812,7 +812,7 @@
     "main-code-base-backward": {
       "value": "32.0",
       "sources": [
-        "/work/jvl210002/migration/bidirectional/paper/MAIN_RESULTS.json",
+        "/work/jvl210002/migration/bidirectional/paper/bidir/MAIN_RESULTS.json",
         "/scratch/juno/jvl210002/bidir/results/2026-09-17/code/llama32-3b/small_s17/trials.jsonl",
         "/scratch/juno/jvl210002/bidir/results/2026-09-17/code/llama32-3b/small_s17/summary.json"
       ]
@@ -820,7 +820,7 @@
     "main-code-base-forward": {
       "value": "37.5",
       "sources": [
-        "/work/jvl210002/migration/bidirectional/paper/MAIN_RESULTS.json",
+        "/work/jvl210002/migration/bidirectional/paper/bidir/MAIN_RESULTS.json",
         "/scratch/juno/jvl210002/bidir/results/2026-09-17/code/llama32-3b/small_s17/trials.jsonl",
         "/scratch/juno/jvl210002/bidir/results/2026-09-17/code/llama32-3b/small_s17/summary.json"
       ]
@@ -828,7 +828,7 @@
     "main-code-mix1-backward": {
       "value": "55.8",
       "sources": [
-        "/work/jvl210002/migration/bidirectional/paper/MAIN_RESULTS.json",
+        "/work/jvl210002/migration/bidirectional/paper/bidir/MAIN_RESULTS.json",
         "/scratch/juno/jvl210002/bidir/results/2026-09-17/code/llama32-3b/small_s17/trials.jsonl",
         "/scratch/juno/jvl210002/bidir/results/2026-09-17/code/llama32-3b/small_s17/summary.json"
       ]
@@ -836,7 +836,7 @@
     "main-code-mix1-forward": {
       "value": "82.8",
       "sources": [
-        "/work/jvl210002/migration/bidirectional/paper/MAIN_RESULTS.json",
+        "/work/jvl210002/migration/bidirectional/paper/bidir/MAIN_RESULTS.json",
         "/scratch/juno/jvl210002/bidir/results/2026-09-17/code/llama32-3b/small_s17/trials.jsonl",
         "/scratch/juno/jvl210002/bidir/results/2026-09-17/code/llama32-3b/small_s17/summary.json"
       ]
@@ -844,7 +844,7 @@
     "main-code-mix1-pairs": {
       "value": "62",
       "sources": [
-        "/work/jvl210002/migration/bidirectional/paper/MAIN_RESULTS.json",
+        "/work/jvl210002/migration/bidirectional/paper/bidir/MAIN_RESULTS.json",
         "/scratch/juno/jvl210002/bidir/results/2026-09-17/code/llama32-3b/small_s17/trials.jsonl",
         "/scratch/juno/jvl210002/bidir/results/2026-09-17/code/llama32-3b/small_s17/summary.json",
         "/scratch/juno/jvl210002/bidir/runs/adapters/code/llama32-3b/mix1_r32_s17/training_summary.json"
@@ -853,7 +853,7 @@
     "main-code-sft-backward": {
       "value": "3.8",
       "sources": [
-        "/work/jvl210002/migration/bidirectional/paper/MAIN_RESULTS.json",
+        "/work/jvl210002/migration/bidirectional/paper/bidir/MAIN_RESULTS.json",
         "/scratch/juno/jvl210002/bidir/results/2026-09-17/code/llama32-3b/small_s17/trials.jsonl",
         "/scratch/juno/jvl210002/bidir/results/2026-09-17/code/llama32-3b/small_s17/summary.json"
       ]
@@ -861,7 +861,7 @@
     "main-code-sft-forward": {
       "value": "82.4",
       "sources": [
-        "/work/jvl210002/migration/bidirectional/paper/MAIN_RESULTS.json",
+        "/work/jvl210002/migration/bidirectional/paper/bidir/MAIN_RESULTS.json",
         "/scratch/juno/jvl210002/bidir/results/2026-09-17/code/llama32-3b/small_s17/trials.jsonl",
         "/scratch/juno/jvl210002/bidir/results/2026-09-17/code/llama32-3b/small_s17/summary.json"
       ]
@@ -869,7 +869,7 @@
     "main-code-training-pairs": {
       "value": "6499",
       "sources": [
-        "/work/jvl210002/migration/bidirectional/paper/MAIN_RESULTS.json",
+        "/work/jvl210002/migration/bidirectional/paper/bidir/MAIN_RESULTS.json",
         "/scratch/juno/jvl210002/bidir/results/2026-09-17/code/llama32-3b/small_s17/trials.jsonl",
         "/scratch/juno/jvl210002/bidir/results/2026-09-17/code/llama32-3b/small_s17/summary.json",
         "/scratch/juno/jvl210002/bidir/runs/adapters/code/llama32-3b/sft_r32_s17/training_summary.json"
@@ -878,7 +878,7 @@
     "main-fmt-base-backward": {
       "value": "51.1",
       "sources": [
-        "/work/jvl210002/migration/bidirectional/paper/MAIN_RESULTS.json",
+        "/work/jvl210002/migration/bidirectional/paper/bidir/MAIN_RESULTS.json",
         "/scratch/juno/jvl210002/bidir/results/2026-09-17/fmt/llama32-3b/small_s17/trials.jsonl",
         "/scratch/juno/jvl210002/bidir/results/2026-09-17/fmt/llama32-3b/small_s17/summary.json"
       ]
@@ -886,7 +886,7 @@
     "main-fmt-base-forward": {
       "value": "60.2",
       "sources": [
-        "/work/jvl210002/migration/bidirectional/paper/MAIN_RESULTS.json",
+        "/work/jvl210002/migration/bidirectional/paper/bidir/MAIN_RESULTS.json",
         "/scratch/juno/jvl210002/bidir/results/2026-09-17/fmt/llama32-3b/small_s17/trials.jsonl",
         "/scratch/juno/jvl210002/bidir/results/2026-09-17/fmt/llama32-3b/small_s17/summary.json"
       ]
@@ -894,7 +894,7 @@
     "main-fmt-mix1-backward": {
       "value": "90.2",
       "sources": [
-        "/work/jvl210002/migration/bidirectional/paper/MAIN_RESULTS.json",
+        "/work/jvl210002/migration/bidirectional/paper/bidir/MAIN_RESULTS.json",
         "/scratch/juno/jvl210002/bidir/results/2026-09-17/fmt/llama32-3b/small_s17/trials.jsonl",
         "/scratch/juno/jvl210002/bidir/results/2026-09-17/fmt/llama32-3b/small_s17/summary.json"
       ]
@@ -902,7 +902,7 @@
     "main-fmt-mix1-forward": {
       "value": "99.6",
       "sources": [
-        "/work/jvl210002/migration/bidirectional/paper/MAIN_RESULTS.json",
+        "/work/jvl210002/migration/bidirectional/paper/bidir/MAIN_RESULTS.json",
         "/scratch/juno/jvl210002/bidir/results/2026-09-17/fmt/llama32-3b/small_s17/trials.jsonl",
         "/scratch/juno/jvl210002/bidir/results/2026-09-17/fmt/llama32-3b/small_s17/summary.json"
       ]
@@ -910,7 +910,7 @@
     "main-fmt-mix1-pairs": {
       "value": "65",
       "sources": [
-        "/work/jvl210002/migration/bidirectional/paper/MAIN_RESULTS.json",
+        "/work/jvl210002/migration/bidirectional/paper/bidir/MAIN_RESULTS.json",
         "/scratch/juno/jvl210002/bidir/results/2026-09-17/fmt/llama32-3b/small_s17/trials.jsonl",
         "/scratch/juno/jvl210002/bidir/results/2026-09-17/fmt/llama32-3b/small_s17/summary.json",
         "/scratch/juno/jvl210002/bidir/runs/adapters/fmt/llama32-3b/mix1_r32_s17/training_summary.json"
@@ -919,7 +919,7 @@
     "main-fmt-mix5-backward": {
       "value": "96.2",
       "sources": [
-        "/work/jvl210002/migration/bidirectional/paper/MAIN_RESULTS.json",
+        "/work/jvl210002/migration/bidirectional/paper/bidir/MAIN_RESULTS.json",
         "/scratch/juno/jvl210002/bidir/results/2026-09-17/fmt/llama32-3b/small_s17/trials.jsonl",
         "/scratch/juno/jvl210002/bidir/results/2026-09-17/fmt/llama32-3b/small_s17/summary.json"
       ]
@@ -927,7 +927,7 @@
     "main-fmt-sft-backward": {
       "value": "0.4",
       "sources": [
-        "/work/jvl210002/migration/bidirectional/paper/MAIN_RESULTS.json",
+        "/work/jvl210002/migration/bidirectional/paper/bidir/MAIN_RESULTS.json",
         "/scratch/juno/jvl210002/bidir/results/2026-09-17/fmt/llama32-3b/small_s17/trials.jsonl",
         "/scratch/juno/jvl210002/bidir/results/2026-09-17/fmt/llama32-3b/small_s17/summary.json"
       ]
@@ -935,7 +935,7 @@
     "main-fmt-sft-forward": {
       "value": "99.7",
       "sources": [
-        "/work/jvl210002/migration/bidirectional/paper/MAIN_RESULTS.json",
+        "/work/jvl210002/migration/bidirectional/paper/bidir/MAIN_RESULTS.json",
         "/scratch/juno/jvl210002/bidir/results/2026-09-17/fmt/llama32-3b/small_s17/trials.jsonl",
         "/scratch/juno/jvl210002/bidir/results/2026-09-17/fmt/llama32-3b/small_s17/summary.json"
       ]
@@ -943,7 +943,7 @@
     "main-fmt-training-pairs": {
       "value": "6500",
       "sources": [
-        "/work/jvl210002/migration/bidirectional/paper/MAIN_RESULTS.json",
+        "/work/jvl210002/migration/bidirectional/paper/bidir/MAIN_RESULTS.json",
         "/scratch/juno/jvl210002/bidir/results/2026-09-17/fmt/llama32-3b/small_s17/trials.jsonl",
         "/scratch/juno/jvl210002/bidir/results/2026-09-17/fmt/llama32-3b/small_s17/summary.json",
         "/scratch/juno/jvl210002/bidir/runs/adapters/fmt/llama32-3b/sft_r32_s17/training_summary.json"
@@ -952,7 +952,7 @@
     "main-mt-en-zh-mix1-backward": {
       "value": "68.2",
       "sources": [
-        "/work/jvl210002/migration/bidirectional/paper/MAIN_RESULTS.json",
+        "/work/jvl210002/migration/bidirectional/paper/bidir/MAIN_RESULTS.json",
         "/scratch/juno/jvl210002/bidir/results/2026-09-17/mt_en-zh/llama32-3b/small_s17/trials.jsonl",
         "/scratch/juno/jvl210002/bidir/results/2026-09-17/mt_en-zh/llama32-3b/small_s17/summary.json"
       ]
@@ -960,7 +960,7 @@
     "main-mt-en-zh-mix1-forward": {
       "value": "76.6",
       "sources": [
-        "/work/jvl210002/migration/bidirectional/paper/MAIN_RESULTS.json",
+        "/work/jvl210002/migration/bidirectional/paper/bidir/MAIN_RESULTS.json",
         "/scratch/juno/jvl210002/bidir/results/2026-09-17/mt_en-zh/llama32-3b/small_s17/trials.jsonl",
         "/scratch/juno/jvl210002/bidir/results/2026-09-17/mt_en-zh/llama32-3b/small_s17/summary.json"
       ]
@@ -968,7 +968,7 @@
     "main-mt-en-zh-sft-backward": {
       "value": "4.0",
       "sources": [
-        "/work/jvl210002/migration/bidirectional/paper/MAIN_RESULTS.json",
+        "/work/jvl210002/migration/bidirectional/paper/bidir/MAIN_RESULTS.json",
         "/scratch/juno/jvl210002/bidir/results/2026-09-17/mt_en-zh/llama32-3b/small_s17/trials.jsonl",
         "/scratch/juno/jvl210002/bidir/results/2026-09-17/mt_en-zh/llama32-3b/small_s17/summary.json"
       ]
@@ -976,7 +976,7 @@
     "main-mt-en-zh-sft-forward": {
       "value": "77.9",
       "sources": [
-        "/work/jvl210002/migration/bidirectional/paper/MAIN_RESULTS.json",
+        "/work/jvl210002/migration/bidirectional/paper/bidir/MAIN_RESULTS.json",
         "/scratch/juno/jvl210002/bidir/results/2026-09-17/mt_en-zh/llama32-3b/small_s17/trials.jsonl",
         "/scratch/juno/jvl210002/bidir/results/2026-09-17/mt_en-zh/llama32-3b/small_s17/summary.json"
       ]
@@ -984,7 +984,7 @@
     "main-objective-code-llama32-3b-cft-backward": {
       "value": "6.5",
       "sources": [
-        "/work/jvl210002/migration/bidirectional/paper/MAIN_RESULTS.json",
+        "/work/jvl210002/migration/bidirectional/paper/bidir/MAIN_RESULTS.json",
         "/scratch/juno/jvl210002/bidir/results/2026-10-11/code/llama32-3b/attrib_table_fill_s17/trials.jsonl",
         "/scratch/juno/jvl210002/bidir/results/2026-10-11/code/llama32-3b/attrib_table_fill_s17/summary.json"
       ]
@@ -992,7 +992,7 @@
     "main-objective-code-llama32-3b-mix5-backward": {
       "value": "75.3",
       "sources": [
-        "/work/jvl210002/migration/bidirectional/paper/MAIN_RESULTS.json",
+        "/work/jvl210002/migration/bidirectional/paper/bidir/MAIN_RESULTS.json",
         "/scratch/juno/jvl210002/bidir/results/2026-10-11/code/llama32-3b/attrib_table_fill_s17/trials.jsonl",
         "/scratch/juno/jvl210002/bidir/results/2026-10-11/code/llama32-3b/attrib_table_fill_s17/summary.json"
       ]
@@ -1000,7 +1000,7 @@
     "main-objective-sql-llama31-8b-mix5-backward": {
       "value": "57.8",
       "sources": [
-        "/work/jvl210002/migration/bidirectional/paper/MAIN_RESULTS.json",
+        "/work/jvl210002/migration/bidirectional/paper/bidir/MAIN_RESULTS.json",
         "/scratch/juno/jvl210002/bidir/results/2026-10-11/sql/llama31-8b/attrib_table_fill_s17/trials.jsonl",
         "/scratch/juno/jvl210002/bidir/results/2026-10-11/sql/llama31-8b/attrib_table_fill_s17/summary.json"
       ]
@@ -1008,7 +1008,7 @@
     "main-objective-sql-llama31-8b-mix5-forward": {
       "value": "71.9",
       "sources": [
-        "/work/jvl210002/migration/bidirectional/paper/MAIN_RESULTS.json",
+        "/work/jvl210002/migration/bidirectional/paper/bidir/MAIN_RESULTS.json",
         "/scratch/juno/jvl210002/bidir/results/2026-10-11/sql/llama31-8b/attrib_table_fill_s17/trials.jsonl",
         "/scratch/juno/jvl210002/bidir/results/2026-10-11/sql/llama31-8b/attrib_table_fill_s17/summary.json"
       ]
@@ -1016,7 +1016,7 @@
     "main-objective-sql-llama31-8b-roundtrip-backward": {
       "value": "58.6",
       "sources": [
-        "/work/jvl210002/migration/bidirectional/paper/MAIN_RESULTS.json",
+        "/work/jvl210002/migration/bidirectional/paper/bidir/MAIN_RESULTS.json",
         "/scratch/juno/jvl210002/bidir/results/2026-10-11/sql/llama31-8b/attrib_table_fill_s17/trials.jsonl",
         "/scratch/juno/jvl210002/bidir/results/2026-10-11/sql/llama31-8b/attrib_table_fill_s17/summary.json"
       ]
@@ -1024,7 +1024,7 @@
     "main-objective-sql-llama31-8b-roundtrip-forward": {
       "value": "71.1",
       "sources": [
-        "/work/jvl210002/migration/bidirectional/paper/MAIN_RESULTS.json",
+        "/work/jvl210002/migration/bidirectional/paper/bidir/MAIN_RESULTS.json",
         "/scratch/juno/jvl210002/bidir/results/2026-10-11/sql/llama31-8b/attrib_table_fill_s17/trials.jsonl",
         "/scratch/juno/jvl210002/bidir/results/2026-10-11/sql/llama31-8b/attrib_table_fill_s17/summary.json"
       ]
@@ -1032,7 +1032,7 @@
     "main-repeat-algebra-rev-runs": {
       "value": "3",
       "sources": [
-        "/work/jvl210002/migration/bidirectional/paper/TASK_METHODS.json",
+        "/work/jvl210002/migration/bidirectional/paper/bidir/TASK_METHODS.json",
         "/scratch/juno/jvl210002/bidir/results/2026-09-17/algebra_rev/llama32-3b/small_s17/trials.jsonl",
         "/scratch/juno/jvl210002/bidir/results/2026-10-03/algebra_rev/llama32-3b/small_s42/trials.jsonl",
         "/scratch/juno/jvl210002/bidir/results/2026-10-03/algebra_rev/llama32-3b/small_s1234/trials.jsonl"
@@ -1041,7 +1041,7 @@
     "main-repeat-code-runs": {
       "value": "3",
       "sources": [
-        "/work/jvl210002/migration/bidirectional/paper/TASK_METHODS.json",
+        "/work/jvl210002/migration/bidirectional/paper/bidir/TASK_METHODS.json",
         "/scratch/juno/jvl210002/bidir/results/2026-09-17/code/llama32-3b/small_s17/trials.jsonl",
         "/scratch/juno/jvl210002/bidir/results/2026-09-18/code/llama32-3b/small_s42/trials.jsonl",
         "/scratch/juno/jvl210002/bidir/results/2026-09-18/code/llama32-3b/small_s1234/trials.jsonl"
@@ -1050,7 +1050,7 @@
     "main-repeat-fmt-runs": {
       "value": "3",
       "sources": [
-        "/work/jvl210002/migration/bidirectional/paper/TASK_METHODS.json",
+        "/work/jvl210002/migration/bidirectional/paper/bidir/TASK_METHODS.json",
         "/scratch/juno/jvl210002/bidir/results/2026-09-17/fmt/llama32-3b/small_s17/trials.jsonl",
         "/scratch/juno/jvl210002/bidir/results/2026-10-03/fmt/llama32-3b/small_s42/trials.jsonl",
         "/scratch/juno/jvl210002/bidir/results/2026-10-03/fmt/llama32-3b/small_s1234/trials.jsonl"
@@ -1059,7 +1059,7 @@
     "main-sql-mix1-backward": {
       "value": "48.5",
       "sources": [
-        "/work/jvl210002/migration/bidirectional/paper/MAIN_RESULTS.json",
+        "/work/jvl210002/migration/bidirectional/paper/bidir/MAIN_RESULTS.json",
         "/scratch/juno/jvl210002/bidir/results/2026-09-17/sql/llama32-3b/small_s17/trials.jsonl",
         "/scratch/juno/jvl210002/bidir/results/2026-09-17/sql/llama32-3b/small_s17/summary.json"
       ]
@@ -1067,7 +1067,7 @@
     "main-sql-mix1-forward": {
       "value": "62.3",
       "sources": [
-        "/work/jvl210002/migration/bidirectional/paper/MAIN_RESULTS.json",
+        "/work/jvl210002/migration/bidirectional/paper/bidir/MAIN_RESULTS.json",
         "/scratch/juno/jvl210002/bidir/results/2026-09-17/sql/llama32-3b/small_s17/trials.jsonl",
         "/scratch/juno/jvl210002/bidir/results/2026-09-17/sql/llama32-3b/small_s17/summary.json"
       ]
@@ -1075,7 +1075,7 @@
     "main-sql-mix5-backward": {
       "value": "55.0",
       "sources": [
-        "/work/jvl210002/migration/bidirectional/paper/MAIN_RESULTS.json",
+        "/work/jvl210002/migration/bidirectional/paper/bidir/MAIN_RESULTS.json",
         "/scratch/juno/jvl210002/bidir/results/2026-09-17/sql/llama32-3b/small_s17/trials.jsonl",
         "/scratch/juno/jvl210002/bidir/results/2026-09-17/sql/llama32-3b/small_s17/summary.json"
       ]
@@ -1083,7 +1083,7 @@
     "main-sql-sft-backward": {
       "value": "23.2",
       "sources": [
-        "/work/jvl210002/migration/bidirectional/paper/MAIN_RESULTS.json",
+        "/work/jvl210002/migration/bidirectional/paper/bidir/MAIN_RESULTS.json",
         "/scratch/juno/jvl210002/bidir/results/2026-09-17/sql/llama32-3b/small_s17/trials.jsonl",
         "/scratch/juno/jvl210002/bidir/results/2026-09-17/sql/llama32-3b/small_s17/summary.json"
       ]
@@ -1091,7 +1091,7 @@
     "main-sql-sft-forward": {
       "value": "62.4",
       "sources": [
-        "/work/jvl210002/migration/bidirectional/paper/MAIN_RESULTS.json",
+        "/work/jvl210002/migration/bidirectional/paper/bidir/MAIN_RESULTS.json",
         "/scratch/juno/jvl210002/bidir/results/2026-09-17/sql/llama32-3b/small_s17/trials.jsonl",
         "/scratch/juno/jvl210002/bidir/results/2026-09-17/sql/llama32-3b/small_s17/summary.json"
       ]

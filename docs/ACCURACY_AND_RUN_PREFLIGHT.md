@@ -64,7 +64,7 @@ Re-run from the repository root:
 ```bash
 source scripts/env.sh
 python scripts/123_accuracy_preflight.py
-python paper/check_arr.py --strict
+python paper/bidir/check_arr.py --strict
 python scripts/97_pipeline.py debug
 pytest -q
 ```

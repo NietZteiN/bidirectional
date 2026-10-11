@@ -15,7 +15,7 @@ from bidir import paper_suite as suite
 from bidir.config import RESULTS_DIR,RUNS_DIR
 from bidir.pipeline_state import atomic_json,evaluation_succeeded
 from bidir.train import adapter_dir
-PAPER=ROOT/'paper'
+PAPER=ROOT/'paper' / 'bidir'
 LOADED_SOURCE_SHA256=hashlib.sha256(Path(__file__).read_bytes()).hexdigest()
 PANEL=[('mt_de-en','llama32-3b'),('fmt','gemma3-4b'),('units','gemma3-12b')]
 ARMS=['base','sft','replay','mix1','mix5','mix10','mix25','mix50','rev','cl_fwd','cl_mix5','sft_extra_ce','mix5_extra_ce']

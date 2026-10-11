@@ -293,7 +293,7 @@ def test_analysis_routes_revised_gemma_and_keeps_completion_counter_distinct(tmp
     from bidir import mechanism_text_graph as fix
     spec=importlib.util.spec_from_file_location('repaired_mechanism_analysis',mx.ROOT/'scripts/114_mechanism_analysis.py')
     analysis=importlib.util.module_from_spec(spec);spec.loader.exec_module(analysis)
-    monkeypatch.setattr(analysis,'ROOT',tmp_path);(tmp_path/'paper').mkdir()
+    monkeypatch.setattr(analysis,'ROOT',tmp_path);(tmp_path/'paper' / 'bidir').mkdir(parents=True)
     # This routing fixture has no diagnostic subset or complete contrast tables. Keep it
     # independent of the real policy, including the disabled-policy rendering fallback.
     monkeypatch.setattr(analysis.paper_sprint,'plan',lambda:None)
@@ -306,7 +306,7 @@ def test_analysis_routes_revised_gemma_and_keeps_completion_counter_distinct(tmp
     monkeypatch.setattr(analysis,'likelihood_report',lambda candidate:dict(revised=fix.applies(candidate)))
     monkeypatch.setattr(mx,'completed',lambda candidate:False)
     assert analysis.main()==0
-    document=json.loads((tmp_path/'paper/MECHANISM_DIAGNOSTICS.json').read_text())
+    document=json.loads((tmp_path/'paper/bidir/MECHANISM_DIAGNOSTICS.json').read_text())
     assert document['production_complete']==1 and document['production_total']==24
     result=next(i for i in document['items'] if i['name']==job['name'])
     assert result['implementation']==fix.PROTOCOL

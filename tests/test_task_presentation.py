@@ -56,8 +56,8 @@ def test_diagnostic_subset_renders_after_scheduling_policy_disabled(tmp_path,mon
     monkeypatch.setattr(diagnostic.paper_sprint,'plan',lambda:None)
     monkeypatch.setattr(diagnostic.paper_sprint,'POLICY',policy)
     monkeypatch.setattr(diagnostic,'ROOT',tmp_path)
-    (tmp_path/'paper/tables').mkdir(parents=True)
+    (tmp_path/'paper/bidir/tables').mkdir(parents=True)
     diagnostic.sprint_tables(dict(items=[]))
-    rendered=(tmp_path/'paper/tables/mechanism_sprint.tex').read_text()
+    rendered=(tmp_path/'paper/bidir/tables/mechanism_sprint.tex').read_text()
     assert 'Likelihood, candidate selection' in rendered and 'Amendment54' not in rendered
     assert json.loads(policy.read_text())['enabled'] is False

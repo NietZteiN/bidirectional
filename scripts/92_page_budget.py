@@ -24,9 +24,9 @@ LIMIT = 8
 
 
 def main() -> int:
-    pdf = ROOT / "paper" / "main.pdf"
+    pdf = ROOT / "paper" / "bidir" / "main.pdf"
     if not pdf.exists():
-        print("paper/main.pdf not built -- run `make paper`", file=sys.stderr)
+        print("paper/bidir/main.pdf not built -- run `make paper`", file=sys.stderr)
         return 1
     from pypdf import PdfReader
 
@@ -39,7 +39,7 @@ def main() -> int:
             body_end = i + 1          # the page it starts on still holds body text
             break
 
-    tex = (ROOT / "paper" / "main.tex").read_text()
+    tex = (ROOT / "paper" / "bidir" / "main.tex").read_text()
     stripped = re.sub(r"%.*", "", tex)
     placeholders = sorted(set(re.findall(r"\\NUM\{([^}]*)\}", stripped)))
     tables = sorted(set(re.findall(r"\\tabinput\{([^}]*)\}", stripped)))

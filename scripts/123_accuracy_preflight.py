@@ -25,7 +25,7 @@ from bidir.config import RUNS_DIR, load_config, resolve_model
 from bidir.pipeline_state import atomic_json
 from bidir.train import adapter_dir, _effective_train_knobs
 
-PAPER = ROOT / 'paper'
+PAPER = ROOT / 'paper' / 'bidir'
 
 
 def read(path):

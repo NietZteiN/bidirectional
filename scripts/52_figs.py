@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 """Generate the paper's figures as pgfplots source, straight from result files.
 
-    python scripts/52_figs.py --fig dose --out paper/figures
+    python scripts/52_figs.py --fig dose --out paper/bidir/figures
 
 pgfplots rather than a rendered image, for the reason obtune's `fig_dose.tex` is generated:
 no number in the figure is hand-typed, the fonts match the document, and re-running the eval
@@ -96,7 +96,7 @@ def main() -> int:
     ap.add_argument("--fig", default="dose", choices=["dose", "alpha", "all"])
     ap.add_argument("--tag", default=None)
     ap.add_argument("--metric", default="strict")
-    ap.add_argument("--out", type=Path, default=ROOT / "paper" / "figures")
+    ap.add_argument("--out", type=Path, default=ROOT / "paper" / "bidir" / "figures")
     a = ap.parse_args()
     a.out.mkdir(parents=True, exist_ok=True)
 

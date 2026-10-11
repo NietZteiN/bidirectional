@@ -4,12 +4,12 @@ Updated October 10, 2026. Amendment57 prioritizes calculating every missing tabl
 The table-completion controller is active; the 32 earlier experiment jobs remain held.
 The completed sprint draft is frozen at Git commit34de8d0; its
 [completion checklist](archive/task_checklists/TASKS-2026-10-10-sprint-complete.md) and
-[receipts](paper/SPRINT_COMPLETION.json) remain historical evidence.
+[receipts](paper/bidir/SPRINT_COMPLETION.json) remain historical evidence.
 
 ## Top priority: calculate the missing tables
 
 - [x] Inventory every generated table, including legacy tables outside the PDF, and record
-      gaps in [TABLE_COMPLETION_AUDIT.json](paper/TABLE_COMPLETION_AUDIT.json).
+      gaps in [TABLE_COMPLETION_AUDIT.json](paper/bidir/TABLE_COMPLETION_AUDIT.json).
 - [x] Calculate all fourteen mixed-task normalized changes from checked same-pass trials,
       including the six previously omitted null/adverse cells; label them descriptively.
 - [x] Register seven seed17 campaigns covering twelve missing arm combinations and
@@ -107,7 +107,7 @@ Amendment53 text-graph repair. Training seed17 is fixed throughout; no new model
 - [x] Units/Gemma12B:full HF diagnostic 450907 completes, retaining the null control.
 
 Live states:[mechanism scheduler](runs/feeder/mechanism_status.json).
-Proof-valid counts:[paper diagnostic report](paper/MECHANISM_DIAGNOSTICS.json), sprint subsection.
+Proof-valid counts:[paper diagnostic report](paper/bidir/MECHANISM_DIAGNOSTICS.json), sprint subsection.
 The sprint snapshot contains five proof-valid production jobs. The other19 registered
 jobs are now held under Amendment56; the full registered production denominator remains24.
 
@@ -123,7 +123,7 @@ jobs are now held under Amendment56; the full registered production denominator 
 - [x] Remove project-status prose and bibliography reading notes; fix citation authors
       and the reversed algebra orientation labels without changing any experiment.
 
-See [revision details](docs/PAPER_REVIEW_REVISION.md) and [updated manuscript](paper/main.pdf).
+See [revision details](docs/PAPER_REVIEW_REVISION.md) and [updated manuscript](paper/bidir/main.pdf).
 
 ## Previous manuscript checkpoint — retained history
 
@@ -169,7 +169,7 @@ See [revision details](docs/PAPER_REVIEW_REVISION.md) and [updated manuscript](p
 - [x] Archive all current trials/manifests:zero outstanding files.
 - [x] Refresh and verify the final anonymous bundle after all diagnostics; all packaged
       hashes verify and all 219 strict-mean replay reports complete.
-- [x] Freeze [the sprint completion snapshot](paper/SPRINT_COMPLETION.json) before the
+- [x] Freeze [the sprint completion snapshot](paper/bidir/SPRINT_COMPLETION.json) before the
       deadline, with completed, failed, deferred and unresolved work explicit.
       A queue delay or failed smoke is reported as such, never filled with an invented finding.
 

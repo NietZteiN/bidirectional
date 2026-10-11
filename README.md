@@ -10,7 +10,7 @@ whether the lost capability is erased or merely suppressed.
 - **The execution plan:** [`RUN_PLAN.md`](RUN_PLAN.md) — panel, budget, phases, decision gate
 - **Live checklist:** [`TASKS.md`](TASKS.md); [paper-completion queue](docs/PAPER_FINISH_PLAN.md)
 - **Autonomous execution:** [`docs/AUTONOMOUS_PIPELINE.md`](docs/AUTONOMOUS_PIPELINE.md)
-- **Paper draft:** [`paper/main.pdf`](paper/main.pdf) and [build instructions](paper/README.md)
+- **Paper draft:** [`paper/bidir/main.pdf`](paper/bidir/main.pdf) and [build instructions](paper/bidir/README.md)
 - **Operating rules:** [`CLAUDE.md`](CLAUDE.md) — compute, environment, and the rules that make
   a result mean something
 - **Related work:** [`RELATED_WORK.md`](RELATED_WORK.md) — what is already claimed and what is

@@ -639,13 +639,13 @@ def test_paper_numbers_resolve_from_disk_and_fall_back_to_red():
 
     Tables and figures were generated, but the abstract's headline figures and the mechanism
     section's magnitudes had no generator, so they would have been copied by hand out of the
-    generated tables. paper/NUMBERS.md records what that cost in the workshop paper: three
+    generated tables. paper/bidir/NUMBERS.md records what that cost in the workshop paper: three
     numbers that had drifted from their source.
     """
     from pathlib import Path
 
     root = Path(__file__).resolve().parents[1]
-    tex = (root / "paper" / "main.tex").read_text()
+    tex = (root / "paper" / "bidir" / "main.tex").read_text()
 
     # The macro must LOOK UP the generated value, not merely always print red.
     assert "\\ifcsname bidirnum@#1\\endcsname" in tex, (
@@ -673,7 +673,7 @@ def test_every_paper_placeholder_is_prose_or_has_a_plan():
     m = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(m)
 
-    keys = set(re.findall(r"\\NUM\{([a-z0-9-]+)\}", (root / "paper" / "main.tex").read_text()))
+    keys = set(re.findall(r"\\NUM\{([a-z0-9-]+)\}", (root / "paper" / "bidir" / "main.tex").read_text()))
     assert keys, "main.tex has no generated numerical macros"
     for key in sorted(keys):
         if key.startswith('main-'):

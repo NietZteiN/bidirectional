@@ -11,7 +11,7 @@ sys.path.insert(0, str(ROOT/'src'))
 from bidir.pipeline_state import atomic_json, evaluation_succeeded
 from bidir.train import adapter_dir
 
-PAPER = ROOT/'paper'
+PAPER = ROOT/'paper' / 'bidir'
 CORE_ARMS = ['base','sft','mix1','mix5','mix10','mix25','mix50','replay',
              'rev','fwd2x','flip','mixedtask']
 CL_ARMS = ['base','sft','mix5','replay','rev','cl_fwd','cl_mix5','cl_shuffled',

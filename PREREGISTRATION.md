@@ -2173,5 +2173,5 @@ every nonzero denominator. Outside registered collapse cells they are labeled si
 descriptive normalized changes, not recovery verdicts; zero denominators are undefined.
 The user explicitly chooses to keep CFT code-specific. Its four translation/SQL
 combinations are not applicable; no cross-domain judgment variant is admitted.
-`paper/TABLE_COMPLETION_AUDIT.json` inventories
+`paper/bidir/TABLE_COMPLETION_AUDIT.json` inventories
 every numerical table gap, including legacy tables outside the current PDF.

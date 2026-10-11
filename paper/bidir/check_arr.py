@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Check the built ACL ARR review draft; --strict also rejects unfinished content.
 
-Requires pypdf. Run from any directory: python paper/check_arr.py.
+Requires pypdf. Run from any directory: python paper/bidir/check_arr.py.
 Official rules: https://aclrollingreview.org/cfp and
 https://acl-org.github.io/ACLPUB/formatting.html
 """

@@ -1,13 +1,13 @@
 > Current scope, October 10: Amendment57 prioritizes calculating missing table results.
 > Seven targeted campaigns run through the exclusive completion controller; the 32 earlier
-> jobs remain held. See [table completion plan](../docs/TABLE_COMPLETION_PLAN.md).
+> jobs remain held. See [table completion plan](../../docs/TABLE_COMPLETION_PLAN.md).
 > Amendment 55's resumed campaign and the completed sprint remain historical records.
 
 # Workshop framing and the current extension — October 10, 2026
 
 The framing source is our local non-archival ATTRIB/NeurIPS workshop draft,
-[“Attributing Gains in Paired Training: Objective or Data Direction?”](../papers/theflipflip_workshop2026.tex)
-(the accompanying [PDF](../papers/theflipflip_workshop2026.pdf) retains the earlier
+[“Attributing Gains in Paired Training: Objective or Data Direction?”](../../papers/theflipflip_workshop2026.tex)
+(the accompanying [PDF](../../papers/theflipflip_workshop2026.pdf) retains the earlier
 “The Free Flip” title). Treat it as a workshop draft, not a
 verified acceptance or a newly established result. Its introduction and decomposition
 sections supply the conceptual starting point: an auxiliary method can change both the
@@ -81,7 +81,7 @@ The selected jobs test likelihood/gradient geometry in two domains and two famil
 retain the units null control, and test all formatting layer bands against matched
 controls. Describe new findings as exploratory; preserve all outcomes.19 registered
 mechanism production jobs and the unfinished repaired Gemma-format CL campaign are
-deferred. [Sprint plan](../docs/PAPER_SPRINT_PLAN.md) records the24-hour target.
+deferred. [Sprint plan](../../docs/PAPER_SPRINT_PLAN.md) records the24-hour target.
 
 All five diagnostics are now complete and proof-valid. The draft reports gold/copy
 rankings in both directions, both length conventions, the Gemma absolute-likelihood
@@ -378,7 +378,7 @@ The general test, restated. Not a summary of results.
 
 ## What would break the paper
 
-Registered in [`../PREREGISTRATION.md`](../PREREGISTRATION.md) §6, and worth keeping in view
+Registered in [`../../PREREGISTRATION.md`](../../PREREGISTRATION.md) §6, and worth keeping in view
 while drafting because each has a section that would have to change:
 
 | if | then |
@@ -405,7 +405,7 @@ is not a fallback to be improvised after the fact.
 - One evaluation pass per table; never quote a cross-pass difference finer than the measured
   determinism floor.
 - No number is hand-typed. Tables come from `scripts/51_tables.py`, figures from
-  `scripts/52_figs.py`, and `paper/NUMBERS.md` maps each to the runs that produced it.
+  `scripts/52_figs.py`, and `paper/bidir/NUMBERS.md` maps each to the runs that produced it.
 - Do not claim every auxiliary-task result on paired data is a directional artifact. We measured
   some; the boundary is what a reviewer will press on.
 
@@ -420,7 +420,7 @@ reported separately. Validation gradients motivate equal-parameter-norm ephemera
 steps tested on disjoint held-out pairs. These balanced local steps do not simulate
 the original mix5 budget. All controls, bands, seeds and adverse outcomes are retained.
 
-`paper/MECHANISM_DIAGNOSTICS.json` automatically indexes only proof-valid production
+`paper/bidir/MECHANISM_DIAGNOSTICS.json` automatically indexes only proof-valid production
 evidence and its source hashes. Likelihood and generation use separate engines; no
 new mechanism finding is claimed merely because the jobs are registered or submitted.
 

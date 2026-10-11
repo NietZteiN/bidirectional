@@ -298,7 +298,7 @@
     "/scratch/juno/jvl210002/bidir/results/paper_finish_v1/probes/mt_de-en__llama32-3b/s1234/probes/trials.jsonl": "6c9115d73f00bcd3a0218967428fb3ea30ad131cb8b637b6dc04b8b158255824",
     "/scratch/juno/jvl210002/bidir/results/paper_finish_v1/probes/mt_de-en__llama32-3b/s1234/probes/contrasts.json": "6d11238c3264fce9af2783c172a63c1039dbc1a0eb4014722c51caf8fc1a9d1e"
   },
-  "signature": "b95166374d2d13cc3afd0c4b14a40629e79afe187e585a87c5b3ca3f2fea59ab",
+  "signature": "7682af41856cde623cca6bf7380d8f1d797cc87665e76a567d6b2af46669c2d5",
   "artifacts": [
     "figures/preservation_frontier.pdf",
     "figures/preservation_frontier.png",
@@ -313,5 +313,5 @@
     "tables/publication_robust_ranges.tex",
     "tables/transfer_boundaries.tex"
   ],
-  "generator_sha256": "11ea832b6cdd1fc67825734ab7cf2f1416f58ef86b544789712aeeba243a76e4"
+  "generator_sha256": "19f92e94d5692222b34b3f749c1320368141fea31bf636167ec46e8761a2ecc6"
 }

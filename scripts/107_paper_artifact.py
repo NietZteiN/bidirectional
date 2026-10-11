@@ -41,7 +41,7 @@ def selected_paths():
     for name,key in [('EVIDENCE_SNAPSHOT.json','sources'),('PUBLICATION_ANALYSIS.json','source_sha256'),
                      ('MAIN_RESULTS.json','source_sha256'),('MANUSCRIPT_COMPLETION.json','source_sha256'),
                      ('TABLE_COMPLETION_AUDIT.json','source_sha256'),('TASK_METHODS.json','source_sha256')]:
-        file=ROOT/'paper'/name
+        file=ROOT/'paper' / 'bidir'/name
         if file.exists():
             document=json.loads(file.read_text());paths.add(file)
             paths.update(Path(p) for p in document.get(key,{}))
@@ -50,24 +50,24 @@ def selected_paths():
     paths.update((ROOT/'src/bidir').rglob('*.py'));paths.update((ROOT/'scripts').rglob('*.py'))
     paths.update((ROOT/'tests').glob('*.py'))
     for name in ['CLAUDE.md','PREREGISTRATION.md','RUN_PLAN.md','TASKS.md','scripts/env.sh','pytest.ini',
-                 'docs/PAPER_FINISH_PLAN.md','docs/AUTONOMOUS_PIPELINE.md','paper/README.md','paper/ARGUMENT.md',
+                 'docs/PAPER_FINISH_PLAN.md','docs/AUTONOMOUS_PIPELINE.md','paper/bidir/README.md','paper/bidir/ARGUMENT.md',
                  'docs/GATE_REPAIR_PLAN.md','docs/MECHANISM_PLAN.md',
                  'docs/PAPER_SPRINT_PLAN.md','docs/BACKGROUND_RUN_PLAN.md','docs/EXPERIMENT_PAUSE.md',
                  'docs/TABLE_COMPLETION_PLAN.md',
                  'docs/PAPER_REVIEW_REVISION.md',
-                 'paper/SPRINT_COMPLETION.json','runs/feeder/paper_sprint_admission.json',
+                 'paper/bidir/SPRINT_COMPLETION.json','runs/feeder/paper_sprint_admission.json',
                  'runs/feeder/background_resume.json','runs/feeder/experiment_pause.json',
-                 'env/extras.txt','paper/main.tex','paper/planned_evaluations.tex','paper/refs.bib',
-                 'paper/numbers.tex','paper/numbers_provenance.json','paper/check_arr.py','paper/Makefile',
-                 'paper/acl.sty','paper/acl_natbib.bst','paper/page_limit.txt','paper/evidence_snapshot.tex',
-                 'paper/PROVENANCE.json','paper/PUBLICATION_PROVENANCE.json','paper/MAIN_RESULTS.json',
-                 'paper/MECHANISM_REVIEW.json','paper/MECHANISM_DIAGNOSTICS.json','paper/MECHANISM_SETUP.json','paper/MECHANISM_TEXT_GRAPH_REPAIR.json',
+                 'env/extras.txt','paper/bidir/main.tex','paper/bidir/planned_evaluations.tex','paper/bidir/refs.bib',
+                 'paper/bidir/numbers.tex','paper/bidir/numbers_provenance.json','paper/bidir/check_arr.py','paper/bidir/Makefile',
+                 'paper/bidir/acl.sty','paper/bidir/acl_natbib.bst','paper/bidir/page_limit.txt','paper/bidir/evidence_snapshot.tex',
+                 'paper/bidir/PROVENANCE.json','paper/bidir/PUBLICATION_PROVENANCE.json','paper/bidir/MAIN_RESULTS.json',
+                 'paper/bidir/MECHANISM_REVIEW.json','paper/bidir/MECHANISM_DIAGNOSTICS.json','paper/bidir/MECHANISM_SETUP.json','paper/bidir/MECHANISM_TEXT_GRAPH_REPAIR.json',
                  'runs/feeder/paper_finish_preflight.json','runs/feeder/paper_finish_status.json',
                  'runs/feeder/h100_overflow_admission.json','runs/feeder/repair_backfill_admission.json']:
         paths.add(ROOT/name)
-    paths.update((ROOT/'paper/tables').glob('*.tex'))
-    paths.update((ROOT/'paper/figures').glob('*.pdf'))
-    paths.update((ROOT/'paper/figures').glob('*.png'))
+    paths.update((ROOT/'paper/bidir/tables').glob('*.tex'))
+    paths.update((ROOT/'paper/bidir/figures').glob('*.pdf'))
+    paths.update((ROOT/'paper/bidir/figures').glob('*.png'))
     paths.update((ROOT/'runs/status').glob('*paper*.json'))
     paths.update((ROOT/'runs/feeder').glob('paper_finish*.json'))
     # Include failed original gates and withdrawal records even when they do not support a gain.
@@ -134,7 +134,7 @@ def build():
         'MANIFEST.json records original and packaged hashes, including path-redaction changes.\n'
         'Verify packaged bytes: python verify_bundle.py\n'
         'Replay recorded strict-score means: python replay_means.py\n'
-        'The source/paper folder builds with Tectonic and Python/pypdf: make paper.\n'
+        'The source/paper/bidir folder builds with Tectonic and Python/pypdf: make paper.\n'
         'The source/configs/paper_finish.json and source/data/paper_finish/manifest.json fix new protocols and dataset revisions.\n'
         'Generation and training need separately installed project environments, model access, and reconstructed original data.\n'
         'No model weights, credentials, or authentication cache is bundled. Review dataset licenses and historical code gaps before release.\n')

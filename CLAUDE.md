@@ -218,5 +218,5 @@ the script hashes and the realised direction balance; every result carries a `su
 with the engine version, the systems and the adapter-effectiveness report.
 
 **No number in the paper is hand-typed.** Tables come from `scripts/51_tables.py` and figures
-from `scripts/52_figs.py`, both reading `trials.jsonl`; `paper/PROVENANCE.json` maps each table
+from `scripts/52_figs.py`, both reading `trials.jsonl`; `paper/bidir/PROVENANCE.json` maps each table
 to the runs it was computed from. Re-running the eval regenerates them.

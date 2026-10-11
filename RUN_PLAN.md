@@ -264,7 +264,7 @@ slots, not on work.
 | **2** small grid | 8 tiers (`small`, `small_zh`, `ladder`, `exec`, `large`, `relearn`, `fullft`, `base_replicate`), placement by model size across three partitions | `slurm/pipeline_grid.py --tier X` |
 | **3a** mechanism | experiments 1-6, floor and upside submitted separately so a stalled probe cannot hold up the result that decides RQ5 | `slurm/pipeline_mech.py --floor` / `--all` → `53_mech_report.py` |
 | **3b** attribution | three objectives, each paired with the `mix` arm supplying the same directional content and none of the method | `slurm/pipeline_attrib.py` |
-| **4** writing | tables and figures generated from `trials.jsonl`; provenance table; pre-registration committed before any adapter was trained | `51_tables.py`, `52_figs.py`, `paper/NUMBERS.md`, `PREREGISTRATION.md` |
+| **4** writing | tables and figures generated from `trials.jsonl`; provenance table; pre-registration committed before any adapter was trained | `51_tables.py`, `52_figs.py`, `paper/bidir/NUMBERS.md`, `PREREGISTRATION.md` |
 
 Supporting: `00_status.py` (what exists, what is queued, what is left), `30_determinism_floor.py`
 (the cross-pass floor every "never quote finer than" rule cites), `Makefile` (`make check` runs

@@ -161,7 +161,7 @@ def sprint_tables(document):
         r'(seed17), strict no-echo success differences on 512 pairs with descriptive 95\% paired '
         'intervals. Retained and edit norms are both recorded; only retained norms are matched. '
         'No best band or control is selected.', 'sprint-layer-controls')
-    path=ROOT/'paper/tables/mechanism_sprint.tex';content='\n'.join(text)+'\n'
+    path=ROOT/'paper/bidir/tables/mechanism_sprint.tex';content='\n'.join(text)+'\n'
     if not path.exists() or path.read_text()!=content:path.write_text(content)
     document['sprint']['table_sha256']=mx.sha(path)
 
@@ -197,7 +197,7 @@ def main():
         analyzer_sha256=mx.sha(__file__),interpretation=mx.plan()['interpretation'],
         multiplicity='Descriptive unadjusted paired intervals; no best-band/step/seed selection or pooled mechanism verdict.')
     sprint_tables(document)
-    target=ROOT/'paper/MECHANISM_DIAGNOSTICS.json'
+    target=ROOT/'paper/bidir/MECHANISM_DIAGNOSTICS.json'
     if not target.exists() or json.loads(target.read_text())!=document:atomic_json(target,document)
     print(f'Mechanism analysis: {complete}/24 production jobs proof-valid')
     return 0

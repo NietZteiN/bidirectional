@@ -14,7 +14,7 @@ from bidir.pipeline_state import atomic_json
 from bidir.train import adapter_dir
 spec=importlib.util.spec_from_file_location('presentation_rates',ROOT/'scripts/117_main_results.py')
 rates=importlib.util.module_from_spec(spec);spec.loader.exec_module(rates)
-PAPER=ROOT/'paper'
+PAPER=ROOT/'paper' / 'bidir'
 ARMS=['base','sft','mix1','mix5']
 
 

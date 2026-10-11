@@ -13,7 +13,7 @@ from bidir.train import adapter_dir
 spec = importlib.util.spec_from_file_location('main_results', ROOT/'scripts/117_main_results.py')
 results = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(results)
-PAPER = ROOT/'paper'
+PAPER = ROOT/'paper' / 'bidir'
 LABELS = {'fmt_contract_v2':'Formatting contract',
           'units_contract_v2':'Units contract', 'py_cpp_typed_v2':'Typed Python/C++'}
 ARMS = ['base', 'sft', 'mix50', 'replay', 'rev']

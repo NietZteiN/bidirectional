@@ -111,7 +111,7 @@ python scripts/112_mechanism_queue.py --max-new 30
 Preflight verifies checkpoint byte hashes, native completion masks/lengths and saved
 control norms. `--reuse` re-verifies a current completed preflight. The detached runner
 then refills eligible jobs, the watchdog bounds retries, and follow-up analysis runs
-`114_mechanism_analysis.py`. `paper/MECHANISM_SETUP.json` records initial CPU verification
+`114_mechanism_analysis.py`. `paper/bidir/MECHANISM_SETUP.json` records initial CPU verification
 and smoke submissions; the live status file is authoritative for changing queue states.
 Initial verification: 403 tests passed, 84 checkpoint hashes matched, all four tokenizer
 profiles and 64 seed-17 layer variants passed. GPU smokes were submitted as 450241–450246

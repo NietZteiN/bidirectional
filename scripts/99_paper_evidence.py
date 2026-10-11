@@ -13,7 +13,7 @@ from bidir.config import RESULTS_DIR
 from bidir.pipeline_state import evaluation_succeeded,atomic_json
 
 STATUS=ROOT/'runs/status'
-PAPER=ROOT/'paper'
+PAPER=ROOT/'paper' / 'bidir'
 
 def sha(path): return hashlib.sha256(path.read_bytes()).hexdigest()
 def escape(text):return text.replace('_',r'\_')

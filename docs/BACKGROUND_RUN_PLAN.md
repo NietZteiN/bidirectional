@@ -54,7 +54,7 @@ Controller stages analyze completed campaigns and rebuild audited working eviden
 Contrastive analysis mirrors current trial/manifests to archive after new valid reports;
 the local anonymous bundle refreshes through the existing paper-completion planner.
 The sprint's narrow appendix remains a disclosed historical subset; additional diagnostic
-results are retained in paper/MECHANISM_DIAGNOSTICS.json for subsequent scientific review.
+results are retained in paper/bidir/MECHANISM_DIAGNOSTICS.json for subsequent scientific review.
 No favorable-outcome selection or automatic conference submission follows scheduling.
 
 Live files: runs/feeder/heartbeat.json, supervisor.json, mechanism_status.json,

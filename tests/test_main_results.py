@@ -66,7 +66,7 @@ def test_distinct_passes_keep_their_own_base_and_source_hash(tmp_path):
 
 @pytest.mark.parametrize('change',['trials','withdrawal'])
 def test_cached_table_does_not_hide_later_evidence_changes(tmp_path,monkeypatch,change):
-    paper=tmp_path/'paper';(paper/'tables').mkdir(parents=True)
+    paper=tmp_path/'paper' / 'bidir';(paper/'tables').mkdir(parents=True)
     (tmp_path/'runs/status').mkdir(parents=True)
     cells=[];sources={}
     for domain in set(report.TASKS)-{'units'}:

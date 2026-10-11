@@ -11,7 +11,7 @@ sys.path.insert(0,str(ROOT/'src'))
 from bidir.pipeline_state import atomic_json
 spec=importlib.util.spec_from_file_location('audited_rates',ROOT/'scripts/117_main_results.py')
 rates=importlib.util.module_from_spec(spec);spec.loader.exec_module(rates)
-PAPER=ROOT/'paper'
+PAPER=ROOT/'paper' / 'bidir'
 
 
 def normalized_change(base,sft,mixed):

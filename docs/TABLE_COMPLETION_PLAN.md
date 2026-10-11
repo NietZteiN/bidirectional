@@ -41,7 +41,7 @@ It runs the completion scheduler, checked analysis and table/PDF refresh after l
 host renewal. The broad runner, watchdog, old shell queue and capacity release are skipped.
 It does not release the 32 previous holds. Disabling this mode or releasing those holds
 requires a subsequent user instruction. `runs/feeder/table_completion_status.json` records
-live progress; `paper/TABLE_COMPLETION_AUDIT.json` records remaining table positions.
+live progress; `paper/bidir/TABLE_COMPLETION_AUDIT.json` records remaining table positions.
 
 ## Admission and debug checkpoint — October 10
 

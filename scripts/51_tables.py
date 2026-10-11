@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 """Generate the paper's tables from result files. Nothing is hand-typed.
 
-    python scripts/51_tables.py --tier small --out paper/tables
+    python scripts/51_tables.py --tier small --out paper/bidir/tables
 
 Every number in the paper must be traceable to a file a recorded run produced (obtune's
 NUMBERS.md rule, and the discipline that caught three wrong figures in the workshop draft).
@@ -113,7 +113,7 @@ def main() -> int:
     ap.add_argument("--tag", default=None, help="only runs whose directory ends with this tag")
     ap.add_argument("--model", default=None)
     ap.add_argument("--metric", default="strict")
-    ap.add_argument("--out", type=Path, default=ROOT / "paper" / "tables")
+    ap.add_argument("--out", type=Path, default=ROOT / "paper" / "bidir" / "tables")
     a = ap.parse_args()
 
     runs = [p.parent for p in RESULTS_DIR.glob("*/*/*/*/trials.jsonl")]

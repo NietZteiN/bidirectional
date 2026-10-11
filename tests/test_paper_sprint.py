@@ -62,7 +62,7 @@ def test_collector_keeps_historical_denominator_and_only_renders_proof_valid_res
     collector = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(collector)
     monkeypatch.setattr(collector, 'ROOT', tmp_path)
-    (tmp_path/'paper/tables').mkdir(parents=True)
+    (tmp_path/'paper/bidir/tables').mkdir(parents=True)
     record = dict(name='ev_mx_hf_fmt_llama32-3b_s17', domain='fmt', model='llama32-3b',
         mode='hf', seed=17, state='awaiting proof-valid result')
     document = dict(production_total=24, items=[record])
@@ -70,7 +70,7 @@ def test_collector_keeps_historical_denominator_and_only_renders_proof_valid_res
     assert document['production_total'] == 24
     assert document['sprint']['production_total'] == 1
     assert document['sprint']['production_complete'] == 0
-    table = tmp_path/'paper/tables/mechanism_sprint.tex'
+    table = tmp_path/'paper/bidir/tables/mechanism_sprint.tex'
     assert 'SFT minus base' not in table.read_text()
     result = dict(contrasts=[dict(system=system, reference=reference, direction=direction,
         metric='gold_delta_nll_per_token', mean=mean, ci95=[mean-.1, mean+.1])
