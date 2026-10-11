@@ -379,7 +379,8 @@ not enforce YAML-exclusive syntax. Algebra expansion lacks a separate expanded-f
 and factorization need not be complete. Factual exact matching may reject aliases.
 Translation thresholds differ by model/direction; its original forward predicate lacks
 explicit echo rejection. SQL question correctness depends on a frozen parser that can
-reject valid paraphrases. The proposed WebNLG text check fails on reference texts and
+reject valid paraphrases; a keyword guard also rejects questions containing the word
+``select.'' The proposed WebNLG text check fails on reference texts and
 therefore cannot support a tuned comparison (Appendix~\ref{app:task-scoring}).
 
 \paragraph{Scope and generality.}

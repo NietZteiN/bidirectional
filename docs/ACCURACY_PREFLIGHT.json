@@ -1,0 +1,188 @@
+{
+  "checked_utc": "2026-10-11T04:02:19.565319+00:00",
+  "errors": {},
+  "auditor_sha256": "9ead6c53d3e511199e67794815b1e1bf1e2a918fd4a8ca954ef20d948728ab20",
+  "scope": "Replays stored scores and checks runtime prerequisites; does not regenerate model answers or prove future GPU success.",
+  "paper": {
+    "source_hashes": 739,
+    "replayed_campaigns": 125,
+    "report_sha256": {
+      "MAIN_RESULTS": "1211ec95247704e573bfe13fe04ed4c39cf05488604efe8aea350f396d12e2be",
+      "EVIDENCE_SNAPSHOT": "d26d147b6ef0a83254f25f8b855deb5dffca588bddb56e303bb9443e2c3968ad",
+      "TASK_METHODS": "b893cd01ea1b9e36351cbbc5233d679ae1e61c3067cb378e253ce0f5371d0a50",
+      "MANUSCRIPT_COMPLETION": "301052661e745fb4dcb1c8102dd43f8dea4129b14123073c712a35ea215a7887",
+      "MECHANISM_DIAGNOSTICS": "3905fd83f52631e8e8e94865cd8832e562b6acfdb3a143ff79eaacb97f24cffc",
+      "PUBLICATION_ANALYSIS": "cdd772fc572b08bec42df40189c02ef1d19014c0adacbc930b3142f920f8ed40"
+    },
+    "presentation_sha256": {
+      "main.tex": "a70fb7e4e0300700723dc63afd155410e65202660f15fc665746353112321d53",
+      "planned_evaluations.tex": "c6021475a89beb541b6ea0c3745104234c9f295f0e53daea70a7bbb253d1bd14",
+      "task_methods.tex": "f7ae15984777dc4d02e1c894d49cc1aad5b072b7840ce32f44f493e4a02705fe",
+      "numbers.tex": "0a9d29b27ebc1e09f83572c02f1cc9f943a7f832cf31f386c66e5df14d6aa357",
+      "main.pdf": "acadc75fe863e7aa56c73ff51463e9423b4325eb5819124fb8adea6ba98d8c01",
+      "tables/main_adaptations.tex": "37ee37e6b86289327b36698bf5eadd23589d833a9ef3e5b25fbbab27ad1be40e",
+      "tables/main_adaptations_full.tex": "0691fa4b2061218ec21b292654c274aee7a1b06bb7ae7acc7de0e08f6a933e5a",
+      "tables/main_loss_baselines.tex": "f686a86b822b2b21b7ab4de685db99a0f782e2a0214c4c4063c59cf8c71e7680"
+    },
+    "corpus_splits": 21,
+    "translation_threshold_rows": 20,
+    "checked_means": 1888,
+    "main_table_scores": 542,
+    "registered_numeric_values": 317,
+    "core_combinations": 91,
+    "published_numeric_macros": 43,
+    "severe_losses": 52,
+    "matched_training_summaries": 66,
+    "repeat_task_orientations": 9,
+    "pending_campaign_arms": 9
+  },
+  "pipeline": {
+    "campaigns": [
+      {
+        "cell": "relation_llama32-3b_s17",
+        "ready": "complete",
+        "completed": [
+          "eval_smoke",
+          "eval"
+        ],
+        "live": {},
+        "microbatch": 16,
+        "gradient_accumulation": 4
+      },
+      {
+        "cell": "exec_llama32-3b_s17",
+        "ready": "eval_smoke",
+        "completed": [
+          "smoke",
+          "train"
+        ],
+        "live": {
+          "eval_smoke": {
+            "job": "451407",
+            "state": "PENDING",
+            "reason": "(Priority)"
+          }
+        },
+        "microbatch": 16,
+        "gradient_accumulation": 4
+      },
+      {
+        "cell": "code_llama32-3b_s17",
+        "ready": "train",
+        "completed": [
+          "smoke"
+        ],
+        "live": {
+          "train": {
+            "job": "451384",
+            "state": "RUNNING",
+            "reason": "g-08-09"
+          }
+        },
+        "microbatch": 4,
+        "gradient_accumulation": 16
+      },
+      {
+        "cell": "mt_en-de_llama32-3b_s17",
+        "ready": "train",
+        "completed": [
+          "smoke"
+        ],
+        "live": {
+          "train": {
+            "job": "451385",
+            "state": "PENDING",
+            "reason": "(Priority)"
+          }
+        },
+        "microbatch": 4,
+        "gradient_accumulation": 16
+      },
+      {
+        "cell": "mt_en-de_llama31-8b_s17",
+        "ready": "train",
+        "completed": [
+          "smoke"
+        ],
+        "live": {
+          "train": {
+            "job": "451386",
+            "state": "PENDING",
+            "reason": "(Priority)"
+          }
+        },
+        "microbatch": 4,
+        "gradient_accumulation": 16
+      },
+      {
+        "cell": "sql_llama32-3b_s17",
+        "ready": "train",
+        "completed": [
+          "smoke"
+        ],
+        "live": {
+          "train": {
+            "job": "451390",
+            "state": "PENDING",
+            "reason": "(Priority)"
+          }
+        },
+        "microbatch": 4,
+        "gradient_accumulation": 16
+      },
+      {
+        "cell": "sql_llama31-8b_s17",
+        "ready": "train",
+        "completed": [
+          "smoke"
+        ],
+        "live": {
+          "train": {
+            "job": "451406",
+            "state": "PENDING",
+            "reason": "(Priority)"
+          }
+        },
+        "microbatch": 4,
+        "gradient_accumulation": 16
+      }
+    ],
+    "verified_prerequisite_adapters": 37,
+    "runtime_modules": [
+      "torch",
+      "transformers",
+      "trl",
+      "peft",
+      "vllm",
+      "sacrebleu",
+      "sympy",
+      "yaml"
+    ],
+    "comet_environment": true,
+    "sql_combined_gpu_fraction": 0.9,
+    "scratch_free_gb": 25047.7
+  },
+  "validation": {
+    "tests": {
+      "passed": 441,
+      "warnings": 5,
+      "log": "/work/jvl210002/migration/bidirectional/runs/feeder/accuracy-debug-tests-final.log",
+      "sha256": "43a0a0fd005e155266ee97ac0dd338889e7fd4da6b2d7c3595e2a0f320a4c865"
+    },
+    "pdf": "ARR: body 7/8 pages; total 26; abstract 126 words; A4 portrait; 0 unembedded fonts\nDraft: 0 unfilled numbers; unresolved references: False; missing assets: False",
+    "controller": {
+      "finished_utc": "2026-10-11T04:01:51.484178+00:00",
+      "checks": {
+        "fresh_heartbeat": true,
+        "supervisor_matches_controller": true,
+        "stages_ok": true,
+        "renewal_successor": true,
+        "logout_detached": true
+      },
+      "fault_test": false,
+      "supervisor_fault_test": false,
+      "host": "c-01-06",
+      "passed": true
+    }
+  }
+}

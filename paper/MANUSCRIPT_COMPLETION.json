@@ -7,9 +7,13 @@
       "seed": 17,
       "run": "/scratch/juno/jvl210002/bidir/results/2026-10-10/fmt_contract_v2/llama31-8b/repair_domain_pilot_s17",
       "means": {
-        "base": {
-          "forward": 0.344,
-          "reverse": 0.6
+        "replay": {
+          "forward": 0.999,
+          "reverse": 0.548
+        },
+        "mix50": {
+          "forward": 0.999,
+          "reverse": 1.0
         },
         "rev": {
           "forward": 0.0,
@@ -19,13 +23,9 @@
           "forward": 0.999,
           "reverse": 0.63
         },
-        "mix50": {
-          "forward": 0.999,
-          "reverse": 1.0
-        },
-        "replay": {
-          "forward": 0.999,
-          "reverse": 0.548
+        "base": {
+          "forward": 0.344,
+          "reverse": 0.6
         }
       }
     },
@@ -35,9 +35,13 @@
       "seed": 42,
       "run": "/scratch/juno/jvl210002/bidir/results/2026-10-11/fmt_contract_v2/llama31-8b/repair_domain_pilot_s42",
       "means": {
-        "base": {
-          "forward": 0.349,
-          "reverse": 0.609
+        "replay": {
+          "forward": 0.997,
+          "reverse": 0.165
+        },
+        "mix50": {
+          "forward": 0.999,
+          "reverse": 1.0
         },
         "rev": {
           "forward": 0.001,
@@ -47,13 +51,9 @@
           "forward": 0.999,
           "reverse": 0.616
         },
-        "mix50": {
-          "forward": 0.999,
-          "reverse": 1.0
-        },
-        "replay": {
-          "forward": 0.997,
-          "reverse": 0.165
+        "base": {
+          "forward": 0.349,
+          "reverse": 0.609
         }
       }
     },
@@ -63,9 +63,13 @@
       "seed": 1234,
       "run": "/scratch/juno/jvl210002/bidir/results/2026-10-11/fmt_contract_v2/llama31-8b/repair_domain_pilot_s1234",
       "means": {
-        "base": {
-          "forward": 0.344,
-          "reverse": 0.6
+        "replay": {
+          "forward": 0.997,
+          "reverse": 0.157
+        },
+        "mix50": {
+          "forward": 1.0,
+          "reverse": 1.0
         },
         "rev": {
           "forward": 0.011,
@@ -75,13 +79,9 @@
           "forward": 0.999,
           "reverse": 0.666
         },
-        "mix50": {
-          "forward": 1.0,
-          "reverse": 1.0
-        },
-        "replay": {
-          "forward": 0.997,
-          "reverse": 0.157
+        "base": {
+          "forward": 0.344,
+          "reverse": 0.6
         }
       }
     },
@@ -91,9 +91,13 @@
       "seed": 17,
       "run": "/scratch/juno/jvl210002/bidir/results/2026-10-10/units_contract_v2/gemma3-12b/repair_domain_pilot_s17",
       "means": {
-        "base": {
-          "forward": 0.399,
-          "reverse": 0.469
+        "replay": {
+          "forward": 0.922,
+          "reverse": 0.65
+        },
+        "mix50": {
+          "forward": 0.951,
+          "reverse": 0.899
         },
         "rev": {
           "forward": 0.387,
@@ -103,13 +107,9 @@
           "forward": 0.97,
           "reverse": 0.703
         },
-        "mix50": {
-          "forward": 0.951,
-          "reverse": 0.899
-        },
-        "replay": {
-          "forward": 0.922,
-          "reverse": 0.65
+        "base": {
+          "forward": 0.399,
+          "reverse": 0.469
         }
       }
     },
@@ -119,9 +119,13 @@
       "seed": 42,
       "run": "/scratch/juno/jvl210002/bidir/results/2026-10-10/units_contract_v2/gemma3-12b/repair_domain_pilot_s42",
       "means": {
-        "base": {
-          "forward": 0.399,
-          "reverse": 0.469
+        "replay": {
+          "forward": 0.929,
+          "reverse": 0.73
+        },
+        "mix50": {
+          "forward": 0.938,
+          "reverse": 0.88
         },
         "rev": {
           "forward": 0.272,
@@ -131,13 +135,9 @@
           "forward": 0.973,
           "reverse": 0.733
         },
-        "mix50": {
-          "forward": 0.938,
-          "reverse": 0.88
-        },
-        "replay": {
-          "forward": 0.929,
-          "reverse": 0.73
+        "base": {
+          "forward": 0.399,
+          "reverse": 0.469
         }
       }
     },
@@ -147,9 +147,13 @@
       "seed": 1234,
       "run": "/scratch/juno/jvl210002/bidir/results/2026-10-10/units_contract_v2/gemma3-12b/repair_domain_pilot_s1234",
       "means": {
-        "base": {
-          "forward": 0.399,
-          "reverse": 0.469
+        "replay": {
+          "forward": 0.944,
+          "reverse": 0.704
+        },
+        "mix50": {
+          "forward": 0.944,
+          "reverse": 0.886
         },
         "rev": {
           "forward": 0.091,
@@ -159,13 +163,9 @@
           "forward": 0.972,
           "reverse": 0.712
         },
-        "mix50": {
-          "forward": 0.944,
-          "reverse": 0.886
-        },
-        "replay": {
-          "forward": 0.944,
-          "reverse": 0.704
+        "base": {
+          "forward": 0.399,
+          "reverse": 0.469
         }
       }
     },
@@ -175,9 +175,13 @@
       "seed": 17,
       "run": "/scratch/juno/jvl210002/bidir/results/2026-10-10/py_cpp_typed_v2/gemma3-12b/repair_domain_pilot_s17",
       "means": {
-        "base": {
-          "forward": 0.862,
-          "reverse": 0.95
+        "replay": {
+          "forward": 0.092,
+          "reverse": 0.0
+        },
+        "mix50": {
+          "forward": 1.0,
+          "reverse": 1.0
         },
         "rev": {
           "forward": 0.0,
@@ -187,13 +191,9 @@
           "forward": 1.0,
           "reverse": 0.35
         },
-        "mix50": {
-          "forward": 1.0,
-          "reverse": 1.0
-        },
-        "replay": {
-          "forward": 0.092,
-          "reverse": 0.0
+        "base": {
+          "forward": 0.862,
+          "reverse": 0.95
         }
       }
     },
@@ -203,9 +203,13 @@
       "seed": 42,
       "run": "/scratch/juno/jvl210002/bidir/results/2026-10-10/py_cpp_typed_v2/gemma3-12b/repair_domain_pilot_s42",
       "means": {
-        "base": {
-          "forward": 0.862,
-          "reverse": 0.95
+        "replay": {
+          "forward": 0.361,
+          "reverse": 0.305
+        },
+        "mix50": {
+          "forward": 0.85,
+          "reverse": 1.0
         },
         "rev": {
           "forward": 0.0,
@@ -215,13 +219,9 @@
           "forward": 1.0,
           "reverse": 0.727
         },
-        "mix50": {
-          "forward": 0.85,
-          "reverse": 1.0
-        },
-        "replay": {
-          "forward": 0.361,
-          "reverse": 0.305
+        "base": {
+          "forward": 0.862,
+          "reverse": 0.95
         }
       }
     },
@@ -231,9 +231,13 @@
       "seed": 1234,
       "run": "/scratch/juno/jvl210002/bidir/results/2026-10-10/py_cpp_typed_v2/gemma3-12b/repair_domain_pilot_s1234",
       "means": {
-        "base": {
-          "forward": 0.862,
-          "reverse": 0.95
+        "replay": {
+          "forward": 0.023,
+          "reverse": 0.0
+        },
+        "mix50": {
+          "forward": 0.735,
+          "reverse": 1.0
         },
         "rev": {
           "forward": 0.0,
@@ -243,13 +247,9 @@
           "forward": 0.748,
           "reverse": 0.558
         },
-        "mix50": {
-          "forward": 0.735,
-          "reverse": 1.0
-        },
-        "replay": {
-          "forward": 0.023,
-          "reverse": 0.0
+        "base": {
+          "forward": 0.862,
+          "reverse": 0.95
         }
       }
     },
@@ -259,9 +259,13 @@
       "seed": 17,
       "run": "/scratch/juno/jvl210002/bidir/results/2026-10-10/py_cpp_typed_v2/llama31-8b/repair_domain_pilot_s17",
       "means": {
-        "base": {
-          "forward": 0.842,
-          "reverse": 1.0
+        "replay": {
+          "forward": 0.996,
+          "reverse": 0.994
+        },
+        "mix50": {
+          "forward": 1.0,
+          "reverse": 0.484
         },
         "rev": {
           "forward": 0.0,
@@ -271,13 +275,9 @@
           "forward": 1.0,
           "reverse": 0.0
         },
-        "mix50": {
-          "forward": 1.0,
-          "reverse": 0.484
-        },
-        "replay": {
-          "forward": 0.996,
-          "reverse": 0.994
+        "base": {
+          "forward": 0.842,
+          "reverse": 1.0
         }
       }
     },
@@ -287,9 +287,13 @@
       "seed": 42,
       "run": "/scratch/juno/jvl210002/bidir/results/2026-10-11/py_cpp_typed_v2/llama31-8b/repair_domain_pilot_s42",
       "means": {
-        "base": {
-          "forward": 0.859,
-          "reverse": 1.0
+        "replay": {
+          "forward": 0.999,
+          "reverse": 0.994
+        },
+        "mix50": {
+          "forward": 0.018,
+          "reverse": 0.0
         },
         "rev": {
           "forward": 0.0,
@@ -299,13 +303,9 @@
           "forward": 1.0,
           "reverse": 0.0
         },
-        "mix50": {
-          "forward": 0.018,
-          "reverse": 0.0
-        },
-        "replay": {
-          "forward": 0.999,
-          "reverse": 0.994
+        "base": {
+          "forward": 0.859,
+          "reverse": 1.0
         }
       }
     },
@@ -315,9 +315,13 @@
       "seed": 1234,
       "run": "/scratch/juno/jvl210002/bidir/results/2026-10-11/py_cpp_typed_v2/llama31-8b/repair_domain_pilot_s1234",
       "means": {
-        "base": {
-          "forward": 0.859,
-          "reverse": 1.0
+        "replay": {
+          "forward": 0.959,
+          "reverse": 0.978
+        },
+        "mix50": {
+          "forward": 1.0,
+          "reverse": 0.001
         },
         "rev": {
           "forward": 0.0,
@@ -327,13 +331,9 @@
           "forward": 1.0,
           "reverse": 0.0
         },
-        "mix50": {
-          "forward": 1.0,
-          "reverse": 0.001
-        },
-        "replay": {
-          "forward": 0.959,
-          "reverse": 0.978
+        "base": {
+          "forward": 0.859,
+          "reverse": 1.0
         }
       }
     }
@@ -605,7 +605,7 @@
     "/work/jvl210002/migration/bidirectional/data/relation/build_report.json": "ec048498d206492a2a4e323f403eee698b664e7b80d0fed4b0368d9703e2ddc6",
     "/scratch/juno/jvl210002/bidir/runs/adapters/relation/llama32-3b/sft_r32_s17/run_manifest.json": "e9894dd0a6147fef42f670d4ee1616dda9b419c9e092af299da30cb70b86c135",
     "/scratch/juno/jvl210002/bidir/runs/adapters/relation/llama32-3b/sft_r32_s17/training_summary.json": "f5d13ddfd7a16745c1632b39b8c4fcf77c8cc5ed02176bad1e5d0a927d0a16bc",
-    "/scratch/juno/jvl210002/bidir/results/2026-09-17/relation/llama32-3b/small_s17/summary.json": "bf41edca0b606b5719279a4d71f2a39362413b0b319d2fd4b7bc337ce0d47c17",
+    "/scratch/juno/jvl210002/bidir/results/2026-10-11/relation/llama32-3b/table_core_s17/summary.json": "b0917f1847786261fba44be8d648408edf35bfe57d82ed93a72964816587857d",
     "/work/jvl210002/migration/bidirectional/data/algebra/train.jsonl": "75f6a4b55c58f4e65b8176d4921d9d7ca0ea6c1290bb5c80a5b6b9d4cdc6e89d",
     "/work/jvl210002/migration/bidirectional/data/algebra/val.jsonl": "01f6238054278cf4a25a8899e032e64b6678d687a9273c37f875f530ad3a612d",
     "/work/jvl210002/migration/bidirectional/data/algebra/test.jsonl": "6bc8f252a58b22d17f98acdc05acc2c47440ee39101d965b3e46115d670f513b",

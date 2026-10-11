@@ -2,84 +2,6 @@
   "generator_sha256": "301c7f541f685bf60ef3cb1024c24303f90a70e6ddfc770334c141a9e02545f2",
   "missing_numeric_fields": [
     {
-      "table": "dose.tex",
-      "row": 19,
-      "column": 5,
-      "source_row": "relation & llama32-3b & 17 & 71.1 & -- & -- & -- & 80.0 & 80.7 & 81.5 & 83.7 \\\\"
-    },
-    {
-      "table": "dose.tex",
-      "row": 19,
-      "column": 6,
-      "source_row": "relation & llama32-3b & 17 & 71.1 & -- & -- & -- & 80.0 & 80.7 & 81.5 & 83.7 \\\\"
-    },
-    {
-      "table": "dose.tex",
-      "row": 19,
-      "column": 7,
-      "source_row": "relation & llama32-3b & 17 & 71.1 & -- & -- & -- & 80.0 & 80.7 & 81.5 & 83.7 \\\\"
-    },
-    {
-      "table": "main.tex",
-      "row": 19,
-      "column": 8,
-      "source_row": "relation & llama32-3b & 17 & 71.9 & 86.7 & 89.6 & 79.3 & -- & -- & -- & 86.7 & 87.4 & 89.6 & 88.1 & 83.0 & 65.2 & 71.1 & 58.5 & 83.7 & -- & -- & -- & 80.0 & 80.7 & 81.5 & 67.4 & 65.9 \\\\"
-    },
-    {
-      "table": "main.tex",
-      "row": 19,
-      "column": 9,
-      "source_row": "relation & llama32-3b & 17 & 71.9 & 86.7 & 89.6 & 79.3 & -- & -- & -- & 86.7 & 87.4 & 89.6 & 88.1 & 83.0 & 65.2 & 71.1 & 58.5 & 83.7 & -- & -- & -- & 80.0 & 80.7 & 81.5 & 67.4 & 65.9 \\\\"
-    },
-    {
-      "table": "main.tex",
-      "row": 19,
-      "column": 10,
-      "source_row": "relation & llama32-3b & 17 & 71.9 & 86.7 & 89.6 & 79.3 & -- & -- & -- & 86.7 & 87.4 & 89.6 & 88.1 & 83.0 & 65.2 & 71.1 & 58.5 & 83.7 & -- & -- & -- & 80.0 & 80.7 & 81.5 & 67.4 & 65.9 \\\\"
-    },
-    {
-      "table": "main.tex",
-      "row": 19,
-      "column": 20,
-      "source_row": "relation & llama32-3b & 17 & 71.9 & 86.7 & 89.6 & 79.3 & -- & -- & -- & 86.7 & 87.4 & 89.6 & 88.1 & 83.0 & 65.2 & 71.1 & 58.5 & 83.7 & -- & -- & -- & 80.0 & 80.7 & 81.5 & 67.4 & 65.9 \\\\"
-    },
-    {
-      "table": "main.tex",
-      "row": 19,
-      "column": 21,
-      "source_row": "relation & llama32-3b & 17 & 71.9 & 86.7 & 89.6 & 79.3 & -- & -- & -- & 86.7 & 87.4 & 89.6 & 88.1 & 83.0 & 65.2 & 71.1 & 58.5 & 83.7 & -- & -- & -- & 80.0 & 80.7 & 81.5 & 67.4 & 65.9 \\\\"
-    },
-    {
-      "table": "main.tex",
-      "row": 19,
-      "column": 22,
-      "source_row": "relation & llama32-3b & 17 & 71.9 & 86.7 & 89.6 & 79.3 & -- & -- & -- & 86.7 & 87.4 & 89.6 & 88.1 & 83.0 & 65.2 & 71.1 & 58.5 & 83.7 & -- & -- & -- & 80.0 & 80.7 & 81.5 & 67.4 & 65.9 \\\\"
-    },
-    {
-      "table": "main_adaptations.tex",
-      "row": 30,
-      "column": 5,
-      "source_row": "Factual relations & F & 71.9 & 86.7 & -- & -- \\\\"
-    },
-    {
-      "table": "main_adaptations.tex",
-      "row": 30,
-      "column": 6,
-      "source_row": "Factual relations & F & 71.9 & 86.7 & -- & -- \\\\"
-    },
-    {
-      "table": "main_adaptations.tex",
-      "row": 31,
-      "column": 5,
-      "source_row": " & B & 65.2 & 71.1 & -- & -- \\\\"
-    },
-    {
-      "table": "main_adaptations.tex",
-      "row": 31,
-      "column": 6,
-      "source_row": " & B & 65.2 & 71.1 & -- & -- \\\\"
-    },
-    {
       "table": "main_adaptations.tex",
       "row": 39,
       "column": 5,
@@ -102,42 +24,6 @@
       "row": 40,
       "column": 6,
       "source_row": " & B & 16.5 & 13.0 & -- & -- \\\\"
-    },
-    {
-      "table": "main_adaptations_full.tex",
-      "row": 32,
-      "column": 5,
-      "source_row": "Factual relations & F & 71.9 & 86.7 & -- & -- & -- & 86.7 & 87.4 & 88.1 & 79.3 & 89.6 & 89.6 & 83.0 \\\\"
-    },
-    {
-      "table": "main_adaptations_full.tex",
-      "row": 32,
-      "column": 6,
-      "source_row": "Factual relations & F & 71.9 & 86.7 & -- & -- & -- & 86.7 & 87.4 & 88.1 & 79.3 & 89.6 & 89.6 & 83.0 \\\\"
-    },
-    {
-      "table": "main_adaptations_full.tex",
-      "row": 32,
-      "column": 7,
-      "source_row": "Factual relations & F & 71.9 & 86.7 & -- & -- & -- & 86.7 & 87.4 & 88.1 & 79.3 & 89.6 & 89.6 & 83.0 \\\\"
-    },
-    {
-      "table": "main_adaptations_full.tex",
-      "row": 33,
-      "column": 5,
-      "source_row": " & B & 65.2 & 71.1 & -- & -- & -- & 80.0 & 80.7 & 67.4 & 83.7 & 58.5 & 81.5 & 65.9 \\\\"
-    },
-    {
-      "table": "main_adaptations_full.tex",
-      "row": 33,
-      "column": 6,
-      "source_row": " & B & 65.2 & 71.1 & -- & -- & -- & 80.0 & 80.7 & 67.4 & 83.7 & 58.5 & 81.5 & 65.9 \\\\"
-    },
-    {
-      "table": "main_adaptations_full.tex",
-      "row": 33,
-      "column": 7,
-      "source_row": " & B & 65.2 & 71.1 & -- & -- & -- & 80.0 & 80.7 & 67.4 & 83.7 & 58.5 & 81.5 & 65.9 \\\\"
     },
     {
       "table": "main_adaptations_full.tex",
@@ -249,39 +135,6 @@
     }
   ],
   "pending_campaign_arms": [
-    {
-      "table": "main_adaptations.tex",
-      "domain": "relation",
-      "model": "llama32-3b",
-      "seed": 17,
-      "arm": "mix1",
-      "directions": [
-        "forward",
-        "reverse"
-      ]
-    },
-    {
-      "table": "main_adaptations.tex",
-      "domain": "relation",
-      "model": "llama32-3b",
-      "seed": 17,
-      "arm": "mix5",
-      "directions": [
-        "forward",
-        "reverse"
-      ]
-    },
-    {
-      "table": "main_adaptations.tex",
-      "domain": "relation",
-      "model": "llama32-3b",
-      "seed": 17,
-      "arm": "mix10",
-      "directions": [
-        "forward",
-        "reverse"
-      ]
-    },
     {
       "table": "main_adaptations.tex",
       "domain": "exec",
@@ -511,7 +364,7 @@
       "model": "llama32-3b",
       "seed": 17,
       "ratio_percent": 87.50000000000016,
-      "run": "/scratch/juno/jvl210002/bidir/results/2026-09-17/relation/llama32-3b/small_s17"
+      "run": "/scratch/juno/jvl210002/bidir/results/2026-10-11/relation/llama32-3b/table_core_s17"
     },
     {
       "domain": "sql",
@@ -551,8 +404,8 @@
     "/scratch/juno/jvl210002/bidir/results/2026-09-17/mt_en-zh/llama32-3b/small_s17/summary.json": "871b7ed612933296831d67f0fd27d24dabacc13df4a8cf7127e820695b71a581",
     "/scratch/juno/jvl210002/bidir/results/2026-09-18/mt_zh-en/llama32-3b/small_s17/trials.jsonl": "c2138a20203b908e3ec8b6f0383e8982a64810e3c65e75226f7e7733d9deb7e4",
     "/scratch/juno/jvl210002/bidir/results/2026-09-18/mt_zh-en/llama32-3b/small_s17/summary.json": "3bcdee83b1afa543a947d6223e6048d9ab987bbd3ea7c378660dae5626a242fa",
-    "/scratch/juno/jvl210002/bidir/results/2026-09-17/relation/llama32-3b/small_s17/trials.jsonl": "a2ea81bcbfd86e6e3949d0e19e113b49d3725058fb522a4f5a111175163d5497",
-    "/scratch/juno/jvl210002/bidir/results/2026-09-17/relation/llama32-3b/small_s17/summary.json": "bf41edca0b606b5719279a4d71f2a39362413b0b319d2fd4b7bc337ce0d47c17",
+    "/scratch/juno/jvl210002/bidir/results/2026-10-11/relation/llama32-3b/table_core_s17/trials.jsonl": "4944591345efa3236baa63b7e93a05961c73f146a36171ebdab7089ec237bf33",
+    "/scratch/juno/jvl210002/bidir/results/2026-10-11/relation/llama32-3b/table_core_s17/summary.json": "b0917f1847786261fba44be8d648408edf35bfe57d82ed93a72964816587857d",
     "/scratch/juno/jvl210002/bidir/results/2026-09-17/sql/llama32-3b/small_s17/trials.jsonl": "8741dcc110e1295156f335209f2b89f6f1fd771d2ac7f247f49380624c727eea",
     "/scratch/juno/jvl210002/bidir/results/2026-09-17/sql/llama32-3b/small_s17/summary.json": "ee79a9fad72dd19e283b748f29efe2c13db2790023a24dc2c8cedc1485f0058c",
     "/scratch/juno/jvl210002/bidir/results/2026-09-18/sql/llama32-3b/small_s42/trials.jsonl": "237209f2338e94f65d3ffbb000c6b3e488e3be6d47dcaefc21abe025c4eff765",

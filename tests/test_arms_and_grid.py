@@ -674,8 +674,12 @@ def test_every_paper_placeholder_is_prose_or_has_a_plan():
     spec.loader.exec_module(m)
 
     keys = set(re.findall(r"\\NUM\{([a-z0-9-]+)\}", (root / "paper" / "main.tex").read_text()))
-    assert keys, "main.tex has no placeholders, which cannot be right yet"
+    assert keys, "main.tex has no generated numerical macros"
     for key in sorted(keys):
+        if key.startswith('main-'):
+            assert m._main_result_number(m.Ctx(), key) is not None, (
+                f"{key!r} has no source-backed main-result value")
+            continue
         assert m.is_prose(key) or key in m.RESOLVERS or key.startswith(
             ("abstract-", "general-", "mech-", "invertibility-", "dose-", "intro-", "setup-")), (
             f"{key!r} is neither prose nor registered nor in a section whose resolvers are "

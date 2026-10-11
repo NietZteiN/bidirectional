@@ -294,6 +294,10 @@ def test_analysis_routes_revised_gemma_and_keeps_completion_counter_distinct(tmp
     spec=importlib.util.spec_from_file_location('repaired_mechanism_analysis',mx.ROOT/'scripts/114_mechanism_analysis.py')
     analysis=importlib.util.module_from_spec(spec);spec.loader.exec_module(analysis)
     monkeypatch.setattr(analysis,'ROOT',tmp_path);(tmp_path/'paper').mkdir()
+    # This routing fixture has no diagnostic subset or complete contrast tables. Keep it
+    # independent of the real policy, including the disabled-policy rendering fallback.
+    monkeypatch.setattr(analysis.paper_sprint,'plan',lambda:None)
+    monkeypatch.setattr(analysis.paper_sprint,'POLICY',tmp_path/'absent_policy.json')
     data=tmp_path/'data';data.mkdir();(data/'manifest.json').write_text('{}')
     monkeypatch.setattr(mx,'DATA',data);monkeypatch.setattr(fix,'OUT',tmp_path/'results')
     job=next(j for j in mx.items() if fix.applies(j) and not j['smoke'])

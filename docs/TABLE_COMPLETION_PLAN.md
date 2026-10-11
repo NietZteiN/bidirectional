@@ -53,3 +53,15 @@ and CPU-host renewal, and 43 targeted regression tests pass. The rebuilt manuscr
 eight body pages, twenty total, resolved numeric macros/references and embedded fonts.
 Fourteen signed mixed-task normalizations are calculated. Twelve arm combinations remain
 unmeasured: 24 main-table percentages plus nine duplicate legacy table positions.
+
+## Accuracy and runtime checkpoint — October 11, 2026 UTC
+
+All seven initial GPU checks passed. The complete relation evaluation filled its
+three low-dose arm combinations; nine combinations remain. Execution training
+completed and awaits generation validation/evaluation. Code production training
+is running; translation/SQL training waits on Slurm priority. No earlier hold was
+released. The controller passes all five health checks. The manuscript accuracy
+replay found no reported-score mismatches, and the full suite passes 441 tests.
+See `ACCURACY_AND_RUN_PREFLIGHT.md` and `ACCURACY_PREFLIGHT.json` for the dated
+checks, document hashes and remaining scope. The PDF has seven body pages and a
+126-word abstract; unresolved experiment percentages remain explicit dashes.

@@ -1097,7 +1097,15 @@
         }
       },
       "training_counts": {
-        "train": 302
+        "train": 302,
+        "mix1": {
+          "reverse_pairs": 3,
+          "retained_pairs": 302
+        },
+        "mix5": {
+          "reverse_pairs": 15,
+          "retained_pairs": 302
+        }
       },
       "prompt_templates": [
         {
@@ -3320,7 +3328,7 @@
     }
   },
   "source_sha256": {
-    "/work/jvl210002/migration/bidirectional/scripts/122_task_presentation.py": "9eb7d0bf41b6d662f15b3f4f047cae0e904144b5b20e84a6da522028f36e11df",
+    "/work/jvl210002/migration/bidirectional/scripts/122_task_presentation.py": "fdb02adae22ff2650de95786c75c6e1f9f5be07e27b33c2310da79ab0068d967",
     "/work/jvl210002/migration/bidirectional/src/bidir/prompts.py": "e1e433487269c0c83eff392bc3ac8cb670c52836f18a0d80bbb2c69f5670316f",
     "/scratch/juno/jvl210002/bidir/runs/adapters/code/llama32-3b/sft_r32_s17/training_summary.json": "127d429ffd075efbe669e1cf072154540aa0967d64c560a92a7f81fc80c1e41f",
     "/scratch/juno/jvl210002/bidir/runs/adapters/code/llama32-3b/mix1_r32_s17/training_summary.json": "e4b038e73a71c93d5259f4036b4d65e04bb79a4346293d7358288da388dd34b6",
@@ -3338,6 +3346,8 @@
     "/scratch/juno/jvl210002/bidir/runs/adapters/relation/llama32-3b/mix1_r32_s17/training_summary.json": "3c2889a4b733de34e3f9ef57911515af3a8f4e7c4bf7cd98f30216ed6e4ead10",
     "/scratch/juno/jvl210002/bidir/runs/adapters/relation/llama32-3b/mix5_r32_s17/training_summary.json": "7a4518da7bebd1fa0203944e592ba11d6a798c4f11561c87c506e4b14b578ad2",
     "/scratch/juno/jvl210002/bidir/runs/adapters/exec/llama32-3b/sft_r32_s17/training_summary.json": "4e651cdfeda1a6fb7e27552bc8f571601488c1fdf1b34aef70ebfbc1da9b922a",
+    "/scratch/juno/jvl210002/bidir/runs/adapters/exec/llama32-3b/mix1_r32_s17/training_summary.json": "27df6a5919807521b1b67769987b9cf9f1201b3cbbb64862d32988671b3ddf7a",
+    "/scratch/juno/jvl210002/bidir/runs/adapters/exec/llama32-3b/mix5_r32_s17/training_summary.json": "97c8714c8053397ec23110d4fbcc4d9290179c856f9ca6ed34d580023e8ec461",
     "/scratch/juno/jvl210002/bidir/runs/adapters/algebra/llama32-3b/sft_r32_s17/training_summary.json": "80019c028ed6adb803bcfcc72f2fce0cc1c95144899c267b54687041e0d4db3e",
     "/scratch/juno/jvl210002/bidir/runs/adapters/algebra/llama32-3b/mix1_r32_s17/training_summary.json": "dfa3208ff4c2aa5fd6c0201784ad8d0bf2130805886e9eec79dcef59f6dd235c",
     "/scratch/juno/jvl210002/bidir/runs/adapters/algebra/llama32-3b/mix5_r32_s17/training_summary.json": "6c2f93ca0ee3a221aa20bde7b366585d259a07edecb8da4d23e992891a515c8d",
@@ -3406,8 +3416,8 @@
     "/scratch/juno/jvl210002/bidir/results/2026-09-17/mt_en-zh/llama32-3b/small_s17/summary.json": "871b7ed612933296831d67f0fd27d24dabacc13df4a8cf7127e820695b71a581",
     "/scratch/juno/jvl210002/bidir/results/2026-09-18/mt_zh-en/llama32-3b/small_s17/trials.jsonl": "c2138a20203b908e3ec8b6f0383e8982a64810e3c65e75226f7e7733d9deb7e4",
     "/scratch/juno/jvl210002/bidir/results/2026-09-18/mt_zh-en/llama32-3b/small_s17/summary.json": "3bcdee83b1afa543a947d6223e6048d9ab987bbd3ea7c378660dae5626a242fa",
-    "/scratch/juno/jvl210002/bidir/results/2026-09-17/relation/llama32-3b/small_s17/trials.jsonl": "a2ea81bcbfd86e6e3949d0e19e113b49d3725058fb522a4f5a111175163d5497",
-    "/scratch/juno/jvl210002/bidir/results/2026-09-17/relation/llama32-3b/small_s17/summary.json": "bf41edca0b606b5719279a4d71f2a39362413b0b319d2fd4b7bc337ce0d47c17",
+    "/scratch/juno/jvl210002/bidir/results/2026-10-11/relation/llama32-3b/table_core_s17/trials.jsonl": "4944591345efa3236baa63b7e93a05961c73f146a36171ebdab7089ec237bf33",
+    "/scratch/juno/jvl210002/bidir/results/2026-10-11/relation/llama32-3b/table_core_s17/summary.json": "b0917f1847786261fba44be8d648408edf35bfe57d82ed93a72964816587857d",
     "/scratch/juno/jvl210002/bidir/results/2026-09-17/algebra_rev/llama32-3b/small_s17/trials.jsonl": "c06a1e79a2739a3f113143105beb0ec9005903aafec08793ff5d67cf99eed259",
     "/scratch/juno/jvl210002/bidir/results/2026-09-17/algebra_rev/llama32-3b/small_s17/summary.json": "44eb24c4a0af79960e362004e21aba8fa11a82e1b0331fba789126c944ea3b53",
     "/scratch/juno/jvl210002/bidir/results/2026-09-17/algebra/llama32-3b/small_s17/trials.jsonl": "69f561bf869247e60edb7f0897a4442cadae6cea46af8c0a5783aefcb960efc1",
@@ -3478,6 +3488,6 @@
     "/scratch/juno/jvl210002/bidir/results/2026-09-26/sql/llama32-3b/attrib_roundtrip_s17/summary.json": "2ceb138d022a447a5709e447d637464fe4c81f571aec9e725083ea30c65ce0cb",
     "/scratch/juno/jvl210002/bidir/results/2026-09-26/sql/llama32-3b/attrib_roundtrip_s17/followup_contrasts.json": "1b16f53d59dd92fda581c8040b64803332f9d82b0ccb1a589c04238990f1156a"
   },
-  "generator_sha256": "9eb7d0bf41b6d662f15b3f4f047cae0e904144b5b20e84a6da522028f36e11df",
+  "generator_sha256": "fdb02adae22ff2650de95786c75c6e1f9f5be07e27b33c2310da79ab0068d967",
   "note": "Presentation only: original prompts, training and scorers unchanged. Missing historical upstream revisions are not inferred."
 }

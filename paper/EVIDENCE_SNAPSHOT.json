@@ -1,12 +1,12 @@
 {
-  "updated_utc": "2026-10-11T03:31:10.552372+00:00",
-  "input_signature": "22a80eba3ab901c83094c08c5b881c40b5843c0aa66a5f3e436664a657fcd88e",
+  "updated_utc": "2026-10-11T03:59:01.488589+00:00",
+  "input_signature": "4981dc263c2e1e5ddb312096c4421fa3976a968efce1503a4830cb23bb2ede8c",
   "resolved_numbers": {
     "contrastive-completed-cells": 24,
     "contrastive-planned-cells": 27,
     "audited-core-cells": 91,
     "failed-new-domain-gates": 6,
-    "audited-core-campaigns": 103,
+    "audited-core-campaigns": 104,
     "failed-explicit-domain-gates": 6,
     "audited-fullft-repairs": 1,
     "core-collapse-cells": 52,
@@ -23,29 +23,29 @@
       "n_instances": 1012,
       "run": "/scratch/juno/jvl210002/bidir/results/2026-09-17/mt_de-en/llama32-3b/small_s17",
       "means": {
-        "rev": {
-          "forward": 0.6353754940711462,
-          "reverse": 0.8517786561264822
-        },
-        "mix50": {
-          "forward": 0.6739130434782609,
-          "reverse": 0.8290513833992095
-        },
         "mix5": {
           "forward": 0.6739130434782609,
           "reverse": 0.8201581027667985
-        },
-        "sft": {
-          "forward": 0.6709486166007905,
-          "reverse": 0.0
         },
         "base": {
           "forward": 0.7371541501976284,
           "reverse": 0.7924901185770751
         },
+        "rev": {
+          "forward": 0.6353754940711462,
+          "reverse": 0.8517786561264822
+        },
         "replay": {
           "forward": 0.6857707509881423,
           "reverse": 0.5899209486166008
+        },
+        "sft": {
+          "forward": 0.6709486166007905,
+          "reverse": 0.0
+        },
+        "mix50": {
+          "forward": 0.6739130434782609,
+          "reverse": 0.8290513833992095
         }
       },
       "finished_utc": "2026-09-17T18:48:33.184092+00:00",
@@ -58,29 +58,29 @@
       "n_instances": 1034,
       "run": "/scratch/juno/jvl210002/bidir/results/2026-09-17/sql/llama32-3b/small_s17",
       "means": {
-        "rev": {
-          "forward": 0.4197292069632495,
-          "reverse": 0.5909090909090909
-        },
-        "mix50": {
-          "forward": 0.586073500967118,
-          "reverse": 0.5812379110251451
-        },
         "mix5": {
           "forward": 0.6083172147001934,
           "reverse": 0.5502901353965184
-        },
-        "sft": {
-          "forward": 0.6237911025145068,
-          "reverse": 0.23210831721470018
         },
         "base": {
           "forward": 0.4951644100580271,
           "reverse": 0.5106382978723404
         },
+        "rev": {
+          "forward": 0.4197292069632495,
+          "reverse": 0.5909090909090909
+        },
         "replay": {
           "forward": 0.597678916827853,
           "reverse": 0.17117988394584138
+        },
+        "sft": {
+          "forward": 0.6237911025145068,
+          "reverse": 0.23210831721470018
+        },
+        "mix50": {
+          "forward": 0.586073500967118,
+          "reverse": 0.5812379110251451
         }
       },
       "finished_utc": "2026-09-17T22:40:48.177540+00:00",
@@ -93,29 +93,29 @@
       "n_instances": 1012,
       "run": "/scratch/juno/jvl210002/bidir/results/2026-09-17/mt_en-de/llama32-3b/small_s17",
       "means": {
-        "rev": {
-          "forward": 0.0,
-          "reverse": 0.6620553359683794
-        },
-        "mix50": {
-          "forward": 0.8458498023715415,
-          "reverse": 0.6778656126482213
-        },
         "mix5": {
           "forward": 0.8547430830039525,
           "reverse": 0.6847826086956522
-        },
-        "sft": {
-          "forward": 0.8478260869565217,
-          "reverse": 0.6442687747035574
         },
         "base": {
           "forward": 0.7924901185770751,
           "reverse": 0.733201581027668
         },
+        "rev": {
+          "forward": 0.0,
+          "reverse": 0.6620553359683794
+        },
         "replay": {
           "forward": 0.8537549407114624,
           "reverse": 0.7203557312252964
+        },
+        "sft": {
+          "forward": 0.8478260869565217,
+          "reverse": 0.6442687747035574
+        },
+        "mix50": {
+          "forward": 0.8458498023715415,
+          "reverse": 0.6778656126482213
         }
       },
       "finished_utc": "2026-09-17T19:56:05.534540+00:00",
@@ -128,29 +128,29 @@
       "n_instances": 2060,
       "run": "/scratch/juno/jvl210002/bidir/results/2026-09-17/code/llama32-3b/small_s17",
       "means": {
-        "rev": {
-          "forward": 0.6563106796116505,
-          "reverse": 0.862621359223301
-        },
-        "mix50": {
-          "forward": 0.8388349514563107,
-          "reverse": 0.8558252427184466
-        },
         "mix5": {
           "forward": 0.8427184466019417,
           "reverse": 0.7524271844660194
-        },
-        "sft": {
-          "forward": 0.8237864077669903,
-          "reverse": 0.0383495145631068
         },
         "base": {
           "forward": 0.37475728155339805,
           "reverse": 0.32038834951456313
         },
+        "rev": {
+          "forward": 0.6563106796116505,
+          "reverse": 0.862621359223301
+        },
         "replay": {
           "forward": 0.7475728155339806,
           "reverse": 0.14514563106796116
+        },
+        "sft": {
+          "forward": 0.8237864077669903,
+          "reverse": 0.0383495145631068
+        },
+        "mix50": {
+          "forward": 0.8388349514563107,
+          "reverse": 0.8558252427184466
         }
       },
       "finished_utc": "2026-09-17T17:37:37.009786+00:00",
@@ -163,29 +163,29 @@
       "n_instances": 1012,
       "run": "/scratch/juno/jvl210002/bidir/results/2026-09-17/mt_en-zh/llama32-3b/small_s17",
       "means": {
-        "rev": {
-          "forward": 0.0,
-          "reverse": 0.7124505928853755
-        },
-        "mix50": {
-          "forward": 0.766798418972332,
-          "reverse": 0.7193675889328063
-        },
         "mix5": {
           "forward": 0.7737154150197628,
           "reverse": 0.682806324110672
-        },
-        "sft": {
-          "forward": 0.7786561264822134,
-          "reverse": 0.039525691699604744
         },
         "base": {
           "forward": 0.741106719367589,
           "reverse": 0.7539525691699605
         },
+        "rev": {
+          "forward": 0.0,
+          "reverse": 0.7124505928853755
+        },
         "replay": {
           "forward": 0.7855731225296443,
           "reverse": 0.7094861660079052
+        },
+        "sft": {
+          "forward": 0.7786561264822134,
+          "reverse": 0.039525691699604744
+        },
+        "mix50": {
+          "forward": 0.766798418972332,
+          "reverse": 0.7193675889328063
         }
       },
       "finished_utc": "2026-09-17T22:42:11.396667+00:00",
@@ -198,29 +198,29 @@
       "n_instances": 1012,
       "run": "/scratch/juno/jvl210002/bidir/results/2026-09-18/mt_zh-en/llama32-3b/small_s17",
       "means": {
-        "rev": {
-          "forward": 0.2341897233201581,
-          "reverse": 0.7766798418972332
-        },
-        "mix50": {
-          "forward": 0.7183794466403162,
-          "reverse": 0.7717391304347826
-        },
         "mix5": {
           "forward": 0.7213438735177866,
           "reverse": 0.7707509881422925
-        },
-        "sft": {
-          "forward": 0.7154150197628458,
-          "reverse": 0.0
         },
         "base": {
           "forward": 0.7598814229249012,
           "reverse": 0.7401185770750988
         },
+        "rev": {
+          "forward": 0.2341897233201581,
+          "reverse": 0.7766798418972332
+        },
         "replay": {
           "forward": 0.7480237154150198,
           "reverse": 0.009881422924901186
+        },
+        "sft": {
+          "forward": 0.7154150197628458,
+          "reverse": 0.0
+        },
+        "mix50": {
+          "forward": 0.7183794466403162,
+          "reverse": 0.7717391304347826
         }
       },
       "finished_utc": "2026-09-18T00:15:46.237755+00:00",
@@ -231,30 +231,34 @@
       "model": "llama32-3b",
       "seed": 17,
       "n_instances": 135,
-      "run": "/scratch/juno/jvl210002/bidir/results/2026-09-17/relation/llama32-3b/small_s17",
+      "run": "/scratch/juno/jvl210002/bidir/results/2026-10-11/relation/llama32-3b/table_core_s17",
       "means": {
+        "mix5": {
+          "forward": 0.8740740740740741,
+          "reverse": 0.7555555555555555
+        },
+        "base": {
+          "forward": 0.7111111111111111,
+          "reverse": 0.6518518518518519
+        },
         "rev": {
-          "forward": 0.7925925925925926,
+          "forward": 0.8,
           "reverse": 0.837037037037037
         },
-        "mix50": {
-          "forward": 0.8740740740740741,
-          "reverse": 0.8074074074074075
+        "replay": {
+          "forward": 0.8814814814814815,
+          "reverse": 0.674074074074074
         },
         "sft": {
           "forward": 0.8666666666666667,
           "reverse": 0.7111111111111111
         },
-        "base": {
-          "forward": 0.7185185185185186,
-          "reverse": 0.6518518518518519
-        },
-        "replay": {
-          "forward": 0.8814814814814815,
-          "reverse": 0.674074074074074
+        "mix50": {
+          "forward": 0.8740740740740741,
+          "reverse": 0.8148148148148148
         }
       },
-      "finished_utc": "2026-09-17T21:45:52.848248+00:00",
+      "finished_utc": "2026-10-11T03:56:06.649801+00:00",
       "collapse": false
     },
     {
@@ -264,29 +268,29 @@
       "n_instances": 2500,
       "run": "/scratch/juno/jvl210002/bidir/results/2026-09-17/algebra_rev/llama32-3b/small_s17",
       "means": {
-        "rev": {
-          "forward": 0.078,
-          "reverse": 0.262
-        },
-        "mix50": {
-          "forward": 0.3608,
-          "reverse": 0.2492
-        },
         "mix5": {
           "forward": 0.4376,
           "reverse": 0.158
-        },
-        "sft": {
-          "forward": 0.4364,
-          "reverse": 0.1468
         },
         "base": {
           "forward": 0.1464,
           "reverse": 0.1736
         },
+        "rev": {
+          "forward": 0.078,
+          "reverse": 0.262
+        },
         "replay": {
           "forward": 0.3688,
           "reverse": 0.1396
+        },
+        "sft": {
+          "forward": 0.4364,
+          "reverse": 0.1468
+        },
+        "mix50": {
+          "forward": 0.3608,
+          "reverse": 0.2492
         }
       },
       "finished_utc": "2026-09-17T14:10:59.051006+00:00",
@@ -299,29 +303,29 @@
       "n_instances": 2500,
       "run": "/scratch/juno/jvl210002/bidir/results/2026-09-17/algebra/llama32-3b/small_s17",
       "means": {
-        "rev": {
-          "forward": 0.1456,
-          "reverse": 0.4364
-        },
-        "mix50": {
-          "forward": 0.2484,
-          "reverse": 0.3652
-        },
         "mix5": {
           "forward": 0.2684,
           "reverse": 0.206
-        },
-        "sft": {
-          "forward": 0.2612,
-          "reverse": 0.078
         },
         "base": {
           "forward": 0.1728,
           "reverse": 0.1472
         },
+        "rev": {
+          "forward": 0.1456,
+          "reverse": 0.4364
+        },
         "replay": {
           "forward": 0.2584,
           "reverse": 0.0916
+        },
+        "sft": {
+          "forward": 0.2612,
+          "reverse": 0.078
+        },
+        "mix50": {
+          "forward": 0.2484,
+          "reverse": 0.3652
         }
       },
       "finished_utc": "2026-09-17T13:01:09.950463+00:00",
@@ -334,29 +338,29 @@
       "n_instances": 1012,
       "run": "/scratch/juno/jvl210002/bidir/results/2026-09-17/mt_de-en/llama32-3b/small_s42",
       "means": {
-        "rev": {
-          "forward": 0.650197628458498,
-          "reverse": 0.8458498023715415
-        },
-        "mix50": {
-          "forward": 0.6758893280632411,
-          "reverse": 0.8517786561264822
-        },
         "mix5": {
           "forward": 0.6640316205533597,
           "reverse": 0.8053359683794467
-        },
-        "sft": {
-          "forward": 0.6640316205533597,
-          "reverse": 0.0
         },
         "base": {
           "forward": 0.7371541501976284,
           "reverse": 0.7924901185770751
         },
+        "rev": {
+          "forward": 0.650197628458498,
+          "reverse": 0.8458498023715415
+        },
         "replay": {
           "forward": 0.6867588932806324,
           "reverse": 0.7470355731225297
+        },
+        "sft": {
+          "forward": 0.6640316205533597,
+          "reverse": 0.0
+        },
+        "mix50": {
+          "forward": 0.6758893280632411,
+          "reverse": 0.8517786561264822
         }
       },
       "finished_utc": "2026-09-17T17:59:41.882272+00:00",
@@ -369,29 +373,29 @@
       "n_instances": 1012,
       "run": "/scratch/juno/jvl210002/bidir/results/2026-09-17/mt_en-de/llama32-3b/small_s42",
       "means": {
-        "rev": {
-          "forward": 0.0,
-          "reverse": 0.6699604743083004
-        },
-        "mix50": {
-          "forward": 0.8260869565217391,
-          "reverse": 0.6669960474308301
-        },
         "mix5": {
           "forward": 0.8409090909090909,
           "reverse": 0.6689723320158103
-        },
-        "sft": {
-          "forward": 0.8507905138339921,
-          "reverse": 0.6274703557312253
         },
         "base": {
           "forward": 0.7924901185770751,
           "reverse": 0.733201581027668
         },
+        "rev": {
+          "forward": 0.0,
+          "reverse": 0.6699604743083004
+        },
         "replay": {
           "forward": 0.8320158102766798,
           "reverse": 0.6986166007905138
+        },
+        "sft": {
+          "forward": 0.8507905138339921,
+          "reverse": 0.6274703557312253
+        },
+        "mix50": {
+          "forward": 0.8260869565217391,
+          "reverse": 0.6669960474308301
         }
       },
       "finished_utc": "2026-09-17T21:37:52.626630+00:00",
@@ -404,29 +408,29 @@
       "n_instances": 2500,
       "run": "/scratch/juno/jvl210002/bidir/results/2026-09-17/fmt/llama32-3b/small_s17",
       "means": {
-        "rev": {
-          "forward": 0.252,
-          "reverse": 0.9936
-        },
-        "mix50": {
-          "forward": 0.9984,
-          "reverse": 0.996
-        },
         "mix5": {
           "forward": 0.9988,
           "reverse": 0.9616
-        },
-        "sft": {
-          "forward": 0.9968,
-          "reverse": 0.004
         },
         "base": {
           "forward": 0.6016,
           "reverse": 0.5108
         },
+        "rev": {
+          "forward": 0.252,
+          "reverse": 0.9936
+        },
         "replay": {
           "forward": 0.9896,
           "reverse": 0.2464
+        },
+        "sft": {
+          "forward": 0.9968,
+          "reverse": 0.004
+        },
+        "mix50": {
+          "forward": 0.9984,
+          "reverse": 0.996
         }
       },
       "finished_utc": "2026-09-17T11:08:03.253284+00:00",
@@ -439,29 +443,29 @@
       "n_instances": 1034,
       "run": "/scratch/juno/jvl210002/bidir/results/2026-09-18/sql/llama32-3b/small_s42",
       "means": {
-        "rev": {
-          "forward": 0.38684719535783363,
-          "reverse": 0.5938104448742747
-        },
-        "mix50": {
-          "forward": 0.5947775628626693,
-          "reverse": 0.5938104448742747
-        },
         "mix5": {
           "forward": 0.6102514506769826,
           "reverse": 0.5551257253384912
-        },
-        "sft": {
-          "forward": 0.6266924564796905,
-          "reverse": 0.3617021276595745
         },
         "base": {
           "forward": 0.4951644100580271,
           "reverse": 0.5106382978723404
         },
+        "rev": {
+          "forward": 0.38684719535783363,
+          "reverse": 0.5938104448742747
+        },
         "replay": {
           "forward": 0.6092843326885881,
           "reverse": 0.2988394584139265
+        },
+        "sft": {
+          "forward": 0.6266924564796905,
+          "reverse": 0.3617021276595745
+        },
+        "mix50": {
+          "forward": 0.5947775628626693,
+          "reverse": 0.5938104448742747
         }
       },
       "finished_utc": "2026-09-18T00:14:02.197832+00:00",
@@ -474,29 +478,29 @@
       "n_instances": 1012,
       "run": "/scratch/juno/jvl210002/bidir/results/2026-09-18/mt_de-en/llama32-3b/small_s1234",
       "means": {
-        "rev": {
-          "forward": 0.6254940711462451,
-          "reverse": 0.8448616600790514
-        },
-        "mix50": {
-          "forward": 0.6739130434782609,
-          "reverse": 0.8488142292490118
-        },
         "mix5": {
           "forward": 0.6689723320158103,
           "reverse": 0.8013833992094862
-        },
-        "sft": {
-          "forward": 0.674901185770751,
-          "reverse": 0.0009881422924901185
         },
         "base": {
           "forward": 0.7371541501976284,
           "reverse": 0.7924901185770751
         },
+        "rev": {
+          "forward": 0.6254940711462451,
+          "reverse": 0.8448616600790514
+        },
         "replay": {
           "forward": 0.6857707509881423,
           "reverse": 0.36264822134387353
+        },
+        "sft": {
+          "forward": 0.674901185770751,
+          "reverse": 0.0009881422924901185
+        },
+        "mix50": {
+          "forward": 0.6739130434782609,
+          "reverse": 0.8488142292490118
         }
       },
       "finished_utc": "2026-09-18T02:50:59.885447+00:00",
@@ -509,29 +513,29 @@
       "n_instances": 1012,
       "run": "/scratch/juno/jvl210002/bidir/results/2026-09-18/mt_en-de/llama32-3b/small_s1234",
       "means": {
-        "rev": {
-          "forward": 0.0,
-          "reverse": 0.6610671936758893
-        },
-        "mix50": {
-          "forward": 0.8409090909090909,
-          "reverse": 0.6679841897233202
-        },
         "mix5": {
           "forward": 0.8448616600790514,
           "reverse": 0.6887351778656127
-        },
-        "sft": {
-          "forward": 0.8606719367588933,
-          "reverse": 0.6304347826086957
         },
         "base": {
           "forward": 0.7924901185770751,
           "reverse": 0.733201581027668
         },
+        "rev": {
+          "forward": 0.0,
+          "reverse": 0.6610671936758893
+        },
         "replay": {
           "forward": 0.8468379446640316,
           "reverse": 0.6926877470355731
+        },
+        "sft": {
+          "forward": 0.8606719367588933,
+          "reverse": 0.6304347826086957
+        },
+        "mix50": {
+          "forward": 0.8409090909090909,
+          "reverse": 0.6679841897233202
         }
       },
       "finished_utc": "2026-09-18T05:49:06.870881+00:00",
@@ -544,29 +548,29 @@
       "n_instances": 2060,
       "run": "/scratch/juno/jvl210002/bidir/results/2026-09-18/code/llama32-3b/small_s42",
       "means": {
-        "rev": {
-          "forward": 0.6684466019417475,
-          "reverse": 0.8684466019417476
-        },
-        "mix50": {
-          "forward": 0.824757281553398,
-          "reverse": 0.8475728155339806
-        },
         "mix5": {
           "forward": 0.8344660194174758,
           "reverse": 0.7266990291262136
-        },
-        "sft": {
-          "forward": 0.8339805825242719,
-          "reverse": 0.0383495145631068
         },
         "base": {
           "forward": 0.37766990291262137,
           "reverse": 0.3237864077669903
         },
+        "rev": {
+          "forward": 0.6684466019417475,
+          "reverse": 0.8684466019417476
+        },
         "replay": {
           "forward": 0.7533980582524272,
           "reverse": 0.17378640776699028
+        },
+        "sft": {
+          "forward": 0.8339805825242719,
+          "reverse": 0.0383495145631068
+        },
+        "mix50": {
+          "forward": 0.824757281553398,
+          "reverse": 0.8475728155339806
         }
       },
       "finished_utc": "2026-09-18T06:21:55.782881+00:00",
@@ -579,29 +583,29 @@
       "n_instances": 1034,
       "run": "/scratch/juno/jvl210002/bidir/results/2026-09-18/sql/llama32-3b/small_s1234",
       "means": {
-        "rev": {
-          "forward": 0.38781431334622823,
-          "reverse": 0.59284332688588
-        },
-        "mix50": {
-          "forward": 0.5880077369439072,
-          "reverse": 0.6102514506769826
-        },
         "mix5": {
           "forward": 0.5957446808510638,
           "reverse": 0.5667311411992263
-        },
-        "sft": {
-          "forward": 0.6005802707930368,
-          "reverse": 0.16634429400386846
         },
         "base": {
           "forward": 0.4922630560928433,
           "reverse": 0.5125725338491296
         },
+        "rev": {
+          "forward": 0.38781431334622823,
+          "reverse": 0.59284332688588
+        },
         "replay": {
           "forward": 0.5880077369439072,
           "reverse": 0.3849129593810445
+        },
+        "sft": {
+          "forward": 0.6005802707930368,
+          "reverse": 0.16634429400386846
+        },
+        "mix50": {
+          "forward": 0.5880077369439072,
+          "reverse": 0.6102514506769826
         }
       },
       "finished_utc": "2026-09-18T07:35:14.917897+00:00",
@@ -614,29 +618,29 @@
       "n_instances": 2060,
       "run": "/scratch/juno/jvl210002/bidir/results/2026-09-18/code/llama32-3b/small_s1234",
       "means": {
-        "rev": {
-          "forward": 0.6524271844660194,
-          "reverse": 0.8635922330097088
-        },
-        "mix50": {
-          "forward": 0.8286407766990291,
-          "reverse": 0.8485436893203884
-        },
         "mix5": {
           "forward": 0.8286407766990291,
           "reverse": 0.7291262135922331
-        },
-        "sft": {
-          "forward": 0.8266990291262136,
-          "reverse": 0.019902912621359223
         },
         "base": {
           "forward": 0.37766990291262137,
           "reverse": 0.3237864077669903
         },
+        "rev": {
+          "forward": 0.6524271844660194,
+          "reverse": 0.8635922330097088
+        },
         "replay": {
           "forward": 0.7781553398058253,
           "reverse": 0.2004854368932039
+        },
+        "sft": {
+          "forward": 0.8266990291262136,
+          "reverse": 0.019902912621359223
+        },
+        "mix50": {
+          "forward": 0.8286407766990291,
+          "reverse": 0.8485436893203884
         }
       },
       "finished_utc": "2026-09-18T12:47:09.275538+00:00",
@@ -649,29 +653,29 @@
       "n_instances": 1012,
       "run": "/scratch/juno/jvl210002/bidir/results/2026-09-19/mt_de-en/gemma3-4b/small_s17",
       "means": {
-        "rev": {
-          "forward": 0.40810276679841895,
-          "reverse": 0.7727272727272727
-        },
-        "mix50": {
-          "forward": 0.6808300395256917,
-          "reverse": 0.7608695652173914
-        },
         "mix5": {
           "forward": 0.674901185770751,
           "reverse": 0.7391304347826086
-        },
-        "sft": {
-          "forward": 0.674901185770751,
-          "reverse": 0.0
         },
         "base": {
           "forward": 0.7539525691699605,
           "reverse": 0.7579051383399209
         },
+        "rev": {
+          "forward": 0.40810276679841895,
+          "reverse": 0.7727272727272727
+        },
         "replay": {
           "forward": 0.6837944664031621,
           "reverse": 0.7114624505928854
+        },
+        "sft": {
+          "forward": 0.674901185770751,
+          "reverse": 0.0
+        },
+        "mix50": {
+          "forward": 0.6808300395256917,
+          "reverse": 0.7608695652173914
         }
       },
       "finished_utc": "2026-09-19T00:23:05.745242+00:00",
@@ -684,29 +688,29 @@
       "n_instances": 1012,
       "run": "/scratch/juno/jvl210002/bidir/results/2026-09-19/mt_en-de/gemma3-4b/small_s17",
       "means": {
-        "rev": {
-          "forward": 0.0,
-          "reverse": 0.658102766798419
-        },
-        "mix50": {
-          "forward": 0.7539525691699605,
-          "reverse": 0.674901185770751
-        },
         "mix5": {
           "forward": 0.7677865612648221,
           "reverse": 0.6907114624505929
-        },
-        "sft": {
-          "forward": 0.7697628458498024,
-          "reverse": 0.020750988142292492
         },
         "base": {
           "forward": 0.7549407114624506,
           "reverse": 0.7519762845849802
         },
+        "rev": {
+          "forward": 0.0,
+          "reverse": 0.658102766798419
+        },
         "replay": {
           "forward": 0.7747035573122529,
           "reverse": 0.7075098814229249
+        },
+        "sft": {
+          "forward": 0.7697628458498024,
+          "reverse": 0.020750988142292492
+        },
+        "mix50": {
+          "forward": 0.7539525691699605,
+          "reverse": 0.674901185770751
         }
       },
       "finished_utc": "2026-09-19T00:35:36.735566+00:00",
@@ -719,29 +723,29 @@
       "n_instances": 1012,
       "run": "/scratch/juno/jvl210002/bidir/results/2026-09-19/mt_en-zh/gemma3-4b/small_s17",
       "means": {
-        "rev": {
-          "forward": 0.0,
-          "reverse": 0.6758893280632411
-        },
-        "mix50": {
-          "forward": 0.7015810276679841,
-          "reverse": 0.6837944664031621
-        },
         "mix5": {
           "forward": 0.6986166007905138,
           "reverse": 0.6699604743083004
-        },
-        "sft": {
-          "forward": 0.6996047430830039,
-          "reverse": 0.00691699604743083
         },
         "base": {
           "forward": 0.7361660079051383,
           "reverse": 0.7213438735177866
         },
+        "rev": {
+          "forward": 0.0,
+          "reverse": 0.6758893280632411
+        },
         "replay": {
           "forward": 0.6986166007905138,
           "reverse": 0.6739130434782609
+        },
+        "sft": {
+          "forward": 0.6996047430830039,
+          "reverse": 0.00691699604743083
+        },
+        "mix50": {
+          "forward": 0.7015810276679841,
+          "reverse": 0.6837944664031621
         }
       },
       "finished_utc": "2026-09-19T01:10:28.736446+00:00",
@@ -754,29 +758,29 @@
       "n_instances": 1034,
       "run": "/scratch/juno/jvl210002/bidir/results/2026-09-19/sql/olmo2-1b/small_s17",
       "means": {
-        "rev": {
-          "forward": 0.01160541586073501,
-          "reverse": 0.6121856866537717
-        },
-        "mix50": {
-          "forward": 0.41392649903288203,
-          "reverse": 0.5783365570599613
-        },
         "mix5": {
           "forward": 0.46421663442940037,
           "reverse": 0.4738878143133462
-        },
-        "sft": {
-          "forward": 0.46034816247582205,
-          "reverse": 0.3916827852998066
         },
         "base": {
           "forward": 0.19245647969052224,
           "reverse": 0.3742746615087041
         },
+        "rev": {
+          "forward": 0.01160541586073501,
+          "reverse": 0.6121856866537717
+        },
         "replay": {
           "forward": 0.4090909090909091,
           "reverse": 0.41295938104448743
+        },
+        "sft": {
+          "forward": 0.46034816247582205,
+          "reverse": 0.3916827852998066
+        },
+        "mix50": {
+          "forward": 0.41392649903288203,
+          "reverse": 0.5783365570599613
         }
       },
       "finished_utc": "2026-09-19T04:35:09.127708+00:00",
@@ -789,25 +793,25 @@
       "n_instances": 135,
       "run": "/scratch/juno/jvl210002/bidir/results/2026-09-19/relation/olmo2-1b/small_s17",
       "means": {
+        "base": {
+          "forward": 0.18518518518518517,
+          "reverse": 0.18518518518518517
+        },
         "rev": {
           "forward": 0.18518518518518517,
           "reverse": 0.4148148148148148
         },
-        "mix50": {
-          "forward": 0.6592592592592592,
-          "reverse": 0.4444444444444444
+        "replay": {
+          "forward": 0.6074074074074074,
+          "reverse": 0.35555555555555557
         },
         "sft": {
           "forward": 0.6592592592592592,
           "reverse": 0.3333333333333333
         },
-        "base": {
-          "forward": 0.18518518518518517,
-          "reverse": 0.18518518518518517
-        },
-        "replay": {
-          "forward": 0.6074074074074074,
-          "reverse": 0.35555555555555557
+        "mix50": {
+          "forward": 0.6592592592592592,
+          "reverse": 0.4444444444444444
         }
       },
       "finished_utc": "2026-09-19T05:20:32.815327+00:00",
@@ -820,29 +824,29 @@
       "n_instances": 2060,
       "run": "/scratch/juno/jvl210002/bidir/results/2026-09-19/code/gemma3-4b/small_s17",
       "means": {
-        "rev": {
-          "forward": 0.7815533980582524,
-          "reverse": 0.9009708737864077
-        },
-        "mix50": {
-          "forward": 0.9053398058252428,
-          "reverse": 0.8839805825242718
-        },
         "mix5": {
           "forward": 0.9111650485436893,
           "reverse": 0.7766990291262136
-        },
-        "sft": {
-          "forward": 0.9092233009708738,
-          "reverse": 0.028640776699029126
         },
         "base": {
           "forward": 0.5218446601941747,
           "reverse": 0.15194174757281553
         },
+        "rev": {
+          "forward": 0.7815533980582524,
+          "reverse": 0.9009708737864077
+        },
         "replay": {
           "forward": 0.904368932038835,
           "reverse": 0.15097087378640778
+        },
+        "sft": {
+          "forward": 0.9092233009708738,
+          "reverse": 0.028640776699029126
+        },
+        "mix50": {
+          "forward": 0.9053398058252428,
+          "reverse": 0.8839805825242718
         }
       },
       "finished_utc": "2026-09-19T08:05:18.082186+00:00",
@@ -855,29 +859,29 @@
       "n_instances": 1034,
       "run": "/scratch/juno/jvl210002/bidir/results/2026-09-19/sql/gemma3-4b/small_s17",
       "means": {
-        "rev": {
-          "forward": 0.008704061895551257,
-          "reverse": 0.6150870406189555
-        },
-        "mix50": {
-          "forward": 0.6508704061895552,
-          "reverse": 0.6034816247582205
-        },
         "mix5": {
           "forward": 0.6682785299806576,
           "reverse": 0.586073500967118
-        },
-        "sft": {
-          "forward": 0.6682785299806576,
-          "reverse": 0.5512572533849129
         },
         "base": {
           "forward": 0.562862669245648,
           "reverse": 0.5793036750483559
         },
+        "rev": {
+          "forward": 0.008704061895551257,
+          "reverse": 0.6150870406189555
+        },
         "replay": {
           "forward": 0.6760154738878144,
           "reverse": 0.528046421663443
+        },
+        "sft": {
+          "forward": 0.6682785299806576,
+          "reverse": 0.5512572533849129
+        },
+        "mix50": {
+          "forward": 0.6508704061895552,
+          "reverse": 0.6034816247582205
         }
       },
       "finished_utc": "2026-09-19T16:59:40.077301+00:00",
@@ -890,25 +894,25 @@
       "n_instances": 135,
       "run": "/scratch/juno/jvl210002/bidir/results/2026-09-19/relation/gemma3-4b/small_s17",
       "means": {
+        "base": {
+          "forward": 0.5851851851851851,
+          "reverse": 0.6370370370370371
+        },
         "rev": {
           "forward": 0.5333333333333333,
           "reverse": 0.8074074074074075
         },
-        "mix50": {
-          "forward": 0.8962962962962963,
-          "reverse": 0.7703703703703704
+        "replay": {
+          "forward": 0.8814814814814815,
+          "reverse": 0.6444444444444445
         },
         "sft": {
           "forward": 0.9111111111111111,
           "reverse": 0.6444444444444445
         },
-        "base": {
-          "forward": 0.5851851851851851,
-          "reverse": 0.6370370370370371
-        },
-        "replay": {
-          "forward": 0.8814814814814815,
-          "reverse": 0.6444444444444445
+        "mix50": {
+          "forward": 0.8962962962962963,
+          "reverse": 0.7703703703703704
         }
       },
       "finished_utc": "2026-09-19T20:23:48.567390+00:00",
@@ -921,29 +925,29 @@
       "n_instances": 1012,
       "run": "/scratch/juno/jvl210002/bidir/results/2026-09-19/mt_de-en/olmo2-1b/small_s17",
       "means": {
-        "rev": {
-          "forward": 0.0,
-          "reverse": 0.8784584980237155
-        },
-        "mix50": {
-          "forward": 0.866600790513834,
-          "reverse": 0.8656126482213439
-        },
         "mix5": {
           "forward": 0.8606719367588933,
           "reverse": 0.8270750988142292
-        },
-        "sft": {
-          "forward": 0.8488142292490118,
-          "reverse": 0.22529644268774704
         },
         "base": {
           "forward": 0.7203557312252964,
           "reverse": 0.7460474308300395
         },
+        "rev": {
+          "forward": 0.0,
+          "reverse": 0.8784584980237155
+        },
         "replay": {
           "forward": 0.8557312252964426,
           "reverse": 0.7865612648221344
+        },
+        "sft": {
+          "forward": 0.8488142292490118,
+          "reverse": 0.22529644268774704
+        },
+        "mix50": {
+          "forward": 0.866600790513834,
+          "reverse": 0.8656126482213439
         }
       },
       "finished_utc": "2026-09-19T20:52:55.619743+00:00",
@@ -956,29 +960,29 @@
       "n_instances": 1012,
       "run": "/scratch/juno/jvl210002/bidir/results/2026-09-19/mt_en-de/olmo2-1b/small_s17",
       "means": {
-        "rev": {
-          "forward": 0.308300395256917,
-          "reverse": 0.8596837944664032
-        },
-        "mix50": {
-          "forward": 0.8537549407114624,
-          "reverse": 0.857707509881423
-        },
         "mix5": {
           "forward": 0.8774703557312253,
           "reverse": 0.8606719367588933
-        },
-        "sft": {
-          "forward": 0.8695652173913043,
-          "reverse": 0.0
         },
         "base": {
           "forward": 0.7490118577075099,
           "reverse": 0.7094861660079052
         },
+        "rev": {
+          "forward": 0.308300395256917,
+          "reverse": 0.8596837944664032
+        },
         "replay": {
           "forward": 0.8646245059288538,
           "reverse": 0.8488142292490118
+        },
+        "sft": {
+          "forward": 0.8695652173913043,
+          "reverse": 0.0
+        },
+        "mix50": {
+          "forward": 0.8537549407114624,
+          "reverse": 0.857707509881423
         }
       },
       "finished_utc": "2026-09-19T20:57:51.003496+00:00",
@@ -991,29 +995,29 @@
       "n_instances": 1012,
       "run": "/scratch/juno/jvl210002/bidir/results/2026-09-19/mt_zh-en/gemma3-4b/small_s17",
       "means": {
-        "rev": {
-          "forward": 0.005928853754940711,
-          "reverse": 0.700592885375494
-        },
-        "mix50": {
-          "forward": 0.6867588932806324,
-          "reverse": 0.6739130434782609
-        },
         "mix5": {
           "forward": 0.6788537549407114,
           "reverse": 0.658102766798419
-        },
-        "sft": {
-          "forward": 0.6808300395256917,
-          "reverse": 0.0
         },
         "base": {
           "forward": 0.7144268774703557,
           "reverse": 0.7381422924901185
         },
+        "rev": {
+          "forward": 0.005928853754940711,
+          "reverse": 0.700592885375494
+        },
         "replay": {
           "forward": 0.6867588932806324,
           "reverse": 0.7114624505928854
+        },
+        "sft": {
+          "forward": 0.6808300395256917,
+          "reverse": 0.0
+        },
+        "mix50": {
+          "forward": 0.6867588932806324,
+          "reverse": 0.6739130434782609
         }
       },
       "finished_utc": "2026-09-19T22:09:34.975476+00:00",
@@ -1026,25 +1030,25 @@
       "n_instances": 135,
       "run": "/scratch/juno/jvl210002/bidir/results/2026-09-21/relation/gemma3-4b/small_s42",
       "means": {
+        "base": {
+          "forward": 0.5851851851851851,
+          "reverse": 0.6370370370370371
+        },
         "rev": {
           "forward": 0.6148148148148148,
           "reverse": 0.7703703703703704
         },
-        "mix50": {
-          "forward": 0.8888888888888888,
-          "reverse": 0.7555555555555555
+        "replay": {
+          "forward": 0.8666666666666667,
+          "reverse": 0.6370370370370371
         },
         "sft": {
           "forward": 0.9185185185185185,
           "reverse": 0.6444444444444445
         },
-        "base": {
-          "forward": 0.5851851851851851,
-          "reverse": 0.6370370370370371
-        },
-        "replay": {
-          "forward": 0.8666666666666667,
-          "reverse": 0.6370370370370371
+        "mix50": {
+          "forward": 0.8888888888888888,
+          "reverse": 0.7555555555555555
         }
       },
       "finished_utc": "2026-09-21T16:16:47.945340+00:00",
@@ -1057,29 +1061,29 @@
       "n_instances": 1012,
       "run": "/scratch/juno/jvl210002/bidir/results/2026-09-21/mt_de-en/gemma3-4b/small_s42",
       "means": {
-        "rev": {
-          "forward": 0.045454545454545456,
-          "reverse": 0.7766798418972332
-        },
-        "mix50": {
-          "forward": 0.6719367588932806,
-          "reverse": 0.7658102766798419
-        },
         "mix5": {
           "forward": 0.6847826086956522,
           "reverse": 0.7292490118577075
-        },
-        "sft": {
-          "forward": 0.6669960474308301,
-          "reverse": 0.0
         },
         "base": {
           "forward": 0.7539525691699605,
           "reverse": 0.7579051383399209
         },
+        "rev": {
+          "forward": 0.045454545454545456,
+          "reverse": 0.7766798418972332
+        },
         "replay": {
           "forward": 0.6689723320158103,
           "reverse": 0.7272727272727273
+        },
+        "sft": {
+          "forward": 0.6669960474308301,
+          "reverse": 0.0
+        },
+        "mix50": {
+          "forward": 0.6719367588932806,
+          "reverse": 0.7658102766798419
         }
       },
       "finished_utc": "2026-09-21T16:53:21.291462+00:00",
@@ -1092,29 +1096,29 @@
       "n_instances": 1012,
       "run": "/scratch/juno/jvl210002/bidir/results/2026-09-21/mt_en-de/gemma3-4b/small_s42",
       "means": {
-        "rev": {
-          "forward": 0.0,
-          "reverse": 0.658102766798419
-        },
-        "mix50": {
-          "forward": 0.7598814229249012,
-          "reverse": 0.6709486166007905
-        },
         "mix5": {
           "forward": 0.7806324110671937,
           "reverse": 0.6926877470355731
-        },
-        "sft": {
-          "forward": 0.7707509881422925,
-          "reverse": 0.5207509881422925
         },
         "base": {
           "forward": 0.7519762845849802,
           "reverse": 0.7519762845849802
         },
+        "rev": {
+          "forward": 0.0,
+          "reverse": 0.658102766798419
+        },
         "replay": {
           "forward": 0.766798418972332,
           "reverse": 0.7252964426877471
+        },
+        "sft": {
+          "forward": 0.7707509881422925,
+          "reverse": 0.5207509881422925
+        },
+        "mix50": {
+          "forward": 0.7598814229249012,
+          "reverse": 0.6709486166007905
         }
       },
       "finished_utc": "2026-09-21T17:03:42.741228+00:00",
@@ -1127,25 +1131,25 @@
       "n_instances": 135,
       "run": "/scratch/juno/jvl210002/bidir/results/2026-09-21/relation/olmo2-1b/small_s42",
       "means": {
+        "base": {
+          "forward": 0.2,
+          "reverse": 0.18518518518518517
+        },
         "rev": {
           "forward": 0.1925925925925926,
           "reverse": 0.4074074074074074
         },
-        "mix50": {
-          "forward": 0.6444444444444445,
-          "reverse": 0.43703703703703706
+        "replay": {
+          "forward": 0.6370370370370371,
+          "reverse": 0.3925925925925926
         },
         "sft": {
           "forward": 0.6444444444444445,
           "reverse": 0.31851851851851853
         },
-        "base": {
-          "forward": 0.2,
-          "reverse": 0.18518518518518517
-        },
-        "replay": {
-          "forward": 0.6370370370370371,
-          "reverse": 0.3925925925925926
+        "mix50": {
+          "forward": 0.6444444444444445,
+          "reverse": 0.43703703703703706
         }
       },
       "finished_utc": "2026-09-21T19:17:27.593672+00:00",
@@ -1158,29 +1162,29 @@
       "n_instances": 1012,
       "run": "/scratch/juno/jvl210002/bidir/results/2026-09-21/mt_de-en/olmo2-1b/small_s42",
       "means": {
-        "rev": {
-          "forward": 0.0009881422924901185,
-          "reverse": 0.8804347826086957
-        },
-        "mix50": {
-          "forward": 0.8596837944664032,
-          "reverse": 0.8616600790513834
-        },
         "mix5": {
           "forward": 0.857707509881423,
           "reverse": 0.8003952569169961
-        },
-        "sft": {
-          "forward": 0.8517786561264822,
-          "reverse": 0.16403162055335968
         },
         "base": {
           "forward": 0.7203557312252964,
           "reverse": 0.7440711462450593
         },
+        "rev": {
+          "forward": 0.0009881422924901185,
+          "reverse": 0.8804347826086957
+        },
         "replay": {
           "forward": 0.8527667984189723,
           "reverse": 0.7895256916996047
+        },
+        "sft": {
+          "forward": 0.8517786561264822,
+          "reverse": 0.16403162055335968
+        },
+        "mix50": {
+          "forward": 0.8596837944664032,
+          "reverse": 0.8616600790513834
         }
       },
       "finished_utc": "2026-09-21T19:30:59.471120+00:00",
@@ -1193,29 +1197,29 @@
       "n_instances": 1012,
       "run": "/scratch/juno/jvl210002/bidir/results/2026-09-21/mt_en-de/olmo2-1b/small_s42",
       "means": {
-        "rev": {
-          "forward": 0.2618577075098814,
-          "reverse": 0.8616600790513834
-        },
-        "mix50": {
-          "forward": 0.8537549407114624,
-          "reverse": 0.8557312252964426
-        },
         "mix5": {
           "forward": 0.8636363636363636,
           "reverse": 0.8567193675889329
-        },
-        "sft": {
-          "forward": 0.8715415019762845,
-          "reverse": 0.0
         },
         "base": {
           "forward": 0.7440711462450593,
           "reverse": 0.7203557312252964
         },
+        "rev": {
+          "forward": 0.2618577075098814,
+          "reverse": 0.8616600790513834
+        },
         "replay": {
           "forward": 0.8527667984189723,
           "reverse": 0.7559288537549407
+        },
+        "sft": {
+          "forward": 0.8715415019762845,
+          "reverse": 0.0
+        },
+        "mix50": {
+          "forward": 0.8537549407114624,
+          "reverse": 0.8557312252964426
         }
       },
       "finished_utc": "2026-09-21T19:40:53.694620+00:00",
@@ -1228,29 +1232,29 @@
       "n_instances": 1034,
       "run": "/scratch/juno/jvl210002/bidir/results/2026-09-21/sql/olmo2-1b/small_s42",
       "means": {
-        "rev": {
-          "forward": 0.008704061895551257,
-          "reverse": 0.5967117988394585
-        },
-        "mix50": {
-          "forward": 0.41295938104448743,
-          "reverse": 0.5618955512572534
-        },
         "mix5": {
           "forward": 0.46421663442940037,
           "reverse": 0.47292069632495165
-        },
-        "sft": {
-          "forward": 0.4564796905222437,
-          "reverse": 0.2862669245647969
         },
         "base": {
           "forward": 0.19148936170212766,
           "reverse": 0.3694390715667311
         },
+        "rev": {
+          "forward": 0.008704061895551257,
+          "reverse": 0.5967117988394585
+        },
         "replay": {
           "forward": 0.4158607350096712,
           "reverse": 0.3713733075435203
+        },
+        "sft": {
+          "forward": 0.4564796905222437,
+          "reverse": 0.2862669245647969
+        },
+        "mix50": {
+          "forward": 0.41295938104448743,
+          "reverse": 0.5618955512572534
         }
       },
       "finished_utc": "2026-09-21T20:36:00.499351+00:00",
@@ -1263,29 +1267,29 @@
       "n_instances": 1012,
       "run": "/scratch/juno/jvl210002/bidir/results/2026-09-21/mt_zh-en/gemma3-4b/small_s42",
       "means": {
-        "rev": {
-          "forward": 0.001976284584980237,
-          "reverse": 0.7124505928853755
-        },
-        "mix50": {
-          "forward": 0.6877470355731226,
-          "reverse": 0.682806324110672
-        },
         "mix5": {
           "forward": 0.6946640316205533,
           "reverse": 0.6442687747035574
-        },
-        "sft": {
-          "forward": 0.6729249011857708,
-          "reverse": 0.0
         },
         "base": {
           "forward": 0.7144268774703557,
           "reverse": 0.7381422924901185
         },
+        "rev": {
+          "forward": 0.001976284584980237,
+          "reverse": 0.7124505928853755
+        },
         "replay": {
           "forward": 0.6778656126482213,
           "reverse": 0.004940711462450593
+        },
+        "sft": {
+          "forward": 0.6729249011857708,
+          "reverse": 0.0
+        },
+        "mix50": {
+          "forward": 0.6877470355731226,
+          "reverse": 0.682806324110672
         }
       },
       "finished_utc": "2026-09-21T21:04:04.510012+00:00",
@@ -1298,29 +1302,29 @@
       "n_instances": 1034,
       "run": "/scratch/juno/jvl210002/bidir/results/2026-09-21/sql/gemma3-4b/small_s42",
       "means": {
-        "rev": {
-          "forward": 0.015473887814313346,
-          "reverse": 0.6179883945841392
-        },
-        "mix50": {
-          "forward": 0.6818181818181818,
-          "reverse": 0.5986460348162476
-        },
         "mix5": {
           "forward": 0.6808510638297872,
           "reverse": 0.5986460348162476
-        },
-        "sft": {
-          "forward": 0.6634429400386848,
-          "reverse": 0.5560928433268859
         },
         "base": {
           "forward": 0.562862669245648,
           "reverse": 0.5793036750483559
         },
+        "rev": {
+          "forward": 0.015473887814313346,
+          "reverse": 0.6179883945841392
+        },
         "replay": {
           "forward": 0.6673114119922631,
           "reverse": 0.3733075435203095
+        },
+        "sft": {
+          "forward": 0.6634429400386848,
+          "reverse": 0.5560928433268859
+        },
+        "mix50": {
+          "forward": 0.6818181818181818,
+          "reverse": 0.5986460348162476
         }
       },
       "finished_utc": "2026-09-21T23:00:46.529328+00:00",
@@ -1333,29 +1337,29 @@
       "n_instances": 1012,
       "run": "/scratch/juno/jvl210002/bidir/results/2026-09-21/mt_en-zh/gemma3-4b/small_s42",
       "means": {
-        "rev": {
-          "forward": 0.0,
-          "reverse": 0.6808300395256917
-        },
-        "mix50": {
-          "forward": 0.7065217391304348,
-          "reverse": 0.6719367588932806
-        },
         "mix5": {
           "forward": 0.7035573122529645,
           "reverse": 0.6669960474308301
-        },
-        "sft": {
-          "forward": 0.6966403162055336,
-          "reverse": 0.0009881422924901185
         },
         "base": {
           "forward": 0.7361660079051383,
           "reverse": 0.7213438735177866
         },
+        "rev": {
+          "forward": 0.0,
+          "reverse": 0.6808300395256917
+        },
         "replay": {
           "forward": 0.7134387351778656,
           "reverse": 0.6610671936758893
+        },
+        "sft": {
+          "forward": 0.6966403162055336,
+          "reverse": 0.0009881422924901185
+        },
+        "mix50": {
+          "forward": 0.7065217391304348,
+          "reverse": 0.6719367588932806
         }
       },
       "finished_utc": "2026-09-21T23:10:08.967174+00:00",
@@ -1368,25 +1372,25 @@
       "n_instances": 135,
       "run": "/scratch/juno/jvl210002/bidir/results/2026-09-22/relation/llama31-8b/small_s17",
       "means": {
+        "base": {
+          "forward": 0.8444444444444444,
+          "reverse": 0.7777777777777778
+        },
         "rev": {
           "forward": 0.7703703703703704,
           "reverse": 0.8666666666666667
         },
-        "mix50": {
-          "forward": 0.9259259259259259,
-          "reverse": 0.8518518518518519
+        "replay": {
+          "forward": 0.9333333333333333,
+          "reverse": 0.8074074074074075
         },
         "sft": {
           "forward": 0.9407407407407408,
           "reverse": 0.8
         },
-        "base": {
-          "forward": 0.8444444444444444,
-          "reverse": 0.7777777777777778
-        },
-        "replay": {
-          "forward": 0.9333333333333333,
-          "reverse": 0.8074074074074075
+        "mix50": {
+          "forward": 0.9259259259259259,
+          "reverse": 0.8518518518518519
         }
       },
       "finished_utc": "2026-09-22T01:17:41.032617+00:00",
@@ -1399,29 +1403,29 @@
       "n_instances": 1012,
       "run": "/scratch/juno/jvl210002/bidir/results/2026-09-22/mt_de-en/llama31-8b/small_s17",
       "means": {
-        "rev": {
-          "forward": 0.045454545454545456,
-          "reverse": 0.7569169960474308
-        },
-        "mix50": {
-          "forward": 0.6472332015810277,
-          "reverse": 0.7302371541501976
-        },
         "mix5": {
           "forward": 0.6511857707509882,
           "reverse": 0.6857707509881423
-        },
-        "sft": {
-          "forward": 0.6383399209486166,
-          "reverse": 0.16106719367588934
         },
         "base": {
           "forward": 0.7420948616600791,
           "reverse": 0.7272727272727273
         },
+        "rev": {
+          "forward": 0.045454545454545456,
+          "reverse": 0.7569169960474308
+        },
         "replay": {
           "forward": 0.6413043478260869,
           "reverse": 0.6442687747035574
+        },
+        "sft": {
+          "forward": 0.6383399209486166,
+          "reverse": 0.16106719367588934
+        },
+        "mix50": {
+          "forward": 0.6472332015810277,
+          "reverse": 0.7302371541501976
         }
       },
       "finished_utc": "2026-09-22T01:29:53.755434+00:00",
@@ -1434,29 +1438,29 @@
       "n_instances": 1012,
       "run": "/scratch/juno/jvl210002/bidir/results/2026-09-22/mt_en-de/gemma3-4b/small_s1234",
       "means": {
-        "rev": {
-          "forward": 0.0,
-          "reverse": 0.6571146245059288
-        },
-        "mix50": {
-          "forward": 0.7648221343873518,
-          "reverse": 0.6729249011857708
-        },
         "mix5": {
           "forward": 0.7618577075098815,
           "reverse": 0.6926877470355731
-        },
-        "sft": {
-          "forward": 0.7638339920948617,
-          "reverse": 0.07707509881422925
         },
         "base": {
           "forward": 0.7549407114624506,
           "reverse": 0.7519762845849802
         },
+        "rev": {
+          "forward": 0.0,
+          "reverse": 0.6571146245059288
+        },
         "replay": {
           "forward": 0.7658102766798419,
           "reverse": 0.7035573122529645
+        },
+        "sft": {
+          "forward": 0.7638339920948617,
+          "reverse": 0.07707509881422925
+        },
+        "mix50": {
+          "forward": 0.7648221343873518,
+          "reverse": 0.6729249011857708
         }
       },
       "finished_utc": "2026-09-22T01:42:31.724302+00:00",
@@ -1469,29 +1473,29 @@
       "n_instances": 1012,
       "run": "/scratch/juno/jvl210002/bidir/results/2026-09-22/mt_en-de/llama31-8b/small_s17",
       "means": {
-        "rev": {
-          "forward": 0.07509881422924901,
-          "reverse": 0.6195652173913043
-        },
-        "mix50": {
-          "forward": 0.7035573122529645,
-          "reverse": 0.6511857707509882
-        },
         "mix5": {
           "forward": 0.7272727272727273,
           "reverse": 0.6956521739130435
-        },
-        "sft": {
-          "forward": 0.7322134387351779,
-          "reverse": 0.5938735177865613
         },
         "base": {
           "forward": 0.7114624505928854,
           "reverse": 0.7420948616600791
         },
+        "rev": {
+          "forward": 0.07509881422924901,
+          "reverse": 0.6195652173913043
+        },
         "replay": {
           "forward": 0.7015810276679841,
           "reverse": 0.700592885375494
+        },
+        "sft": {
+          "forward": 0.7322134387351779,
+          "reverse": 0.5938735177865613
+        },
+        "mix50": {
+          "forward": 0.7035573122529645,
+          "reverse": 0.6511857707509882
         }
       },
       "finished_utc": "2026-09-22T01:54:30.062117+00:00",
@@ -1504,29 +1508,29 @@
       "n_instances": 2060,
       "run": "/scratch/juno/jvl210002/bidir/results/2026-09-22/code/gemma3-4b/small_s42",
       "means": {
-        "rev": {
-          "forward": 0.7305825242718447,
-          "reverse": 0.9009708737864077
-        },
-        "mix50": {
-          "forward": 0.8902912621359224,
-          "reverse": 0.8859223300970874
-        },
         "mix5": {
           "forward": 0.9199029126213593,
           "reverse": 0.7737864077669903
-        },
-        "sft": {
-          "forward": 0.9150485436893204,
-          "reverse": 0.01407766990291262
         },
         "base": {
           "forward": 0.5218446601941747,
           "reverse": 0.15194174757281553
         },
+        "rev": {
+          "forward": 0.7305825242718447,
+          "reverse": 0.9009708737864077
+        },
         "replay": {
           "forward": 0.9029126213592233,
           "reverse": 0.16650485436893203
+        },
+        "sft": {
+          "forward": 0.9150485436893204,
+          "reverse": 0.01407766990291262
+        },
+        "mix50": {
+          "forward": 0.8902912621359224,
+          "reverse": 0.8859223300970874
         }
       },
       "finished_utc": "2026-09-22T04:26:26.851735+00:00",
@@ -1539,29 +1543,29 @@
       "n_instances": 1012,
       "run": "/scratch/juno/jvl210002/bidir/results/2026-09-22/mt_zh-en/llama31-8b/small_s17",
       "means": {
-        "rev": {
-          "forward": 0.3685770750988142,
-          "reverse": 0.6877470355731226
-        },
-        "mix50": {
-          "forward": 0.682806324110672,
-          "reverse": 0.6887351778656127
-        },
         "mix5": {
           "forward": 0.6719367588932806,
           "reverse": 0.6847826086956522
-        },
-        "sft": {
-          "forward": 0.6788537549407114,
-          "reverse": 0.0
         },
         "base": {
           "forward": 0.7252964426877471,
           "reverse": 0.717391304347826
         },
+        "rev": {
+          "forward": 0.3685770750988142,
+          "reverse": 0.6877470355731226
+        },
         "replay": {
           "forward": 0.6590909090909091,
           "reverse": 0.5770750988142292
+        },
+        "sft": {
+          "forward": 0.6788537549407114,
+          "reverse": 0.0
+        },
+        "mix50": {
+          "forward": 0.682806324110672,
+          "reverse": 0.6887351778656127
         }
       },
       "finished_utc": "2026-09-22T05:54:22.507729+00:00",
@@ -1574,25 +1578,25 @@
       "n_instances": 135,
       "run": "/scratch/juno/jvl210002/bidir/results/2026-09-22/relation/gemma3-12b/small_s17",
       "means": {
+        "base": {
+          "forward": 0.6592592592592592,
+          "reverse": 0.8
+        },
         "rev": {
           "forward": 0.5851851851851851,
           "reverse": 0.8888888888888888
         },
-        "mix50": {
-          "forward": 0.9259259259259259,
-          "reverse": 0.8962962962962963
+        "replay": {
+          "forward": 0.9333333333333333,
+          "reverse": 0.8
         },
         "sft": {
           "forward": 0.9555555555555556,
           "reverse": 0.7925925925925926
         },
-        "base": {
-          "forward": 0.6592592592592592,
-          "reverse": 0.8
-        },
-        "replay": {
-          "forward": 0.9333333333333333,
-          "reverse": 0.8
+        "mix50": {
+          "forward": 0.9259259259259259,
+          "reverse": 0.8962962962962963
         }
       },
       "finished_utc": "2026-09-22T06:00:57.228954+00:00",
@@ -1605,29 +1609,29 @@
       "n_instances": 1034,
       "run": "/scratch/juno/jvl210002/bidir/results/2026-09-22/sql/llama31-8b/small_s17",
       "means": {
-        "rev": {
-          "forward": 0.4564796905222437,
-          "reverse": 0.6150870406189555
-        },
-        "mix50": {
-          "forward": 0.7176015473887815,
-          "reverse": 0.6170212765957447
-        },
         "mix5": {
           "forward": 0.7195357833655706,
           "reverse": 0.5725338491295938
-        },
-        "sft": {
-          "forward": 0.7195357833655706,
-          "reverse": 0.5087040618955513
         },
         "base": {
           "forward": 0.6199226305609284,
           "reverse": 0.5425531914893617
         },
+        "rev": {
+          "forward": 0.4564796905222437,
+          "reverse": 0.6150870406189555
+        },
         "replay": {
           "forward": 0.6876208897485493,
           "reverse": 0.48936170212765956
+        },
+        "sft": {
+          "forward": 0.7195357833655706,
+          "reverse": 0.5087040618955513
+        },
+        "mix50": {
+          "forward": 0.7176015473887815,
+          "reverse": 0.6170212765957447
         }
       },
       "finished_utc": "2026-09-22T06:01:41.702959+00:00",
@@ -1640,29 +1644,29 @@
       "n_instances": 1012,
       "run": "/scratch/juno/jvl210002/bidir/results/2026-09-22/mt_en-zh/llama31-8b/small_s17",
       "means": {
-        "rev": {
-          "forward": 0.0,
-          "reverse": 0.6571146245059288
-        },
-        "mix50": {
-          "forward": 0.7075098814229249,
-          "reverse": 0.6788537549407114
-        },
         "mix5": {
           "forward": 0.6976284584980237,
           "reverse": 0.6808300395256917
-        },
-        "sft": {
-          "forward": 0.6926877470355731,
-          "reverse": 0.030632411067193676
         },
         "base": {
           "forward": 0.7223320158102767,
           "reverse": 0.7252964426877471
         },
+        "rev": {
+          "forward": 0.0,
+          "reverse": 0.6571146245059288
+        },
         "replay": {
           "forward": 0.7104743083003953,
           "reverse": 0.7183794466403162
+        },
+        "sft": {
+          "forward": 0.6926877470355731,
+          "reverse": 0.030632411067193676
+        },
+        "mix50": {
+          "forward": 0.7075098814229249,
+          "reverse": 0.6788537549407114
         }
       },
       "finished_utc": "2026-09-22T06:34:06.734609+00:00",
@@ -1675,29 +1679,29 @@
       "n_instances": 1012,
       "run": "/scratch/juno/jvl210002/bidir/results/2026-09-22/mt_de-en/gemma3-12b/small_s17",
       "means": {
-        "rev": {
-          "forward": 0.016798418972332016,
-          "reverse": 0.6650197628458498
-        },
-        "mix50": {
-          "forward": 0.6768774703557312,
-          "reverse": 0.6620553359683794
-        },
         "mix5": {
           "forward": 0.6630434782608695,
           "reverse": 0.6067193675889329
-        },
-        "sft": {
-          "forward": 0.6669960474308301,
-          "reverse": 0.001976284584980237
         },
         "base": {
           "forward": 0.7687747035573123,
           "reverse": 0.7203557312252964
         },
+        "rev": {
+          "forward": 0.016798418972332016,
+          "reverse": 0.6650197628458498
+        },
         "replay": {
           "forward": 0.6679841897233202,
           "reverse": 0.558300395256917
+        },
+        "sft": {
+          "forward": 0.6669960474308301,
+          "reverse": 0.001976284584980237
+        },
+        "mix50": {
+          "forward": 0.6768774703557312,
+          "reverse": 0.6620553359683794
         }
       },
       "finished_utc": "2026-09-22T07:29:04.964738+00:00",
@@ -1710,29 +1714,29 @@
       "n_instances": 1012,
       "run": "/scratch/juno/jvl210002/bidir/results/2026-09-22/mt_en-de/gemma3-12b/small_s17",
       "means": {
-        "rev": {
-          "forward": 0.009881422924901186,
-          "reverse": 0.6689723320158103
-        },
-        "mix50": {
-          "forward": 0.642292490118577,
-          "reverse": 0.6877470355731226
-        },
         "mix5": {
           "forward": 0.6442687747035574,
           "reverse": 0.7045454545454546
-        },
-        "sft": {
-          "forward": 0.6650197628458498,
-          "reverse": 0.0029644268774703555
         },
         "base": {
           "forward": 0.7272727272727273,
           "reverse": 0.7687747035573123
         },
+        "rev": {
+          "forward": 0.009881422924901186,
+          "reverse": 0.6689723320158103
+        },
         "replay": {
           "forward": 0.658102766798419,
           "reverse": 0.7401185770750988
+        },
+        "sft": {
+          "forward": 0.6650197628458498,
+          "reverse": 0.0029644268774703555
+        },
+        "mix50": {
+          "forward": 0.642292490118577,
+          "reverse": 0.6877470355731226
         }
       },
       "finished_utc": "2026-09-22T10:38:11.999066+00:00",
@@ -1745,29 +1749,29 @@
       "n_instances": 1012,
       "run": "/scratch/juno/jvl210002/bidir/results/2026-09-22/mt_en-zh/gemma3-12b/small_s17",
       "means": {
-        "rev": {
-          "forward": 0.0,
-          "reverse": 0.6304347826086957
-        },
-        "mix50": {
-          "forward": 0.6729249011857708,
-          "reverse": 0.6175889328063241
-        },
         "mix5": {
           "forward": 0.6709486166007905,
           "reverse": 0.6324110671936759
-        },
-        "sft": {
-          "forward": 0.6709486166007905,
-          "reverse": 0.05434782608695652
         },
         "base": {
           "forward": 0.7341897233201581,
           "reverse": 0.6877470355731226
         },
+        "rev": {
+          "forward": 0.0,
+          "reverse": 0.6304347826086957
+        },
         "replay": {
           "forward": 0.6630434782608695,
           "reverse": 0.642292490118577
+        },
+        "sft": {
+          "forward": 0.6709486166007905,
+          "reverse": 0.05434782608695652
+        },
+        "mix50": {
+          "forward": 0.6729249011857708,
+          "reverse": 0.6175889328063241
         }
       },
       "finished_utc": "2026-09-22T15:36:45.067994+00:00",
@@ -1780,29 +1784,29 @@
       "n_instances": 1012,
       "run": "/scratch/juno/jvl210002/bidir/results/2026-09-22/mt_zh-en/gemma3-12b/small_s17",
       "means": {
-        "rev": {
-          "forward": 0.1324110671936759,
-          "reverse": 0.6640316205533597
-        },
-        "mix50": {
-          "forward": 0.6215415019762845,
-          "reverse": 0.607707509881423
-        },
         "mix5": {
           "forward": 0.6324110671936759,
           "reverse": 0.6492094861660079
-        },
-        "sft": {
-          "forward": 0.616600790513834,
-          "reverse": 0.001976284584980237
         },
         "base": {
           "forward": 0.6877470355731226,
           "reverse": 0.7213438735177866
         },
+        "rev": {
+          "forward": 0.1324110671936759,
+          "reverse": 0.6640316205533597
+        },
         "replay": {
           "forward": 0.6067193675889329,
           "reverse": 0.6699604743083004
+        },
+        "sft": {
+          "forward": 0.616600790513834,
+          "reverse": 0.001976284584980237
+        },
+        "mix50": {
+          "forward": 0.6215415019762845,
+          "reverse": 0.607707509881423
         }
       },
       "finished_utc": "2026-09-22T16:15:59.487381+00:00",
@@ -1815,29 +1819,29 @@
       "n_instances": 1034,
       "run": "/scratch/juno/jvl210002/bidir/results/2026-09-22/sql/gemma3-12b/small_s17",
       "means": {
-        "rev": {
-          "forward": 0.1286266924564797,
-          "reverse": 0.6228239845261122
-        },
-        "mix50": {
-          "forward": 0.706963249516441,
-          "reverse": 0.6189555125725339
-        },
         "mix5": {
           "forward": 0.7437137330754352,
           "reverse": 0.6092843326885881
-        },
-        "sft": {
-          "forward": 0.7408123791102514,
-          "reverse": 0.5512572533849129
         },
         "base": {
           "forward": 0.655705996131528,
           "reverse": 0.6150870406189555
         },
+        "rev": {
+          "forward": 0.1286266924564797,
+          "reverse": 0.6228239845261122
+        },
         "replay": {
           "forward": 0.7263056092843327,
           "reverse": 0.5087040618955513
+        },
+        "sft": {
+          "forward": 0.7408123791102514,
+          "reverse": 0.5512572533849129
+        },
+        "mix50": {
+          "forward": 0.706963249516441,
+          "reverse": 0.6189555125725339
         }
       },
       "finished_utc": "2026-09-22T16:23:20.371978+00:00",
@@ -1850,29 +1854,29 @@
       "n_instances": 2060,
       "run": "/scratch/juno/jvl210002/bidir/results/2026-09-25/code/gemma3-12b/small_s17",
       "means": {
-        "rev": {
-          "forward": 0.675242718446602,
-          "reverse": 0.9412621359223301
-        },
-        "mix50": {
-          "forward": 0.9276699029126214,
-          "reverse": 0.9305825242718446
-        },
         "mix5": {
           "forward": 0.954368932038835,
           "reverse": 0.8660194174757282
-        },
-        "sft": {
-          "forward": 0.9495145631067962,
-          "reverse": 0.5893203883495146
         },
         "base": {
           "forward": 0.5975728155339806,
           "reverse": 0.2859223300970874
         },
+        "rev": {
+          "forward": 0.675242718446602,
+          "reverse": 0.9412621359223301
+        },
         "replay": {
           "forward": 0.9398058252427185,
           "reverse": 0.5553398058252427
+        },
+        "sft": {
+          "forward": 0.9495145631067962,
+          "reverse": 0.5893203883495146
+        },
+        "mix50": {
+          "forward": 0.9276699029126214,
+          "reverse": 0.9305825242718446
         }
       },
       "finished_utc": "2026-09-25T12:33:24.600090+00:00",
@@ -1885,25 +1889,25 @@
       "n_instances": 135,
       "run": "/scratch/juno/jvl210002/bidir/results/2026-09-25/relation/llama31-8b/small_s42",
       "means": {
+        "base": {
+          "forward": 0.8444444444444444,
+          "reverse": 0.7777777777777778
+        },
         "rev": {
           "forward": 0.8074074074074075,
           "reverse": 0.8592592592592593
         },
-        "mix50": {
-          "forward": 0.9185185185185185,
-          "reverse": 0.8592592592592593
+        "replay": {
+          "forward": 0.9259259259259259,
+          "reverse": 0.8222222222222222
         },
         "sft": {
           "forward": 0.9259259259259259,
           "reverse": 0.7111111111111111
         },
-        "base": {
-          "forward": 0.8444444444444444,
-          "reverse": 0.7777777777777778
-        },
-        "replay": {
-          "forward": 0.9259259259259259,
-          "reverse": 0.8222222222222222
+        "mix50": {
+          "forward": 0.9185185185185185,
+          "reverse": 0.8592592592592593
         }
       },
       "finished_utc": "2026-09-25T12:39:08.512790+00:00",
@@ -1916,29 +1920,29 @@
       "n_instances": 1012,
       "run": "/scratch/juno/jvl210002/bidir/results/2026-09-26/mt_de-en/llama31-8b/small_s42",
       "means": {
-        "rev": {
-          "forward": 0.2440711462450593,
-          "reverse": 0.7440711462450593
-        },
-        "mix50": {
-          "forward": 0.6600790513833992,
-          "reverse": 0.7391304347826086
-        },
         "mix5": {
           "forward": 0.6304347826086957,
           "reverse": 0.6867588932806324
-        },
-        "sft": {
-          "forward": 0.6452569169960475,
-          "reverse": 0.13537549407114624
         },
         "base": {
           "forward": 0.7450592885375494,
           "reverse": 0.7302371541501976
         },
+        "rev": {
+          "forward": 0.2440711462450593,
+          "reverse": 0.7440711462450593
+        },
         "replay": {
           "forward": 0.6432806324110671,
           "reverse": 0.6679841897233202
+        },
+        "sft": {
+          "forward": 0.6452569169960475,
+          "reverse": 0.13537549407114624
+        },
+        "mix50": {
+          "forward": 0.6600790513833992,
+          "reverse": 0.7391304347826086
         }
       },
       "finished_utc": "2026-09-26T02:16:49.762727+00:00",
@@ -1951,29 +1955,29 @@
       "n_instances": 1012,
       "run": "/scratch/juno/jvl210002/bidir/results/2026-09-26/mt_en-de/llama31-8b/small_s42",
       "means": {
-        "rev": {
-          "forward": 0.010869565217391304,
-          "reverse": 0.6363636363636364
-        },
-        "mix50": {
-          "forward": 0.7401185770750988,
-          "reverse": 0.6393280632411067
-        },
         "mix5": {
           "forward": 0.7361660079051383,
           "reverse": 0.6907114624505929
-        },
-        "sft": {
-          "forward": 0.7252964426877471,
-          "reverse": 0.20948616600790515
         },
         "base": {
           "forward": 0.7114624505928854,
           "reverse": 0.7420948616600791
         },
+        "rev": {
+          "forward": 0.010869565217391304,
+          "reverse": 0.6363636363636364
+        },
         "replay": {
           "forward": 0.7272727272727273,
           "reverse": 0.6867588932806324
+        },
+        "sft": {
+          "forward": 0.7252964426877471,
+          "reverse": 0.20948616600790515
+        },
+        "mix50": {
+          "forward": 0.7401185770750988,
+          "reverse": 0.6393280632411067
         }
       },
       "finished_utc": "2026-09-26T02:25:51.957957+00:00",
@@ -1986,25 +1990,25 @@
       "n_instances": 135,
       "run": "/scratch/juno/jvl210002/bidir/results/2026-09-26/relation/gemma3-12b/small_s42",
       "means": {
+        "base": {
+          "forward": 0.6592592592592592,
+          "reverse": 0.8
+        },
         "rev": {
           "forward": 0.5925925925925926,
           "reverse": 0.8740740740740741
         },
-        "mix50": {
-          "forward": 0.9333333333333333,
-          "reverse": 0.8888888888888888
+        "replay": {
+          "forward": 0.9259259259259259,
+          "reverse": 0.8444444444444444
         },
         "sft": {
           "forward": 0.9407407407407408,
           "reverse": 0.7777777777777778
         },
-        "base": {
-          "forward": 0.6592592592592592,
-          "reverse": 0.8
-        },
-        "replay": {
-          "forward": 0.9259259259259259,
-          "reverse": 0.8444444444444444
+        "mix50": {
+          "forward": 0.9333333333333333,
+          "reverse": 0.8888888888888888
         }
       },
       "finished_utc": "2026-09-26T09:10:04.843937+00:00",
@@ -2017,29 +2021,29 @@
       "n_instances": 1034,
       "run": "/scratch/juno/jvl210002/bidir/results/2026-09-26/sql/llama31-8b/small_s42",
       "means": {
-        "rev": {
-          "forward": 0.3965183752417795,
-          "reverse": 0.6141199226305609
-        },
-        "mix50": {
-          "forward": 0.7108317214700194,
-          "reverse": 0.6141199226305609
-        },
         "mix5": {
           "forward": 0.7088974854932302,
           "reverse": 0.6121856866537717
-        },
-        "sft": {
-          "forward": 0.7263056092843327,
-          "reverse": 0.5357833655705996
         },
         "base": {
           "forward": 0.6199226305609284,
           "reverse": 0.5425531914893617
         },
+        "rev": {
+          "forward": 0.3965183752417795,
+          "reverse": 0.6141199226305609
+        },
         "replay": {
           "forward": 0.6808510638297872,
           "reverse": 0.488394584139265
+        },
+        "sft": {
+          "forward": 0.7263056092843327,
+          "reverse": 0.5357833655705996
+        },
+        "mix50": {
+          "forward": 0.7108317214700194,
+          "reverse": 0.6141199226305609
         }
       },
       "finished_utc": "2026-09-26T09:28:44.166720+00:00",
@@ -2052,29 +2056,29 @@
       "n_instances": 1012,
       "run": "/scratch/juno/jvl210002/bidir/results/2026-09-26/mt_en-zh/llama31-8b/small_s42",
       "means": {
-        "rev": {
-          "forward": 0.0,
-          "reverse": 0.6640316205533597
-        },
-        "mix50": {
-          "forward": 0.7183794466403162,
-          "reverse": 0.6699604743083004
-        },
         "mix5": {
           "forward": 0.6926877470355731,
           "reverse": 0.6887351778656127
-        },
-        "sft": {
-          "forward": 0.7025691699604744,
-          "reverse": 0.13043478260869565
         },
         "base": {
           "forward": 0.7223320158102767,
           "reverse": 0.7252964426877471
         },
+        "rev": {
+          "forward": 0.0,
+          "reverse": 0.6640316205533597
+        },
         "replay": {
           "forward": 0.7282608695652174,
           "reverse": 0.5484189723320159
+        },
+        "sft": {
+          "forward": 0.7025691699604744,
+          "reverse": 0.13043478260869565
+        },
+        "mix50": {
+          "forward": 0.7183794466403162,
+          "reverse": 0.6699604743083004
         }
       },
       "finished_utc": "2026-09-26T15:04:33.259769+00:00",
@@ -2087,29 +2091,29 @@
       "n_instances": 1012,
       "run": "/scratch/juno/jvl210002/bidir/results/2026-09-26/mt_zh-en/llama31-8b/small_s42",
       "means": {
-        "rev": {
-          "forward": 0.08201581027667984,
-          "reverse": 0.6768774703557312
-        },
-        "mix50": {
-          "forward": 0.6758893280632411,
-          "reverse": 0.6936758893280632
-        },
         "mix5": {
           "forward": 0.6758893280632411,
           "reverse": 0.700592885375494
-        },
-        "sft": {
-          "forward": 0.6798418972332015,
-          "reverse": 0.0
         },
         "base": {
           "forward": 0.7312252964426877,
           "reverse": 0.7164031620553359
         },
+        "rev": {
+          "forward": 0.08201581027667984,
+          "reverse": 0.6768774703557312
+        },
         "replay": {
           "forward": 0.6590909090909091,
           "reverse": 0.39031620553359686
+        },
+        "sft": {
+          "forward": 0.6798418972332015,
+          "reverse": 0.0
+        },
+        "mix50": {
+          "forward": 0.6758893280632411,
+          "reverse": 0.6936758893280632
         }
       },
       "finished_utc": "2026-09-26T15:11:34.030327+00:00",
@@ -2122,29 +2126,29 @@
       "n_instances": 1012,
       "run": "/scratch/juno/jvl210002/bidir/results/2026-09-26/mt_de-en/gemma3-12b/small_s42",
       "means": {
-        "rev": {
-          "forward": 0.01383399209486166,
-          "reverse": 0.6640316205533597
-        },
-        "mix50": {
-          "forward": 0.6709486166007905,
-          "reverse": 0.6343873517786561
-        },
         "mix5": {
           "forward": 0.6610671936758893,
           "reverse": 0.6106719367588933
-        },
-        "sft": {
-          "forward": 0.6699604743083004,
-          "reverse": 0.0009881422924901185
         },
         "base": {
           "forward": 0.7687747035573123,
           "reverse": 0.7203557312252964
         },
+        "rev": {
+          "forward": 0.01383399209486166,
+          "reverse": 0.6640316205533597
+        },
         "replay": {
           "forward": 0.6679841897233202,
           "reverse": 0.5928853754940712
+        },
+        "sft": {
+          "forward": 0.6699604743083004,
+          "reverse": 0.0009881422924901185
+        },
+        "mix50": {
+          "forward": 0.6709486166007905,
+          "reverse": 0.6343873517786561
         }
       },
       "finished_utc": "2026-09-26T15:17:32.005763+00:00",
@@ -2157,29 +2161,29 @@
       "n_instances": 1012,
       "run": "/scratch/juno/jvl210002/bidir/results/2026-09-26/mt_en-de/gemma3-12b/small_s42",
       "means": {
-        "rev": {
-          "forward": 0.003952569169960474,
-          "reverse": 0.6768774703557312
-        },
-        "mix50": {
-          "forward": 0.6482213438735178,
-          "reverse": 0.6719367588932806
-        },
         "mix5": {
           "forward": 0.6669960474308301,
           "reverse": 0.7015810276679841
-        },
-        "sft": {
-          "forward": 0.6610671936758893,
-          "reverse": 0.07905138339920949
         },
         "base": {
           "forward": 0.7272727272727273,
           "reverse": 0.7687747035573123
         },
+        "rev": {
+          "forward": 0.003952569169960474,
+          "reverse": 0.6768774703557312
+        },
         "replay": {
           "forward": 0.6472332015810277,
           "reverse": 0.7430830039525692
+        },
+        "sft": {
+          "forward": 0.6610671936758893,
+          "reverse": 0.07905138339920949
+        },
+        "mix50": {
+          "forward": 0.6482213438735178,
+          "reverse": 0.6719367588932806
         }
       },
       "finished_utc": "2026-09-26T15:20:59.941595+00:00",
@@ -2192,29 +2196,29 @@
       "n_instances": 1034,
       "run": "/scratch/juno/jvl210002/bidir/results/2026-09-26/sql/gemma3-12b/small_s42",
       "means": {
-        "rev": {
-          "forward": 0.25918762088974856,
-          "reverse": 0.6218568665377177
-        },
-        "mix50": {
-          "forward": 0.723404255319149,
-          "reverse": 0.6305609284332688
-        },
         "mix5": {
           "forward": 0.746615087040619,
           "reverse": 0.6315280464216635
-        },
-        "sft": {
-          "forward": 0.7340425531914894,
-          "reverse": 0.5338491295938105
         },
         "base": {
           "forward": 0.655705996131528,
           "reverse": 0.6150870406189555
         },
+        "rev": {
+          "forward": 0.25918762088974856,
+          "reverse": 0.6218568665377177
+        },
         "replay": {
           "forward": 0.7330754352030948,
           "reverse": 0.5338491295938105
+        },
+        "sft": {
+          "forward": 0.7340425531914894,
+          "reverse": 0.5338491295938105
+        },
+        "mix50": {
+          "forward": 0.723404255319149,
+          "reverse": 0.6305609284332688
         }
       },
       "finished_utc": "2026-09-26T15:41:02.829274+00:00",
@@ -2227,29 +2231,29 @@
       "n_instances": 1012,
       "run": "/scratch/juno/jvl210002/bidir/results/2026-09-26/mt_en-zh/gemma3-12b/small_s42",
       "means": {
-        "rev": {
-          "forward": 0.0,
-          "reverse": 0.6205533596837944
-        },
-        "mix50": {
-          "forward": 0.6492094861660079,
-          "reverse": 0.6136363636363636
-        },
         "mix5": {
           "forward": 0.6867588932806324,
           "reverse": 0.6482213438735178
-        },
-        "sft": {
-          "forward": 0.6946640316205533,
-          "reverse": 0.03359683794466403
         },
         "base": {
           "forward": 0.7341897233201581,
           "reverse": 0.6877470355731226
         },
+        "rev": {
+          "forward": 0.0,
+          "reverse": 0.6205533596837944
+        },
         "replay": {
           "forward": 0.6620553359683794,
           "reverse": 0.650197628458498
+        },
+        "sft": {
+          "forward": 0.6946640316205533,
+          "reverse": 0.03359683794466403
+        },
+        "mix50": {
+          "forward": 0.6492094861660079,
+          "reverse": 0.6136363636363636
         }
       },
       "finished_utc": "2026-09-26T15:41:34.950194+00:00",
@@ -2262,29 +2266,29 @@
       "n_instances": 1012,
       "run": "/scratch/juno/jvl210002/bidir/results/2026-09-26/mt_zh-en/gemma3-12b/small_s42",
       "means": {
-        "rev": {
-          "forward": 0.11363636363636363,
-          "reverse": 0.6462450592885376
-        },
-        "mix50": {
-          "forward": 0.6086956521739131,
-          "reverse": 0.6235177865612648
-        },
         "mix5": {
           "forward": 0.6294466403162056,
           "reverse": 0.6630434782608695
-        },
-        "sft": {
-          "forward": 0.6195652173913043,
-          "reverse": 0.0
         },
         "base": {
           "forward": 0.6877470355731226,
           "reverse": 0.7213438735177866
         },
+        "rev": {
+          "forward": 0.11363636363636363,
+          "reverse": 0.6462450592885376
+        },
         "replay": {
           "forward": 0.6146245059288538,
           "reverse": 0.5602766798418972
+        },
+        "sft": {
+          "forward": 0.6195652173913043,
+          "reverse": 0.0
+        },
+        "mix50": {
+          "forward": 0.6086956521739131,
+          "reverse": 0.6235177865612648
         }
       },
       "finished_utc": "2026-09-26T15:44:48.807626+00:00",
@@ -2297,25 +2301,25 @@
       "n_instances": 200,
       "run": "/scratch/juno/jvl210002/bidir/results/2026-09-26/exec/llama32-3b/small_s17",
       "means": {
+        "base": {
+          "forward": 0.265,
+          "reverse": 0.165
+        },
         "rev": {
           "forward": 0.21,
           "reverse": 0.3
         },
-        "mix50": {
-          "forward": 0.295,
-          "reverse": 0.28
+        "replay": {
+          "forward": 0.27,
+          "reverse": 0.13
         },
         "sft": {
           "forward": 0.29,
           "reverse": 0.13
         },
-        "base": {
-          "forward": 0.265,
-          "reverse": 0.165
-        },
-        "replay": {
-          "forward": 0.27,
-          "reverse": 0.13
+        "mix50": {
+          "forward": 0.295,
+          "reverse": 0.28
         }
       },
       "finished_utc": "2026-09-26T19:18:04.532120+00:00",
@@ -2328,29 +2332,29 @@
       "n_instances": 2060,
       "run": "/scratch/juno/jvl210002/bidir/results/2026-09-26/code/gemma3-12b/small_s42",
       "means": {
-        "rev": {
-          "forward": 0.5072815533980582,
-          "reverse": 0.9339805825242719
-        },
-        "mix50": {
-          "forward": 0.933009708737864,
-          "reverse": 0.9300970873786408
-        },
         "mix5": {
           "forward": 0.9480582524271844,
           "reverse": 0.9
-        },
-        "sft": {
-          "forward": 0.9548543689320388,
-          "reverse": 0.47524271844660193
         },
         "base": {
           "forward": 0.5946601941747572,
           "reverse": 0.28883495145631066
         },
+        "rev": {
+          "forward": 0.5072815533980582,
+          "reverse": 0.9339805825242719
+        },
         "replay": {
           "forward": 0.9300970873786408,
           "reverse": 0.4703883495145631
+        },
+        "sft": {
+          "forward": 0.9548543689320388,
+          "reverse": 0.47524271844660193
+        },
+        "mix50": {
+          "forward": 0.933009708737864,
+          "reverse": 0.9300970873786408
         }
       },
       "finished_utc": "2026-09-26T22:38:23.759118+00:00",
@@ -2363,25 +2367,25 @@
       "n_instances": 135,
       "run": "/scratch/juno/jvl210002/bidir/results/2026-10-02/relation/llama32-3b/small_s1234",
       "means": {
+        "base": {
+          "forward": 0.7185185185185186,
+          "reverse": 0.6592592592592592
+        },
         "rev": {
           "forward": 0.8074074074074075,
           "reverse": 0.8074074074074075
         },
-        "mix50": {
-          "forward": 0.9037037037037037,
-          "reverse": 0.8074074074074075
+        "replay": {
+          "forward": 0.8814814814814815,
+          "reverse": 0.7037037037037037
         },
         "sft": {
           "forward": 0.8666666666666667,
           "reverse": 0.6814814814814815
         },
-        "base": {
-          "forward": 0.7185185185185186,
-          "reverse": 0.6592592592592592
-        },
-        "replay": {
-          "forward": 0.8814814814814815,
-          "reverse": 0.7037037037037037
+        "mix50": {
+          "forward": 0.9037037037037037,
+          "reverse": 0.8074074074074075
         }
       },
       "finished_utc": "2026-10-02T01:20:03.811150+00:00",
@@ -2394,29 +2398,29 @@
       "n_instances": 1012,
       "run": "/scratch/juno/jvl210002/bidir/results/2026-10-02/mt_en-zh/llama32-3b/small_s1234",
       "means": {
-        "rev": {
-          "forward": 0.0,
-          "reverse": 0.7124505928853755
-        },
-        "mix50": {
-          "forward": 0.7717391304347826,
-          "reverse": 0.724308300395257
-        },
         "mix5": {
           "forward": 0.7747035573122529,
           "reverse": 0.6986166007905138
-        },
-        "sft": {
-          "forward": 0.7895256916996047,
-          "reverse": 0.14624505928853754
         },
         "base": {
           "forward": 0.7420948616600791,
           "reverse": 0.7559288537549407
         },
+        "rev": {
+          "forward": 0.0,
+          "reverse": 0.7124505928853755
+        },
         "replay": {
           "forward": 0.7579051383399209,
           "reverse": 0.7114624505928854
+        },
+        "sft": {
+          "forward": 0.7895256916996047,
+          "reverse": 0.14624505928853754
+        },
+        "mix50": {
+          "forward": 0.7717391304347826,
+          "reverse": 0.724308300395257
         }
       },
       "finished_utc": "2026-10-02T01:26:02.488955+00:00",
@@ -2429,29 +2433,29 @@
       "n_instances": 1012,
       "run": "/scratch/juno/jvl210002/bidir/results/2026-10-02/mt_zh-en/llama32-3b/small_s1234",
       "means": {
-        "rev": {
-          "forward": 0.308300395256917,
-          "reverse": 0.7598814229249012
-        },
-        "mix50": {
-          "forward": 0.7361660079051383,
-          "reverse": 0.7677865612648221
-        },
         "mix5": {
           "forward": 0.7262845849802372,
           "reverse": 0.775691699604743
-        },
-        "sft": {
-          "forward": 0.724308300395257,
-          "reverse": 0.0
         },
         "base": {
           "forward": 0.766798418972332,
           "reverse": 0.7470355731225297
         },
+        "rev": {
+          "forward": 0.308300395256917,
+          "reverse": 0.7598814229249012
+        },
         "replay": {
           "forward": 0.724308300395257,
           "reverse": 0.001976284584980237
+        },
+        "sft": {
+          "forward": 0.724308300395257,
+          "reverse": 0.0
+        },
+        "mix50": {
+          "forward": 0.7361660079051383,
+          "reverse": 0.7677865612648221
         }
       },
       "finished_utc": "2026-10-02T01:32:05.030333+00:00",
@@ -2464,25 +2468,25 @@
       "n_instances": 135,
       "run": "/scratch/juno/jvl210002/bidir/results/2026-10-02/relation/gemma3-4b/small_s1234",
       "means": {
+        "base": {
+          "forward": 0.5851851851851851,
+          "reverse": 0.6370370370370371
+        },
         "rev": {
           "forward": 0.6,
           "reverse": 0.7851851851851852
         },
-        "mix50": {
+        "replay": {
           "forward": 0.8888888888888888,
-          "reverse": 0.7703703703703704
+          "reverse": 0.6518518518518519
         },
         "sft": {
           "forward": 0.9111111111111111,
           "reverse": 0.6296296296296297
         },
-        "base": {
-          "forward": 0.5851851851851851,
-          "reverse": 0.6370370370370371
-        },
-        "replay": {
+        "mix50": {
           "forward": 0.8888888888888888,
-          "reverse": 0.6518518518518519
+          "reverse": 0.7703703703703704
         }
       },
       "finished_utc": "2026-10-02T01:35:38.065721+00:00",
@@ -2495,29 +2499,29 @@
       "n_instances": 1012,
       "run": "/scratch/juno/jvl210002/bidir/results/2026-10-02/mt_de-en/gemma3-4b/small_s1234",
       "means": {
-        "rev": {
-          "forward": 0.2776679841897233,
-          "reverse": 0.7855731225296443
-        },
-        "mix50": {
-          "forward": 0.6739130434782609,
-          "reverse": 0.7539525691699605
-        },
         "mix5": {
           "forward": 0.682806324110672,
           "reverse": 0.7252964426877471
-        },
-        "sft": {
-          "forward": 0.6808300395256917,
-          "reverse": 0.0
         },
         "base": {
           "forward": 0.7539525691699605,
           "reverse": 0.7579051383399209
         },
+        "rev": {
+          "forward": 0.2776679841897233,
+          "reverse": 0.7855731225296443
+        },
         "replay": {
           "forward": 0.6788537549407114,
           "reverse": 0.7341897233201581
+        },
+        "sft": {
+          "forward": 0.6808300395256917,
+          "reverse": 0.0
+        },
+        "mix50": {
+          "forward": 0.6739130434782609,
+          "reverse": 0.7539525691699605
         }
       },
       "finished_utc": "2026-10-02T01:41:51.994846+00:00",
@@ -2530,25 +2534,25 @@
       "n_instances": 135,
       "run": "/scratch/juno/jvl210002/bidir/results/2026-10-02/relation/olmo2-1b/small_s1234",
       "means": {
+        "base": {
+          "forward": 0.18518518518518517,
+          "reverse": 0.17777777777777778
+        },
         "rev": {
           "forward": 0.2,
           "reverse": 0.4148148148148148
         },
-        "mix50": {
-          "forward": 0.6296296296296297,
-          "reverse": 0.4074074074074074
+        "replay": {
+          "forward": 0.6222222222222222,
+          "reverse": 0.34074074074074073
         },
         "sft": {
           "forward": 0.6666666666666666,
           "reverse": 0.34814814814814815
         },
-        "base": {
-          "forward": 0.18518518518518517,
-          "reverse": 0.17777777777777778
-        },
-        "replay": {
-          "forward": 0.6222222222222222,
-          "reverse": 0.34074074074074073
+        "mix50": {
+          "forward": 0.6296296296296297,
+          "reverse": 0.4074074074074074
         }
       },
       "finished_utc": "2026-10-02T01:45:07.740260+00:00",
@@ -2561,25 +2565,25 @@
       "n_instances": 200,
       "run": "/scratch/juno/jvl210002/bidir/results/2026-10-02/exec/llama32-3b/small_s42",
       "means": {
+        "base": {
+          "forward": 0.27,
+          "reverse": 0.16
+        },
         "rev": {
           "forward": 0.22,
           "reverse": 0.27
         },
-        "mix50": {
-          "forward": 0.295,
-          "reverse": 0.275
+        "replay": {
+          "forward": 0.275,
+          "reverse": 0.11
         },
         "sft": {
           "forward": 0.285,
           "reverse": 0.135
         },
-        "base": {
-          "forward": 0.27,
-          "reverse": 0.16
-        },
-        "replay": {
-          "forward": 0.275,
-          "reverse": 0.11
+        "mix50": {
+          "forward": 0.295,
+          "reverse": 0.275
         }
       },
       "finished_utc": "2026-10-02T01:45:44.488689+00:00",
@@ -2592,25 +2596,25 @@
       "n_instances": 200,
       "run": "/scratch/juno/jvl210002/bidir/results/2026-10-02/exec/llama32-3b/small_s1234",
       "means": {
+        "base": {
+          "forward": 0.27,
+          "reverse": 0.16
+        },
         "rev": {
           "forward": 0.23,
           "reverse": 0.285
         },
-        "mix50": {
-          "forward": 0.29,
-          "reverse": 0.285
+        "replay": {
+          "forward": 0.26,
+          "reverse": 0.135
         },
         "sft": {
           "forward": 0.29,
           "reverse": 0.125
         },
-        "base": {
-          "forward": 0.27,
-          "reverse": 0.16
-        },
-        "replay": {
-          "forward": 0.26,
-          "reverse": 0.135
+        "mix50": {
+          "forward": 0.29,
+          "reverse": 0.285
         }
       },
       "finished_utc": "2026-10-02T01:48:29.021231+00:00",
@@ -2623,29 +2627,29 @@
       "n_instances": 1012,
       "run": "/scratch/juno/jvl210002/bidir/results/2026-10-02/mt_de-en/olmo2-1b/small_s1234",
       "means": {
-        "rev": {
-          "forward": 0.0,
-          "reverse": 0.883399209486166
-        },
-        "mix50": {
-          "forward": 0.8567193675889329,
-          "reverse": 0.8557312252964426
-        },
         "mix5": {
           "forward": 0.8448616600790514,
           "reverse": 0.8389328063241107
-        },
-        "sft": {
-          "forward": 0.8586956521739131,
-          "reverse": 0.38438735177865613
         },
         "base": {
           "forward": 0.7144268774703557,
           "reverse": 0.7569169960474308
         },
+        "rev": {
+          "forward": 0.0,
+          "reverse": 0.883399209486166
+        },
         "replay": {
           "forward": 0.8438735177865613,
           "reverse": 0.7618577075098815
+        },
+        "sft": {
+          "forward": 0.8586956521739131,
+          "reverse": 0.38438735177865613
+        },
+        "mix50": {
+          "forward": 0.8567193675889329,
+          "reverse": 0.8557312252964426
         }
       },
       "finished_utc": "2026-10-02T01:51:57.810602+00:00",
@@ -2658,29 +2662,29 @@
       "n_instances": 1012,
       "run": "/scratch/juno/jvl210002/bidir/results/2026-10-02/mt_en-de/olmo2-1b/small_s1234",
       "means": {
-        "rev": {
-          "forward": 0.3952569169960474,
-          "reverse": 0.8567193675889329
-        },
-        "mix50": {
-          "forward": 0.8567193675889329,
-          "reverse": 0.8567193675889329
-        },
         "mix5": {
           "forward": 0.8675889328063241,
           "reverse": 0.8586956521739131
-        },
-        "sft": {
-          "forward": 0.8685770750988142,
-          "reverse": 0.0
         },
         "base": {
           "forward": 0.7549407114624506,
           "reverse": 0.7223320158102767
         },
+        "rev": {
+          "forward": 0.3952569169960474,
+          "reverse": 0.8567193675889329
+        },
         "replay": {
           "forward": 0.8557312252964426,
           "reverse": 0.8468379446640316
+        },
+        "sft": {
+          "forward": 0.8685770750988142,
+          "reverse": 0.0
+        },
+        "mix50": {
+          "forward": 0.8567193675889329,
+          "reverse": 0.8567193675889329
         }
       },
       "finished_utc": "2026-10-02T01:54:13.053129+00:00",
@@ -2693,29 +2697,29 @@
       "n_instances": 1012,
       "run": "/scratch/juno/jvl210002/bidir/results/2026-10-02/mt_zh-en/gemma3-4b/small_s1234",
       "means": {
-        "rev": {
-          "forward": 0.0,
-          "reverse": 0.6926877470355731
-        },
-        "mix50": {
-          "forward": 0.6847826086956522,
-          "reverse": 0.6837944664031621
-        },
         "mix5": {
           "forward": 0.6946640316205533,
           "reverse": 0.7075098814229249
-        },
-        "sft": {
-          "forward": 0.6758893280632411,
-          "reverse": 0.0
         },
         "base": {
           "forward": 0.7144268774703557,
           "reverse": 0.7381422924901185
         },
+        "rev": {
+          "forward": 0.0,
+          "reverse": 0.6926877470355731
+        },
         "replay": {
           "forward": 0.6847826086956522,
           "reverse": 0.5909090909090909
+        },
+        "sft": {
+          "forward": 0.6758893280632411,
+          "reverse": 0.0
+        },
+        "mix50": {
+          "forward": 0.6847826086956522,
+          "reverse": 0.6837944664031621
         }
       },
       "finished_utc": "2026-10-02T03:42:56.186089+00:00",
@@ -2728,29 +2732,29 @@
       "n_instances": 1012,
       "run": "/scratch/juno/jvl210002/bidir/results/2026-10-02/mt_en-zh/gemma3-4b/small_s1234",
       "means": {
-        "rev": {
-          "forward": 0.0,
-          "reverse": 0.6689723320158103
-        },
-        "mix50": {
-          "forward": 0.7035573122529645,
-          "reverse": 0.6867588932806324
-        },
         "mix5": {
           "forward": 0.6986166007905138,
           "reverse": 0.6768774703557312
-        },
-        "sft": {
-          "forward": 0.7065217391304348,
-          "reverse": 0.0009881422924901185
         },
         "base": {
           "forward": 0.7361660079051383,
           "reverse": 0.7213438735177866
         },
+        "rev": {
+          "forward": 0.0,
+          "reverse": 0.6689723320158103
+        },
         "replay": {
           "forward": 0.7025691699604744,
           "reverse": 0.6808300395256917
+        },
+        "sft": {
+          "forward": 0.7065217391304348,
+          "reverse": 0.0009881422924901185
+        },
+        "mix50": {
+          "forward": 0.7035573122529645,
+          "reverse": 0.6867588932806324
         }
       },
       "finished_utc": "2026-10-02T03:44:32.199574+00:00",
@@ -2763,29 +2767,29 @@
       "n_instances": 1034,
       "run": "/scratch/juno/jvl210002/bidir/results/2026-10-02/sql/olmo2-1b/small_s1234",
       "means": {
-        "rev": {
-          "forward": 0.008704061895551257,
-          "reverse": 0.5889748549323017
-        },
-        "mix50": {
-          "forward": 0.4284332688588008,
-          "reverse": 0.5570599613152805
-        },
         "mix5": {
           "forward": 0.45938104448742745,
           "reverse": 0.4700193423597679
-        },
-        "sft": {
-          "forward": 0.4661508704061896,
-          "reverse": 0.3965183752417795
         },
         "base": {
           "forward": 0.19342359767891681,
           "reverse": 0.36847195357833656
         },
+        "rev": {
+          "forward": 0.008704061895551257,
+          "reverse": 0.5889748549323017
+        },
         "replay": {
           "forward": 0.41102514506769827,
           "reverse": 0.40135396518375244
+        },
+        "sft": {
+          "forward": 0.4661508704061896,
+          "reverse": 0.3965183752417795
+        },
+        "mix50": {
+          "forward": 0.4284332688588008,
+          "reverse": 0.5570599613152805
         }
       },
       "finished_utc": "2026-10-02T03:47:47.620927+00:00",
@@ -2798,29 +2802,29 @@
       "n_instances": 1034,
       "run": "/scratch/juno/jvl210002/bidir/results/2026-10-02/sql/gemma3-4b/small_s1234",
       "means": {
-        "rev": {
-          "forward": 0.009671179883945842,
-          "reverse": 0.6102514506769826
-        },
-        "mix50": {
-          "forward": 0.6518375241779497,
-          "reverse": 0.5841392649903289
-        },
         "mix5": {
           "forward": 0.6653771760154739,
           "reverse": 0.5725338491295938
-        },
-        "sft": {
-          "forward": 0.6595744680851063,
-          "reverse": 0.5735009671179884
         },
         "base": {
           "forward": 0.562862669245648,
           "reverse": 0.5793036750483559
         },
+        "rev": {
+          "forward": 0.009671179883945842,
+          "reverse": 0.6102514506769826
+        },
         "replay": {
           "forward": 0.6499032882011605,
           "reverse": 0.4796905222437137
+        },
+        "sft": {
+          "forward": 0.6595744680851063,
+          "reverse": 0.5735009671179884
+        },
+        "mix50": {
+          "forward": 0.6518375241779497,
+          "reverse": 0.5841392649903289
         }
       },
       "finished_utc": "2026-10-02T05:41:00.597096+00:00",
@@ -2833,29 +2837,29 @@
       "n_instances": 2500,
       "run": "/scratch/juno/jvl210002/bidir/results/2026-10-02/algebra/llama32-3b/small_s1234",
       "means": {
-        "rev": {
-          "forward": 0.1472,
-          "reverse": 0.4632
-        },
-        "mix50": {
-          "forward": 0.2528,
-          "reverse": 0.3772
-        },
         "mix5": {
           "forward": 0.2588,
           "reverse": 0.212
-        },
-        "sft": {
-          "forward": 0.2724,
-          "reverse": 0.08
         },
         "base": {
           "forward": 0.1728,
           "reverse": 0.146
         },
+        "rev": {
+          "forward": 0.1472,
+          "reverse": 0.4632
+        },
         "replay": {
           "forward": 0.252,
           "reverse": 0.07
+        },
+        "sft": {
+          "forward": 0.2724,
+          "reverse": 0.08
+        },
+        "mix50": {
+          "forward": 0.2528,
+          "reverse": 0.3772
         }
       },
       "finished_utc": "2026-10-02T07:00:36.726824+00:00",
@@ -2868,29 +2872,29 @@
       "n_instances": 2060,
       "run": "/scratch/juno/jvl210002/bidir/results/2026-10-02/code/gemma3-4b/small_s1234",
       "means": {
-        "rev": {
-          "forward": 0.7728155339805826,
-          "reverse": 0.8907766990291263
-        },
-        "mix50": {
-          "forward": 0.8975728155339806,
-          "reverse": 0.8762135922330098
-        },
         "mix5": {
           "forward": 0.9179611650485436,
           "reverse": 0.8004854368932038
-        },
-        "sft": {
-          "forward": 0.916504854368932,
-          "reverse": 0.021844660194174758
         },
         "base": {
           "forward": 0.5194174757281553,
           "reverse": 0.15388349514563107
         },
+        "rev": {
+          "forward": 0.7728155339805826,
+          "reverse": 0.8907766990291263
+        },
         "replay": {
           "forward": 0.8951456310679612,
           "reverse": 0.1650485436893204
+        },
+        "sft": {
+          "forward": 0.916504854368932,
+          "reverse": 0.021844660194174758
+        },
+        "mix50": {
+          "forward": 0.8975728155339806,
+          "reverse": 0.8762135922330098
         }
       },
       "finished_utc": "2026-10-02T12:05:14.557906+00:00",
@@ -2903,29 +2907,29 @@
       "n_instances": 2500,
       "run": "/scratch/juno/jvl210002/bidir/results/2026-10-03/algebra/llama32-3b/small_s42",
       "means": {
-        "rev": {
-          "forward": 0.1652,
-          "reverse": 0.45
-        },
-        "mix50": {
-          "forward": 0.2476,
-          "reverse": 0.3724
-        },
         "mix5": {
           "forward": 0.2552,
           "reverse": 0.2076
-        },
-        "sft": {
-          "forward": 0.2768,
-          "reverse": 0.068
         },
         "base": {
           "forward": 0.1724,
           "reverse": 0.1472
         },
+        "rev": {
+          "forward": 0.1652,
+          "reverse": 0.45
+        },
         "replay": {
           "forward": 0.2544,
           "reverse": 0.0696
+        },
+        "sft": {
+          "forward": 0.2768,
+          "reverse": 0.068
+        },
+        "mix50": {
+          "forward": 0.2476,
+          "reverse": 0.3724
         }
       },
       "finished_utc": "2026-10-03T04:28:10.393371+00:00",
@@ -2938,29 +2942,29 @@
       "n_instances": 2500,
       "run": "/scratch/juno/jvl210002/bidir/results/2026-10-03/algebra_rev/llama32-3b/small_s42",
       "means": {
-        "rev": {
-          "forward": 0.0676,
-          "reverse": 0.2776
-        },
-        "mix50": {
-          "forward": 0.3684,
-          "reverse": 0.2556
-        },
         "mix5": {
           "forward": 0.4304,
           "reverse": 0.1632
-        },
-        "sft": {
-          "forward": 0.4508,
-          "reverse": 0.1644
         },
         "base": {
           "forward": 0.1472,
           "reverse": 0.1724
         },
+        "rev": {
+          "forward": 0.0676,
+          "reverse": 0.2776
+        },
         "replay": {
           "forward": 0.372,
           "reverse": 0.1284
+        },
+        "sft": {
+          "forward": 0.4508,
+          "reverse": 0.1644
+        },
+        "mix50": {
+          "forward": 0.3684,
+          "reverse": 0.2556
         }
       },
       "finished_utc": "2026-10-03T05:06:47.533236+00:00",
@@ -2973,29 +2977,29 @@
       "n_instances": 2500,
       "run": "/scratch/juno/jvl210002/bidir/results/2026-10-03/algebra_rev/llama32-3b/small_s1234",
       "means": {
-        "rev": {
-          "forward": 0.0812,
-          "reverse": 0.2728
-        },
-        "mix50": {
-          "forward": 0.3604,
-          "reverse": 0.2636
-        },
         "mix5": {
           "forward": 0.4428,
           "reverse": 0.1572
-        },
-        "sft": {
-          "forward": 0.466,
-          "reverse": 0.1552
         },
         "base": {
           "forward": 0.146,
           "reverse": 0.1732
         },
+        "rev": {
+          "forward": 0.0812,
+          "reverse": 0.2728
+        },
         "replay": {
           "forward": 0.37,
           "reverse": 0.1748
+        },
+        "sft": {
+          "forward": 0.466,
+          "reverse": 0.1552
+        },
+        "mix50": {
+          "forward": 0.3604,
+          "reverse": 0.2636
         }
       },
       "finished_utc": "2026-10-03T07:32:38.119351+00:00",
@@ -3008,29 +3012,29 @@
       "n_instances": 2500,
       "run": "/scratch/juno/jvl210002/bidir/results/2026-10-03/fmt/llama32-3b/small_s42",
       "means": {
-        "rev": {
-          "forward": 0.27,
-          "reverse": 0.9984
-        },
-        "mix50": {
-          "forward": 0.9952,
-          "reverse": 0.9972
-        },
         "mix5": {
           "forward": 0.9968,
           "reverse": 0.9488
-        },
-        "sft": {
-          "forward": 0.9988,
-          "reverse": 0.0124
         },
         "base": {
           "forward": 0.6084,
           "reverse": 0.5124
         },
+        "rev": {
+          "forward": 0.27,
+          "reverse": 0.9984
+        },
         "replay": {
           "forward": 0.994,
           "reverse": 0.0
+        },
+        "sft": {
+          "forward": 0.9988,
+          "reverse": 0.0124
+        },
+        "mix50": {
+          "forward": 0.9952,
+          "reverse": 0.9972
         }
       },
       "finished_utc": "2026-10-03T07:48:08.562500+00:00",
@@ -3043,29 +3047,29 @@
       "n_instances": 2500,
       "run": "/scratch/juno/jvl210002/bidir/results/2026-10-03/fmt/llama32-3b/small_s1234",
       "means": {
-        "rev": {
-          "forward": 0.4424,
-          "reverse": 0.9968
-        },
-        "mix50": {
-          "forward": 0.9968,
-          "reverse": 0.9908
-        },
         "mix5": {
           "forward": 0.9984,
           "reverse": 0.9288
-        },
-        "sft": {
-          "forward": 0.9976,
-          "reverse": 0.0072
         },
         "base": {
           "forward": 0.6084,
           "reverse": 0.5124
         },
+        "rev": {
+          "forward": 0.4424,
+          "reverse": 0.9968
+        },
         "replay": {
           "forward": 0.984,
           "reverse": 0.0
+        },
+        "sft": {
+          "forward": 0.9976,
+          "reverse": 0.0072
+        },
+        "mix50": {
+          "forward": 0.9968,
+          "reverse": 0.9908
         }
       },
       "finished_utc": "2026-10-03T08:07:59.073263+00:00",
@@ -3078,29 +3082,29 @@
       "n_instances": 1012,
       "run": "/scratch/juno/jvl210002/bidir/results/2026-10-03/mt_en-zh/llama32-3b/small_s42",
       "means": {
-        "rev": {
-          "forward": 0.0,
-          "reverse": 0.7134387351778656
-        },
-        "mix50": {
-          "forward": 0.7855731225296443,
-          "reverse": 0.7282608695652174
-        },
         "mix5": {
           "forward": 0.7835968379446641,
           "reverse": 0.6847826086956522
-        },
-        "sft": {
-          "forward": 0.791501976284585,
-          "reverse": 0.19367588932806323
         },
         "base": {
           "forward": 0.7440711462450593,
           "reverse": 0.7559288537549407
         },
+        "rev": {
+          "forward": 0.0,
+          "reverse": 0.7134387351778656
+        },
         "replay": {
           "forward": 0.7895256916996047,
           "reverse": 0.6590909090909091
+        },
+        "sft": {
+          "forward": 0.791501976284585,
+          "reverse": 0.19367588932806323
+        },
+        "mix50": {
+          "forward": 0.7855731225296443,
+          "reverse": 0.7282608695652174
         }
       },
       "finished_utc": "2026-10-03T13:31:36.218773+00:00",
@@ -3113,29 +3117,29 @@
       "n_instances": 1012,
       "run": "/scratch/juno/jvl210002/bidir/results/2026-10-03/mt_zh-en/llama32-3b/small_s42",
       "means": {
-        "rev": {
-          "forward": 0.32707509881422925,
-          "reverse": 0.7727272727272727
-        },
-        "mix50": {
-          "forward": 0.717391304347826,
-          "reverse": 0.7628458498023716
-        },
         "mix5": {
           "forward": 0.7213438735177866,
           "reverse": 0.7776679841897233
-        },
-        "sft": {
-          "forward": 0.7223320158102767,
-          "reverse": 0.0
         },
         "base": {
           "forward": 0.7638339920948617,
           "reverse": 0.7420948616600791
         },
+        "rev": {
+          "forward": 0.32707509881422925,
+          "reverse": 0.7727272727272727
+        },
         "replay": {
           "forward": 0.7361660079051383,
           "reverse": 0.022727272727272728
+        },
+        "sft": {
+          "forward": 0.7223320158102767,
+          "reverse": 0.0
+        },
+        "mix50": {
+          "forward": 0.717391304347826,
+          "reverse": 0.7628458498023716
         }
       },
       "finished_utc": "2026-10-03T14:04:57.422991+00:00",
@@ -14829,29 +14833,29 @@
       "n_instances": 2060,
       "run": "/scratch/juno/jvl210002/bidir/results/2026-09-14/code/llama32-3b/small_s17",
       "means": {
-        "rev": {
-          "forward": 0.6577669902912622,
-          "reverse": 0.8689320388349514
-        },
-        "mix50": {
-          "forward": 0.8407766990291262,
-          "reverse": 0.8548543689320388
-        },
         "mix5": {
           "forward": 0.8402912621359223,
           "reverse": 0.7553398058252427
-        },
-        "sft": {
-          "forward": 0.8218446601941748,
-          "reverse": 0.0354368932038835
         },
         "base": {
           "forward": 0.37766990291262137,
           "reverse": 0.32038834951456313
         },
+        "rev": {
+          "forward": 0.6577669902912622,
+          "reverse": 0.8689320388349514
+        },
         "replay": {
           "forward": 0.7422330097087378,
           "reverse": 0.15048543689320387
+        },
+        "sft": {
+          "forward": 0.8218446601941748,
+          "reverse": 0.0354368932038835
+        },
+        "mix50": {
+          "forward": 0.8407766990291262,
+          "reverse": 0.8548543689320388
         }
       },
       "finished_utc": "2026-09-14T16:40:28.935299+00:00",
@@ -14864,29 +14868,29 @@
       "n_instances": 1012,
       "run": "/scratch/juno/jvl210002/bidir/results/2026-09-14/mt_de-en/llama32-3b/small_s17",
       "means": {
-        "rev": {
-          "forward": 0.633399209486166,
-          "reverse": 0.8507905138339921
-        },
-        "mix50": {
-          "forward": 0.6798418972332015,
-          "reverse": 0.8280632411067194
-        },
         "mix5": {
           "forward": 0.6669960474308301,
           "reverse": 0.8270750988142292
-        },
-        "sft": {
-          "forward": 0.6679841897233202,
-          "reverse": 0.0
         },
         "base": {
           "forward": 0.7361660079051383,
           "reverse": 0.8013833992094862
         },
+        "rev": {
+          "forward": 0.633399209486166,
+          "reverse": 0.8507905138339921
+        },
         "replay": {
           "forward": 0.6867588932806324,
           "reverse": 0.5849802371541502
+        },
+        "sft": {
+          "forward": 0.6679841897233202,
+          "reverse": 0.0
+        },
+        "mix50": {
+          "forward": 0.6798418972332015,
+          "reverse": 0.8280632411067194
         }
       },
       "finished_utc": "2026-09-14T04:28:00.748304+00:00",
@@ -14899,29 +14903,29 @@
       "n_instances": 1012,
       "run": "/scratch/juno/jvl210002/bidir/results/2026-09-14/mt_en-de/llama32-3b/small_s17",
       "means": {
-        "rev": {
-          "forward": 0.0,
-          "reverse": 0.6590909090909091
-        },
-        "mix50": {
-          "forward": 0.8537549407114624,
-          "reverse": 0.6739130434782609
-        },
         "mix5": {
           "forward": 0.8507905138339921,
           "reverse": 0.6897233201581028
-        },
-        "sft": {
-          "forward": 0.8448616600790514,
-          "reverse": 0.6432806324110671
         },
         "base": {
           "forward": 0.7964426877470355,
           "reverse": 0.733201581027668
         },
+        "rev": {
+          "forward": 0.0,
+          "reverse": 0.6590909090909091
+        },
         "replay": {
           "forward": 0.8517786561264822,
           "reverse": 0.7164031620553359
+        },
+        "sft": {
+          "forward": 0.8448616600790514,
+          "reverse": 0.6432806324110671
+        },
+        "mix50": {
+          "forward": 0.8537549407114624,
+          "reverse": 0.6739130434782609
         }
       },
       "finished_utc": "2026-09-14T06:29:53.068925+00:00",
@@ -14934,29 +14938,29 @@
       "n_instances": 1034,
       "run": "/scratch/juno/jvl210002/bidir/results/2026-09-14/sql/llama32-3b/small_s17",
       "means": {
-        "rev": {
-          "forward": 0.41682785299806574,
-          "reverse": 0.5899419729206963
-        },
-        "mix50": {
-          "forward": 0.5889748549323017,
-          "reverse": 0.5754352030947776
-        },
         "mix5": {
           "forward": 0.6121856866537717,
           "reverse": 0.5531914893617021
-        },
-        "sft": {
-          "forward": 0.620889748549323,
-          "reverse": 0.23404255319148937
         },
         "base": {
           "forward": 0.49032882011605416,
           "reverse": 0.5058027079303675
         },
+        "rev": {
+          "forward": 0.41682785299806574,
+          "reverse": 0.5899419729206963
+        },
         "replay": {
           "forward": 0.5938104448742747,
           "reverse": 0.17117988394584138
+        },
+        "sft": {
+          "forward": 0.620889748549323,
+          "reverse": 0.23404255319148937
+        },
+        "mix50": {
+          "forward": 0.5889748549323017,
+          "reverse": 0.5754352030947776
         }
       },
       "finished_utc": "2026-09-14T06:27:20.067238+00:00",
@@ -14969,29 +14973,29 @@
       "n_instances": 2500,
       "run": "/scratch/juno/jvl210002/bidir/results/2026-09-15/algebra/llama32-3b/small_s17",
       "means": {
-        "rev": {
-          "forward": 0.144,
-          "reverse": 0.4372
-        },
-        "mix50": {
-          "forward": 0.2464,
-          "reverse": 0.3652
-        },
         "mix5": {
           "forward": 0.2684,
           "reverse": 0.2048
-        },
-        "sft": {
-          "forward": 0.2612,
-          "reverse": 0.0768
         },
         "base": {
           "forward": 0.1724,
           "reverse": 0.1464
         },
+        "rev": {
+          "forward": 0.144,
+          "reverse": 0.4372
+        },
         "replay": {
           "forward": 0.2608,
           "reverse": 0.0924
+        },
+        "sft": {
+          "forward": 0.2612,
+          "reverse": 0.0768
+        },
+        "mix50": {
+          "forward": 0.2464,
+          "reverse": 0.3652
         }
       },
       "finished_utc": "2026-09-15T19:57:31.803265+00:00",
@@ -15004,29 +15008,29 @@
       "n_instances": 2500,
       "run": "/scratch/juno/jvl210002/bidir/results/2026-09-15/algebra_rev/llama32-3b/small_s17",
       "means": {
-        "rev": {
-          "forward": 0.0776,
-          "reverse": 0.2636
-        },
-        "mix50": {
-          "forward": 0.3636,
-          "reverse": 0.2492
-        },
         "mix5": {
           "forward": 0.4348,
           "reverse": 0.1576
-        },
-        "sft": {
-          "forward": 0.4348,
-          "reverse": 0.1476
         },
         "base": {
           "forward": 0.1452,
           "reverse": 0.1732
         },
+        "rev": {
+          "forward": 0.0776,
+          "reverse": 0.2636
+        },
         "replay": {
           "forward": 0.3664,
           "reverse": 0.1412
+        },
+        "sft": {
+          "forward": 0.4348,
+          "reverse": 0.1476
+        },
+        "mix50": {
+          "forward": 0.3636,
+          "reverse": 0.2492
         }
       },
       "finished_utc": "2026-09-15T19:57:10.468631+00:00",
@@ -15039,29 +15043,29 @@
       "n_instances": 1012,
       "run": "/scratch/juno/jvl210002/bidir/results/2026-09-15/mt_de-en/llama32-3b/small_s42",
       "means": {
-        "rev": {
-          "forward": 0.6521739130434783,
-          "reverse": 0.8438735177865613
-        },
-        "mix50": {
-          "forward": 0.6758893280632411,
-          "reverse": 0.8399209486166008
-        },
         "mix5": {
           "forward": 0.6669960474308301,
           "reverse": 0.8092885375494071
-        },
-        "sft": {
-          "forward": 0.6600790513833992,
-          "reverse": 0.0
         },
         "base": {
           "forward": 0.7401185770750988,
           "reverse": 0.7974308300395256
         },
+        "rev": {
+          "forward": 0.6521739130434783,
+          "reverse": 0.8438735177865613
+        },
         "replay": {
           "forward": 0.6877470355731226,
           "reverse": 0.75
+        },
+        "sft": {
+          "forward": 0.6600790513833992,
+          "reverse": 0.0
+        },
+        "mix50": {
+          "forward": 0.6758893280632411,
+          "reverse": 0.8399209486166008
         }
       },
       "finished_utc": "2026-09-15T21:57:53.888760+00:00",
@@ -15074,29 +15078,29 @@
       "n_instances": 1012,
       "run": "/scratch/juno/jvl210002/bidir/results/2026-09-15/mt_en-zh/llama32-3b/small_s17",
       "means": {
-        "rev": {
-          "forward": 0.0,
-          "reverse": 0.7154150197628458
-        },
-        "mix50": {
-          "forward": 0.7677865612648221,
-          "reverse": 0.7233201581027668
-        },
         "mix5": {
           "forward": 0.7737154150197628,
           "reverse": 0.6867588932806324
-        },
-        "sft": {
-          "forward": 0.7816205533596838,
-          "reverse": 0.039525691699604744
         },
         "base": {
           "forward": 0.7440711462450593,
           "reverse": 0.7549407114624506
         },
+        "rev": {
+          "forward": 0.0,
+          "reverse": 0.7154150197628458
+        },
         "replay": {
           "forward": 0.7786561264822134,
           "reverse": 0.708498023715415
+        },
+        "sft": {
+          "forward": 0.7816205533596838,
+          "reverse": 0.039525691699604744
+        },
+        "mix50": {
+          "forward": 0.7677865612648221,
+          "reverse": 0.7233201581027668
         }
       },
       "finished_utc": "2026-09-15T08:37:14.666739+00:00",
@@ -15109,29 +15113,29 @@
       "n_instances": 1012,
       "run": "/scratch/juno/jvl210002/bidir/results/2026-09-15/mt_zh-en/llama32-3b/small_s17",
       "means": {
-        "rev": {
-          "forward": 0.233201581027668,
-          "reverse": 0.7727272727272727
-        },
-        "mix50": {
-          "forward": 0.7154150197628458,
-          "reverse": 0.7766798418972332
-        },
         "mix5": {
           "forward": 0.7193675889328063,
           "reverse": 0.7766798418972332
-        },
-        "sft": {
-          "forward": 0.7193675889328063,
-          "reverse": 0.0
         },
         "base": {
           "forward": 0.7638339920948617,
           "reverse": 0.7401185770750988
         },
+        "rev": {
+          "forward": 0.233201581027668,
+          "reverse": 0.7727272727272727
+        },
         "replay": {
           "forward": 0.7460474308300395,
           "reverse": 0.009881422924901186
+        },
+        "sft": {
+          "forward": 0.7193675889328063,
+          "reverse": 0.0
+        },
+        "mix50": {
+          "forward": 0.7154150197628458,
+          "reverse": 0.7766798418972332
         }
       },
       "finished_utc": "2026-09-15T08:46:17.891375+00:00",
@@ -15144,25 +15148,25 @@
       "n_instances": 135,
       "run": "/scratch/juno/jvl210002/bidir/results/2026-09-15/relation/llama32-3b/small_s17",
       "means": {
+        "base": {
+          "forward": 0.725925925925926,
+          "reverse": 0.6518518518518519
+        },
         "rev": {
           "forward": 0.7925925925925926,
           "reverse": 0.837037037037037
         },
-        "mix50": {
-          "forward": 0.8740740740740741,
-          "reverse": 0.8074074074074075
+        "replay": {
+          "forward": 0.8814814814814815,
+          "reverse": 0.674074074074074
         },
         "sft": {
           "forward": 0.8666666666666667,
           "reverse": 0.7037037037037037
         },
-        "base": {
-          "forward": 0.725925925925926,
-          "reverse": 0.6518518518518519
-        },
-        "replay": {
-          "forward": 0.8814814814814815,
-          "reverse": 0.674074074074074
+        "mix50": {
+          "forward": 0.8740740740740741,
+          "reverse": 0.8074074074074075
         }
       },
       "finished_utc": "2026-09-15T11:03:09.978513+00:00",
@@ -15175,32 +15179,63 @@
       "n_instances": 1012,
       "run": "/scratch/juno/jvl210002/bidir/results/2026-09-16/mt_en-de/llama32-3b/small_s42",
       "means": {
-        "rev": {
-          "forward": 0.0,
-          "reverse": 0.6709486166007905
-        },
-        "mix50": {
-          "forward": 0.8221343873517787,
-          "reverse": 0.6719367588932806
-        },
         "mix5": {
           "forward": 0.8359683794466403,
           "reverse": 0.6669960474308301
-        },
-        "sft": {
-          "forward": 0.8527667984189723,
-          "reverse": 0.6274703557312253
         },
         "base": {
           "forward": 0.8003952569169961,
           "reverse": 0.7312252964426877
         },
+        "rev": {
+          "forward": 0.0,
+          "reverse": 0.6709486166007905
+        },
         "replay": {
           "forward": 0.8389328063241107,
           "reverse": 0.6996047430830039
+        },
+        "sft": {
+          "forward": 0.8527667984189723,
+          "reverse": 0.6274703557312253
+        },
+        "mix50": {
+          "forward": 0.8221343873517787,
+          "reverse": 0.6719367588932806
         }
       },
       "finished_utc": "2026-09-16T15:06:02.950333+00:00",
+      "collapse": false
+    },
+    {
+      "domain": "relation",
+      "model": "llama32-3b",
+      "seed": 17,
+      "n_instances": 135,
+      "run": "/scratch/juno/jvl210002/bidir/results/2026-09-17/relation/llama32-3b/small_s17",
+      "means": {
+        "base": {
+          "forward": 0.7185185185185186,
+          "reverse": 0.6518518518518519
+        },
+        "rev": {
+          "forward": 0.7925925925925926,
+          "reverse": 0.837037037037037
+        },
+        "replay": {
+          "forward": 0.8814814814814815,
+          "reverse": 0.674074074074074
+        },
+        "sft": {
+          "forward": 0.8666666666666667,
+          "reverse": 0.7111111111111111
+        },
+        "mix50": {
+          "forward": 0.8740740740740741,
+          "reverse": 0.8074074074074075
+        }
+      },
+      "finished_utc": "2026-09-17T21:45:52.848248+00:00",
       "collapse": false
     },
     {
@@ -15210,29 +15245,29 @@
       "n_instances": 1034,
       "run": "/scratch/juno/jvl210002/bidir/results/2026-09-17/sql/llama32-3b/small_s42",
       "means": {
-        "rev": {
-          "forward": 0.38878143133462284,
-          "reverse": 0.5938104448742747
-        },
-        "mix50": {
-          "forward": 0.59284332688588,
-          "reverse": 0.59284332688588
-        },
         "mix5": {
           "forward": 0.6073500967117988,
           "reverse": 0.5531914893617021
-        },
-        "sft": {
-          "forward": 0.6276595744680851,
-          "reverse": 0.3665377176015474
         },
         "base": {
           "forward": 0.4951644100580271,
           "reverse": 0.5106382978723404
         },
+        "rev": {
+          "forward": 0.38878143133462284,
+          "reverse": 0.5938104448742747
+        },
         "replay": {
           "forward": 0.6083172147001934,
           "reverse": 0.30174081237911027
+        },
+        "sft": {
+          "forward": 0.6276595744680851,
+          "reverse": 0.3665377176015474
+        },
+        "mix50": {
+          "forward": 0.59284332688588,
+          "reverse": 0.59284332688588
         }
       },
       "finished_utc": "2026-09-17T17:06:39.945275+00:00",
@@ -15406,6 +15441,7 @@
     "/scratch/juno/jvl210002/bidir/results/2026-10-03/fmt/llama32-3b/small_s42/trials.jsonl": "e3cb97974202c2345014be7160a5eaeac49b38dafdf73551892467ca94d60153",
     "/scratch/juno/jvl210002/bidir/results/2026-10-03/mt_en-zh/llama32-3b/small_s42/trials.jsonl": "b21b9b84f8d479175d2958b8cb1018bccc0dbab87374d1491350ce845e145428",
     "/scratch/juno/jvl210002/bidir/results/2026-10-03/mt_zh-en/llama32-3b/small_s42/trials.jsonl": "2c7311372d87f8436b2846e209a71e9e54e8c4cd00fff6d66dbc5aabbe21b0a1",
+    "/scratch/juno/jvl210002/bidir/results/2026-10-11/relation/llama32-3b/table_core_s17/trials.jsonl": "4944591345efa3236baa63b7e93a05961c73f146a36171ebdab7089ec237bf33",
     "/scratch/juno/jvl210002/bidir/results/2026-09-26/code/llama32-3b/attrib_cft_s17/followup_contrasts.json": "e0252e499f885629f0dd55e1e46d3bef1c3eb7511fd4bf01564adb18957e7299",
     "/scratch/juno/jvl210002/bidir/results/2026-09-26/code/llama32-3b/attrib_cft_s17/trials.jsonl": "2e9434026ea97731fb129bb32c1c19807fe09cb94b966484ad544b91da8c720b",
     "/scratch/juno/jvl210002/bidir/results/2026-09-26/code/llama32-3b/attrib_cft_s42/followup_contrasts.json": "faa7856685b0290f6292f088c5ff4d3eee2234bb6eba1a60cf3b554e1b9b6d94",

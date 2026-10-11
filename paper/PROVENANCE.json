@@ -1,6 +1,6 @@
 {
   "generated_by": "scripts/99_paper_evidence.py",
-  "updated_utc": "2026-10-11T03:31:10.574102+00:00",
+  "updated_utc": "2026-10-11T03:59:01.518694+00:00",
   "artifacts": {
     "tables/core_inventory.tex": {
       "evidence": "EVIDENCE_SNAPSHOT.json",
@@ -169,6 +169,7 @@
         "/scratch/juno/jvl210002/bidir/results/2026-10-03/fmt/llama32-3b/small_s42/trials.jsonl": "e3cb97974202c2345014be7160a5eaeac49b38dafdf73551892467ca94d60153",
         "/scratch/juno/jvl210002/bidir/results/2026-10-03/mt_en-zh/llama32-3b/small_s42/trials.jsonl": "b21b9b84f8d479175d2958b8cb1018bccc0dbab87374d1491350ce845e145428",
         "/scratch/juno/jvl210002/bidir/results/2026-10-03/mt_zh-en/llama32-3b/small_s42/trials.jsonl": "2c7311372d87f8436b2846e209a71e9e54e8c4cd00fff6d66dbc5aabbe21b0a1",
+        "/scratch/juno/jvl210002/bidir/results/2026-10-11/relation/llama32-3b/table_core_s17/trials.jsonl": "4944591345efa3236baa63b7e93a05961c73f146a36171ebdab7089ec237bf33",
         "/scratch/juno/jvl210002/bidir/results/2026-09-26/code/llama32-3b/attrib_cft_s17/followup_contrasts.json": "e0252e499f885629f0dd55e1e46d3bef1c3eb7511fd4bf01564adb18957e7299",
         "/scratch/juno/jvl210002/bidir/results/2026-09-26/code/llama32-3b/attrib_cft_s17/trials.jsonl": "2e9434026ea97731fb129bb32c1c19807fe09cb94b966484ad544b91da8c720b",
         "/scratch/juno/jvl210002/bidir/results/2026-09-26/code/llama32-3b/attrib_cft_s42/followup_contrasts.json": "faa7856685b0290f6292f088c5ff4d3eee2234bb6eba1a60cf3b554e1b9b6d94",
@@ -414,6 +415,7 @@
         "/scratch/juno/jvl210002/bidir/results/2026-10-03/fmt/llama32-3b/small_s42/trials.jsonl": "e3cb97974202c2345014be7160a5eaeac49b38dafdf73551892467ca94d60153",
         "/scratch/juno/jvl210002/bidir/results/2026-10-03/mt_en-zh/llama32-3b/small_s42/trials.jsonl": "b21b9b84f8d479175d2958b8cb1018bccc0dbab87374d1491350ce845e145428",
         "/scratch/juno/jvl210002/bidir/results/2026-10-03/mt_zh-en/llama32-3b/small_s42/trials.jsonl": "2c7311372d87f8436b2846e209a71e9e54e8c4cd00fff6d66dbc5aabbe21b0a1",
+        "/scratch/juno/jvl210002/bidir/results/2026-10-11/relation/llama32-3b/table_core_s17/trials.jsonl": "4944591345efa3236baa63b7e93a05961c73f146a36171ebdab7089ec237bf33",
         "/scratch/juno/jvl210002/bidir/results/2026-09-26/code/llama32-3b/attrib_cft_s17/followup_contrasts.json": "e0252e499f885629f0dd55e1e46d3bef1c3eb7511fd4bf01564adb18957e7299",
         "/scratch/juno/jvl210002/bidir/results/2026-09-26/code/llama32-3b/attrib_cft_s17/trials.jsonl": "2e9434026ea97731fb129bb32c1c19807fe09cb94b966484ad544b91da8c720b",
         "/scratch/juno/jvl210002/bidir/results/2026-09-26/code/llama32-3b/attrib_cft_s42/followup_contrasts.json": "faa7856685b0290f6292f088c5ff4d3eee2234bb6eba1a60cf3b554e1b9b6d94",
@@ -659,6 +661,7 @@
         "/scratch/juno/jvl210002/bidir/results/2026-10-03/fmt/llama32-3b/small_s42/trials.jsonl": "e3cb97974202c2345014be7160a5eaeac49b38dafdf73551892467ca94d60153",
         "/scratch/juno/jvl210002/bidir/results/2026-10-03/mt_en-zh/llama32-3b/small_s42/trials.jsonl": "b21b9b84f8d479175d2958b8cb1018bccc0dbab87374d1491350ce845e145428",
         "/scratch/juno/jvl210002/bidir/results/2026-10-03/mt_zh-en/llama32-3b/small_s42/trials.jsonl": "2c7311372d87f8436b2846e209a71e9e54e8c4cd00fff6d66dbc5aabbe21b0a1",
+        "/scratch/juno/jvl210002/bidir/results/2026-10-11/relation/llama32-3b/table_core_s17/trials.jsonl": "4944591345efa3236baa63b7e93a05961c73f146a36171ebdab7089ec237bf33",
         "/scratch/juno/jvl210002/bidir/results/2026-09-26/code/llama32-3b/attrib_cft_s17/followup_contrasts.json": "e0252e499f885629f0dd55e1e46d3bef1c3eb7511fd4bf01564adb18957e7299",
         "/scratch/juno/jvl210002/bidir/results/2026-09-26/code/llama32-3b/attrib_cft_s17/trials.jsonl": "2e9434026ea97731fb129bb32c1c19807fe09cb94b966484ad544b91da8c720b",
         "/scratch/juno/jvl210002/bidir/results/2026-09-26/code/llama32-3b/attrib_cft_s42/followup_contrasts.json": "faa7856685b0290f6292f088c5ff4d3eee2234bb6eba1a60cf3b554e1b9b6d94",
@@ -904,6 +907,7 @@
         "/scratch/juno/jvl210002/bidir/results/2026-10-03/fmt/llama32-3b/small_s42/trials.jsonl": "e3cb97974202c2345014be7160a5eaeac49b38dafdf73551892467ca94d60153",
         "/scratch/juno/jvl210002/bidir/results/2026-10-03/mt_en-zh/llama32-3b/small_s42/trials.jsonl": "b21b9b84f8d479175d2958b8cb1018bccc0dbab87374d1491350ce845e145428",
         "/scratch/juno/jvl210002/bidir/results/2026-10-03/mt_zh-en/llama32-3b/small_s42/trials.jsonl": "2c7311372d87f8436b2846e209a71e9e54e8c4cd00fff6d66dbc5aabbe21b0a1",
+        "/scratch/juno/jvl210002/bidir/results/2026-10-11/relation/llama32-3b/table_core_s17/trials.jsonl": "4944591345efa3236baa63b7e93a05961c73f146a36171ebdab7089ec237bf33",
         "/scratch/juno/jvl210002/bidir/results/2026-09-26/code/llama32-3b/attrib_cft_s17/followup_contrasts.json": "e0252e499f885629f0dd55e1e46d3bef1c3eb7511fd4bf01564adb18957e7299",
         "/scratch/juno/jvl210002/bidir/results/2026-09-26/code/llama32-3b/attrib_cft_s17/trials.jsonl": "2e9434026ea97731fb129bb32c1c19807fe09cb94b966484ad544b91da8c720b",
         "/scratch/juno/jvl210002/bidir/results/2026-09-26/code/llama32-3b/attrib_cft_s42/followup_contrasts.json": "faa7856685b0290f6292f088c5ff4d3eee2234bb6eba1a60cf3b554e1b9b6d94",
@@ -1149,6 +1153,7 @@
         "/scratch/juno/jvl210002/bidir/results/2026-10-03/fmt/llama32-3b/small_s42/trials.jsonl": "e3cb97974202c2345014be7160a5eaeac49b38dafdf73551892467ca94d60153",
         "/scratch/juno/jvl210002/bidir/results/2026-10-03/mt_en-zh/llama32-3b/small_s42/trials.jsonl": "b21b9b84f8d479175d2958b8cb1018bccc0dbab87374d1491350ce845e145428",
         "/scratch/juno/jvl210002/bidir/results/2026-10-03/mt_zh-en/llama32-3b/small_s42/trials.jsonl": "2c7311372d87f8436b2846e209a71e9e54e8c4cd00fff6d66dbc5aabbe21b0a1",
+        "/scratch/juno/jvl210002/bidir/results/2026-10-11/relation/llama32-3b/table_core_s17/trials.jsonl": "4944591345efa3236baa63b7e93a05961c73f146a36171ebdab7089ec237bf33",
         "/scratch/juno/jvl210002/bidir/results/2026-09-26/code/llama32-3b/attrib_cft_s17/followup_contrasts.json": "e0252e499f885629f0dd55e1e46d3bef1c3eb7511fd4bf01564adb18957e7299",
         "/scratch/juno/jvl210002/bidir/results/2026-09-26/code/llama32-3b/attrib_cft_s17/trials.jsonl": "2e9434026ea97731fb129bb32c1c19807fe09cb94b966484ad544b91da8c720b",
         "/scratch/juno/jvl210002/bidir/results/2026-09-26/code/llama32-3b/attrib_cft_s42/followup_contrasts.json": "faa7856685b0290f6292f088c5ff4d3eee2234bb6eba1a60cf3b554e1b9b6d94",
@@ -1394,6 +1399,7 @@
         "/scratch/juno/jvl210002/bidir/results/2026-10-03/fmt/llama32-3b/small_s42/trials.jsonl": "e3cb97974202c2345014be7160a5eaeac49b38dafdf73551892467ca94d60153",
         "/scratch/juno/jvl210002/bidir/results/2026-10-03/mt_en-zh/llama32-3b/small_s42/trials.jsonl": "b21b9b84f8d479175d2958b8cb1018bccc0dbab87374d1491350ce845e145428",
         "/scratch/juno/jvl210002/bidir/results/2026-10-03/mt_zh-en/llama32-3b/small_s42/trials.jsonl": "2c7311372d87f8436b2846e209a71e9e54e8c4cd00fff6d66dbc5aabbe21b0a1",
+        "/scratch/juno/jvl210002/bidir/results/2026-10-11/relation/llama32-3b/table_core_s17/trials.jsonl": "4944591345efa3236baa63b7e93a05961c73f146a36171ebdab7089ec237bf33",
         "/scratch/juno/jvl210002/bidir/results/2026-09-26/code/llama32-3b/attrib_cft_s17/followup_contrasts.json": "e0252e499f885629f0dd55e1e46d3bef1c3eb7511fd4bf01564adb18957e7299",
         "/scratch/juno/jvl210002/bidir/results/2026-09-26/code/llama32-3b/attrib_cft_s17/trials.jsonl": "2e9434026ea97731fb129bb32c1c19807fe09cb94b966484ad544b91da8c720b",
         "/scratch/juno/jvl210002/bidir/results/2026-09-26/code/llama32-3b/attrib_cft_s42/followup_contrasts.json": "faa7856685b0290f6292f088c5ff4d3eee2234bb6eba1a60cf3b554e1b9b6d94",
@@ -1639,6 +1645,7 @@
         "/scratch/juno/jvl210002/bidir/results/2026-10-03/fmt/llama32-3b/small_s42/trials.jsonl": "e3cb97974202c2345014be7160a5eaeac49b38dafdf73551892467ca94d60153",
         "/scratch/juno/jvl210002/bidir/results/2026-10-03/mt_en-zh/llama32-3b/small_s42/trials.jsonl": "b21b9b84f8d479175d2958b8cb1018bccc0dbab87374d1491350ce845e145428",
         "/scratch/juno/jvl210002/bidir/results/2026-10-03/mt_zh-en/llama32-3b/small_s42/trials.jsonl": "2c7311372d87f8436b2846e209a71e9e54e8c4cd00fff6d66dbc5aabbe21b0a1",
+        "/scratch/juno/jvl210002/bidir/results/2026-10-11/relation/llama32-3b/table_core_s17/trials.jsonl": "4944591345efa3236baa63b7e93a05961c73f146a36171ebdab7089ec237bf33",
         "/scratch/juno/jvl210002/bidir/results/2026-09-26/code/llama32-3b/attrib_cft_s17/followup_contrasts.json": "e0252e499f885629f0dd55e1e46d3bef1c3eb7511fd4bf01564adb18957e7299",
         "/scratch/juno/jvl210002/bidir/results/2026-09-26/code/llama32-3b/attrib_cft_s17/trials.jsonl": "2e9434026ea97731fb129bb32c1c19807fe09cb94b966484ad544b91da8c720b",
         "/scratch/juno/jvl210002/bidir/results/2026-09-26/code/llama32-3b/attrib_cft_s42/followup_contrasts.json": "faa7856685b0290f6292f088c5ff4d3eee2234bb6eba1a60cf3b554e1b9b6d94",
@@ -1718,5 +1725,5 @@
       }
     }
   },
-  "input_signature": "22a80eba3ab901c83094c08c5b881c40b5843c0aa66a5f3e436664a657fcd88e"
+  "input_signature": "4981dc263c2e1e5ddb312096c4421fa3976a968efce1503a4830cb23bb2ede8c"
 }
