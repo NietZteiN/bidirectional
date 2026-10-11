@@ -41,7 +41,7 @@ def main():
         tracked.update(RESULTS_DIR.glob(pattern))
     tracked.update(STATUS.glob('*.json'))
     tracked.update([Path(__file__),PAPER/'main.tex',ROOT/'scripts/93_numbers.py',ROOT/'scripts/117_main_results.py',
-                    ROOT/'scripts/118_manuscript_completion.py'])
+                    ROOT/'scripts/118_manuscript_completion.py',ROOT/'scripts/121_table_audit.py'])
     tracked.update((ROOT/'data').glob('*/build_report.json'))
     tracked.update((ROOT/'data').glob('*/*.jsonl'))
     from bidir.config import RUNS_DIR
@@ -62,7 +62,8 @@ def main():
         unchanged=json.loads(snapshot.read_text()).get('input_signature')==signature
         main_outputs = [PAPER/'MAIN_RESULTS.json', PAPER/'tables/main_adaptations.tex',
                         PAPER/'tables/main_loss_baselines.tex',PAPER/'MANUSCRIPT_COMPLETION.json',
-                        PAPER/'tables/methods_details.tex',PAPER/'tables/revised_domain_results.tex']
+                        PAPER/'tables/methods_details.tex',PAPER/'tables/revised_domain_results.tex',
+                        PAPER/'TABLE_COMPLETION_AUDIT.json']
         if unchanged and (not args.build or (all(p.exists() for p in main_outputs) and (PAPER/'main.pdf').exists()
                                             and (PAPER/'main.pdf').stat().st_mtime>=snapshot.stat().st_mtime)):
             print('paper evidence unchanged');return 0
@@ -131,14 +132,16 @@ def main():
         d=json.loads(p.read_text())
         if d.get('passed') is True:
             repair_audits[d['checkpoint']]=d;sources[str(p)]=sha(p)
-    for trial in sorted(RESULTS_DIR.glob('*/*/*/small_s*/trials.jsonl')):
+    core_trials=set(RESULTS_DIR.glob('*/*/*/small_s*/trials.jsonl'))
+    core_trials.update(RESULTS_DIR.glob('*/*/*/table_core_s*/trials.jsonl'))
+    for trial in sorted(core_trials):
         run=trial.parent
-        if not re.fullmatch(r'small_s\d+',run.name):continue
+        if not re.fullmatch(r'(small|table_core)_s\d+',run.name):continue
         try:
             summary=json.loads((run/'summary.json').read_text())
             if summary['domain']=='fmt_novel':continue  # never-had control, not an eligible main task
             name=f"ev_{summary['domain']}_{summary['model']}_s{summary['seed']}"
-            if not evaluation_succeeded(run,STATUS,name):
+            if not any(evaluation_succeeded(run,STATUS,n) for n in [name,name+'_table_core']):
                 rejected.append(str(run));continue
             desired={'base','sft','mix5','mix50','replay','rev'} & set(summary['arms'])
             groups={};seen=set()
@@ -261,6 +264,7 @@ def build_paper():
     import subprocess
     subprocess.run([sys.executable,str(ROOT/'scripts/117_main_results.py')],cwd=ROOT,check=True,timeout=180)
     subprocess.run([sys.executable,str(ROOT/'scripts/118_manuscript_completion.py')],cwd=ROOT,check=True,timeout=180)
+    subprocess.run([sys.executable,str(ROOT/'scripts/121_table_audit.py')],cwd=ROOT,check=True,timeout=180)
     subprocess.run([sys.executable,str(ROOT/'scripts/93_numbers.py')],cwd=ROOT,check=True,timeout=180)
     completed=subprocess.run(['make','paper'],cwd=ROOT,capture_output=True,text=True,timeout=180)
     (ROOT/'runs/feeder/paper_build_latest.log').write_text(completed.stdout+completed.stderr)

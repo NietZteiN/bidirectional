@@ -1,0 +1,514 @@
+{
+  "generator_sha256": "301c7f541f685bf60ef3cb1024c24303f90a70e6ddfc770334c141a9e02545f2",
+  "missing_numeric_fields": [
+    {
+      "table": "dose.tex",
+      "row": 19,
+      "column": 5,
+      "source_row": "relation & llama32-3b & 17 & 71.1 & -- & -- & -- & 80.0 & 80.7 & 81.5 & 83.7 \\\\"
+    },
+    {
+      "table": "dose.tex",
+      "row": 19,
+      "column": 6,
+      "source_row": "relation & llama32-3b & 17 & 71.1 & -- & -- & -- & 80.0 & 80.7 & 81.5 & 83.7 \\\\"
+    },
+    {
+      "table": "dose.tex",
+      "row": 19,
+      "column": 7,
+      "source_row": "relation & llama32-3b & 17 & 71.1 & -- & -- & -- & 80.0 & 80.7 & 81.5 & 83.7 \\\\"
+    },
+    {
+      "table": "main.tex",
+      "row": 19,
+      "column": 8,
+      "source_row": "relation & llama32-3b & 17 & 71.9 & 86.7 & 89.6 & 79.3 & -- & -- & -- & 86.7 & 87.4 & 89.6 & 88.1 & 83.0 & 65.2 & 71.1 & 58.5 & 83.7 & -- & -- & -- & 80.0 & 80.7 & 81.5 & 67.4 & 65.9 \\\\"
+    },
+    {
+      "table": "main.tex",
+      "row": 19,
+      "column": 9,
+      "source_row": "relation & llama32-3b & 17 & 71.9 & 86.7 & 89.6 & 79.3 & -- & -- & -- & 86.7 & 87.4 & 89.6 & 88.1 & 83.0 & 65.2 & 71.1 & 58.5 & 83.7 & -- & -- & -- & 80.0 & 80.7 & 81.5 & 67.4 & 65.9 \\\\"
+    },
+    {
+      "table": "main.tex",
+      "row": 19,
+      "column": 10,
+      "source_row": "relation & llama32-3b & 17 & 71.9 & 86.7 & 89.6 & 79.3 & -- & -- & -- & 86.7 & 87.4 & 89.6 & 88.1 & 83.0 & 65.2 & 71.1 & 58.5 & 83.7 & -- & -- & -- & 80.0 & 80.7 & 81.5 & 67.4 & 65.9 \\\\"
+    },
+    {
+      "table": "main.tex",
+      "row": 19,
+      "column": 20,
+      "source_row": "relation & llama32-3b & 17 & 71.9 & 86.7 & 89.6 & 79.3 & -- & -- & -- & 86.7 & 87.4 & 89.6 & 88.1 & 83.0 & 65.2 & 71.1 & 58.5 & 83.7 & -- & -- & -- & 80.0 & 80.7 & 81.5 & 67.4 & 65.9 \\\\"
+    },
+    {
+      "table": "main.tex",
+      "row": 19,
+      "column": 21,
+      "source_row": "relation & llama32-3b & 17 & 71.9 & 86.7 & 89.6 & 79.3 & -- & -- & -- & 86.7 & 87.4 & 89.6 & 88.1 & 83.0 & 65.2 & 71.1 & 58.5 & 83.7 & -- & -- & -- & 80.0 & 80.7 & 81.5 & 67.4 & 65.9 \\\\"
+    },
+    {
+      "table": "main.tex",
+      "row": 19,
+      "column": 22,
+      "source_row": "relation & llama32-3b & 17 & 71.9 & 86.7 & 89.6 & 79.3 & -- & -- & -- & 86.7 & 87.4 & 89.6 & 88.1 & 83.0 & 65.2 & 71.1 & 58.5 & 83.7 & -- & -- & -- & 80.0 & 80.7 & 81.5 & 67.4 & 65.9 \\\\"
+    },
+    {
+      "table": "main_adaptations.tex",
+      "row": 32,
+      "column": 5,
+      "source_row": "Factual relations & F & 71.9 & 86.7 & -- & -- & -- & 86.7 & 87.4 & 88.1 & 79.3 & 89.6 & 89.6 & 83.0 \\\\"
+    },
+    {
+      "table": "main_adaptations.tex",
+      "row": 32,
+      "column": 6,
+      "source_row": "Factual relations & F & 71.9 & 86.7 & -- & -- & -- & 86.7 & 87.4 & 88.1 & 79.3 & 89.6 & 89.6 & 83.0 \\\\"
+    },
+    {
+      "table": "main_adaptations.tex",
+      "row": 32,
+      "column": 7,
+      "source_row": "Factual relations & F & 71.9 & 86.7 & -- & -- & -- & 86.7 & 87.4 & 88.1 & 79.3 & 89.6 & 89.6 & 83.0 \\\\"
+    },
+    {
+      "table": "main_adaptations.tex",
+      "row": 33,
+      "column": 5,
+      "source_row": " & B & 65.2 & 71.1 & -- & -- & -- & 80.0 & 80.7 & 67.4 & 83.7 & 58.5 & 81.5 & 65.9 \\\\"
+    },
+    {
+      "table": "main_adaptations.tex",
+      "row": 33,
+      "column": 6,
+      "source_row": " & B & 65.2 & 71.1 & -- & -- & -- & 80.0 & 80.7 & 67.4 & 83.7 & 58.5 & 81.5 & 65.9 \\\\"
+    },
+    {
+      "table": "main_adaptations.tex",
+      "row": 33,
+      "column": 7,
+      "source_row": " & B & 65.2 & 71.1 & -- & -- & -- & 80.0 & 80.7 & 67.4 & 83.7 & 58.5 & 81.5 & 65.9 \\\\"
+    },
+    {
+      "table": "main_adaptations.tex",
+      "row": 41,
+      "column": 5,
+      "source_row": "Execution prediction & F & 26.5 & 29.0 & -- & -- & -- & 29.5 & 29.5 & 27.0 & 21.0 & 31.5 & 30.5 & 24.5 \\\\"
+    },
+    {
+      "table": "main_adaptations.tex",
+      "row": 41,
+      "column": 6,
+      "source_row": "Execution prediction & F & 26.5 & 29.0 & -- & -- & -- & 29.5 & 29.5 & 27.0 & 21.0 & 31.5 & 30.5 & 24.5 \\\\"
+    },
+    {
+      "table": "main_adaptations.tex",
+      "row": 41,
+      "column": 7,
+      "source_row": "Execution prediction & F & 26.5 & 29.0 & -- & -- & -- & 29.5 & 29.5 & 27.0 & 21.0 & 31.5 & 30.5 & 24.5 \\\\"
+    },
+    {
+      "table": "main_adaptations.tex",
+      "row": 42,
+      "column": 5,
+      "source_row": " & B & 16.5 & 13.0 & -- & -- & -- & 26.0 & 28.0 & 13.0 & 30.0 & 12.5 & 29.0 & 12.5 \\\\"
+    },
+    {
+      "table": "main_adaptations.tex",
+      "row": 42,
+      "column": 6,
+      "source_row": " & B & 16.5 & 13.0 & -- & -- & -- & 26.0 & 28.0 & 13.0 & 30.0 & 12.5 & 29.0 & 12.5 \\\\"
+    },
+    {
+      "table": "main_adaptations.tex",
+      "row": 42,
+      "column": 7,
+      "source_row": " & B & 16.5 & 13.0 & -- & -- & -- & 26.0 & 28.0 & 13.0 & 30.0 & 12.5 & 29.0 & 12.5 \\\\"
+    },
+    {
+      "table": "main_loss_baselines.tex",
+      "row": 41,
+      "column": 9,
+      "source_row": "English $\\to$ German & L8B & F & 71.1 & 73.1 & \\textcolor{blue!60!black}{\\textbf{73.0}} & \\textit{n/a} & 74.0 & -- \\\\"
+    },
+    {
+      "table": "main_loss_baselines.tex",
+      "row": 42,
+      "column": 9,
+      "source_row": " &  & B & 74.2 & 58.7 & \\textcolor{blue!60!black}{\\textbf{69.2}} & \\textit{n/a} & 0.1 & -- \\\\"
+    },
+    {
+      "table": "main_loss_baselines.tex",
+      "row": 44,
+      "column": 9,
+      "source_row": "English $\\to$ German & L3B & F & 79.7 & 84.8 & \\textcolor{blue!60!black}{\\textbf{85.4}} & \\textit{n/a} & 85.1 & -- \\\\"
+    },
+    {
+      "table": "main_loss_baselines.tex",
+      "row": 45,
+      "column": 9,
+      "source_row": " &  & B & 72.8 & 63.6 & \\textcolor{blue!60!black}{\\textbf{68.8}} & \\textit{n/a} & 0.0 & -- \\\\"
+    },
+    {
+      "table": "main_loss_baselines.tex",
+      "row": 47,
+      "column": 8,
+      "source_row": "Code transformation & L3B & F & 38.0 & 81.4 & \\textcolor{blue!60!black}{\\textbf{84.2}} & 84.1 & -- & -- \\\\"
+    },
+    {
+      "table": "main_loss_baselines.tex",
+      "row": 47,
+      "column": 9,
+      "source_row": "Code transformation & L3B & F & 38.0 & 81.4 & \\textcolor{blue!60!black}{\\textbf{84.2}} & 84.1 & -- & -- \\\\"
+    },
+    {
+      "table": "main_loss_baselines.tex",
+      "row": 48,
+      "column": 8,
+      "source_row": " &  & B & 32.0 & \\textcolor{red!70!black}{\\textbf{3.6}} & \\textcolor{blue!60!black}{\\textbf{75.4}} & 6.7 & -- & -- \\\\"
+    },
+    {
+      "table": "main_loss_baselines.tex",
+      "row": 48,
+      "column": 9,
+      "source_row": " &  & B & 32.0 & \\textcolor{red!70!black}{\\textbf{3.6}} & \\textcolor{blue!60!black}{\\textbf{75.4}} & 6.7 & -- & -- \\\\"
+    },
+    {
+      "table": "main_loss_baselines.tex",
+      "row": 50,
+      "column": 8,
+      "source_row": "Question $\\to$ SQL & L8B & F & 62.0 & 72.1 & \\textcolor{blue!60!black}{\\textbf{71.9}} & \\textit{n/a} & -- & 71.3 \\\\"
+    },
+    {
+      "table": "main_loss_baselines.tex",
+      "row": 51,
+      "column": 8,
+      "source_row": " &  & B & 54.9 & 51.3 & \\textcolor{blue!60!black}{\\textbf{57.8}} & \\textit{n/a} & -- & 58.8 \\\\"
+    },
+    {
+      "table": "main_loss_baselines.tex",
+      "row": 53,
+      "column": 8,
+      "source_row": "Question $\\to$ SQL & L3B & F & 49.1 & 62.3 & \\textcolor{blue!60!black}{\\textbf{61.0}} & \\textit{n/a} & -- & 61.5 \\\\"
+    },
+    {
+      "table": "main_loss_baselines.tex",
+      "row": 54,
+      "column": 8,
+      "source_row": " &  & B & 51.5 & \\textcolor{red!70!black}{\\textbf{23.3}} & \\textcolor{blue!60!black}{\\textbf{55.2}} & \\textit{n/a} & -- & 48.2 \\\\"
+    }
+  ],
+  "pending_campaign_arms": [
+    {
+      "table": "main_adaptations.tex",
+      "domain": "relation",
+      "model": "llama32-3b",
+      "seed": 17,
+      "arm": "mix1",
+      "directions": [
+        "forward",
+        "reverse"
+      ]
+    },
+    {
+      "table": "main_adaptations.tex",
+      "domain": "relation",
+      "model": "llama32-3b",
+      "seed": 17,
+      "arm": "mix5",
+      "directions": [
+        "forward",
+        "reverse"
+      ]
+    },
+    {
+      "table": "main_adaptations.tex",
+      "domain": "relation",
+      "model": "llama32-3b",
+      "seed": 17,
+      "arm": "mix10",
+      "directions": [
+        "forward",
+        "reverse"
+      ]
+    },
+    {
+      "table": "main_adaptations.tex",
+      "domain": "exec",
+      "model": "llama32-3b",
+      "seed": 17,
+      "arm": "mix1",
+      "directions": [
+        "forward",
+        "reverse"
+      ]
+    },
+    {
+      "table": "main_adaptations.tex",
+      "domain": "exec",
+      "model": "llama32-3b",
+      "seed": 17,
+      "arm": "mix5",
+      "directions": [
+        "forward",
+        "reverse"
+      ]
+    },
+    {
+      "table": "main_adaptations.tex",
+      "domain": "exec",
+      "model": "llama32-3b",
+      "seed": 17,
+      "arm": "mix10",
+      "directions": [
+        "forward",
+        "reverse"
+      ]
+    },
+    {
+      "table": "main_loss_baselines.tex",
+      "domain": "mt_en-de",
+      "model": "llama31-8b",
+      "seed": 17,
+      "arm": "roundtrip",
+      "directions": [
+        "forward",
+        "reverse"
+      ]
+    },
+    {
+      "table": "main_loss_baselines.tex",
+      "domain": "mt_en-de",
+      "model": "llama32-3b",
+      "seed": 17,
+      "arm": "roundtrip",
+      "directions": [
+        "forward",
+        "reverse"
+      ]
+    },
+    {
+      "table": "main_loss_baselines.tex",
+      "domain": "code",
+      "model": "llama32-3b",
+      "seed": 17,
+      "arm": "unlikelihood",
+      "directions": [
+        "forward",
+        "reverse"
+      ]
+    },
+    {
+      "table": "main_loss_baselines.tex",
+      "domain": "code",
+      "model": "llama32-3b",
+      "seed": 17,
+      "arm": "roundtrip",
+      "directions": [
+        "forward",
+        "reverse"
+      ]
+    },
+    {
+      "table": "main_loss_baselines.tex",
+      "domain": "sql",
+      "model": "llama31-8b",
+      "seed": 17,
+      "arm": "unlikelihood",
+      "directions": [
+        "forward",
+        "reverse"
+      ]
+    },
+    {
+      "table": "main_loss_baselines.tex",
+      "domain": "sql",
+      "model": "llama32-3b",
+      "seed": 17,
+      "arm": "unlikelihood",
+      "directions": [
+        "forward",
+        "reverse"
+      ]
+    }
+  ],
+  "code_specific_cft_entries": [
+    {
+      "table": "main_loss_baselines.tex",
+      "domain": "mt_en-de",
+      "model": "llama31-8b",
+      "seed": 17,
+      "arm": "cft",
+      "directions": [
+        "forward",
+        "reverse"
+      ]
+    },
+    {
+      "table": "main_loss_baselines.tex",
+      "domain": "mt_en-de",
+      "model": "llama32-3b",
+      "seed": 17,
+      "arm": "cft",
+      "directions": [
+        "forward",
+        "reverse"
+      ]
+    },
+    {
+      "table": "main_loss_baselines.tex",
+      "domain": "sql",
+      "model": "llama31-8b",
+      "seed": 17,
+      "arm": "cft",
+      "directions": [
+        "forward",
+        "reverse"
+      ]
+    },
+    {
+      "table": "main_loss_baselines.tex",
+      "domain": "sql",
+      "model": "llama32-3b",
+      "seed": 17,
+      "arm": "cft",
+      "directions": [
+        "forward",
+        "reverse"
+      ]
+    }
+  ],
+  "computed_normalized_changes": [
+    {
+      "domain": "algebra",
+      "model": "llama32-3b",
+      "seed": 17,
+      "ratio_percent": -25.43352601156069,
+      "run": "/scratch/juno/jvl210002/bidir/results/2026-09-17/algebra/llama32-3b/small_s17"
+    },
+    {
+      "domain": "algebra_rev",
+      "model": "llama32-3b",
+      "seed": 17,
+      "ratio_percent": 441.79104477611946,
+      "run": "/scratch/juno/jvl210002/bidir/results/2026-09-17/algebra_rev/llama32-3b/small_s17"
+    },
+    {
+      "domain": "code",
+      "model": "llama32-3b",
+      "seed": 17,
+      "ratio_percent": -1.3769363166953537,
+      "run": "/scratch/juno/jvl210002/bidir/results/2026-09-17/code/llama32-3b/small_s17"
+    },
+    {
+      "domain": "fmt",
+      "model": "llama32-3b",
+      "seed": 17,
+      "ratio_percent": 83.89897395422257,
+      "run": "/scratch/juno/jvl210002/bidir/results/2026-09-17/fmt/llama32-3b/small_s17"
+    },
+    {
+      "domain": "mt_de-en",
+      "model": "llama32-3b",
+      "seed": 1234,
+      "ratio_percent": 74.65667915106118,
+      "run": "/scratch/juno/jvl210002/bidir/results/2026-09-18/mt_de-en/llama32-3b/small_s1234"
+    },
+    {
+      "domain": "mt_de-en",
+      "model": "llama32-3b",
+      "seed": 17,
+      "ratio_percent": 90.27431421446383,
+      "run": "/scratch/juno/jvl210002/bidir/results/2026-09-17/mt_de-en/llama32-3b/small_s17"
+    },
+    {
+      "domain": "mt_de-en",
+      "model": "llama32-3b",
+      "seed": 42,
+      "ratio_percent": 91.77057356608479,
+      "run": "/scratch/juno/jvl210002/bidir/results/2026-09-17/mt_de-en/llama32-3b/small_s42"
+    },
+    {
+      "domain": "mt_en-de",
+      "model": "llama32-3b",
+      "seed": 17,
+      "ratio_percent": 96.66666666666667,
+      "run": "/scratch/juno/jvl210002/bidir/results/2026-09-17/mt_en-de/llama32-3b/small_s17"
+    },
+    {
+      "domain": "mt_en-de",
+      "model": "llama32-3b",
+      "seed": 42,
+      "ratio_percent": 84.11214953271025,
+      "run": "/scratch/juno/jvl210002/bidir/results/2026-09-17/mt_en-de/llama32-3b/small_s42"
+    },
+    {
+      "domain": "mt_en-zh",
+      "model": "llama32-3b",
+      "seed": 17,
+      "ratio_percent": 92.80774550484095,
+      "run": "/scratch/juno/jvl210002/bidir/results/2026-09-17/mt_en-zh/llama32-3b/small_s17"
+    },
+    {
+      "domain": "mt_zh-en",
+      "model": "llama32-3b",
+      "seed": 17,
+      "ratio_percent": 95.99465954606143,
+      "run": "/scratch/juno/jvl210002/bidir/results/2026-09-18/mt_zh-en/llama32-3b/small_s17"
+    },
+    {
+      "domain": "relation",
+      "model": "llama32-3b",
+      "seed": 17,
+      "ratio_percent": 87.50000000000016,
+      "run": "/scratch/juno/jvl210002/bidir/results/2026-09-17/relation/llama32-3b/small_s17"
+    },
+    {
+      "domain": "sql",
+      "model": "llama32-3b",
+      "seed": 17,
+      "ratio_percent": 97.56944444444446,
+      "run": "/scratch/juno/jvl210002/bidir/results/2026-09-17/sql/llama32-3b/small_s17"
+    },
+    {
+      "domain": "sql",
+      "model": "llama32-3b",
+      "seed": 42,
+      "ratio_percent": 110.3896103896104,
+      "run": "/scratch/juno/jvl210002/bidir/results/2026-09-18/sql/llama32-3b/small_s42"
+    }
+  ],
+  "source_sha256": {
+    "/scratch/juno/jvl210002/bidir/results/2026-09-17/algebra/llama32-3b/small_s17/trials.jsonl": "69f561bf869247e60edb7f0897a4442cadae6cea46af8c0a5783aefcb960efc1",
+    "/scratch/juno/jvl210002/bidir/results/2026-09-17/algebra/llama32-3b/small_s17/summary.json": "4c08425afb7a4f257142e14b907a4386476fbed113b987cc94253c5d6f946e7a",
+    "/scratch/juno/jvl210002/bidir/results/2026-09-17/algebra_rev/llama32-3b/small_s17/trials.jsonl": "c06a1e79a2739a3f113143105beb0ec9005903aafec08793ff5d67cf99eed259",
+    "/scratch/juno/jvl210002/bidir/results/2026-09-17/algebra_rev/llama32-3b/small_s17/summary.json": "44eb24c4a0af79960e362004e21aba8fa11a82e1b0331fba789126c944ea3b53",
+    "/scratch/juno/jvl210002/bidir/results/2026-09-17/code/llama32-3b/small_s17/trials.jsonl": "a6db0a7b61da0b0d22062f4b5cec46121cdf0e519a97b3fee808511377f0afc6",
+    "/scratch/juno/jvl210002/bidir/results/2026-09-17/code/llama32-3b/small_s17/summary.json": "e262585f5367431458b74d6be28150592266daee4b3a88416c0c777ace8d0c49",
+    "/scratch/juno/jvl210002/bidir/results/2026-09-17/fmt/llama32-3b/small_s17/trials.jsonl": "a0ca6766a80e190fcd26e029ec23a39b30264fa35b4d1cce23c6e81091fc399d",
+    "/scratch/juno/jvl210002/bidir/results/2026-09-17/fmt/llama32-3b/small_s17/summary.json": "31bea55ac8176c28bbea79830187f7425826c657a0a903d5e4924697048b12d3",
+    "/scratch/juno/jvl210002/bidir/results/2026-09-18/mt_de-en/llama32-3b/small_s1234/trials.jsonl": "627db74a92ab75c1b6bfbe89df61adc65d3c396d946522f8a7074ec12eec16c9",
+    "/scratch/juno/jvl210002/bidir/results/2026-09-18/mt_de-en/llama32-3b/small_s1234/summary.json": "dd93b3415d248102a1de532d1d2530c9af8f88bbc22df3452f36badbd05ad764",
+    "/scratch/juno/jvl210002/bidir/results/2026-09-17/mt_de-en/llama32-3b/small_s17/trials.jsonl": "559b34bf664e8c2a8a6fa8f98442e28b7b1b996dbaab367152707afcba7473d6",
+    "/scratch/juno/jvl210002/bidir/results/2026-09-17/mt_de-en/llama32-3b/small_s17/summary.json": "e42bab2e0d4b24781dc3110d1590a8aedc6635b97ae214e09428cf07462c69fd",
+    "/scratch/juno/jvl210002/bidir/results/2026-09-17/mt_de-en/llama32-3b/small_s42/trials.jsonl": "0790c309383980301fd7849c348033ebfa2f052fcbcec1647c0f10c4b309c319",
+    "/scratch/juno/jvl210002/bidir/results/2026-09-17/mt_de-en/llama32-3b/small_s42/summary.json": "184d620be18cefac39da744daf664e856132be8bf4fc8edd0d11d61cdfc29d3e",
+    "/scratch/juno/jvl210002/bidir/results/2026-09-17/mt_en-de/llama32-3b/small_s17/trials.jsonl": "7c80bed5711e3db0846839056a75908bc8b0d32e418366954d1f6a0f599c5ec6",
+    "/scratch/juno/jvl210002/bidir/results/2026-09-17/mt_en-de/llama32-3b/small_s17/summary.json": "79b88c74dd9faedf2e4249386e5addb8eb2085e98109ebf506a284f57f91cd62",
+    "/scratch/juno/jvl210002/bidir/results/2026-09-17/mt_en-de/llama32-3b/small_s42/trials.jsonl": "400477efd94d063bde9cc96ef347bb5f1a819a16fc5bf35280c2e78b1f916500",
+    "/scratch/juno/jvl210002/bidir/results/2026-09-17/mt_en-de/llama32-3b/small_s42/summary.json": "5e5a9815975ea626452e5c50e22e385ba3564c033799f7ea52eaa3c406b5456c",
+    "/scratch/juno/jvl210002/bidir/results/2026-09-17/mt_en-zh/llama32-3b/small_s17/trials.jsonl": "575818e0338439fda9a1431f36d113a1338ed457df8e1e8d413812a354c40dbe",
+    "/scratch/juno/jvl210002/bidir/results/2026-09-17/mt_en-zh/llama32-3b/small_s17/summary.json": "871b7ed612933296831d67f0fd27d24dabacc13df4a8cf7127e820695b71a581",
+    "/scratch/juno/jvl210002/bidir/results/2026-09-18/mt_zh-en/llama32-3b/small_s17/trials.jsonl": "c2138a20203b908e3ec8b6f0383e8982a64810e3c65e75226f7e7733d9deb7e4",
+    "/scratch/juno/jvl210002/bidir/results/2026-09-18/mt_zh-en/llama32-3b/small_s17/summary.json": "3bcdee83b1afa543a947d6223e6048d9ab987bbd3ea7c378660dae5626a242fa",
+    "/scratch/juno/jvl210002/bidir/results/2026-09-17/relation/llama32-3b/small_s17/trials.jsonl": "a2ea81bcbfd86e6e3949d0e19e113b49d3725058fb522a4f5a111175163d5497",
+    "/scratch/juno/jvl210002/bidir/results/2026-09-17/relation/llama32-3b/small_s17/summary.json": "bf41edca0b606b5719279a4d71f2a39362413b0b319d2fd4b7bc337ce0d47c17",
+    "/scratch/juno/jvl210002/bidir/results/2026-09-17/sql/llama32-3b/small_s17/trials.jsonl": "8741dcc110e1295156f335209f2b89f6f1fd771d2ac7f247f49380624c727eea",
+    "/scratch/juno/jvl210002/bidir/results/2026-09-17/sql/llama32-3b/small_s17/summary.json": "ee79a9fad72dd19e283b748f29efe2c13db2790023a24dc2c8cedc1485f0058c",
+    "/scratch/juno/jvl210002/bidir/results/2026-09-18/sql/llama32-3b/small_s42/trials.jsonl": "237209f2338e94f65d3ffbb000c6b3e488e3be6d47dcaefc21abe025c4eff765",
+    "/scratch/juno/jvl210002/bidir/results/2026-09-18/sql/llama32-3b/small_s42/summary.json": "49d8cdea2ff8bfe8e1f8085353ff41c45ace0262c388da5e89fc7340a4fc577d"
+  },
+  "note": "All generated tables inventoried, including legacy tables outside the current PDF. The user chose code-specific CFT: translation/SQL entries are not applicable and no extension is queued. Undefined ratios are mathematical boundaries."
+}

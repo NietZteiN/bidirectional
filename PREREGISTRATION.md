@@ -2138,3 +2138,40 @@ artifact verification remain authorized. No new experimental measurements, chang
 favorable-outcome selection or invented values are introduced. Unmeasured/failed cells remain
 explicit. The operational pause receipt is `runs/feeder/experiment_pause.json`; the resumption
 procedure and the current manuscript priority are documented in `docs/EXPERIMENT_PAUSE.md`.
+
+## Amendment 57 — October 10, 2026: calculate missing table entries first
+
+The user clarifies that filling blanks means computing unmeasured table results, and makes
+those calculations the top priority. This authorizes new table-completion GPU work after
+Amendment56's pause; the previous 32 held jobs remain held while the exclusive completion
+queue runs. CPU collection and source-backed table/PDF refresh continue unattended.
+
+The fixed panel in `configs/table_completion.json` uses seed17 only: relation and execution
+prediction/Llama3B at nominal 1/5/10% replacement, plus missing unlikelihood/round-trip arms
+on code/Llama3B, English-to-German/Llama3B and Llama8B, and SQL/Llama3B and Llama8B.
+Every new evaluation regenerates base and all displayed compatible controls together;
+partial completion never supplies a treatment contrast. Existing complete, nonwithdrawn
+adapters are reused. In particular, the relation low-dose adapters already exist but were
+excluded from evaluation by the earlier rung policy; their new outcomes are exploratory.
+
+This explicitly extends Amendment17 for these two seed17 cells only: fewer than one
+effective batch of distinct reversed pairs is allowed, with realized integer counts and
+supervised exposure retained. Full corpus size, effective batch64, epochs, optimizer and
+steps remain matched. These cells do not enter the original registered knee claim. No
+increase of the semantic corpus, repeat-seed selection or change of scorer/gate is made.
+
+New auxiliary workloads use microbatch4 with accumulation16, retaining effective batch64
+and the base LoRA/loss recipe. Four-step GPU training smokes must show nonzero realized
+auxiliary exposure before production; shared-pass generation smokes precede full evaluation.
+Smoke outputs have separate namespaces and never fill production tables. Failed gates,
+ineffective arms, code failures and null/adverse results remain visible. Bounded attempts
+prevent an unattended retry loop. The broader runner, watchdog and shell submission queue
+are excluded from this admission mode, including after logout and CPU-host renewal.
+
+Previously omitted mixed-task ratios are also calculated from audited same-pass trials for
+every nonzero denominator. Outside registered collapse cells they are labeled signed
+descriptive normalized changes, not recovery verdicts; zero denominators are undefined.
+The user explicitly chooses to keep CFT code-specific. Its four translation/SQL
+combinations are not applicable; no cross-domain judgment variant is admitted.
+`paper/TABLE_COMPLETION_AUDIT.json` inventories
+every numerical table gap, including legacy tables outside the current PDF.

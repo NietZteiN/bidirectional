@@ -1,0 +1,5 @@
+_extends: _base_lora.yaml
+# Conservative common microbatch for the new auxiliary workloads; effective batch stays 64.
+train:
+  per_device_batch: 4
+  grad_accum: 16

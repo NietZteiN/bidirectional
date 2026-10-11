@@ -1,5 +1,10 @@
 # Experiment pause and manuscript priority — Amendment 56
 
+> Superseded in scope by Amendment57: the user clarified that missing numerical table
+> entries need new calculations. The exclusive table-completion controller is active;
+> the 32 original jobs described below remain held. See [current plan](TABLE_COMPLETION_PLAN.md).
+> The stop/zero-running observations below are the historical pause receipt.
+
 The user paused all current bidirectional experiments on October 10, 2026 and prioritized
 completing the paper from existing evidence. This supersedes Amendment 55's active scheduling.
 

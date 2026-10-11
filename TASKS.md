@@ -1,11 +1,40 @@
 # Experiment and task checklist
 
-Updated October 10, 2026. Experiments paused by user request, Amendment56; manuscript completion is the priority.
+Updated October 10, 2026. Amendment57 prioritizes calculating every missing table entry.
+The table-completion controller is active; the 32 earlier experiment jobs remain held.
 The completed sprint draft is frozen at Git commit34de8d0; its
 [completion checklist](archive/task_checklists/TASKS-2026-10-10-sprint-complete.md) and
 [receipts](paper/SPRINT_COMPLETION.json) remain historical evidence.
 
-## Paused experiment queue
+## Top priority: calculate the missing tables
+
+- [x] Inventory every generated table, including legacy tables outside the PDF, and record
+      gaps in [TABLE_COMPLETION_AUDIT.json](paper/TABLE_COMPLETION_AUDIT.json).
+- [x] Calculate all fourteen mixed-task normalized changes from checked same-pass trials,
+      including the six previously omitted null/adverse cells; label them descriptively.
+- [x] Register seven seed17 campaigns covering twelve missing arm combinations and
+      24 main-table forward/backward percentages. Queue first GPU checks for all seven.
+- [ ] Evaluate saved relation/Llama3B mix1/mix5/mix10 adapters together with every
+      displayed control and a fresh base; refresh both primary and legacy tables.
+- [ ] Train execution/Llama3B mix1/mix5/mix10 after valid GPU checks, then evaluate
+      all twelve main-grid arms together. Below-batch doses remain exploratory.
+- [ ] Train and evaluate code/Llama3B unlikelihood and round-trip; translation/Llama3B
+      and Llama8B round-trip; SQL/Llama3B and Llama8B unlikelihood. Keep same-pass controls.
+- [x] Keep CFT code-specific, as requested. Mark its four translation/SQL combinations
+      as not applicable; no cross-domain CFT variant is queued.
+- [ ] Finish all eligible production table cells and verify the remaining-gap audit.
+- [x] Run the detached controller in exclusive table mode after logout/renewal;
+      skip broad scheduling and old shell-queue launches while this priority is active.
+- [x] Pass 43 targeted regression tests and all five detached-controller health checks;
+      rebuild the eight-body-page draft with resolved numeric macros and references.
+      GPU checks are queued, not yet validated; 33 numeric table positions remain pending,
+      including nine duplicate legacy positions.
+
+See [table completion plan](docs/TABLE_COMPLETION_PLAN.md). Current job/phase progress:
+[table scheduler](runs/feeder/table_completion_status.json). New results enter the paper
+only after full paired coverage, adapter effectiveness, source hashes and successful status checks.
+
+## Earlier experiment queue — remains held
 
 - [x] Stop automatic scheduling and hold all 32 current experiment jobs, including four
       running training packs requeued into held state; verify zero running experiments.
@@ -14,11 +43,12 @@ The completed sprint draft is frozen at Git commit34de8d0; its
 - [x] Complete the remaining manuscript/reporting blanks using existing evidence;
       unmeasured rungs and ineligible comparisons remain explicitly unavailable.
 
-All unfinished experiment jobs are held until an explicit user resume request.
-New-domain and contrastive work retains first priority. Completed adapters are reused;
+The previous unfinished experiment jobs remain held. The user's clarification explicitly
+resumes the table-completion work above; it takes priority over the earlier new-domain,
+contrastive and mechanism campaign. Completed adapters are reused;
 training packs resume only missing arms. Engineering proofs, capability gates, quarantine,
 bounded retries, same-pass base comparisons and null/adverse reporting remain enforced.
-The controller STOP sentinel persists after logout and CPU-host renewal.
+The controller's exclusive table mode persists after logout and CPU-host renewal.
 
 - [x] Reopen the original campaign by disabling the completed sprint's admission guard.
 - [ ] Finish the remaining19 registered explanatory production jobs across all three seeds,

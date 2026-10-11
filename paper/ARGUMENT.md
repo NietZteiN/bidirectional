@@ -1,6 +1,6 @@
-> Current scope, October 10: Amendment 56 pauses all experiments and automatic admission.
-> Manuscript completion from existing evidence is the priority. All 32 experiment jobs are
-> held; the controller is stopped. See [pause plan](../docs/EXPERIMENT_PAUSE.md).
+> Current scope, October 10: Amendment57 prioritizes calculating missing table results.
+> Seven targeted campaigns run through the exclusive completion controller; the 32 earlier
+> jobs remain held. See [table completion plan](../docs/TABLE_COMPLETION_PLAN.md).
 > Amendment 55's resumed campaign and the completed sprint remain historical records.
 
 # Workshop framing and the current extension — October 10, 2026
@@ -39,7 +39,8 @@ Current mixed-direction contrastive wins and task-specific forward costs stay in
 argument. The manuscript uses this framing directly; it does not fabricate a bibliographic
 entry or public publication status for the local anonymous workshop draft. All new prose
 rates come from `MAIN_RESULTS.json` and the existing audited campaigns, with within-pass
-comparisons only. The experiment queue is paused under Amendment 56.
+comparisons only. The earlier queue remains held under Amendment56; Amendment57
+authorizes the exclusive missing-table campaigns. CFT stays code-specific.
 
 # Current paper story — October 10, 2026
 

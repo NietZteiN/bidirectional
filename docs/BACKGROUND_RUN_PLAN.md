@@ -1,6 +1,6 @@
-> Paused October 10 under Amendment 56. All experiment jobs are held and the controller
-> is stopped; completing manuscript blanks takes priority. See [pause plan](EXPERIMENT_PAUSE.md).
-> The admission plan and checkpoint below describe the earlier Amendment 55 resumption.
+> Current Amendment57 priority: [calculate missing table entries](TABLE_COMPLETION_PLAN.md).
+> The exclusive table controller is active; all 32 earlier jobs remain held. CFT stays
+> code-specific. The broader campaign and pause checkpoints below are historical.
 
 # Registered background campaign — Amendment55
 

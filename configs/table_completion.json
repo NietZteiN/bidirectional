@@ -1,0 +1,18 @@
+{
+  "enabled": true,
+  "exclusive": true,
+  "amendment": 57,
+  "seed": 17,
+  "smoke_steps": 4,
+  "eval_smoke_pairs": 40,
+  "max_attempts": 3,
+  "cells": [
+    {"domain": "relation", "model": "llama32-3b", "tag": "table_core", "new_arms": ["mix1", "mix5", "mix10"], "arms": ["base", "sft", "mix1", "mix5", "mix10", "mix25", "mix50", "replay", "rev", "fwd2x", "flip", "mixedtask"]},
+    {"domain": "exec", "model": "llama32-3b", "tag": "table_core", "new_arms": ["mix1", "mix5", "mix10"], "arms": ["base", "sft", "mix1", "mix5", "mix10", "mix25", "mix50", "replay", "rev", "fwd2x", "flip", "mixedtask"]},
+    {"domain": "code", "model": "llama32-3b", "tag": "attrib_table_fill", "new_arms": ["unlikelihood", "roundtrip"], "arms": ["base", "sft", "mix5", "cft", "unlikelihood", "roundtrip"]},
+    {"domain": "mt_en-de", "model": "llama32-3b", "tag": "attrib_table_fill", "new_arms": ["roundtrip"], "arms": ["base", "sft", "mix5", "unlikelihood", "roundtrip"]},
+    {"domain": "mt_en-de", "model": "llama31-8b", "tag": "attrib_table_fill", "new_arms": ["roundtrip"], "arms": ["base", "sft", "mix5", "unlikelihood", "roundtrip"]},
+    {"domain": "sql", "model": "llama32-3b", "tag": "attrib_table_fill", "new_arms": ["unlikelihood"], "arms": ["base", "sft", "mix5", "unlikelihood", "roundtrip"]},
+    {"domain": "sql", "model": "llama31-8b", "tag": "attrib_table_fill", "new_arms": ["unlikelihood"], "arms": ["base", "sft", "mix5", "unlikelihood", "roundtrip"]}
+  ]
+}

@@ -16,11 +16,11 @@ mt\_en-de & llama32-3b & 17 & 64.4 & 70.8 & 68.5 & 68.2 & 68.2 & 67.8 & 67.0 & 6
 mt\_en-de & llama32-3b & 42 & 62.7 & 71.3 & 66.9 & 67.5 & 66.8 & 66.7 & 66.2 & 67.0 \\
 mt\_en-zh & llama32-3b & 17 & 4.0 & 68.2 & 68.3 & 69.9 & 71.5 & 71.9 & 72.8 & 71.2 \\
 mt\_zh-en & llama32-3b & 17 & 0.0 & 76.2 & 77.1 & 80.0 & 78.3 & 77.2 & 76.1 & 77.7 \\
-relation & llama32-3b & 17 & 71.1 & $\varnothing$ & $\varnothing$ & $\varnothing$ & 80.0 & 80.7 & 81.5 & 83.7 \\
+relation & llama32-3b & 17 & 71.1 & -- & -- & -- & 80.0 & 80.7 & 81.5 & 83.7 \\
 sql & llama32-3b & 17 & 23.2 & 48.5 & 55.0 & 57.5 & 59.9 & 58.1 & 58.8 & 59.1 \\
 sql & llama32-3b & 42 & 36.2 & 50.1 & 55.5 & 57.3 & 56.1 & 59.4 & 57.4 & 59.4 \\
 \bottomrule
 \end{tabular}
-\caption{Reverse-direction strict success along the dose ladder. Every rung replaces forward pairs with their own reversal, so instances, sequence tokens and steps are matched to \textsc{sft} at every dose. $\varnothing$ marks a rung the domain's corpus cannot express: the reversed pairs fall below one effective batch, so the arm would be noise rather than a dose and was not run. '--' would be an absent result.}
+\caption{Backward strict success by nominal replacement dose. Instances and optimizer steps are matched; realized token counts are audited separately. Dashes are pending measurements. Low-dose relation/execution additions are exploratory below-batch extensions under Amendment57, excluded from the original registered knee analysis.}
 \label{tab:dose}
 \end{table}

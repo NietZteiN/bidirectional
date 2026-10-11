@@ -3,24 +3,24 @@
 \small
 \begin{tabular}{lrrrrrr}
 \toprule
-Domain & Model & Seed & base$_\leftarrow$ & sft$_\leftarrow$ & mixedtask$_\leftarrow$ & recovered \\
+Domain & Model & Seed & base$_\leftarrow$ & sft$_\leftarrow$ & mixedtask$_\leftarrow$ & Normalized change \\
 \midrule
-algebra & llama32-3b & 17 & 14.7 & 7.8 & 6.0 & -- \\
-algebra\_rev & llama32-3b & 17 & 17.4 & 14.7 & 26.5 & -- \\
-code & llama32-3b & 17 & 32.0 & 3.8 & 3.4 & -1\% \\
-fmt & llama32-3b & 17 & 51.1 & 0.4 & 42.9 & 84\% \\
-mt\_de-en & llama32-3b & 1234 & 79.2 & 0.1 & 59.2 & 75\% \\
-mt\_de-en & llama32-3b & 17 & 79.2 & 0.0 & 71.5 & 90\% \\
-mt\_de-en & llama32-3b & 42 & 79.2 & 0.0 & 72.7 & 92\% \\
-mt\_en-de & llama32-3b & 17 & 73.3 & 64.4 & 73.0 & -- \\
-mt\_en-de & llama32-3b & 42 & 73.3 & 62.7 & 71.6 & -- \\
-mt\_en-zh & llama32-3b & 17 & 75.4 & 4.0 & 70.3 & 93\% \\
-mt\_zh-en & llama32-3b & 17 & 74.0 & 0.0 & 71.0 & 96\% \\
-relation & llama32-3b & 17 & 65.2 & 71.1 & 65.9 & -- \\
-sql & llama32-3b & 17 & 51.1 & 23.2 & 50.4 & 98\% \\
-sql & llama32-3b & 42 & 51.1 & 36.2 & 52.6 & -- \\
+algebra & llama32-3b & 17 & 14.7 & 7.8 & 6.0 & -25.4\% \\
+algebra\_rev & llama32-3b & 17 & 17.4 & 14.7 & 26.5 & +441.8\% \\
+code & llama32-3b & 17 & 32.0 & 3.8 & 3.4 & -1.4\% \\
+fmt & llama32-3b & 17 & 51.1 & 0.4 & 42.9 & +83.9\% \\
+mt\_de-en & llama32-3b & 1234 & 79.2 & 0.1 & 59.2 & +74.7\% \\
+mt\_de-en & llama32-3b & 17 & 79.2 & 0.0 & 71.5 & +90.3\% \\
+mt\_de-en & llama32-3b & 42 & 79.2 & 0.0 & 72.7 & +91.8\% \\
+mt\_en-de & llama32-3b & 17 & 73.3 & 64.4 & 73.0 & +96.7\% \\
+mt\_en-de & llama32-3b & 42 & 73.3 & 62.7 & 71.6 & +84.1\% \\
+mt\_en-zh & llama32-3b & 17 & 75.4 & 4.0 & 70.3 & +92.8\% \\
+mt\_zh-en & llama32-3b & 17 & 74.0 & 0.0 & 71.0 & +96.0\% \\
+relation & llama32-3b & 17 & 65.2 & 71.1 & 65.9 & +87.5\% \\
+sql & llama32-3b & 17 & 51.1 & 23.2 & 50.4 & +97.6\% \\
+sql & llama32-3b & 42 & 51.1 & 36.2 & 52.6 & +110.4\% \\
 \bottomrule
 \end{tabular}
-\caption{Reverse-direction strict success when the paired task is 20 \% of a five-task SFT set. \emph{recovered} is $(\textsc{mixedtask}-\textsc{sft})/(\textsc{base}-\textsc{sft})$, shown only for cells meeting the pre-registered collapse criterion ($\le -50$ \% relative); elsewhere the denominator is too small for the ratio to mean anything.}
+\caption{Reverse strict success under mixed-task SFT. Normalized change is $100(\mathrm{mixedtask}-\mathrm{sft})/(\mathrm{base}-\mathrm{sft})$, calculated for every nonzero denominator, including null/adverse cells. Outside collapse cells this is a signed descriptive normalization, not a recovery verdict; negative or near-zero denominators limit interpretation. All rates in a row use one complete evaluation campaign.}
 \label{tab:mixture}
 \end{table}

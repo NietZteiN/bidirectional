@@ -97,6 +97,20 @@ def queue_pass(log):
         elif 'REFUSED' in content: break
 
 
+def controller_stages():
+    table_plan=ROOT/'configs/table_completion.json'
+    table_scope=json.loads(table_plan.read_text()) if table_plan.exists() else {}
+    exclusive=bool(table_scope.get('enabled') and table_scope.get('exclusive'))
+    stages=([('table_completion',[sys.executable,'scripts/119_table_completion.py'],300)] if exclusive else [
+        ('watchdog',[sys.executable,'runs/feeder/watchdog.py'],120),
+        ('capacity',[sys.executable,'scripts/96_gpu_capacity.py'],90),
+        ('a30_admission',[sys.executable,'scripts/103_a30_admission.py'],90),
+        ('runner',[sys.executable,'scripts/95_runner.py','--max-inflight','24'],600)])+[
+        ('followup_analysis',[sys.executable,'scripts/102_followup_analysis.py'],600),
+        ('paper_snapshot',[sys.executable,'scripts/99_paper_evidence.py','--if-changed','--build'],600)]
+    return exclusive,stages
+
+
 def main():
     signal.signal(signal.SIGTERM,terminate);signal.signal(signal.SIGINT,terminate)
     os.chdir(ROOT)
@@ -108,18 +122,13 @@ def main():
             while not shutdown and not STOP.exists():
                 results={}
                 log.write(f'--- {datetime.now(timezone.utc).isoformat()} controller {os.getpid()} ---\n')
-                for name,cmd,timeout in [
-                    ('watchdog',[sys.executable,'runs/feeder/watchdog.py'],120),
-                    ('capacity',[sys.executable,'scripts/96_gpu_capacity.py'],90),
-                    ('a30_admission',[sys.executable,'scripts/103_a30_admission.py'],90),
-                    ('runner',[sys.executable,'scripts/95_runner.py','--max-inflight','24'],600),
-                    ('followup_analysis',[sys.executable,'scripts/102_followup_analysis.py'],600),
-                    ('paper_snapshot',[sys.executable,'scripts/99_paper_evidence.py','--if-changed','--build'],600)]:
+                exclusive,stages=controller_stages()
+                for name,cmd,timeout in stages:
                     if shutdown or STOP.exists(): break
                     try: results[name]=stage(name,cmd,timeout,log)
                     except Exception as exc:
                         results[name]=1;log.write(f'[{name}] {type(exc).__name__}: {exc}\n')
-                if not shutdown and not STOP.exists():
+                if not exclusive and not shutdown and not STOP.exists():
                     try: queue_pass(log)
                     except Exception as exc: log.write(f'[queue] {type(exc).__name__}: {exc}\n');results['queue']=1
                 heartbeat('idle',stage_pid=None,last_pass=results)

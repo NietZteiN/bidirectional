@@ -38,21 +38,21 @@ Unit conversion & G12B & F & 33.7 & 97.1 & \textcolor{blue!60!black}{\textbf{97.
 \toprule
 Task & Model & Dir. & Base & SFT & 5\% & CFT & Unlikelihood & Round-trip \\
 \midrule
-English $\to$ German & L8B & F & 71.1 & 73.1 & \textcolor{blue!60!black}{\textbf{73.0}} & -- & 74.0 & -- \\
- &  & B & 74.2 & 58.7 & \textcolor{blue!60!black}{\textbf{69.2}} & -- & 0.1 & -- \\
+English $\to$ German & L8B & F & 71.1 & 73.1 & \textcolor{blue!60!black}{\textbf{73.0}} & \textit{n/a} & 74.0 & -- \\
+ &  & B & 74.2 & 58.7 & \textcolor{blue!60!black}{\textbf{69.2}} & \textit{n/a} & 0.1 & -- \\
 \addlinespace[2pt]
-English $\to$ German & L3B & F & 79.7 & 84.8 & \textcolor{blue!60!black}{\textbf{85.4}} & -- & 85.1 & -- \\
- &  & B & 72.8 & 63.6 & \textcolor{blue!60!black}{\textbf{68.8}} & -- & 0.0 & -- \\
+English $\to$ German & L3B & F & 79.7 & 84.8 & \textcolor{blue!60!black}{\textbf{85.4}} & \textit{n/a} & 85.1 & -- \\
+ &  & B & 72.8 & 63.6 & \textcolor{blue!60!black}{\textbf{68.8}} & \textit{n/a} & 0.0 & -- \\
 \addlinespace[2pt]
 Code transformation & L3B & F & 38.0 & 81.4 & \textcolor{blue!60!black}{\textbf{84.2}} & 84.1 & -- & -- \\
  &  & B & 32.0 & \textcolor{red!70!black}{\textbf{3.6}} & \textcolor{blue!60!black}{\textbf{75.4}} & 6.7 & -- & -- \\
 \addlinespace[2pt]
-Question $\to$ SQL & L8B & F & 62.0 & 72.1 & \textcolor{blue!60!black}{\textbf{71.9}} & -- & -- & 71.3 \\
- &  & B & 54.9 & 51.3 & \textcolor{blue!60!black}{\textbf{57.8}} & -- & -- & 58.8 \\
+Question $\to$ SQL & L8B & F & 62.0 & 72.1 & \textcolor{blue!60!black}{\textbf{71.9}} & \textit{n/a} & -- & 71.3 \\
+ &  & B & 54.9 & 51.3 & \textcolor{blue!60!black}{\textbf{57.8}} & \textit{n/a} & -- & 58.8 \\
 \addlinespace[2pt]
-Question $\to$ SQL & L3B & F & 49.1 & 62.3 & \textcolor{blue!60!black}{\textbf{61.0}} & -- & -- & 61.5 \\
- &  & B & 51.5 & \textcolor{red!70!black}{\textbf{23.3}} & \textcolor{blue!60!black}{\textbf{55.2}} & -- & -- & 48.2 \\
+Question $\to$ SQL & L3B & F & 49.1 & 62.3 & \textcolor{blue!60!black}{\textbf{61.0}} & \textit{n/a} & -- & 61.5 \\
+ &  & B & 51.5 & \textcolor{red!70!black}{\textbf{23.3}} & \textcolor{blue!60!black}{\textbf{55.2}} & \textit{n/a} & -- & 48.2 \\
 \bottomrule
 \end{tabular}
-\caption{Strict success (\%); F/B denotes forward/backward. Blue highlights small reversed-pair doses; red highlights SFT backward success at most half the same-pass base (a descriptive threshold). All eligible original contrastive and audited auxiliary-objective cells at fixed seed 17. Each task/model row pair uses its own fresh evaluation pass and base; scores across campaigns are not treatment contrasts. L/G denotes Llama/Gemma; B denotes billions of parameters. The $5\%$ column is ordinary reversed-pair SFT. CL-F/M adds alignment to forward/mixed-direction CE; Shuffle randomizes positive pairs; CE-F+/M+ adds CE as an exposure proxy; CFT is the reconstructed code-equivalence contrastive fine-tuning recipe. Dashes denote untested objectives; failed gates, other seeds and paired intervals remain in the appendix/audit.}\label{tab:main-loss-baselines}
+\caption{Strict success (\%); F/B denotes forward/backward. Blue highlights small reversed-pair doses; red highlights SFT backward success at most half the same-pass base (a descriptive threshold). All eligible original contrastive and audited auxiliary-objective cells at fixed seed 17. Each task/model row pair uses its own fresh evaluation pass and base; scores across campaigns are not treatment contrasts. L/G denotes Llama/Gemma; B denotes billions of parameters. The $5\%$ column is ordinary reversed-pair SFT. CL-F/M adds alignment to forward/mixed-direction CE; Shuffle randomizes positive pairs; CE-F+/M+ adds CE as an exposure proxy; CFT is the reconstructed code-equivalence contrastive fine-tuning recipe. Dashes denote pending compatible objectives; n/a marks code-equivalence CFT outside code. Failed gates, other seeds and paired intervals remain in the appendix/audit.}\label{tab:main-loss-baselines}
 \end{table*}

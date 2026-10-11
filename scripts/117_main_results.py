@@ -30,6 +30,16 @@ def sha(path):
     return hashlib.sha256(Path(path).read_bytes()).hexdigest()
 
 
+def latest_auxiliary(records):
+    latest={};timestamps={}
+    for c in records:
+        if c['seed']!=17 or not set(c['means']) & {'cft','unlikelihood','roundtrip'}:continue
+        k=(c['domain'],c['model'],c['seed'])
+        timestamp=(json.loads((Path(c['run'])/'summary.json').read_text())['finished_utc'],c['run'])
+        if k not in latest or timestamp>timestamps[k]:latest[k]=c;timestamps[k]=timestamp
+    return list(latest.values())
+
+
 def campaign_rates(run, expected_hash, sources):
     """Reject partial/duplicate coverage and ineffective arms, including non-core arms."""
     run = Path(run)
@@ -64,9 +74,9 @@ def campaign_rates(run, expected_hash, sources):
                 for d in ['forward','reverse']} for arm in arms}
 
 
-def value(means, arm, direction):
+def value(means, arm, direction, not_applicable=False):
     if arm not in means:
-        return '--'
+        return r'\textit{n/a}' if not_applicable else '--'
     number = f"{100*means[arm][direction]:.1f}"
     if arm in ['mix1','mix5']:
         return r'\textcolor{blue!60!black}{\textbf{'+number+'}}'
@@ -92,7 +102,8 @@ def grid(campaigns, arms, labels, with_model=False, dose_groups=False):
             row = [TASKS[c['domain']] if direction == 'forward' else '']
             if with_model:
                 row.append(MODELS[c['model']] if direction == 'forward' else '')
-            row += [label]+[value(c['means'],a,direction) for a in arms]
+            row += [label]+[value(c['means'],a,direction,
+                                 a=='cft' and c['domain']!='code') for a in arms]
             lines.append(' & '.join(row)+r' \\')
     return '\n'.join(lines+[r'\bottomrule',r'\end{tabular}'])
 
@@ -109,7 +120,9 @@ def render(core, contrastive, auxiliary):
         r'instances and steps fixed. Replay replaces $50\%$ with generic instructions; '
         r'Rev. trains backward only; Fwd2$\times$ doubles forward training; Flip trains both '
         r'directions at doubled budget; Multi mixes other tasks. Dashes are unresolved '
-        r'dose rungs, not zeros.}\label{tab:main-adaptations}',r'\end{table*}'])
+        r'dose rungs, not zeros. The relation/execution low-dose extension (Amendment57) '
+        r'uses fewer than one effective batch of distinct reversed pairs; it is exploratory '
+        r'and excluded from the original registered knee analysis.}\label{tab:main-adaptations}',r'\end{table*}'])
     pieces = [r'\begin{table*}[!t]',r'\centering\footnotesize',
               r'\textbf{(a) Contrastive objectives and exposure controls}\par\smallskip',
         grid(contrastive,CL_ARMS,['Base','SFT',r'5\%','Replay','Rev.','CL-F','CL-M',
@@ -125,7 +138,8 @@ def render(core, contrastive, auxiliary):
         r'ordinary reversed-pair SFT. CL-F/M adds alignment to forward/mixed-direction CE; '
         r'Shuffle randomizes positive pairs; CE-F+/M+ adds CE as an exposure proxy; '
         r'CFT is the reconstructed code-equivalence contrastive fine-tuning recipe. '
-        r'Dashes denote untested objectives; failed gates, other seeds and paired intervals '
+        r'Dashes denote pending compatible objectives; n/a marks code-equivalence CFT '
+        r'outside code. Failed gates, other seeds and paired intervals '
         r'remain in the appendix/audit.}'
         r'\label{tab:main-loss-baselines}',r'\end{table*}']
     return primary, '\n'.join(pieces)
@@ -136,8 +150,7 @@ def main():
     core_records = [c for c in snapshot['core_cells'] if c['model']=='llama32-3b' and c['seed']==17]
     cl_records = [c for c in snapshot['contrastive_reports'] if c['seed']==17
                   and c['domain'] in ['fmt','mt_de-en','units']]
-    aux_records = [c for c in snapshot['followup_reports'] if c['seed']==17
-                   and set(c['means']) & {'cft','unlikelihood','roundtrip'}]
+    aux_records=latest_auxiliary(snapshot['followup_reports'])
     records = core_records+cl_records+aux_records
     fingerprints = {str(Path(c['run'])/'trials.jsonl'):sha(Path(c['run'])/'trials.jsonl')
                     for c in records}
@@ -173,17 +186,17 @@ def main():
             rejected.append(dict(run=str(run),reason='missing successful matching status'));continue
         try:
             means = campaign_rates(run,snapshot['sources'][str(run/'trials.jsonl')],sources)
-            if method:
-                if not c.get('auxiliary_exposure',{}).get(method,{}).get('valid'):
+            for audited_method in set(c.get('means',{})) & {'cft','unlikelihood','roundtrip'}:
+                if not c.get('auxiliary_exposure',{}).get(audited_method,{}).get('valid'):
                     raise ValueError('unverified auxiliary exposure')
-                adapter = adapter_dir(c['domain'],c['model'],method,32,17)
+                adapter = adapter_dir(c['domain'],c['model'],audited_method,32,17)
                 if (adapter/'WITHDRAWN.txt').exists():
                     raise ValueError('withdrawn auxiliary adapter')
                 training = json.loads((adapter/'training_summary.json').read_text())
                 tokens = (training.get('direction_exposure') or {}).get('supervised_tokens_by_direction',{})
                 counts = (training.get('lengths') or {}).get('supervised_tokens_by_task',{})
-                valid = (tokens.get('conflict_unlikelihood',0)>0 if method=='unlikelihood' else
-                         tokens.get('roundtrip_reverse_ce',0)>0 if method=='roundtrip' else
+                valid = (tokens.get('conflict_unlikelihood',0)>0 if audited_method=='unlikelihood' else
+                         tokens.get('roundtrip_reverse_ce',0)>0 if audited_method=='roundtrip' else
                          counts.get('pos',0)>0 and counts.get('neg',0)>0)
                 if not valid:
                     raise ValueError('current training metadata lacks auxiliary exposure')
@@ -193,7 +206,7 @@ def main():
             rejected.append(dict(run=str(run),reason=str(exc)));continue
         entry = dict(domain=c['domain'],model=c['model'],seed=17,run=str(run),means=means,
                      trial_sha256=fingerprints[str(run/'trials.jsonl')])
-        (auxiliary if method else core if tag=='small' else contrastive).append(entry)
+        (auxiliary if method else core if tag in ['small','table_core'] else contrastive).append(entry)
     core.sort(key=lambda c:list(TASKS).index(c['domain']))
     contrastive.sort(key=lambda c:(list(TASKS).index(c['domain']),c['model']))
     auxiliary.sort(key=lambda c:(list(TASKS).index(c['domain']),c['model']))
