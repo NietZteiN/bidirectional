@@ -46,8 +46,8 @@ python scripts/104_paper_finish.py --max-new 0   # reconcile/report without subm
 python scripts/95_runner.py --status
 python scripts/97_pipeline.py debug
 python scripts/107_paper_artifact.py --build
-python paper/artifact/verify_bundle.py
-python paper/artifact/replay_means.py
+python artifacts/paper/verify_bundle.py
+python artifacts/paper/replay_means.py
 ```
 
 Live per-item states/job IDs are in `runs/feeder/paper_finish_status.json`. The production

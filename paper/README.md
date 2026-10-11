@@ -90,8 +90,10 @@ byte for byte; their SHA-256 hashes are recorded in `check_arr.py`.
   `scripts/118_manuscript_completion.py` during the evidence-backed build.
 - `TABLE_COMPLETION_AUDIT.json` — every missing numerical table position, required
   campaign arms, code-specific CFT boundaries and calculated mixed-task normalizations.
-- `artifact/` — local anonymous evidence bundle, original/redacted hash mapping, standalone
-  hash verifier and strict-mean replay. Weights are excluded; external release remains separate.
+- The local anonymous evidence bundle lives outside this folder at
+  `../artifacts/paper/`: original/redacted hash mapping, standalone hash verifier and
+  strict-mean replay. `scripts/107_paper_artifact.py --build` regenerates it there.
+  Weights are excluded; external release remains separate.
 
 See [ARGUMENT.md](ARGUMENT.md) for the argument and drafting decisions.
 
@@ -100,8 +102,12 @@ are integrated from audited evidence; unmeasured diagnostics supply no claimed f
 The strict format check passes; scientific review and deferred diagnostics are separate. Transfer, probes, prompts/templates and recipe sensitivity
 were separately registered in Amendment 50 and admitted to the autonomous smoke-gated queue.
 Pending allocation is not a successful GPU test. `refs.bib` is a local snapshot of
-`../papers/references.bib`; keep it current when adding citations. Older ACM files under
-`Router_Merger (1)/` are reference material and are not inputs to this draft.
+`../papers/references.bib`; keep it current when adding citations.
+
+The unrelated `Router_Merger (1)` ACM/FSE manuscript from the older GitHub upload
+has been moved to `../archive/legacy_manuscripts/Router_Merger (1)/` (local archive).
+It is not a build dependency. `paper/` holds this manuscript, its generated evidence
+reports and build assets; literature PDFs live separately in `../papers/`.
 
 ## Build and check
 

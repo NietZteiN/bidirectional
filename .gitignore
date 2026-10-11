@@ -42,3 +42,6 @@ __pycache__/
 # hundreds of MB. /work is the durable copy; git holds the code that regenerates everything
 # except the trials themselves.
 /archive/
+
+# Local evidence bundles are separate from the standalone manuscript folder.
+/artifacts/

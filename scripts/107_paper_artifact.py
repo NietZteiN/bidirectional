@@ -17,7 +17,7 @@ from bidir import paper_suite as suite
 from bidir.config import RESULTS_DIR,RUNS_DIR
 from bidir.pipeline_state import atomic_json
 
-BUNDLE=ROOT/'paper/artifact'
+BUNDLE=ROOT/'artifacts/paper'
 
 
 def digest(path):return hashlib.sha256(Path(path).read_bytes()).hexdigest()
