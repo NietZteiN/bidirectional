@@ -72,3 +72,22 @@ def test_controller_exclusive_mode_does_not_run_broad_planners(tmp_path,monkeypa
     path.write_text(json.dumps(dict(enabled=False,exclusive=True)))
     exclusive,stages=daemon.controller_stages()
     assert not exclusive and 'runner' in [s[0] for s in stages]
+
+
+def test_background_resume_preserves_frozen_table_plan(tmp_path,monkeypatch):
+    daemon=module('tc_background_daemon_test','../runs/feeder/daemon.py')
+    monkeypatch.setattr(daemon,'ROOT',tmp_path)
+    (tmp_path/'configs').mkdir()
+    table=tmp_path/'configs/table_completion.json'
+    table.write_text(json.dumps(dict(enabled=True,exclusive=True)))
+    frozen=table.read_bytes()
+    background=tmp_path/'configs/background_campaign.json'
+    background.write_text(json.dumps(dict(enabled=False)))
+    exclusive,stages=daemon.controller_stages()
+    assert exclusive and 'runner' not in [s[0] for s in stages]
+    background.write_text(json.dumps(dict(enabled=True)))
+    exclusive,stages=daemon.controller_stages()
+    assert not exclusive
+    assert [s[0] for s in stages]==[
+        'watchdog','capacity','a30_admission','runner','followup_analysis','paper_snapshot']
+    assert table.read_bytes()==frozen

@@ -19,6 +19,13 @@ controller. Each controller pass runs the watchdog, capacity check, scheduling, 
 submissions, registered contrastive analyses, and cached paper evidence/PDF refreshes. Heartbeats and stage results are written
 atomically. There is no feeder lifetime expiry or artificial GPU cap.
 
+`configs/background_campaign.json` selects the resumed registered campaign after the
+October11 table-completion delivery. When enabled, it overrides exclusive table scheduling
+without changing the frozen table configuration or invalidating completed worker receipts.
+When disabled, an enabled exclusive table plan selects only table work, analysis and paper
+refresh. Mode changes persist across CPU-host renewal; reload an existing controller after
+changing controller source. See [background plan](BACKGROUND_RUN_PLAN.md) for current scope.
+
 Training packs resume from fully saved adapters, run remaining arms back to back, and
 schedule dependent within-pass evaluations. Valid seed-17 contrastive cells automatically
 admit seeds42/1234 regardless of measured effect sign. Future arms select larger microbatches

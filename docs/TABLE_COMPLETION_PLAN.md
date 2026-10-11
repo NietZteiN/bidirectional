@@ -4,7 +4,9 @@
 twelve missing arm/task/model combinations. The paper has zero pending campaign arms
 and zero missing numeric fields. SQL/Llama3B evaluation 451562 completed successfully
 in 48 minutes 34 seconds; its results are incorporated in the tables and PDF. The 32
-earlier jobs remain held. Dated checkpoints below describe earlier states.
+earlier jobs remained held at completion. The subsequent Amendment58 continuation
+resumes them; see [background plan](BACKGROUND_RUN_PLAN.md). Dated checkpoints below
+describe earlier states.
 
 The user's clarification supersedes the prose-only interpretation of Amendment56.
 Complete unmeasured numerical table entries first. New table work is authorized; the

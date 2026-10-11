@@ -292,6 +292,14 @@ beyond additional-CE or shuffled-pair controls. In code, CFT yields
 \NUM{main-objective-code-llama32-3b-mix5-backward}\% for $5\%$ reversed-pair SFT,
 with each evaluated on the same examples as its base and controls. Forward-only
 unlikelihood also fails to preserve backward translation in these experiments.
+In SQL/Llama3B, backward success is
+\NUM{main-objective-sql-llama32-3b-mix5-backward}\% with $5\%$ reversal versus
+\NUM{main-objective-sql-llama32-3b-sft-backward}\% with forward SFT and
+\NUM{main-objective-sql-llama32-3b-unlikelihood-backward}\% with unlikelihood.
+The mixture's forward success is
+\NUM{main-objective-sql-llama32-3b-mix5-forward}\% versus
+\NUM{main-objective-sql-llama32-3b-sft-forward}\% for SFT, showing preservation
+with a modest forward cost.
 These comparisons establish why directional SFT is a necessary baseline.
 
 Mixed-direction alignment sometimes improves on the $5\%$ mixture. In SQL/Llama8B,

@@ -1,0 +1,365 @@
+{
+  "checked_utc": "2026-10-11T15:38:41.737064+00:00",
+  "errors": {},
+  "auditor_sha256": "f70981f17de478421119e1cfc9e9cf8c9fc7c5980fa7dcd24b08937c082fd5d9",
+  "scope": "Replays stored scores; verifies saved checkpoints, controller health and the requested background-job releases. Does not regenerate model answers or guarantee future job success.",
+  "paper": {
+    "source_hashes": 762,
+    "replayed_campaigns": 125,
+    "report_sha256": {
+      "MAIN_RESULTS": "a5c08395f4f70e6a90fbabe329c523497fc1475ffbedbc9c93431513c6512b75",
+      "EVIDENCE_SNAPSHOT": "40622ed9ce46e54531e096752bf1664ef3fa9967ef330231a482b3c4ca95ab6f",
+      "TASK_METHODS": "5557acd9dec136689b13f2d6a46ec145de368da1a8633dbb8eef524b54ef037b",
+      "MANUSCRIPT_COMPLETION": "c1e61ef05482736aa8c0e26ef171631380c7009221e113e3b7ad8b21ef2ab1d3",
+      "MECHANISM_DIAGNOSTICS": "8559ce831d3d625728f65adabb6a002982018ffadc9fcac705575ea1009bd662",
+      "PUBLICATION_ANALYSIS": "df54fca8e2c3ae9309201a648694bb35e4d08dea349f658f60fbf9a6d2fec004"
+    },
+    "presentation_sha256": {
+      "main.tex": "125e41d375a572c1adb98a191ff19dd070d83c0e0e99122ae5e5bee7de655f73",
+      "planned_evaluations.tex": "c6021475a89beb541b6ea0c3745104234c9f295f0e53daea70a7bbb253d1bd14",
+      "task_methods.tex": "f7ae15984777dc4d02e1c894d49cc1aad5b072b7840ce32f44f493e4a02705fe",
+      "numbers.tex": "890b0c5c256fa34cfb27272b1e459147be40ddff19458938aaf6e61d7145b44e",
+      "main.pdf": "ca3a48b2a271c8e7b157cf375c18542adcc1e4c4088420525cd157ee0d3ed788",
+      "tables/main_adaptations.tex": "1bbdcf9c6242e28909fab85fce172689cb73afa29646b72d74a67847bb11910d",
+      "tables/main_adaptations_full.tex": "9418221b2507d8676dfe2354dad8a2678fe48dd7ddc5bda6dca7ae390f6cfb93",
+      "tables/main_loss_baselines.tex": "dddc2e7d790a5f272630caf9a547ac4ece4dd411a0c6dbe862aa250c429754a2"
+    },
+    "corpus_splits": 21,
+    "translation_threshold_rows": 20,
+    "checked_means": 1908,
+    "main_table_scores": 564,
+    "registered_numeric_values": 333,
+    "core_combinations": 91,
+    "published_numeric_macros": 48,
+    "severe_losses": 52,
+    "matched_training_summaries": 66,
+    "repeat_task_orientations": 9,
+    "pending_campaign_arms": 0
+  },
+  "pipeline": {
+    "campaigns": [
+      {
+        "cell": "relation_llama32-3b_s17",
+        "ready": "complete",
+        "completed": [
+          "eval_smoke",
+          "eval"
+        ],
+        "live": {},
+        "microbatch": 16,
+        "gradient_accumulation": 4
+      },
+      {
+        "cell": "exec_llama32-3b_s17",
+        "ready": "complete",
+        "completed": [
+          "smoke",
+          "train",
+          "eval_smoke",
+          "eval"
+        ],
+        "live": {},
+        "microbatch": 16,
+        "gradient_accumulation": 4
+      },
+      {
+        "cell": "code_llama32-3b_s17",
+        "ready": "complete",
+        "completed": [
+          "smoke",
+          "train",
+          "eval_smoke",
+          "eval"
+        ],
+        "live": {},
+        "microbatch": 4,
+        "gradient_accumulation": 16
+      },
+      {
+        "cell": "mt_en-de_llama32-3b_s17",
+        "ready": "complete",
+        "completed": [
+          "smoke",
+          "train",
+          "eval_smoke",
+          "eval"
+        ],
+        "live": {},
+        "microbatch": 4,
+        "gradient_accumulation": 16
+      },
+      {
+        "cell": "mt_en-de_llama31-8b_s17",
+        "ready": "complete",
+        "completed": [
+          "smoke",
+          "train",
+          "eval_smoke",
+          "eval"
+        ],
+        "live": {},
+        "microbatch": 4,
+        "gradient_accumulation": 16
+      },
+      {
+        "cell": "sql_llama32-3b_s17",
+        "ready": "complete",
+        "completed": [
+          "smoke",
+          "train",
+          "eval_smoke",
+          "eval"
+        ],
+        "live": {},
+        "microbatch": 4,
+        "gradient_accumulation": 16
+      },
+      {
+        "cell": "sql_llama31-8b_s17",
+        "ready": "complete",
+        "completed": [
+          "smoke",
+          "train",
+          "eval_smoke",
+          "eval"
+        ],
+        "live": {},
+        "microbatch": 4,
+        "gradient_accumulation": 16
+      }
+    ],
+    "verified_prerequisite_adapters": 43,
+    "runtime_modules": [
+      "torch",
+      "transformers",
+      "trl",
+      "peft",
+      "vllm",
+      "sacrebleu",
+      "sympy",
+      "yaml"
+    ],
+    "comet_environment": true,
+    "sql_combined_gpu_fraction": 0.9,
+    "scratch_free_gb": 25046.1
+  },
+  "health": {
+    "finished_utc": "2026-10-11T15:37:24.217714+00:00",
+    "checks": {
+      "fresh_heartbeat": true,
+      "supervisor_matches_controller": true,
+      "stages_ok": true,
+      "renewal_successor": true,
+      "logout_detached": true
+    },
+    "fault_test": false,
+    "supervisor_fault_test": false,
+    "host": "c-01-06",
+    "passed": true
+  },
+  "continuation": {
+    "amendment": 58,
+    "released_jobs": 32,
+    "verified_queue": [
+      {
+        "job": "451181",
+        "name": "tr_fmt_det50_llama31-8b_s42_repair_legacy_pilot",
+        "state": "PENDING",
+        "reason": "(Priority)"
+      },
+      {
+        "job": "451189",
+        "name": "tr_fmt_det25_llama31-8b_s1234_repair_legacy_pilot",
+        "state": "PENDING",
+        "reason": "(Priority)"
+      },
+      {
+        "job": "451187",
+        "name": "tr_fmt_det50_llama31-8b_s1234_repair_legacy_pilot",
+        "state": "PENDING",
+        "reason": "(Priority)"
+      },
+      {
+        "job": "451180",
+        "name": "ev_fmt_det75_llama31-8b_s42_repair_legacy_pilot",
+        "state": "PENDING",
+        "reason": "(Priority)"
+      },
+      {
+        "job": "451190",
+        "name": "ev_fmt_det25_llama31-8b_s1234_repair_legacy_pilot",
+        "state": "PENDING",
+        "reason": "(Dependency)"
+      },
+      {
+        "job": "451188",
+        "name": "ev_fmt_det50_llama31-8b_s1234_repair_legacy_pilot",
+        "state": "PENDING",
+        "reason": "(Dependency)"
+      },
+      {
+        "job": "451186",
+        "name": "ev_fmt_det75_llama31-8b_s1234_repair_legacy_pilot",
+        "state": "PENDING",
+        "reason": "(Dependency)"
+      },
+      {
+        "job": "451184",
+        "name": "ev_fmt_det25_llama31-8b_s42_repair_legacy_pilot",
+        "state": "PENDING",
+        "reason": "(Dependency)"
+      },
+      {
+        "job": "451182",
+        "name": "ev_fmt_det50_llama31-8b_s42_repair_legacy_pilot",
+        "state": "PENDING",
+        "reason": "(Dependency)"
+      },
+      {
+        "job": "451170",
+        "name": "ev_fmt_contract_v2_gemma3-12b_s17_contrastive_pilot",
+        "state": "PENDING",
+        "reason": "(Dependency)"
+      },
+      {
+        "job": "451157",
+        "name": "ev_mx_hf_mt_de-en_llama32-3b_s1234",
+        "state": "PENDING",
+        "reason": "(Priority)"
+      },
+      {
+        "job": "451155",
+        "name": "ev_mx_hf_mt_de-en_llama32-3b_s42",
+        "state": "PENDING",
+        "reason": "(Priority)"
+      },
+      {
+        "job": "451152",
+        "name": "ev_mx_hf_fmt_llama32-3b_s1234",
+        "state": "PENDING",
+        "reason": "(Priority)"
+      },
+      {
+        "job": "451150",
+        "name": "ev_mx_hf_fmt_llama32-3b_s42",
+        "state": "PENDING",
+        "reason": "(Priority)"
+      },
+      {
+        "job": "451167",
+        "name": "ev_mx2_hf_units_gemma3-12b_s1234",
+        "state": "PENDING",
+        "reason": "(Priority)"
+      },
+      {
+        "job": "451165",
+        "name": "ev_mx2_hf_units_gemma3-12b_s42",
+        "state": "PENDING",
+        "reason": "(Priority)"
+      },
+      {
+        "job": "451163",
+        "name": "ev_mx_layers_mt_de-en_gemma3-4b_s1234",
+        "state": "PENDING",
+        "reason": "(Priority)"
+      },
+      {
+        "job": "451162",
+        "name": "ev_mx2_hf_mt_de-en_gemma3-4b_s1234",
+        "state": "PENDING",
+        "reason": "(Priority)"
+      },
+      {
+        "job": "451161",
+        "name": "ev_mx_layers_mt_de-en_gemma3-4b_s42",
+        "state": "PENDING",
+        "reason": "(Priority)"
+      },
+      {
+        "job": "451160",
+        "name": "ev_mx2_hf_mt_de-en_gemma3-4b_s42",
+        "state": "PENDING",
+        "reason": "(Priority)"
+      },
+      {
+        "job": "451159",
+        "name": "ev_mx_layers_mt_de-en_gemma3-4b_s17",
+        "state": "PENDING",
+        "reason": "(Priority)"
+      },
+      {
+        "job": "451158",
+        "name": "ev_mx_layers_mt_de-en_llama32-3b_s1234",
+        "state": "PENDING",
+        "reason": "(Priority)"
+      },
+      {
+        "job": "451156",
+        "name": "ev_mx_layers_mt_de-en_llama32-3b_s42",
+        "state": "PENDING",
+        "reason": "(Priority)"
+      },
+      {
+        "job": "451154",
+        "name": "ev_mx_layers_mt_de-en_llama32-3b_s17",
+        "state": "PENDING",
+        "reason": "(Priority)"
+      },
+      {
+        "job": "451153",
+        "name": "ev_mx_layers_fmt_llama32-3b_s1234",
+        "state": "PENDING",
+        "reason": "(Priority)"
+      },
+      {
+        "job": "451151",
+        "name": "ev_mx_layers_fmt_llama32-3b_s42",
+        "state": "PENDING",
+        "reason": "(Priority)"
+      },
+      {
+        "job": "451168",
+        "name": "ev_mx_layers_units_gemma3-12b_s1234",
+        "state": "PENDING",
+        "reason": "(Priority)"
+      },
+      {
+        "job": "451166",
+        "name": "ev_mx_layers_units_gemma3-12b_s42",
+        "state": "PENDING",
+        "reason": "(Priority)"
+      },
+      {
+        "job": "451164",
+        "name": "ev_mx_layers_units_gemma3-12b_s17",
+        "state": "PENDING",
+        "reason": "(Priority)"
+      },
+      {
+        "job": "451185",
+        "name": "tr_fmt_det75_llama31-8b_s1234_repair_legacy_pilot",
+        "state": "PENDING",
+        "reason": "(Priority)"
+      },
+      {
+        "job": "451183",
+        "name": "tr_fmt_det25_llama31-8b_s42_repair_legacy_pilot",
+        "state": "PENDING",
+        "reason": "(Priority)"
+      },
+      {
+        "job": "451169",
+        "name": "tr_fmt_contract_v2_gemma3-12b_s17_contrastive_pilot",
+        "state": "PENDING",
+        "reason": "(Priority)"
+      }
+    ],
+    "receipt_sha256": "dfc948b3ea1ecf7354f72e88c903bab82038833993840aa8f63853dad4d6b08c",
+    "frozen_table_plan_sha256": "9b6d5352cd711bafa0257eb23f92d78387dfdd79805512862c8d6ef47d3e15ef"
+  },
+  "tests": {
+    "passed": 29,
+    "log_sha256": "419a807528f6191293a8ea650ef799af9daaa15d5b9f8651fd69b4c90cdaa2b8",
+    "previous_full_suite_passed": 441
+  }
+}

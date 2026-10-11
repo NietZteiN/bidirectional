@@ -100,7 +100,10 @@ def queue_pass(log):
 def controller_stages():
     table_plan=ROOT/'configs/table_completion.json'
     table_scope=json.loads(table_plan.read_text()) if table_plan.exists() else {}
-    exclusive=bool(table_scope.get('enabled') and table_scope.get('exclusive'))
+    background_plan=ROOT/'configs/background_campaign.json'
+    background_scope=json.loads(background_plan.read_text()) if background_plan.exists() else {}
+    exclusive=bool(table_scope.get('enabled') and table_scope.get('exclusive')
+                   and not background_scope.get('enabled'))
     stages=([('table_completion',[sys.executable,'scripts/119_table_completion.py'],300)] if exclusive else [
         ('watchdog',[sys.executable,'runs/feeder/watchdog.py'],120),
         ('capacity',[sys.executable,'scripts/96_gpu_capacity.py'],90),

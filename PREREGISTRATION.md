@@ -2175,3 +2175,22 @@ The user explicitly chooses to keep CFT code-specific. Its four translation/SQL
 combinations are not applicable; no cross-domain judgment variant is admitted.
 `paper/bidir/TABLE_COMPLETION_AUDIT.json` inventories
 every numerical table gap, including legacy tables outside the current PDF.
+
+## Amendment 58 — October 11, 2026: continue after table completion
+
+After all seven Amendment57 campaigns completed and all twelve missing arm/task/model
+combinations were measured, the user instructs: “ok update paper, push, and continue.”
+Resume the previously registered Amendment55 background campaign and release only the
+32 still-held experiment jobs identified in Amendment56's pause receipt. The completed
+table campaign, including negative unlikelihood outcomes, remains reported. The manuscript
+discussion incorporates the final SQL comparison using generated numerical macros.
+
+An independent operational switch in `configs/background_campaign.json` selects broad
+scheduling without editing the proof-pinned table configuration. Preserve all model/data
+settings, samples, seeds, scorers, gates, smoke proofs, controls and retry/quarantine rules.
+Completed training arms are reused; dependency chains remain intact. Domain and contrastive
+work retains priority over explanatory diagnostics, and conditional contrastive seeds require
+a valid first-seed evaluation. No new catalogue task protocol or scientific measurement
+criterion is introduced. The artificial GPU and per-project QoS caps remain disabled;
+Slurm resource limits still apply. The renewable detached controller continues analysis
+and paper refresh after logout. Earlier completion/pause receipts remain historical.

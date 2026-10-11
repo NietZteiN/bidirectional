@@ -3,7 +3,9 @@
 Updated October 11, 2026. All seven prioritized table-completion campaigns are finished:
 all twelve missing arm/task/model combinations are measured, with no missing numeric
 table entries. The final SQL evaluation completed at 09:19 CDT and the paper refreshed.
-The detached controller is healthy and idle; the 32 earlier experiment jobs remain held.
+The user has requested continuation after table completion. Amendment58 resumes the
+32 earlier held jobs and the registered background campaign; the detached controller
+will collect results and rebuild the paper automatically.
 The completed sprint draft is frozen at Git commit34de8d0; its
 [completion checklist](archive/task_checklists/TASKS-2026-10-10-sprint-complete.md) and
 [receipts](paper/bidir/SPRINT_COMPLETION.json) remain historical evidence.
@@ -39,7 +41,7 @@ See [table completion plan](docs/TABLE_COMPLETION_PLAN.md). Current job/phase pr
 [table scheduler](runs/feeder/table_completion_status.json). New results enter the paper
 only after full paired coverage, adapter effectiveness, source hashes and successful status checks.
 
-## Earlier experiment queue — remains held
+## Background experiment queue — resumed October 11
 
 - [x] Stop automatic scheduling and hold all 32 current experiment jobs, including four
       running training packs requeued into held state; verify zero running experiments.
@@ -48,12 +50,18 @@ only after full paired coverage, adapter effectiveness, source hashes and succes
 - [x] Complete the remaining manuscript/reporting blanks using existing evidence;
       unmeasured rungs and ineligible comparisons remain explicitly unavailable.
 
-The previous unfinished experiment jobs remain held. The user's clarification explicitly
-resumes the table-completion work above; it takes priority over the earlier new-domain,
-contrastive and mechanism campaign. Completed adapters are reused;
+The table-completion priority is finished. The user's October11 instruction to update,
+push and continue resumes the previously held domain, contrastive and mechanism campaign.
+The independent background scheduling switch preserves the frozen table plan and its
+completion receipts. Completed adapters are reused;
 training packs resume only missing arms. Engineering proofs, capability gates, quarantine,
 bounded retries, same-pass base comparisons and null/adverse reporting remain enforced.
-The controller's exclusive table mode persists after logout and CPU-host renewal.
+The controller's background mode persists after logout and CPU-host renewal.
+
+- [x] Verify release of only the 32 recorded held experiment IDs, controller health
+      and the first completed background scheduling cycle.
+      All five health checks pass, all six controller stages returned zero, and all
+      32 released jobs are pending priority/dependencies at this checkpoint.
 
 - [x] Reopen the original campaign by disabling the completed sprint's admission guard.
 - [ ] Finish the remaining19 registered explanatory production jobs across all three seeds,
@@ -67,7 +75,8 @@ The controller's exclusive table mode persists after logout and CPU-host renewal
 - [x] Collect completed checked contrasts, preserve trials and refresh the working paper evidence.
 - [x] Verify a complete healthy controller pass, detached stdin and CPU-host renewal.
       All five health checks and43 distinct targeted regression tests pass. Initial admission queues
-      41 GPU jobs across34 experiment cells at that historical checkpoint. Amendment56 now holds all remaining jobs.
+      41 GPU jobs across34 experiment cells at that historical checkpoint. Amendment56's
+      pause and Amendment57's table-only phase are historical; Amendment58 resumes work.
 
 Live states: [mechanism scheduler](runs/feeder/mechanism_status.json),
 [repair scheduler](runs/feeder/gate_repair_status.json), and
@@ -185,7 +194,7 @@ See [revision details](docs/PAPER_REVIEW_REVISION.md) and [updated manuscript](p
   extra probes without a complete registered/tested worker and admission path.
 
 The former sprint deferrals (registered seeds, contrastive packs and layer panels) now
-belong to the paused experiment queue above. Configs/paper_sprint.json remains disabled
+belong to the resumed experiment queue above. Configs/paper_sprint.json remains disabled
 under explicit user authorization. All experiment artifacts are retained. The immutable
 sprint receipts describe delivery at34de8d0; subsequent results update the working evidence.
 

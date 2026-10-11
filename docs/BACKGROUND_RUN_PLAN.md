@@ -1,6 +1,41 @@
-> Current Amendment57 priority: [calculate missing table entries](TABLE_COMPLETION_PLAN.md).
-> The exclusive table controller is active; all 32 earlier jobs remain held. CFT stays
-> code-specific. The broader campaign and pause checkpoints below are historical.
+> Current Amendment58 scope, October11: the missing-table campaigns are complete.
+> The user requests updating the paper, pushing and continuing. Resume the 32 recorded
+> held jobs and registered background scheduling. CFT remains code-specific. Completed
+> table results and the original sprint remain preserved historical records.
+
+## Continuation after table completion — Amendment58
+
+All seven table-completion campaigns finished and all twelve missing combinations are
+reported. `configs/background_campaign.json` selects background scheduling independently
+of the frozen `configs/table_completion.json`; changing that frozen file would invalidate
+the table workers' signature checks. The CPU host, supervisor and renewal are retained.
+Release only the still-held experiment IDs from `runs/feeder/experiment_pause.json`,
+checking their names and repository working directories first. Preserve dependencies,
+saved adapters, scorer/gate rules and bounded retry/quarantine behavior.
+
+The queue resumes the existing priority order below. Completed work is skipped; the
+repaired-format Gemma contrastive campaign precedes conditional extra seeds. The nineteen
+remaining registered explanatory jobs stay behind domain/contrastive work. This continuation
+does not introduce new datasets or experimental recipes. The six-GPU cap and project QoS
+share remain disabled. Paper refresh and checked analysis continue after logout.
+
+The main text now explains the final SQL comparison: 5% reversal gives 55.4% backward
+success versus 24.1% with SFT and 3.6% with unlikelihood, with forward rates of 60.8%
+and 62.0% for reversal and SFT. The negative baseline result is retained. Runtime release
+and health receipts are saved in `runs/feeder/background_continue_2026-10-11.json`.
+
+Continuation checks: all 29 targeted controller, table, repair, sprint and pipeline-state
+tests pass. The unchanged mechanism preflight verifies saved checkpoints and data, and
+the scheduling dry run passes with all existing completion/quarantine boundaries retained.
+All 32 recorded holds were released; jobs are pending Slurm priority/dependencies.
+The supervisor reloaded the controller in background mode; its capacity stage confirms
+the GPU cap is disabled. The rebuilt manuscript passes strict PDF checks (seven body pages,
+26 total, 126 abstract words). The numerical audit finds no mismatches in 564 table
+percentages or 333 registered values; all table-worker completion signatures remain valid.
+The first full background cycle completed with all six stage exit codes zero; all five
+controller health checks pass, including detached stdin and a queued CPU-host successor.
+The final manuscript hashes and these checks are recorded in
+[continuation preflight](BACKGROUND_CONTINUE_PREFLIGHT_2026-10-11.json).
 
 # Registered background campaign — Amendment55
 

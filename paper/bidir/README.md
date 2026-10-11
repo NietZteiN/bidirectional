@@ -1,6 +1,7 @@
 > Current status, October 11: all seven prioritized table-completion campaigns are finished;
 > all twelve missing comparisons are measured and no numeric table entries remain missing.
-> The final SQL evaluation completed at 09:19 CDT. The 32 earlier jobs remain held.
+> The final SQL evaluation completed at 09:19 CDT. The user's continuation request now
+> resumes the 32 previously held jobs and registered background pipeline (Amendment58).
 > See [table completion plan](../../docs/TABLE_COMPLETION_PLAN.md) and
 > [remaining table gaps](TABLE_COMPLETION_AUDIT.json).
 > Amendment 55's resumed campaign and the completed sprint remain historical records.
@@ -42,8 +43,8 @@ established by failed backward generation. Mechanism evidence motivates selectiv
 interference in one cell; it is supporting diagnosis, not the central practical claim.
 [MAIN_RESULTS.json](MAIN_RESULTS.json) records every displayed campaign and source hash;
 `scripts/117_main_results.py` regenerates both main tables before the paper builds.
-The earlier campaign stays held under Amendment56; Amendment57 authorizes and prioritizes
-the missing-table campaigns. Earlier sprint scope below is historical.
+Amendment57's missing-table campaigns are complete; Amendment58 resumes the earlier
+registered campaign after the user's continuation request. Earlier sprint scope below is historical.
 
 # Current delivery scope — October10, 2026
 

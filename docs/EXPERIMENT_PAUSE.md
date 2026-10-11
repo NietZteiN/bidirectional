@@ -1,8 +1,8 @@
 # Experiment pause and manuscript priority — Amendment 56
 
-> Superseded in scope by Amendment57: the user clarified that missing numerical table
-> entries need new calculations. The exclusive table-completion controller is active;
-> the 32 original jobs described below remain held. See [current plan](TABLE_COMPLETION_PLAN.md).
+> Historical pause receipt. Amendment57 completed the missing table entries; Amendment58
+> follows the user's October11 request to update, push and continue, resuming the 32 recorded
+> held jobs and registered background scheduling. See [current plan](BACKGROUND_RUN_PLAN.md).
 > The stop/zero-running observations below are the historical pause receipt.
 
 The user paused all current bidirectional experiments on October 10, 2026 and prioritized
@@ -17,7 +17,7 @@ completing the paper from existing evidence. This supersedes Amendment 55's acti
   An unfinished arm can restart on resume; no mid-optimizer checkpoint is promised.
 - Read-only collection, checked CPU analyses, manuscript editing and local verification
   can continue. Do not restart the scheduler, release jobs or launch experiments until the
-  user requests resume. No experimental result is inferred from a held queue entry.
+  user requests resume (received October11). No experimental result is inferred from a held queue entry.
 
 The detailed before/after Slurm specifications, actions and verification are recorded in
 `runs/feeder/experiment_pause.json`. Historical campaign plans and sprint receipts are retained.

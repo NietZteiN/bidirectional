@@ -1,5 +1,5 @@
 {
-  "generated_utc": "2026-10-11T14:21:28.794011+00:00",
+  "generated_utc": "2026-10-11T15:33:58.156717+00:00",
   "resolved": {
     "audited-core-cells": {
       "value": "91",
@@ -1033,6 +1033,46 @@
         "/work/jvl210002/migration/bidirectional/paper/bidir/MAIN_RESULTS.json",
         "/scratch/juno/jvl210002/bidir/results/2026-10-11/sql/llama31-8b/attrib_table_fill_s17/trials.jsonl",
         "/scratch/juno/jvl210002/bidir/results/2026-10-11/sql/llama31-8b/attrib_table_fill_s17/summary.json"
+      ]
+    },
+    "main-objective-sql-llama32-3b-mix5-backward": {
+      "value": "55.4",
+      "sources": [
+        "/work/jvl210002/migration/bidirectional/paper/bidir/MAIN_RESULTS.json",
+        "/scratch/juno/jvl210002/bidir/results/2026-10-11/sql/llama32-3b/attrib_table_fill_s17/trials.jsonl",
+        "/scratch/juno/jvl210002/bidir/results/2026-10-11/sql/llama32-3b/attrib_table_fill_s17/summary.json"
+      ]
+    },
+    "main-objective-sql-llama32-3b-mix5-forward": {
+      "value": "60.8",
+      "sources": [
+        "/work/jvl210002/migration/bidirectional/paper/bidir/MAIN_RESULTS.json",
+        "/scratch/juno/jvl210002/bidir/results/2026-10-11/sql/llama32-3b/attrib_table_fill_s17/trials.jsonl",
+        "/scratch/juno/jvl210002/bidir/results/2026-10-11/sql/llama32-3b/attrib_table_fill_s17/summary.json"
+      ]
+    },
+    "main-objective-sql-llama32-3b-sft-backward": {
+      "value": "24.1",
+      "sources": [
+        "/work/jvl210002/migration/bidirectional/paper/bidir/MAIN_RESULTS.json",
+        "/scratch/juno/jvl210002/bidir/results/2026-10-11/sql/llama32-3b/attrib_table_fill_s17/trials.jsonl",
+        "/scratch/juno/jvl210002/bidir/results/2026-10-11/sql/llama32-3b/attrib_table_fill_s17/summary.json"
+      ]
+    },
+    "main-objective-sql-llama32-3b-sft-forward": {
+      "value": "62.0",
+      "sources": [
+        "/work/jvl210002/migration/bidirectional/paper/bidir/MAIN_RESULTS.json",
+        "/scratch/juno/jvl210002/bidir/results/2026-10-11/sql/llama32-3b/attrib_table_fill_s17/trials.jsonl",
+        "/scratch/juno/jvl210002/bidir/results/2026-10-11/sql/llama32-3b/attrib_table_fill_s17/summary.json"
+      ]
+    },
+    "main-objective-sql-llama32-3b-unlikelihood-backward": {
+      "value": "3.6",
+      "sources": [
+        "/work/jvl210002/migration/bidirectional/paper/bidir/MAIN_RESULTS.json",
+        "/scratch/juno/jvl210002/bidir/results/2026-10-11/sql/llama32-3b/attrib_table_fill_s17/trials.jsonl",
+        "/scratch/juno/jvl210002/bidir/results/2026-10-11/sql/llama32-3b/attrib_table_fill_s17/summary.json"
       ]
     },
     "main-repeat-algebra-rev-runs": {
