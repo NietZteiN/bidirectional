@@ -47,3 +47,21 @@ document/report hashes. Strict PDF checks pass: seven body pages, 26 total pages
 The paper will refresh automatically after the final SQL evaluation succeeds.
 Success remains conditional on the running job finishing; its two missing
 percentages remain dashes until then.
+
+## Remaining-time estimate — approximately 08:40 CDT
+
+Job 451562 has run for about ten minutes. Both generation stages have completed,
+and execution-based SQL scoring is underway. It is still running with its 128 GiB
+host-memory allocation; no new failure is recorded. The controller heartbeat is
+fresh and all three stages in its latest completed cycle returned zero.
+
+Estimated remaining time: **20–45 minutes for evaluation, then 5–10 minutes for
+paper refresh and validation** (roughly 25–55 minutes total). This estimate uses
+the completed SQL run and the current stage; scoring has no per-example progress
+counter and can vary with the generated queries. A further failure would extend
+the estimate. The four-hour Slurm limit is a resource ceiling, not the forecast.
+
+The current PDF already contains all six completed campaigns. Only the two
+SQL/Llama3B unlikelihood percentages await measurement. The automatic controller
+will ingest a successful receipt and rebuild the tables/PDF; the earlier 32 holds
+will remain in place.

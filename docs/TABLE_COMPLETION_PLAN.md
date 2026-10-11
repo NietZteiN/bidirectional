@@ -92,3 +92,13 @@ The refreshed numerical audit has no errors: 562 displayed percentages, 331
 registered numerical values and 758 source hashes match their sources. Strict PDF
 checks pass. See `RESULTS_PROGRESS_2026-10-11.md` for the measured comparisons and
 `RESULTS_PREFLIGHT_2026-10-11.json` for the exact audited snapshot.
+
+## Remaining-time checkpoint — approximately 08:40 CDT
+
+The final SQL/Llama3B evaluation (451562) is running, about ten minutes elapsed;
+generation is complete and execution scoring is underway. Estimate another
+20–45 minutes for evaluation and 5–10 minutes for paper refresh/checks, conditional
+on successful completion. Six campaigns and eleven missing combinations remain
+complete; one combination/two percentages remain pending. The current paper is
+already updated with every completed campaign. This forecast does not cover the
+32 earlier held jobs, which are outside the active table-completion priority.
