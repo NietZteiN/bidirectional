@@ -43,3 +43,18 @@ pages, a 165-word abstract, embedded fonts, and resolved numeric macros and refe
 All five background-pipeline health checks pass. Missing experiment cells remain explicit
 dashes until their queued measurements complete; the format check does not certify their
 completion.
+
+## Focused narrative revision
+
+The second editorial pass keeps the task/scoring explanations and section order. The
+abstract states the seven-family scope and one measured formatting result. The introduction
+ends on the empirical contribution; compute accounting and the replacement objective sit
+in setup. Section 5 progresses from large low-dose gains to other tasks and the adverse
+algebra orientation, with the knee criterion beside the appendix dose ladder. Section 6
+first explains why reverse-mapping exposure can confound attribution, then describes the
+methods and controls. Section 7 leads with the Gemma likelihood/generation discrepancy,
+followed by the output-selection hypothesis and supporting diagnostics. SFT and CE are
+defined at first use, and unit conversion is identified as a supplementary boundary task.
+These changes do not alter experiments, scoring, exclusions, or measured results.
+The rebuilt draft has seven body pages, 25 total pages, and a 126-word abstract;
+strict PDF checks pass with resolved numbers/references and embedded fonts.

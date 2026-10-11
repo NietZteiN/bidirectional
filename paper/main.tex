@@ -48,13 +48,15 @@
 \begin{abstract}
 Fine-tuning a language model to perform a task in one direction can improve that task
 while weakening its ability to work in the reverse direction. We study this tradeoff
-across several domains and test a simple way to preserve both abilities: replace a small
-share of training examples with their reversed pairs. In several settings, this change
-preserves much of the reverse-task performance while retaining most forward gains,
-without adding training examples or optimizer steps. The benefit and required proportion
-vary by task. Comparisons with contrastive and other auxiliary objectives show that
-reversed-pair training is an essential baseline for evaluating specialized preservation
-methods.
+across seven task families and test a simple intervention: replace a small share of forward
+training pairs with their reversals. For example, in format conversion, $1\%$ reversed
+pairs yield \NUM{main-fmt-mix1-backward}\% backward success, compared with
+\NUM{main-fmt-sft-backward}\% under forward-only training, while forward performance
+is nearly unchanged. The intervention starts from the base model and keeps training-example
+counts and optimizer steps fixed. Benefits extend to code, translation, and semantic parsing,
+although the useful proportion and forward costs vary by task. Comparisons with contrastive
+and other auxiliary objectives show why ordinary reversed-pair training is an essential
+baseline for evaluating preservation methods.
 \end{abstract}
 
 \section{Introduction}
@@ -68,8 +70,8 @@ degradation in code transformation \citep{nikiema2025contrastive} and translatio
 substantial loss of an existing capability.
 
 The practical intervention is simple: replace some forward examples with their reversed
-pairs and train with ordinary cross-entropy. In our formatting comparison, forward-only
-SFT improves forward success from \NUM{main-fmt-base-forward}\% to
+pairs and train with ordinary cross-entropy (CE) loss. In our formatting comparison,
+forward-only supervised fine-tuning (SFT) improves forward success from \NUM{main-fmt-base-forward}\% to
 \NUM{main-fmt-sft-forward}\%, but backward success falls from
 \NUM{main-fmt-base-backward}\% to \NUM{main-fmt-sft-backward}\%.
 With $1\%$ reversal, backward success is \NUM{main-fmt-mix1-backward}\% and forward
@@ -77,21 +79,13 @@ success is \NUM{main-fmt-mix1-forward}\%. The mixture is trained from the base c
 it prevents much of the backward loss rather than repairing an already collapsed model
 with additional data.
 
-This baseline changes what a specialized preservation objective must demonstrate. An
-auxiliary objective may change directional information as well as optimization. Encoding
-both sides of a pair, or adding backward prediction targets, can help independently of a
-particular loss. We first measure preservation with reversed-pair SFT, then compare
-auxiliary objectives against that directional supervision and appropriate exposure controls.
-Matching examples and optimizer steps does not guarantee equal tokens, runtime, or FLOPs.
-
-The paper makes three connected contributions. First, it characterizes forward/backward
-tradeoffs across task families, models, and training runs. Second, it measures how those
-tradeoffs change with the proportion of reversed pairs. Third, it tests whether specialized
-objectives add benefits beyond ordinary directional supervision. The required dose varies
-by task: low doses can preserve backward performance with little forward change, but they
-can also impose costs or fail. Unit conversion provides a repeated case where forward SFT
-improves both directions. Supporting diagnostics examine output selection; they do not
-establish memorization, erased knowledge, or a universal internal mechanism.
+We make three connected contributions. First, we characterize forward/backward
+tradeoffs across task families, models, and training runs. Second, we measure how those
+tradeoffs change with the proportion of reversed pairs. Third, we test whether specialized
+objectives add benefits beyond ordinary directional supervision. Across several tasks,
+small reversal proportions preserve backward performance while retaining most forward
+gains. This changes how preservation methods should be evaluated: a specialized objective
+must show what it adds beyond simply training on the reverse mapping.
 
 \section{Paired tasks and directional degradation}
 \label{sec:defined}
@@ -121,6 +115,9 @@ not independent datasets. Formatting converts JSON to YAML/XML and Markdown tabl
 CSV, with the backward tasks converting back. Code pairs readable Python with five
 obfuscation styles. Execution prediction supplies the function in both directions and
 accepts any input producing the required backward output.
+Unit conversion is an additional boundary experiment outside these seven families,
+testing whether forward training necessarily harms reverse performance
+(Appendix~\ref{app:boundaries}).
 
 \paragraph{What success means.}
 Each answer receives a binary, task-specific correctness score; strict success is the
@@ -144,7 +141,7 @@ extractor and contributes no tuned result. Exact prompts, parsing rules, thresho
 source versions and split sizes are consolidated in Appendix~\ref{app:task-scoring}.
 
 \paragraph{Training data and intervention.}
-Table~\ref{tab:task-definitions} prominently gives retained training sizes. In the reference
+The retained training sizes are in Table~\ref{tab:task-definitions}. In the reference
 formatting run, $1\%$ means \NUM{main-fmt-mix1-pairs} reversed pairs among
 \NUM{main-fmt-training-pairs}; in code it means \NUM{main-code-mix1-pairs} among
 \NUM{main-code-training-pairs}. The actual integer counts depend on grouping and filtering;
@@ -153,8 +150,23 @@ Forward-only SFT uses all pairs in the forward direction. A replacement mixture 
 pairs by identity, keeping grouped variants of a program or country together, and replaces
 the selected examples with their reversals. No underlying pair is trained in both directions
 in a replacement mixture. Every mixture starts from the base model. Training-example counts,
-epochs, and optimizer steps match forward SFT; sequence lengths, supervised-token exposure,
-and runtime can differ and are reported separately.
+epochs, and optimizer steps match forward SFT. This does not guarantee equal token counts,
+runtime, or floating-point operations (FLOPs); detailed accounting is in
+Appendix~\ref{app:dose-summary}.
+
+Let $I_F$ and $I_B$ be the forward and backward instructions, and partition training pairs
+$D$ into unreversed $F_\rho$ and reversed $B_\rho$ at replacement proportion $\rho$.
+With target-completion loss $\ell_\theta$, the schematic pair-level objective is
+\begin{equation}
+\begin{aligned}
+\mathcal L_\rho = \frac{1}{|D|}\Big[&
+\sum_{(x,y)\in F_\rho}\ell_\theta(y\mid I_F,x)\\
+&+\sum_{(x,y)\in B_\rho}\ell_\theta(x\mid I_B,y)\Big].
+\end{aligned}
+\label{eq:replacement}
+\end{equation}
+At $\rho=0$, the model trains only on forward targets. Reversing selected pairs directly
+supervises the backward conditional using the same underlying relationship.
 
 \paragraph{Models, controls and uncertainty.}
 We evaluate Llama 3B/8B, Gemma 4B/12B, and OLMo 1B, primarily with LoRA. The main
@@ -193,7 +205,10 @@ a property to measure, not a necessary outcome of fine-tuning.
 \section{Small backward doses with ordinary SFT}
 \label{sec:dose}
 
-Small reversal proportions prevent much of the backward loss in formatting and code.
+A small share of reversed pairs can prevent large backward losses, but the useful share
+depends on the task and direction.
+
+\paragraph{Large gains from small proportions.}
 Formatting backward success is \NUM{main-fmt-mix1-backward}\% with $1\%$ reversal and
 \NUM{main-fmt-mix5-backward}\% with $5\%$, versus \NUM{main-fmt-sft-backward}\% under
 forward-only SFT. Code backward success is \NUM{main-code-mix1-backward}\% at $1\%$
@@ -203,14 +218,10 @@ Generic replay and doubled forward training do not yield comparable backward ben
 in these comparisons (Table~\ref{tab:full-adaptations}). More forward optimization is
 not a substitute for supplying backward targets.
 
-The benefits recur across \NUM{main-repeat-fmt-runs} formatting runs and
-\NUM{main-repeat-code-runs} code runs with different training seeds. At $1\%$, the
-backward improvement over forward SFT ranges from \NUM{main-repeat-fmt-mix1-backward-lo}
-to \NUM{main-repeat-fmt-mix1-backward-hi} percentage points in formatting and from
-\NUM{main-repeat-code-mix1-backward-lo} to \NUM{main-repeat-code-mix1-backward-hi} in
-code. These are within-run differences, not differences between independently evaluated
-checkpoints. Table~\ref{tab:main-seed-variation} reports both-direction ranges for every
-task with repeated low-dose measurements; paired test uncertainty is reported separately.
+The $1\%$ benefits recur across \NUM{main-repeat-fmt-runs} formatting runs and
+\NUM{main-repeat-code-runs} code runs with different training seeds.
+Table~\ref{tab:main-seed-variation} reports the range of forward and backward changes
+for every task with repeated low-dose measurements.
 
 \begin{figure*}[t]
 \centering
@@ -219,7 +230,7 @@ task with repeated low-dose measurements; paired test uncertainty is reported se
 forward-only SFT, and 1\%/5\% reversal. Each panel evaluates Llama3B on the same examples
 (training seed 17). Bars show marginal 95\% cluster-bootstrap intervals over test examples.
 Table~\ref{tab:preservation-paired} gives paired differences; Table~\ref{tab:main-seed-variation}
-shows variation across training runs. Point proximity does not establish equivalence.}
+shows variation across training runs.}
 \label{fig:dose-tradeoff-draft}
 \end{figure*}
 
@@ -233,8 +244,7 @@ a cost. In question-to-SQL training, backward question success rises from
 \NUM{main-sql-mix5-backward}\% at $5\%$; forward success at $1\%$ is
 \NUM{main-sql-mix1-forward}\% versus \NUM{main-sql-sft-forward}\%.
 Figure~\ref{fig:dose-tradeoff-draft} displays the joint forward/backward comparison;
-Appendix~\ref{app:complete-main-comparisons} separates paired uncertainty from
-variation across training runs.
+the gains must be assessed alongside these forward costs.
 
 \paragraph{The useful dose depends on the task.}
 When training polynomial expansion, $1\%$ reversed pairs bring backward factorization
@@ -249,31 +259,31 @@ and relative to the existing capability. The adverse $1\%$ expansion result occu
 would obscure this finding.
 
 The full ladder evaluates $1$, $5$, $10$, $25$, and $50\%$ replacement where available.
-Our prespecified dose knee is the smallest proportion reaching $90\%$ of the half-reversal
-model's backward success. This is a within-task criterion, not a common absolute target or
-a statistical equivalence test. Small relation/execution corpora yield fewer than one
-effective batch of distinct reversed examples at low doses; their later exploratory
-measurements are excluded from the original knee analysis.
+The complete comparisons and dose criterion are in Appendix~\ref{app:dose-ladder}.
 
 \section{What specialized objectives add}
 \label{sec:attrib}
 
-Specialized objectives do not consistently replace directional supervision, but some add
-benefits when combined with it. The comparison asks whether an objective improves generation
-beyond ordinary reversed-pair SFT, rather than whether it beats forward-only training alone.
-Table~\ref{tab:main-loss-baselines} reports both task directions and separate controls.
+A preservation method may help because it exposes the model to the reverse mapping.
+The comparison asks whether its training objective adds a benefit beyond that exposure.
+We compare auxiliary
+methods with ordinary reversed-pair SFT and with controls that change exposure without
+adding the proposed loss. Beating forward-only training is not enough to answer this
+question. Table~\ref{tab:main-loss-baselines} reports both task directions.
 
 \input{tables/main_loss_baselines.tex}
-\paragraph{Information and objective controls.}
-Our representation-alignment objectives combine forward-only or mixed-direction CE with
-symmetric contrastive alignment. Both sides are encoded independently and negatives come
-only from training data. The alignment term has no backward generation CE, but still
-exposes the inverse correspondence. Shuffled-positive controls test pairing, and additional
-CE controls provide an exposure/computation proxy. They do not match measured FLOPs.
-CFT is a separate, code-specific reconstruction that trains program-equivalence judgments
-with CE; it is distinct from representation alignment. Other baselines add instruction-conflict
-unlikelihood or periodically generate a forward answer and train reverse round-trip CE.
-Their realized directional token exposure is reported separately.
+\paragraph{Methods and controls.}
+Representation-alignment methods encode the two sides independently and train paired
+representations to be similar, using a symmetric contrastive loss alongside forward-only
+or mixed-direction CE. Negatives come only from training data. This exposes the paired
+correspondence without applying backward generation CE. Shuffling the positive pairs tests
+whether their correspondence matters; repeating ordinary CE on the same examples tests
+whether extra predictive training can reproduce the benefit.
+Contrastive fine-tuning (CFT) is a separate, code-specific reconstruction that trains
+program-equivalence judgments with CE. Other baselines add instruction-conflict
+unlikelihood or periodically generate a forward answer and train on its reverse mapping
+with round-trip CE. Exact recipes and realized directional exposure are reported in the
+appendix.
 
 \paragraph{Generation results.}
 Forward-only representation alignment does not consistently improve backward generation
@@ -284,51 +294,44 @@ with each evaluated on the same examples as its base and controls. Forward-only
 unlikelihood also fails to preserve backward translation in these experiments.
 These comparisons establish why directional SFT is a necessary baseline.
 
-The objective comparison also has positive and mixed results. Mixed-direction alignment
-sometimes improves on the $5\%$ mixture. In SQL/Llama8B, round-trip training yields
+Mixed-direction alignment sometimes improves on the $5\%$ mixture. In SQL/Llama8B,
+round-trip training yields
 \NUM{main-objective-sql-llama31-8b-roundtrip-backward}\% backward success versus
 \NUM{main-objective-sql-llama31-8b-mix5-backward}\% for the mixture, while forward
 success is \NUM{main-objective-sql-llama31-8b-roundtrip-forward}\% versus
 \NUM{main-objective-sql-llama31-8b-mix5-forward}\%. These point estimates trade a small
 forward decrease for a backward increase; their uncertainty is shown in
 Table~\ref{tab:auxiliary-intervals}. Appendix~\ref{app:complete-main-comparisons} reports all primary
-contrasts and their per-run uncertainty. Confidence intervals spanning zero do not show
-equivalence, especially near a generation floor.
+contrasts and their per-run uncertainty. Specialized objectives therefore need to be judged
+against the directional baseline on both forward and backward performance.
 
 \section{Why backward examples may help}
 \label{sec:mechanism}
 
-Forward CE trains $y$ given forward instruction $I_F$ and $x$, without directly penalizing
-an incorrect backward answer given $I_B$ and $y$. Partition pairs into unreversed $F_\rho$
-and reversed $B_\rho$. With target-completion loss $\ell_\theta$, replacement has the
-schematic pair-level objective
-\begin{equation}
-\begin{aligned}
-\mathcal L_\rho = \frac{1}{|D|}\Big[&
-\sum_{(x,y)\in F_\rho}\ell_\theta(y\mid I_F,x)\\
-&+\sum_{(x,y)\in B_\rho}\ell_\theta(x\mid I_B,y)\Big].
-\end{aligned}
-\end{equation}
-The relationship between the paired sides is unchanged, but the requested conditional
-changes. Our hypothesis is that backward examples maintain task-conditioned output selection
-that forward-only updates can bias. This explains why ordinary CE could preserve a previously
-usable backward capability without a special alignment objective.
+Correct-answer likelihood and generated correctness can move in opposite directions.
+In Gemma translation, forward SFT lowers loss on correct backward answers even as backward
+generation becomes worse. Correct answers becoming less probable therefore cannot alone
+account for degradation across models: generation also depends on their probability
+relative to competing outputs.
 
-Supporting diagnostics examine this account, after the empirical preservation comparison.
-In formatting and translation, forward SFT reduces preference for correct backward answers
-over copied inputs; mixed-direction SFT increases that preference. Gemma translation is
-instructive: absolute loss on correct backward answers improves despite degraded generation,
-so answer likelihood alone does not explain the failure. Formatting middle-layer removals
-improve backward success beyond scaling and random removals matched for retained update norm,
-with small forward changes. This suggests selective interference in that task.
+We hypothesize that forward-only updates bias which output the model selects for the
+backward task, and backward examples help maintain that selection. Equation~\ref{eq:replacement}
+shows how ordinary CE supplies direct supervision for this conditional; it could counter
+the bias without a special alignment objective. Candidate comparisons support this account:
+in formatting and translation, forward SFT reduces preference for correct backward answers
+over copied inputs, while mixed-direction SFT increases that preference.
 
-Final-checkpoint gradient cosines offer little evidence of persistent gradient conflict.
-Local backward updates improve held-out loss even in the units null case, so such an
-improvement is not a collapse-specific signature. Candidate lengths, valid alternative
-translations, unmatched edit norms and multiple interventions limit interpretation.
-Appendix~\ref{app:mechanism-sprint} gives the complete diagnostic comparisons. These
-results support an output-selection hypothesis without demonstrating erased knowledge,
-a universal cause, or a general post-training repair.
+Layer interventions provide complementary evidence in formatting. Removing middle-layer
+updates improves backward success beyond scaling and random-removal controls matched for
+retained update norm, with small forward changes. This suggests selective interference in
+that task. Gradient and local-update analyses provide no clear collapse-specific signature
+and are reported with the complete comparisons in Appendix~\ref{app:mechanism-sprint}.
+
+The evidence is exploratory. Restricted candidates do not cover all valid answers, candidate
+lengths affect rankings, and the layer controls match retained norms rather than edit norms.
+Multiple interventions in one task do not establish a general mechanism. These observations
+support output-selection interference as a hypothesis; they do not demonstrate erased
+knowledge or a general post-training repair.
 
 \section{Related work}
 \label{sec:related}
@@ -411,6 +414,14 @@ sign; earlier results remain in the accompanying data.
 \input{tables/core_inventory.tex}
 \input{tables/main_seed_variation.tex}
 \input{tables/preservation_paired.tex}
+\paragraph{Dose ladder and criterion.}
+\label{app:dose-ladder}
+The full ladder tests $1$, $5$, $10$, $25$, and $50\%$ reversed-pair replacement where
+available. The prespecified dose knee is the smallest tested proportion reaching $90\%$
+of the half-reversal model's backward success. This within-task criterion is neither a
+common absolute target nor a statistical equivalence test. Small relation/execution corpora
+yield fewer than one effective batch of distinct reversed examples at low doses; their
+later exploratory measurements are excluded from the original knee analysis.
 \input{tables/main_adaptations_full.tex}
 \begin{figure}[t]
 \centering

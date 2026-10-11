@@ -1,5 +1,5 @@
 {
-  "generated_utc": "2026-10-11T03:19:57.077765+00:00",
+  "generated_utc": "2026-10-11T03:31:35.709908+00:00",
   "resolved": {
     "audited-core-cells": {
       "value": "91",
@@ -1008,24 +1008,6 @@
         "/scratch/juno/jvl210002/bidir/results/2026-10-03/algebra_rev/llama32-3b/small_s1234/trials.jsonl"
       ]
     },
-    "main-repeat-code-mix1-backward-hi": {
-      "value": "60.0",
-      "sources": [
-        "/work/jvl210002/migration/bidirectional/paper/TASK_METHODS.json",
-        "/scratch/juno/jvl210002/bidir/results/2026-09-17/code/llama32-3b/small_s17/trials.jsonl",
-        "/scratch/juno/jvl210002/bidir/results/2026-09-18/code/llama32-3b/small_s42/trials.jsonl",
-        "/scratch/juno/jvl210002/bidir/results/2026-09-18/code/llama32-3b/small_s1234/trials.jsonl"
-      ]
-    },
-    "main-repeat-code-mix1-backward-lo": {
-      "value": "52.0",
-      "sources": [
-        "/work/jvl210002/migration/bidirectional/paper/TASK_METHODS.json",
-        "/scratch/juno/jvl210002/bidir/results/2026-09-17/code/llama32-3b/small_s17/trials.jsonl",
-        "/scratch/juno/jvl210002/bidir/results/2026-09-18/code/llama32-3b/small_s42/trials.jsonl",
-        "/scratch/juno/jvl210002/bidir/results/2026-09-18/code/llama32-3b/small_s1234/trials.jsonl"
-      ]
-    },
     "main-repeat-code-runs": {
       "value": "3",
       "sources": [
@@ -1033,24 +1015,6 @@
         "/scratch/juno/jvl210002/bidir/results/2026-09-17/code/llama32-3b/small_s17/trials.jsonl",
         "/scratch/juno/jvl210002/bidir/results/2026-09-18/code/llama32-3b/small_s42/trials.jsonl",
         "/scratch/juno/jvl210002/bidir/results/2026-09-18/code/llama32-3b/small_s1234/trials.jsonl"
-      ]
-    },
-    "main-repeat-fmt-mix1-backward-hi": {
-      "value": "89.8",
-      "sources": [
-        "/work/jvl210002/migration/bidirectional/paper/TASK_METHODS.json",
-        "/scratch/juno/jvl210002/bidir/results/2026-09-17/fmt/llama32-3b/small_s17/trials.jsonl",
-        "/scratch/juno/jvl210002/bidir/results/2026-10-03/fmt/llama32-3b/small_s42/trials.jsonl",
-        "/scratch/juno/jvl210002/bidir/results/2026-10-03/fmt/llama32-3b/small_s1234/trials.jsonl"
-      ]
-    },
-    "main-repeat-fmt-mix1-backward-lo": {
-      "value": "86.1",
-      "sources": [
-        "/work/jvl210002/migration/bidirectional/paper/TASK_METHODS.json",
-        "/scratch/juno/jvl210002/bidir/results/2026-09-17/fmt/llama32-3b/small_s17/trials.jsonl",
-        "/scratch/juno/jvl210002/bidir/results/2026-10-03/fmt/llama32-3b/small_s42/trials.jsonl",
-        "/scratch/juno/jvl210002/bidir/results/2026-10-03/fmt/llama32-3b/small_s1234/trials.jsonl"
       ]
     },
     "main-repeat-fmt-runs": {
