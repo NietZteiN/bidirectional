@@ -40,7 +40,7 @@ def main():
                     'audit/fullft_saved_repair_*.json']:
         tracked.update(RESULTS_DIR.glob(pattern))
     tracked.update(STATUS.glob('*.json'))
-    tracked.update([Path(__file__),PAPER/'main.tex',ROOT/'scripts/93_numbers.py'])
+    tracked.update([Path(__file__),PAPER/'main.tex',ROOT/'scripts/93_numbers.py',ROOT/'scripts/117_main_results.py'])
     for path in [PAPER/'MECHANISM_DIAGNOSTICS.json',ROOT/'configs/paper_sprint.json',
                  PAPER/'tables/mechanism_sprint.tex']:
         if path.exists():tracked.add(path)
@@ -54,7 +54,9 @@ def main():
     unchanged=False
     if args.if_changed and snapshot.exists():
         unchanged=json.loads(snapshot.read_text()).get('input_signature')==signature
-        if unchanged and (not args.build or ((PAPER/'main.pdf').exists()
+        main_outputs = [PAPER/'MAIN_RESULTS.json', PAPER/'tables/main_adaptations.tex',
+                        PAPER/'tables/main_loss_baselines.tex']
+        if unchanged and (not args.build or (all(p.exists() for p in main_outputs) and (PAPER/'main.pdf').exists()
                                             and (PAPER/'main.pdf').stat().st_mtime>=snapshot.stat().st_mtime)):
             print('paper evidence unchanged');return 0
     if unchanged:
@@ -212,7 +214,7 @@ def main():
         core_selection_rule='latest validated completion timestamp per domain/model/training seed; no effect-sign selection',
         rejected_runs=rejected,sources=sources,
         mechanism_claims='pending audit; no cross-model/seed pooling',
-        legacy_auxiliary_arms='excluded pending withdrawal/exposure audit'))
+        legacy_auxiliary_arms='requires current withdrawal/exposure audit in scripts/117_main_results.py before main-table inclusion'))
     atomic_json(PAPER/'PROVENANCE.json',dict(
         generated_by='scripts/99_paper_evidence.py',updated_utc=datetime.now(timezone.utc).isoformat(),
         artifacts={name:dict(evidence='EVIDENCE_SNAPSHOT.json',source_hashes=sources)
@@ -250,6 +252,7 @@ def plot_core(cells):
 
 def build_paper():
     import subprocess
+    subprocess.run([sys.executable,str(ROOT/'scripts/117_main_results.py')],cwd=ROOT,check=True,timeout=180)
     subprocess.run([sys.executable,str(ROOT/'scripts/93_numbers.py')],cwd=ROOT,check=True,timeout=180)
     completed=subprocess.run(['make','paper'],cwd=ROOT,capture_output=True,text=True,timeout=180)
     (ROOT/'runs/feeder/paper_build_latest.log').write_text(completed.stdout+completed.stderr)

@@ -74,6 +74,19 @@ Proof-valid counts:[paper diagnostic report](paper/MECHANISM_DIAGNOSTICS.json), 
 The sprint snapshot contains five proof-valid production jobs. Amendment55 resumes the
  other19; the full registered production denominator remains24.
 
+## Current manuscript revision — October 10
+
+- [x] Center abstract, introduction and conclusion on forward gains/backward loss and
+      small-dose reversed-pair SFT, with measured 1% formatting/code examples.
+- [x] Add compact percentage main tables: all eleven reference task orientations and
+      all twelve main-grid systems; all eight eligible original contrastive and five
+      exposure-audited auxiliary-objective seed-17 cells, with both directions.
+- [x] Highlight low-dose arms and descriptive SFT collapse; retain unresolved rungs,
+      adverse dose effects, units nulls and loss-baseline wins.
+- [x] Keep model/seed counts and paired uncertainty in the appendix/source audit.
+- [x] Verify source integrity and controller regressions (32 targeted tests); rebuild
+      the seven-page main draft, 168-word abstract, with all numbers resolved.
+
 ## Completed sprint CPU/paper delivery — commit34de8d0
 
 - [x] Integrate all five proof-valid diagnostic findings, including the Gemma likelihood

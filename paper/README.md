@@ -3,6 +3,32 @@
 > Sprint limits below are historical; commit34de8d0 preserves that draft and receipts.
 > See [background plan](../docs/BACKGROUND_RUN_PLAN.md).
 
+# Current paper story — October 10, 2026
+
+Forward-only SFT can improve the trained task while damaging its backward counterpart.
+The practical intervention is to reverse a small share of existing pairs and keep ordinary
+cross-entropy. Lead with the fixed-seed formatting and code examples: 1% reversal gives
+substantial backward recovery with little forward change. Use source-generated numbers;
+do not claim a universal 1% optimum or universal superiority over auxiliary losses.
+
+The main presentation now has two percentage tables:
+
+- Table 1: all eleven Llama3B seed-17 task orientations, forward/backward rows, base,
+  SFT, every reversal dose and every registered main-grid control. Blue identifies low
+  doses; red identifies SFT backward rates at or below half of the same-pass base.
+- Table 2: every eligible original seed-17 contrastive task/model cell and every audited
+  seed-17 auxiliary-objective cell, with both directions and fresh within-pass baselines.
+  Preserve mixed-direction contrastive gains, round-trip tradeoffs and the units null.
+
+Highlighting is descriptive. Missing dose rungs are dashes. Model/seed coverage and paired
+intervals remain in the appendix and source audit. Memorization or memory erasure is not
+established by failed backward generation. Mechanism evidence motivates selective
+interference in one cell; it is supporting diagnosis, not the central practical claim.
+[MAIN_RESULTS.json](MAIN_RESULTS.json) records every displayed campaign and source hash;
+`scripts/117_main_results.py` regenerates both main tables before the paper builds.
+The background campaign continues under Amendment 55. Earlier sprint scope below is
+historical and does not restrict the active experiment queue.
+
 # Current delivery scope — October10, 2026
 
 The [24-hour paper sprint](../docs/PAPER_SPRINT_PLAN.md) stops additional training and

@@ -135,6 +135,17 @@ def _snapshot_number(c: Ctx, key: str) -> Optional[str]:
     return str(value)
 
 
+def _main_result_number(c: Ctx, key: str) -> Optional[str]:
+    path = PAPER / 'MAIN_RESULTS.json'
+    if not path.exists():
+        return None
+    item = json.loads(path.read_text()).get('numbers', {}).get(key)
+    if item is None:
+        return None
+    c.note(path, Path(item['run'])/'trials.jsonl', Path(item['run'])/'summary.json')
+    return item['value']
+
+
 for _key in ("contrastive-completed-cells", "contrastive-planned-cells",
              "audited-core-cells", "failed-new-domain-gates", "failed-explicit-domain-gates",
              "audited-fullft-repairs", "core-collapse-cells", "audited-core-campaigns",
@@ -162,7 +173,7 @@ def main() -> int:
         if is_prose(key):
             prose.append(key)
             continue
-        fn = RESOLVERS.get(key)
+        fn = (lambda c, key=key: _main_result_number(c, key)) if key.startswith('main-') else RESOLVERS.get(key)
         if fn is None:
             unresolved.append((key, "no resolver written"))
             continue

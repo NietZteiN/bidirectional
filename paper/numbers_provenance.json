@@ -1,5 +1,5 @@
 {
-  "generated_utc": "2026-10-10T23:38:47.785192+00:00",
+  "generated_utc": "2026-10-11T01:46:51.695315+00:00",
   "resolved": {
     "audited-core-campaigns": {
       "value": "103",
@@ -223,12 +223,28 @@
         "/scratch/juno/jvl210002/bidir/results/2026-10-10/fmt_det50/llama31-8b/repair_legacy_pilot_s17/trials.jsonl",
         "/scratch/juno/jvl210002/bidir/results/2026-10-10/fmt_det75/llama31-8b/repair_legacy_pilot_s17/followup_contrasts.json",
         "/scratch/juno/jvl210002/bidir/results/2026-10-10/fmt_det75/llama31-8b/repair_legacy_pilot_s17/trials.jsonl",
+        "/scratch/juno/jvl210002/bidir/results/2026-10-10/py_cpp_typed_v2/gemma3-12b/repair_domain_pilot_s1234/followup_contrasts.json",
+        "/scratch/juno/jvl210002/bidir/results/2026-10-10/py_cpp_typed_v2/gemma3-12b/repair_domain_pilot_s1234/trials.jsonl",
         "/scratch/juno/jvl210002/bidir/results/2026-10-10/py_cpp_typed_v2/gemma3-12b/repair_domain_pilot_s17/followup_contrasts.json",
         "/scratch/juno/jvl210002/bidir/results/2026-10-10/py_cpp_typed_v2/gemma3-12b/repair_domain_pilot_s17/trials.jsonl",
+        "/scratch/juno/jvl210002/bidir/results/2026-10-10/py_cpp_typed_v2/gemma3-12b/repair_domain_pilot_s42/followup_contrasts.json",
+        "/scratch/juno/jvl210002/bidir/results/2026-10-10/py_cpp_typed_v2/gemma3-12b/repair_domain_pilot_s42/trials.jsonl",
         "/scratch/juno/jvl210002/bidir/results/2026-10-10/py_cpp_typed_v2/llama31-8b/repair_domain_pilot_s17/followup_contrasts.json",
         "/scratch/juno/jvl210002/bidir/results/2026-10-10/py_cpp_typed_v2/llama31-8b/repair_domain_pilot_s17/trials.jsonl",
+        "/scratch/juno/jvl210002/bidir/results/2026-10-10/units_contract_v2/gemma3-12b/repair_domain_pilot_s1234/followup_contrasts.json",
+        "/scratch/juno/jvl210002/bidir/results/2026-10-10/units_contract_v2/gemma3-12b/repair_domain_pilot_s1234/trials.jsonl",
         "/scratch/juno/jvl210002/bidir/results/2026-10-10/units_contract_v2/gemma3-12b/repair_domain_pilot_s17/followup_contrasts.json",
-        "/scratch/juno/jvl210002/bidir/results/2026-10-10/units_contract_v2/gemma3-12b/repair_domain_pilot_s17/trials.jsonl"
+        "/scratch/juno/jvl210002/bidir/results/2026-10-10/units_contract_v2/gemma3-12b/repair_domain_pilot_s17/trials.jsonl",
+        "/scratch/juno/jvl210002/bidir/results/2026-10-10/units_contract_v2/gemma3-12b/repair_domain_pilot_s42/followup_contrasts.json",
+        "/scratch/juno/jvl210002/bidir/results/2026-10-10/units_contract_v2/gemma3-12b/repair_domain_pilot_s42/trials.jsonl",
+        "/scratch/juno/jvl210002/bidir/results/2026-10-11/fmt_contract_v2/llama31-8b/repair_domain_pilot_s1234/followup_contrasts.json",
+        "/scratch/juno/jvl210002/bidir/results/2026-10-11/fmt_contract_v2/llama31-8b/repair_domain_pilot_s1234/trials.jsonl",
+        "/scratch/juno/jvl210002/bidir/results/2026-10-11/fmt_contract_v2/llama31-8b/repair_domain_pilot_s42/followup_contrasts.json",
+        "/scratch/juno/jvl210002/bidir/results/2026-10-11/fmt_contract_v2/llama31-8b/repair_domain_pilot_s42/trials.jsonl",
+        "/scratch/juno/jvl210002/bidir/results/2026-10-11/py_cpp_typed_v2/llama31-8b/repair_domain_pilot_s1234/followup_contrasts.json",
+        "/scratch/juno/jvl210002/bidir/results/2026-10-11/py_cpp_typed_v2/llama31-8b/repair_domain_pilot_s1234/trials.jsonl",
+        "/scratch/juno/jvl210002/bidir/results/2026-10-11/py_cpp_typed_v2/llama31-8b/repair_domain_pilot_s42/followup_contrasts.json",
+        "/scratch/juno/jvl210002/bidir/results/2026-10-11/py_cpp_typed_v2/llama31-8b/repair_domain_pilot_s42/trials.jsonl"
       ]
     },
     "audited-core-cells": {
@@ -453,12 +469,28 @@
         "/scratch/juno/jvl210002/bidir/results/2026-10-10/fmt_det50/llama31-8b/repair_legacy_pilot_s17/trials.jsonl",
         "/scratch/juno/jvl210002/bidir/results/2026-10-10/fmt_det75/llama31-8b/repair_legacy_pilot_s17/followup_contrasts.json",
         "/scratch/juno/jvl210002/bidir/results/2026-10-10/fmt_det75/llama31-8b/repair_legacy_pilot_s17/trials.jsonl",
+        "/scratch/juno/jvl210002/bidir/results/2026-10-10/py_cpp_typed_v2/gemma3-12b/repair_domain_pilot_s1234/followup_contrasts.json",
+        "/scratch/juno/jvl210002/bidir/results/2026-10-10/py_cpp_typed_v2/gemma3-12b/repair_domain_pilot_s1234/trials.jsonl",
         "/scratch/juno/jvl210002/bidir/results/2026-10-10/py_cpp_typed_v2/gemma3-12b/repair_domain_pilot_s17/followup_contrasts.json",
         "/scratch/juno/jvl210002/bidir/results/2026-10-10/py_cpp_typed_v2/gemma3-12b/repair_domain_pilot_s17/trials.jsonl",
+        "/scratch/juno/jvl210002/bidir/results/2026-10-10/py_cpp_typed_v2/gemma3-12b/repair_domain_pilot_s42/followup_contrasts.json",
+        "/scratch/juno/jvl210002/bidir/results/2026-10-10/py_cpp_typed_v2/gemma3-12b/repair_domain_pilot_s42/trials.jsonl",
         "/scratch/juno/jvl210002/bidir/results/2026-10-10/py_cpp_typed_v2/llama31-8b/repair_domain_pilot_s17/followup_contrasts.json",
         "/scratch/juno/jvl210002/bidir/results/2026-10-10/py_cpp_typed_v2/llama31-8b/repair_domain_pilot_s17/trials.jsonl",
+        "/scratch/juno/jvl210002/bidir/results/2026-10-10/units_contract_v2/gemma3-12b/repair_domain_pilot_s1234/followup_contrasts.json",
+        "/scratch/juno/jvl210002/bidir/results/2026-10-10/units_contract_v2/gemma3-12b/repair_domain_pilot_s1234/trials.jsonl",
         "/scratch/juno/jvl210002/bidir/results/2026-10-10/units_contract_v2/gemma3-12b/repair_domain_pilot_s17/followup_contrasts.json",
-        "/scratch/juno/jvl210002/bidir/results/2026-10-10/units_contract_v2/gemma3-12b/repair_domain_pilot_s17/trials.jsonl"
+        "/scratch/juno/jvl210002/bidir/results/2026-10-10/units_contract_v2/gemma3-12b/repair_domain_pilot_s17/trials.jsonl",
+        "/scratch/juno/jvl210002/bidir/results/2026-10-10/units_contract_v2/gemma3-12b/repair_domain_pilot_s42/followup_contrasts.json",
+        "/scratch/juno/jvl210002/bidir/results/2026-10-10/units_contract_v2/gemma3-12b/repair_domain_pilot_s42/trials.jsonl",
+        "/scratch/juno/jvl210002/bidir/results/2026-10-11/fmt_contract_v2/llama31-8b/repair_domain_pilot_s1234/followup_contrasts.json",
+        "/scratch/juno/jvl210002/bidir/results/2026-10-11/fmt_contract_v2/llama31-8b/repair_domain_pilot_s1234/trials.jsonl",
+        "/scratch/juno/jvl210002/bidir/results/2026-10-11/fmt_contract_v2/llama31-8b/repair_domain_pilot_s42/followup_contrasts.json",
+        "/scratch/juno/jvl210002/bidir/results/2026-10-11/fmt_contract_v2/llama31-8b/repair_domain_pilot_s42/trials.jsonl",
+        "/scratch/juno/jvl210002/bidir/results/2026-10-11/py_cpp_typed_v2/llama31-8b/repair_domain_pilot_s1234/followup_contrasts.json",
+        "/scratch/juno/jvl210002/bidir/results/2026-10-11/py_cpp_typed_v2/llama31-8b/repair_domain_pilot_s1234/trials.jsonl",
+        "/scratch/juno/jvl210002/bidir/results/2026-10-11/py_cpp_typed_v2/llama31-8b/repair_domain_pilot_s42/followup_contrasts.json",
+        "/scratch/juno/jvl210002/bidir/results/2026-10-11/py_cpp_typed_v2/llama31-8b/repair_domain_pilot_s42/trials.jsonl"
       ]
     },
     "audited-fullft-repairs": {
@@ -683,12 +715,28 @@
         "/scratch/juno/jvl210002/bidir/results/2026-10-10/fmt_det50/llama31-8b/repair_legacy_pilot_s17/trials.jsonl",
         "/scratch/juno/jvl210002/bidir/results/2026-10-10/fmt_det75/llama31-8b/repair_legacy_pilot_s17/followup_contrasts.json",
         "/scratch/juno/jvl210002/bidir/results/2026-10-10/fmt_det75/llama31-8b/repair_legacy_pilot_s17/trials.jsonl",
+        "/scratch/juno/jvl210002/bidir/results/2026-10-10/py_cpp_typed_v2/gemma3-12b/repair_domain_pilot_s1234/followup_contrasts.json",
+        "/scratch/juno/jvl210002/bidir/results/2026-10-10/py_cpp_typed_v2/gemma3-12b/repair_domain_pilot_s1234/trials.jsonl",
         "/scratch/juno/jvl210002/bidir/results/2026-10-10/py_cpp_typed_v2/gemma3-12b/repair_domain_pilot_s17/followup_contrasts.json",
         "/scratch/juno/jvl210002/bidir/results/2026-10-10/py_cpp_typed_v2/gemma3-12b/repair_domain_pilot_s17/trials.jsonl",
+        "/scratch/juno/jvl210002/bidir/results/2026-10-10/py_cpp_typed_v2/gemma3-12b/repair_domain_pilot_s42/followup_contrasts.json",
+        "/scratch/juno/jvl210002/bidir/results/2026-10-10/py_cpp_typed_v2/gemma3-12b/repair_domain_pilot_s42/trials.jsonl",
         "/scratch/juno/jvl210002/bidir/results/2026-10-10/py_cpp_typed_v2/llama31-8b/repair_domain_pilot_s17/followup_contrasts.json",
         "/scratch/juno/jvl210002/bidir/results/2026-10-10/py_cpp_typed_v2/llama31-8b/repair_domain_pilot_s17/trials.jsonl",
+        "/scratch/juno/jvl210002/bidir/results/2026-10-10/units_contract_v2/gemma3-12b/repair_domain_pilot_s1234/followup_contrasts.json",
+        "/scratch/juno/jvl210002/bidir/results/2026-10-10/units_contract_v2/gemma3-12b/repair_domain_pilot_s1234/trials.jsonl",
         "/scratch/juno/jvl210002/bidir/results/2026-10-10/units_contract_v2/gemma3-12b/repair_domain_pilot_s17/followup_contrasts.json",
-        "/scratch/juno/jvl210002/bidir/results/2026-10-10/units_contract_v2/gemma3-12b/repair_domain_pilot_s17/trials.jsonl"
+        "/scratch/juno/jvl210002/bidir/results/2026-10-10/units_contract_v2/gemma3-12b/repair_domain_pilot_s17/trials.jsonl",
+        "/scratch/juno/jvl210002/bidir/results/2026-10-10/units_contract_v2/gemma3-12b/repair_domain_pilot_s42/followup_contrasts.json",
+        "/scratch/juno/jvl210002/bidir/results/2026-10-10/units_contract_v2/gemma3-12b/repair_domain_pilot_s42/trials.jsonl",
+        "/scratch/juno/jvl210002/bidir/results/2026-10-11/fmt_contract_v2/llama31-8b/repair_domain_pilot_s1234/followup_contrasts.json",
+        "/scratch/juno/jvl210002/bidir/results/2026-10-11/fmt_contract_v2/llama31-8b/repair_domain_pilot_s1234/trials.jsonl",
+        "/scratch/juno/jvl210002/bidir/results/2026-10-11/fmt_contract_v2/llama31-8b/repair_domain_pilot_s42/followup_contrasts.json",
+        "/scratch/juno/jvl210002/bidir/results/2026-10-11/fmt_contract_v2/llama31-8b/repair_domain_pilot_s42/trials.jsonl",
+        "/scratch/juno/jvl210002/bidir/results/2026-10-11/py_cpp_typed_v2/llama31-8b/repair_domain_pilot_s1234/followup_contrasts.json",
+        "/scratch/juno/jvl210002/bidir/results/2026-10-11/py_cpp_typed_v2/llama31-8b/repair_domain_pilot_s1234/trials.jsonl",
+        "/scratch/juno/jvl210002/bidir/results/2026-10-11/py_cpp_typed_v2/llama31-8b/repair_domain_pilot_s42/followup_contrasts.json",
+        "/scratch/juno/jvl210002/bidir/results/2026-10-11/py_cpp_typed_v2/llama31-8b/repair_domain_pilot_s42/trials.jsonl"
       ]
     },
     "contrastive-completed-cells": {
@@ -913,12 +961,28 @@
         "/scratch/juno/jvl210002/bidir/results/2026-10-10/fmt_det50/llama31-8b/repair_legacy_pilot_s17/trials.jsonl",
         "/scratch/juno/jvl210002/bidir/results/2026-10-10/fmt_det75/llama31-8b/repair_legacy_pilot_s17/followup_contrasts.json",
         "/scratch/juno/jvl210002/bidir/results/2026-10-10/fmt_det75/llama31-8b/repair_legacy_pilot_s17/trials.jsonl",
+        "/scratch/juno/jvl210002/bidir/results/2026-10-10/py_cpp_typed_v2/gemma3-12b/repair_domain_pilot_s1234/followup_contrasts.json",
+        "/scratch/juno/jvl210002/bidir/results/2026-10-10/py_cpp_typed_v2/gemma3-12b/repair_domain_pilot_s1234/trials.jsonl",
         "/scratch/juno/jvl210002/bidir/results/2026-10-10/py_cpp_typed_v2/gemma3-12b/repair_domain_pilot_s17/followup_contrasts.json",
         "/scratch/juno/jvl210002/bidir/results/2026-10-10/py_cpp_typed_v2/gemma3-12b/repair_domain_pilot_s17/trials.jsonl",
+        "/scratch/juno/jvl210002/bidir/results/2026-10-10/py_cpp_typed_v2/gemma3-12b/repair_domain_pilot_s42/followup_contrasts.json",
+        "/scratch/juno/jvl210002/bidir/results/2026-10-10/py_cpp_typed_v2/gemma3-12b/repair_domain_pilot_s42/trials.jsonl",
         "/scratch/juno/jvl210002/bidir/results/2026-10-10/py_cpp_typed_v2/llama31-8b/repair_domain_pilot_s17/followup_contrasts.json",
         "/scratch/juno/jvl210002/bidir/results/2026-10-10/py_cpp_typed_v2/llama31-8b/repair_domain_pilot_s17/trials.jsonl",
+        "/scratch/juno/jvl210002/bidir/results/2026-10-10/units_contract_v2/gemma3-12b/repair_domain_pilot_s1234/followup_contrasts.json",
+        "/scratch/juno/jvl210002/bidir/results/2026-10-10/units_contract_v2/gemma3-12b/repair_domain_pilot_s1234/trials.jsonl",
         "/scratch/juno/jvl210002/bidir/results/2026-10-10/units_contract_v2/gemma3-12b/repair_domain_pilot_s17/followup_contrasts.json",
-        "/scratch/juno/jvl210002/bidir/results/2026-10-10/units_contract_v2/gemma3-12b/repair_domain_pilot_s17/trials.jsonl"
+        "/scratch/juno/jvl210002/bidir/results/2026-10-10/units_contract_v2/gemma3-12b/repair_domain_pilot_s17/trials.jsonl",
+        "/scratch/juno/jvl210002/bidir/results/2026-10-10/units_contract_v2/gemma3-12b/repair_domain_pilot_s42/followup_contrasts.json",
+        "/scratch/juno/jvl210002/bidir/results/2026-10-10/units_contract_v2/gemma3-12b/repair_domain_pilot_s42/trials.jsonl",
+        "/scratch/juno/jvl210002/bidir/results/2026-10-11/fmt_contract_v2/llama31-8b/repair_domain_pilot_s1234/followup_contrasts.json",
+        "/scratch/juno/jvl210002/bidir/results/2026-10-11/fmt_contract_v2/llama31-8b/repair_domain_pilot_s1234/trials.jsonl",
+        "/scratch/juno/jvl210002/bidir/results/2026-10-11/fmt_contract_v2/llama31-8b/repair_domain_pilot_s42/followup_contrasts.json",
+        "/scratch/juno/jvl210002/bidir/results/2026-10-11/fmt_contract_v2/llama31-8b/repair_domain_pilot_s42/trials.jsonl",
+        "/scratch/juno/jvl210002/bidir/results/2026-10-11/py_cpp_typed_v2/llama31-8b/repair_domain_pilot_s1234/followup_contrasts.json",
+        "/scratch/juno/jvl210002/bidir/results/2026-10-11/py_cpp_typed_v2/llama31-8b/repair_domain_pilot_s1234/trials.jsonl",
+        "/scratch/juno/jvl210002/bidir/results/2026-10-11/py_cpp_typed_v2/llama31-8b/repair_domain_pilot_s42/followup_contrasts.json",
+        "/scratch/juno/jvl210002/bidir/results/2026-10-11/py_cpp_typed_v2/llama31-8b/repair_domain_pilot_s42/trials.jsonl"
       ]
     },
     "contrastive-planned-cells": {
@@ -1143,12 +1207,28 @@
         "/scratch/juno/jvl210002/bidir/results/2026-10-10/fmt_det50/llama31-8b/repair_legacy_pilot_s17/trials.jsonl",
         "/scratch/juno/jvl210002/bidir/results/2026-10-10/fmt_det75/llama31-8b/repair_legacy_pilot_s17/followup_contrasts.json",
         "/scratch/juno/jvl210002/bidir/results/2026-10-10/fmt_det75/llama31-8b/repair_legacy_pilot_s17/trials.jsonl",
+        "/scratch/juno/jvl210002/bidir/results/2026-10-10/py_cpp_typed_v2/gemma3-12b/repair_domain_pilot_s1234/followup_contrasts.json",
+        "/scratch/juno/jvl210002/bidir/results/2026-10-10/py_cpp_typed_v2/gemma3-12b/repair_domain_pilot_s1234/trials.jsonl",
         "/scratch/juno/jvl210002/bidir/results/2026-10-10/py_cpp_typed_v2/gemma3-12b/repair_domain_pilot_s17/followup_contrasts.json",
         "/scratch/juno/jvl210002/bidir/results/2026-10-10/py_cpp_typed_v2/gemma3-12b/repair_domain_pilot_s17/trials.jsonl",
+        "/scratch/juno/jvl210002/bidir/results/2026-10-10/py_cpp_typed_v2/gemma3-12b/repair_domain_pilot_s42/followup_contrasts.json",
+        "/scratch/juno/jvl210002/bidir/results/2026-10-10/py_cpp_typed_v2/gemma3-12b/repair_domain_pilot_s42/trials.jsonl",
         "/scratch/juno/jvl210002/bidir/results/2026-10-10/py_cpp_typed_v2/llama31-8b/repair_domain_pilot_s17/followup_contrasts.json",
         "/scratch/juno/jvl210002/bidir/results/2026-10-10/py_cpp_typed_v2/llama31-8b/repair_domain_pilot_s17/trials.jsonl",
+        "/scratch/juno/jvl210002/bidir/results/2026-10-10/units_contract_v2/gemma3-12b/repair_domain_pilot_s1234/followup_contrasts.json",
+        "/scratch/juno/jvl210002/bidir/results/2026-10-10/units_contract_v2/gemma3-12b/repair_domain_pilot_s1234/trials.jsonl",
         "/scratch/juno/jvl210002/bidir/results/2026-10-10/units_contract_v2/gemma3-12b/repair_domain_pilot_s17/followup_contrasts.json",
-        "/scratch/juno/jvl210002/bidir/results/2026-10-10/units_contract_v2/gemma3-12b/repair_domain_pilot_s17/trials.jsonl"
+        "/scratch/juno/jvl210002/bidir/results/2026-10-10/units_contract_v2/gemma3-12b/repair_domain_pilot_s17/trials.jsonl",
+        "/scratch/juno/jvl210002/bidir/results/2026-10-10/units_contract_v2/gemma3-12b/repair_domain_pilot_s42/followup_contrasts.json",
+        "/scratch/juno/jvl210002/bidir/results/2026-10-10/units_contract_v2/gemma3-12b/repair_domain_pilot_s42/trials.jsonl",
+        "/scratch/juno/jvl210002/bidir/results/2026-10-11/fmt_contract_v2/llama31-8b/repair_domain_pilot_s1234/followup_contrasts.json",
+        "/scratch/juno/jvl210002/bidir/results/2026-10-11/fmt_contract_v2/llama31-8b/repair_domain_pilot_s1234/trials.jsonl",
+        "/scratch/juno/jvl210002/bidir/results/2026-10-11/fmt_contract_v2/llama31-8b/repair_domain_pilot_s42/followup_contrasts.json",
+        "/scratch/juno/jvl210002/bidir/results/2026-10-11/fmt_contract_v2/llama31-8b/repair_domain_pilot_s42/trials.jsonl",
+        "/scratch/juno/jvl210002/bidir/results/2026-10-11/py_cpp_typed_v2/llama31-8b/repair_domain_pilot_s1234/followup_contrasts.json",
+        "/scratch/juno/jvl210002/bidir/results/2026-10-11/py_cpp_typed_v2/llama31-8b/repair_domain_pilot_s1234/trials.jsonl",
+        "/scratch/juno/jvl210002/bidir/results/2026-10-11/py_cpp_typed_v2/llama31-8b/repair_domain_pilot_s42/followup_contrasts.json",
+        "/scratch/juno/jvl210002/bidir/results/2026-10-11/py_cpp_typed_v2/llama31-8b/repair_domain_pilot_s42/trials.jsonl"
       ]
     },
     "core-collapse-cells": {
@@ -1373,12 +1453,28 @@
         "/scratch/juno/jvl210002/bidir/results/2026-10-10/fmt_det50/llama31-8b/repair_legacy_pilot_s17/trials.jsonl",
         "/scratch/juno/jvl210002/bidir/results/2026-10-10/fmt_det75/llama31-8b/repair_legacy_pilot_s17/followup_contrasts.json",
         "/scratch/juno/jvl210002/bidir/results/2026-10-10/fmt_det75/llama31-8b/repair_legacy_pilot_s17/trials.jsonl",
+        "/scratch/juno/jvl210002/bidir/results/2026-10-10/py_cpp_typed_v2/gemma3-12b/repair_domain_pilot_s1234/followup_contrasts.json",
+        "/scratch/juno/jvl210002/bidir/results/2026-10-10/py_cpp_typed_v2/gemma3-12b/repair_domain_pilot_s1234/trials.jsonl",
         "/scratch/juno/jvl210002/bidir/results/2026-10-10/py_cpp_typed_v2/gemma3-12b/repair_domain_pilot_s17/followup_contrasts.json",
         "/scratch/juno/jvl210002/bidir/results/2026-10-10/py_cpp_typed_v2/gemma3-12b/repair_domain_pilot_s17/trials.jsonl",
+        "/scratch/juno/jvl210002/bidir/results/2026-10-10/py_cpp_typed_v2/gemma3-12b/repair_domain_pilot_s42/followup_contrasts.json",
+        "/scratch/juno/jvl210002/bidir/results/2026-10-10/py_cpp_typed_v2/gemma3-12b/repair_domain_pilot_s42/trials.jsonl",
         "/scratch/juno/jvl210002/bidir/results/2026-10-10/py_cpp_typed_v2/llama31-8b/repair_domain_pilot_s17/followup_contrasts.json",
         "/scratch/juno/jvl210002/bidir/results/2026-10-10/py_cpp_typed_v2/llama31-8b/repair_domain_pilot_s17/trials.jsonl",
+        "/scratch/juno/jvl210002/bidir/results/2026-10-10/units_contract_v2/gemma3-12b/repair_domain_pilot_s1234/followup_contrasts.json",
+        "/scratch/juno/jvl210002/bidir/results/2026-10-10/units_contract_v2/gemma3-12b/repair_domain_pilot_s1234/trials.jsonl",
         "/scratch/juno/jvl210002/bidir/results/2026-10-10/units_contract_v2/gemma3-12b/repair_domain_pilot_s17/followup_contrasts.json",
-        "/scratch/juno/jvl210002/bidir/results/2026-10-10/units_contract_v2/gemma3-12b/repair_domain_pilot_s17/trials.jsonl"
+        "/scratch/juno/jvl210002/bidir/results/2026-10-10/units_contract_v2/gemma3-12b/repair_domain_pilot_s17/trials.jsonl",
+        "/scratch/juno/jvl210002/bidir/results/2026-10-10/units_contract_v2/gemma3-12b/repair_domain_pilot_s42/followup_contrasts.json",
+        "/scratch/juno/jvl210002/bidir/results/2026-10-10/units_contract_v2/gemma3-12b/repair_domain_pilot_s42/trials.jsonl",
+        "/scratch/juno/jvl210002/bidir/results/2026-10-11/fmt_contract_v2/llama31-8b/repair_domain_pilot_s1234/followup_contrasts.json",
+        "/scratch/juno/jvl210002/bidir/results/2026-10-11/fmt_contract_v2/llama31-8b/repair_domain_pilot_s1234/trials.jsonl",
+        "/scratch/juno/jvl210002/bidir/results/2026-10-11/fmt_contract_v2/llama31-8b/repair_domain_pilot_s42/followup_contrasts.json",
+        "/scratch/juno/jvl210002/bidir/results/2026-10-11/fmt_contract_v2/llama31-8b/repair_domain_pilot_s42/trials.jsonl",
+        "/scratch/juno/jvl210002/bidir/results/2026-10-11/py_cpp_typed_v2/llama31-8b/repair_domain_pilot_s1234/followup_contrasts.json",
+        "/scratch/juno/jvl210002/bidir/results/2026-10-11/py_cpp_typed_v2/llama31-8b/repair_domain_pilot_s1234/trials.jsonl",
+        "/scratch/juno/jvl210002/bidir/results/2026-10-11/py_cpp_typed_v2/llama31-8b/repair_domain_pilot_s42/followup_contrasts.json",
+        "/scratch/juno/jvl210002/bidir/results/2026-10-11/py_cpp_typed_v2/llama31-8b/repair_domain_pilot_s42/trials.jsonl"
       ]
     },
     "core-domain-count": {
@@ -1603,12 +1699,28 @@
         "/scratch/juno/jvl210002/bidir/results/2026-10-10/fmt_det50/llama31-8b/repair_legacy_pilot_s17/trials.jsonl",
         "/scratch/juno/jvl210002/bidir/results/2026-10-10/fmt_det75/llama31-8b/repair_legacy_pilot_s17/followup_contrasts.json",
         "/scratch/juno/jvl210002/bidir/results/2026-10-10/fmt_det75/llama31-8b/repair_legacy_pilot_s17/trials.jsonl",
+        "/scratch/juno/jvl210002/bidir/results/2026-10-10/py_cpp_typed_v2/gemma3-12b/repair_domain_pilot_s1234/followup_contrasts.json",
+        "/scratch/juno/jvl210002/bidir/results/2026-10-10/py_cpp_typed_v2/gemma3-12b/repair_domain_pilot_s1234/trials.jsonl",
         "/scratch/juno/jvl210002/bidir/results/2026-10-10/py_cpp_typed_v2/gemma3-12b/repair_domain_pilot_s17/followup_contrasts.json",
         "/scratch/juno/jvl210002/bidir/results/2026-10-10/py_cpp_typed_v2/gemma3-12b/repair_domain_pilot_s17/trials.jsonl",
+        "/scratch/juno/jvl210002/bidir/results/2026-10-10/py_cpp_typed_v2/gemma3-12b/repair_domain_pilot_s42/followup_contrasts.json",
+        "/scratch/juno/jvl210002/bidir/results/2026-10-10/py_cpp_typed_v2/gemma3-12b/repair_domain_pilot_s42/trials.jsonl",
         "/scratch/juno/jvl210002/bidir/results/2026-10-10/py_cpp_typed_v2/llama31-8b/repair_domain_pilot_s17/followup_contrasts.json",
         "/scratch/juno/jvl210002/bidir/results/2026-10-10/py_cpp_typed_v2/llama31-8b/repair_domain_pilot_s17/trials.jsonl",
+        "/scratch/juno/jvl210002/bidir/results/2026-10-10/units_contract_v2/gemma3-12b/repair_domain_pilot_s1234/followup_contrasts.json",
+        "/scratch/juno/jvl210002/bidir/results/2026-10-10/units_contract_v2/gemma3-12b/repair_domain_pilot_s1234/trials.jsonl",
         "/scratch/juno/jvl210002/bidir/results/2026-10-10/units_contract_v2/gemma3-12b/repair_domain_pilot_s17/followup_contrasts.json",
-        "/scratch/juno/jvl210002/bidir/results/2026-10-10/units_contract_v2/gemma3-12b/repair_domain_pilot_s17/trials.jsonl"
+        "/scratch/juno/jvl210002/bidir/results/2026-10-10/units_contract_v2/gemma3-12b/repair_domain_pilot_s17/trials.jsonl",
+        "/scratch/juno/jvl210002/bidir/results/2026-10-10/units_contract_v2/gemma3-12b/repair_domain_pilot_s42/followup_contrasts.json",
+        "/scratch/juno/jvl210002/bidir/results/2026-10-10/units_contract_v2/gemma3-12b/repair_domain_pilot_s42/trials.jsonl",
+        "/scratch/juno/jvl210002/bidir/results/2026-10-11/fmt_contract_v2/llama31-8b/repair_domain_pilot_s1234/followup_contrasts.json",
+        "/scratch/juno/jvl210002/bidir/results/2026-10-11/fmt_contract_v2/llama31-8b/repair_domain_pilot_s1234/trials.jsonl",
+        "/scratch/juno/jvl210002/bidir/results/2026-10-11/fmt_contract_v2/llama31-8b/repair_domain_pilot_s42/followup_contrasts.json",
+        "/scratch/juno/jvl210002/bidir/results/2026-10-11/fmt_contract_v2/llama31-8b/repair_domain_pilot_s42/trials.jsonl",
+        "/scratch/juno/jvl210002/bidir/results/2026-10-11/py_cpp_typed_v2/llama31-8b/repair_domain_pilot_s1234/followup_contrasts.json",
+        "/scratch/juno/jvl210002/bidir/results/2026-10-11/py_cpp_typed_v2/llama31-8b/repair_domain_pilot_s1234/trials.jsonl",
+        "/scratch/juno/jvl210002/bidir/results/2026-10-11/py_cpp_typed_v2/llama31-8b/repair_domain_pilot_s42/followup_contrasts.json",
+        "/scratch/juno/jvl210002/bidir/results/2026-10-11/py_cpp_typed_v2/llama31-8b/repair_domain_pilot_s42/trials.jsonl"
       ]
     },
     "failed-explicit-domain-gates": {
@@ -1833,12 +1945,28 @@
         "/scratch/juno/jvl210002/bidir/results/2026-10-10/fmt_det50/llama31-8b/repair_legacy_pilot_s17/trials.jsonl",
         "/scratch/juno/jvl210002/bidir/results/2026-10-10/fmt_det75/llama31-8b/repair_legacy_pilot_s17/followup_contrasts.json",
         "/scratch/juno/jvl210002/bidir/results/2026-10-10/fmt_det75/llama31-8b/repair_legacy_pilot_s17/trials.jsonl",
+        "/scratch/juno/jvl210002/bidir/results/2026-10-10/py_cpp_typed_v2/gemma3-12b/repair_domain_pilot_s1234/followup_contrasts.json",
+        "/scratch/juno/jvl210002/bidir/results/2026-10-10/py_cpp_typed_v2/gemma3-12b/repair_domain_pilot_s1234/trials.jsonl",
         "/scratch/juno/jvl210002/bidir/results/2026-10-10/py_cpp_typed_v2/gemma3-12b/repair_domain_pilot_s17/followup_contrasts.json",
         "/scratch/juno/jvl210002/bidir/results/2026-10-10/py_cpp_typed_v2/gemma3-12b/repair_domain_pilot_s17/trials.jsonl",
+        "/scratch/juno/jvl210002/bidir/results/2026-10-10/py_cpp_typed_v2/gemma3-12b/repair_domain_pilot_s42/followup_contrasts.json",
+        "/scratch/juno/jvl210002/bidir/results/2026-10-10/py_cpp_typed_v2/gemma3-12b/repair_domain_pilot_s42/trials.jsonl",
         "/scratch/juno/jvl210002/bidir/results/2026-10-10/py_cpp_typed_v2/llama31-8b/repair_domain_pilot_s17/followup_contrasts.json",
         "/scratch/juno/jvl210002/bidir/results/2026-10-10/py_cpp_typed_v2/llama31-8b/repair_domain_pilot_s17/trials.jsonl",
+        "/scratch/juno/jvl210002/bidir/results/2026-10-10/units_contract_v2/gemma3-12b/repair_domain_pilot_s1234/followup_contrasts.json",
+        "/scratch/juno/jvl210002/bidir/results/2026-10-10/units_contract_v2/gemma3-12b/repair_domain_pilot_s1234/trials.jsonl",
         "/scratch/juno/jvl210002/bidir/results/2026-10-10/units_contract_v2/gemma3-12b/repair_domain_pilot_s17/followup_contrasts.json",
-        "/scratch/juno/jvl210002/bidir/results/2026-10-10/units_contract_v2/gemma3-12b/repair_domain_pilot_s17/trials.jsonl"
+        "/scratch/juno/jvl210002/bidir/results/2026-10-10/units_contract_v2/gemma3-12b/repair_domain_pilot_s17/trials.jsonl",
+        "/scratch/juno/jvl210002/bidir/results/2026-10-10/units_contract_v2/gemma3-12b/repair_domain_pilot_s42/followup_contrasts.json",
+        "/scratch/juno/jvl210002/bidir/results/2026-10-10/units_contract_v2/gemma3-12b/repair_domain_pilot_s42/trials.jsonl",
+        "/scratch/juno/jvl210002/bidir/results/2026-10-11/fmt_contract_v2/llama31-8b/repair_domain_pilot_s1234/followup_contrasts.json",
+        "/scratch/juno/jvl210002/bidir/results/2026-10-11/fmt_contract_v2/llama31-8b/repair_domain_pilot_s1234/trials.jsonl",
+        "/scratch/juno/jvl210002/bidir/results/2026-10-11/fmt_contract_v2/llama31-8b/repair_domain_pilot_s42/followup_contrasts.json",
+        "/scratch/juno/jvl210002/bidir/results/2026-10-11/fmt_contract_v2/llama31-8b/repair_domain_pilot_s42/trials.jsonl",
+        "/scratch/juno/jvl210002/bidir/results/2026-10-11/py_cpp_typed_v2/llama31-8b/repair_domain_pilot_s1234/followup_contrasts.json",
+        "/scratch/juno/jvl210002/bidir/results/2026-10-11/py_cpp_typed_v2/llama31-8b/repair_domain_pilot_s1234/trials.jsonl",
+        "/scratch/juno/jvl210002/bidir/results/2026-10-11/py_cpp_typed_v2/llama31-8b/repair_domain_pilot_s42/followup_contrasts.json",
+        "/scratch/juno/jvl210002/bidir/results/2026-10-11/py_cpp_typed_v2/llama31-8b/repair_domain_pilot_s42/trials.jsonl"
       ]
     },
     "failed-new-domain-gates": {
@@ -2063,12 +2191,28 @@
         "/scratch/juno/jvl210002/bidir/results/2026-10-10/fmt_det50/llama31-8b/repair_legacy_pilot_s17/trials.jsonl",
         "/scratch/juno/jvl210002/bidir/results/2026-10-10/fmt_det75/llama31-8b/repair_legacy_pilot_s17/followup_contrasts.json",
         "/scratch/juno/jvl210002/bidir/results/2026-10-10/fmt_det75/llama31-8b/repair_legacy_pilot_s17/trials.jsonl",
+        "/scratch/juno/jvl210002/bidir/results/2026-10-10/py_cpp_typed_v2/gemma3-12b/repair_domain_pilot_s1234/followup_contrasts.json",
+        "/scratch/juno/jvl210002/bidir/results/2026-10-10/py_cpp_typed_v2/gemma3-12b/repair_domain_pilot_s1234/trials.jsonl",
         "/scratch/juno/jvl210002/bidir/results/2026-10-10/py_cpp_typed_v2/gemma3-12b/repair_domain_pilot_s17/followup_contrasts.json",
         "/scratch/juno/jvl210002/bidir/results/2026-10-10/py_cpp_typed_v2/gemma3-12b/repair_domain_pilot_s17/trials.jsonl",
+        "/scratch/juno/jvl210002/bidir/results/2026-10-10/py_cpp_typed_v2/gemma3-12b/repair_domain_pilot_s42/followup_contrasts.json",
+        "/scratch/juno/jvl210002/bidir/results/2026-10-10/py_cpp_typed_v2/gemma3-12b/repair_domain_pilot_s42/trials.jsonl",
         "/scratch/juno/jvl210002/bidir/results/2026-10-10/py_cpp_typed_v2/llama31-8b/repair_domain_pilot_s17/followup_contrasts.json",
         "/scratch/juno/jvl210002/bidir/results/2026-10-10/py_cpp_typed_v2/llama31-8b/repair_domain_pilot_s17/trials.jsonl",
+        "/scratch/juno/jvl210002/bidir/results/2026-10-10/units_contract_v2/gemma3-12b/repair_domain_pilot_s1234/followup_contrasts.json",
+        "/scratch/juno/jvl210002/bidir/results/2026-10-10/units_contract_v2/gemma3-12b/repair_domain_pilot_s1234/trials.jsonl",
         "/scratch/juno/jvl210002/bidir/results/2026-10-10/units_contract_v2/gemma3-12b/repair_domain_pilot_s17/followup_contrasts.json",
-        "/scratch/juno/jvl210002/bidir/results/2026-10-10/units_contract_v2/gemma3-12b/repair_domain_pilot_s17/trials.jsonl"
+        "/scratch/juno/jvl210002/bidir/results/2026-10-10/units_contract_v2/gemma3-12b/repair_domain_pilot_s17/trials.jsonl",
+        "/scratch/juno/jvl210002/bidir/results/2026-10-10/units_contract_v2/gemma3-12b/repair_domain_pilot_s42/followup_contrasts.json",
+        "/scratch/juno/jvl210002/bidir/results/2026-10-10/units_contract_v2/gemma3-12b/repair_domain_pilot_s42/trials.jsonl",
+        "/scratch/juno/jvl210002/bidir/results/2026-10-11/fmt_contract_v2/llama31-8b/repair_domain_pilot_s1234/followup_contrasts.json",
+        "/scratch/juno/jvl210002/bidir/results/2026-10-11/fmt_contract_v2/llama31-8b/repair_domain_pilot_s1234/trials.jsonl",
+        "/scratch/juno/jvl210002/bidir/results/2026-10-11/fmt_contract_v2/llama31-8b/repair_domain_pilot_s42/followup_contrasts.json",
+        "/scratch/juno/jvl210002/bidir/results/2026-10-11/fmt_contract_v2/llama31-8b/repair_domain_pilot_s42/trials.jsonl",
+        "/scratch/juno/jvl210002/bidir/results/2026-10-11/py_cpp_typed_v2/llama31-8b/repair_domain_pilot_s1234/followup_contrasts.json",
+        "/scratch/juno/jvl210002/bidir/results/2026-10-11/py_cpp_typed_v2/llama31-8b/repair_domain_pilot_s1234/trials.jsonl",
+        "/scratch/juno/jvl210002/bidir/results/2026-10-11/py_cpp_typed_v2/llama31-8b/repair_domain_pilot_s42/followup_contrasts.json",
+        "/scratch/juno/jvl210002/bidir/results/2026-10-11/py_cpp_typed_v2/llama31-8b/repair_domain_pilot_s42/trials.jsonl"
       ]
     },
     "fullft-completed-cells": {
@@ -2293,12 +2437,28 @@
         "/scratch/juno/jvl210002/bidir/results/2026-10-10/fmt_det50/llama31-8b/repair_legacy_pilot_s17/trials.jsonl",
         "/scratch/juno/jvl210002/bidir/results/2026-10-10/fmt_det75/llama31-8b/repair_legacy_pilot_s17/followup_contrasts.json",
         "/scratch/juno/jvl210002/bidir/results/2026-10-10/fmt_det75/llama31-8b/repair_legacy_pilot_s17/trials.jsonl",
+        "/scratch/juno/jvl210002/bidir/results/2026-10-10/py_cpp_typed_v2/gemma3-12b/repair_domain_pilot_s1234/followup_contrasts.json",
+        "/scratch/juno/jvl210002/bidir/results/2026-10-10/py_cpp_typed_v2/gemma3-12b/repair_domain_pilot_s1234/trials.jsonl",
         "/scratch/juno/jvl210002/bidir/results/2026-10-10/py_cpp_typed_v2/gemma3-12b/repair_domain_pilot_s17/followup_contrasts.json",
         "/scratch/juno/jvl210002/bidir/results/2026-10-10/py_cpp_typed_v2/gemma3-12b/repair_domain_pilot_s17/trials.jsonl",
+        "/scratch/juno/jvl210002/bidir/results/2026-10-10/py_cpp_typed_v2/gemma3-12b/repair_domain_pilot_s42/followup_contrasts.json",
+        "/scratch/juno/jvl210002/bidir/results/2026-10-10/py_cpp_typed_v2/gemma3-12b/repair_domain_pilot_s42/trials.jsonl",
         "/scratch/juno/jvl210002/bidir/results/2026-10-10/py_cpp_typed_v2/llama31-8b/repair_domain_pilot_s17/followup_contrasts.json",
         "/scratch/juno/jvl210002/bidir/results/2026-10-10/py_cpp_typed_v2/llama31-8b/repair_domain_pilot_s17/trials.jsonl",
+        "/scratch/juno/jvl210002/bidir/results/2026-10-10/units_contract_v2/gemma3-12b/repair_domain_pilot_s1234/followup_contrasts.json",
+        "/scratch/juno/jvl210002/bidir/results/2026-10-10/units_contract_v2/gemma3-12b/repair_domain_pilot_s1234/trials.jsonl",
         "/scratch/juno/jvl210002/bidir/results/2026-10-10/units_contract_v2/gemma3-12b/repair_domain_pilot_s17/followup_contrasts.json",
-        "/scratch/juno/jvl210002/bidir/results/2026-10-10/units_contract_v2/gemma3-12b/repair_domain_pilot_s17/trials.jsonl"
+        "/scratch/juno/jvl210002/bidir/results/2026-10-10/units_contract_v2/gemma3-12b/repair_domain_pilot_s17/trials.jsonl",
+        "/scratch/juno/jvl210002/bidir/results/2026-10-10/units_contract_v2/gemma3-12b/repair_domain_pilot_s42/followup_contrasts.json",
+        "/scratch/juno/jvl210002/bidir/results/2026-10-10/units_contract_v2/gemma3-12b/repair_domain_pilot_s42/trials.jsonl",
+        "/scratch/juno/jvl210002/bidir/results/2026-10-11/fmt_contract_v2/llama31-8b/repair_domain_pilot_s1234/followup_contrasts.json",
+        "/scratch/juno/jvl210002/bidir/results/2026-10-11/fmt_contract_v2/llama31-8b/repair_domain_pilot_s1234/trials.jsonl",
+        "/scratch/juno/jvl210002/bidir/results/2026-10-11/fmt_contract_v2/llama31-8b/repair_domain_pilot_s42/followup_contrasts.json",
+        "/scratch/juno/jvl210002/bidir/results/2026-10-11/fmt_contract_v2/llama31-8b/repair_domain_pilot_s42/trials.jsonl",
+        "/scratch/juno/jvl210002/bidir/results/2026-10-11/py_cpp_typed_v2/llama31-8b/repair_domain_pilot_s1234/followup_contrasts.json",
+        "/scratch/juno/jvl210002/bidir/results/2026-10-11/py_cpp_typed_v2/llama31-8b/repair_domain_pilot_s1234/trials.jsonl",
+        "/scratch/juno/jvl210002/bidir/results/2026-10-11/py_cpp_typed_v2/llama31-8b/repair_domain_pilot_s42/followup_contrasts.json",
+        "/scratch/juno/jvl210002/bidir/results/2026-10-11/py_cpp_typed_v2/llama31-8b/repair_domain_pilot_s42/trials.jsonl"
       ]
     },
     "fullft-planned-cells": {
@@ -2523,12 +2683,116 @@
         "/scratch/juno/jvl210002/bidir/results/2026-10-10/fmt_det50/llama31-8b/repair_legacy_pilot_s17/trials.jsonl",
         "/scratch/juno/jvl210002/bidir/results/2026-10-10/fmt_det75/llama31-8b/repair_legacy_pilot_s17/followup_contrasts.json",
         "/scratch/juno/jvl210002/bidir/results/2026-10-10/fmt_det75/llama31-8b/repair_legacy_pilot_s17/trials.jsonl",
+        "/scratch/juno/jvl210002/bidir/results/2026-10-10/py_cpp_typed_v2/gemma3-12b/repair_domain_pilot_s1234/followup_contrasts.json",
+        "/scratch/juno/jvl210002/bidir/results/2026-10-10/py_cpp_typed_v2/gemma3-12b/repair_domain_pilot_s1234/trials.jsonl",
         "/scratch/juno/jvl210002/bidir/results/2026-10-10/py_cpp_typed_v2/gemma3-12b/repair_domain_pilot_s17/followup_contrasts.json",
         "/scratch/juno/jvl210002/bidir/results/2026-10-10/py_cpp_typed_v2/gemma3-12b/repair_domain_pilot_s17/trials.jsonl",
+        "/scratch/juno/jvl210002/bidir/results/2026-10-10/py_cpp_typed_v2/gemma3-12b/repair_domain_pilot_s42/followup_contrasts.json",
+        "/scratch/juno/jvl210002/bidir/results/2026-10-10/py_cpp_typed_v2/gemma3-12b/repair_domain_pilot_s42/trials.jsonl",
         "/scratch/juno/jvl210002/bidir/results/2026-10-10/py_cpp_typed_v2/llama31-8b/repair_domain_pilot_s17/followup_contrasts.json",
         "/scratch/juno/jvl210002/bidir/results/2026-10-10/py_cpp_typed_v2/llama31-8b/repair_domain_pilot_s17/trials.jsonl",
+        "/scratch/juno/jvl210002/bidir/results/2026-10-10/units_contract_v2/gemma3-12b/repair_domain_pilot_s1234/followup_contrasts.json",
+        "/scratch/juno/jvl210002/bidir/results/2026-10-10/units_contract_v2/gemma3-12b/repair_domain_pilot_s1234/trials.jsonl",
         "/scratch/juno/jvl210002/bidir/results/2026-10-10/units_contract_v2/gemma3-12b/repair_domain_pilot_s17/followup_contrasts.json",
-        "/scratch/juno/jvl210002/bidir/results/2026-10-10/units_contract_v2/gemma3-12b/repair_domain_pilot_s17/trials.jsonl"
+        "/scratch/juno/jvl210002/bidir/results/2026-10-10/units_contract_v2/gemma3-12b/repair_domain_pilot_s17/trials.jsonl",
+        "/scratch/juno/jvl210002/bidir/results/2026-10-10/units_contract_v2/gemma3-12b/repair_domain_pilot_s42/followup_contrasts.json",
+        "/scratch/juno/jvl210002/bidir/results/2026-10-10/units_contract_v2/gemma3-12b/repair_domain_pilot_s42/trials.jsonl",
+        "/scratch/juno/jvl210002/bidir/results/2026-10-11/fmt_contract_v2/llama31-8b/repair_domain_pilot_s1234/followup_contrasts.json",
+        "/scratch/juno/jvl210002/bidir/results/2026-10-11/fmt_contract_v2/llama31-8b/repair_domain_pilot_s1234/trials.jsonl",
+        "/scratch/juno/jvl210002/bidir/results/2026-10-11/fmt_contract_v2/llama31-8b/repair_domain_pilot_s42/followup_contrasts.json",
+        "/scratch/juno/jvl210002/bidir/results/2026-10-11/fmt_contract_v2/llama31-8b/repair_domain_pilot_s42/trials.jsonl",
+        "/scratch/juno/jvl210002/bidir/results/2026-10-11/py_cpp_typed_v2/llama31-8b/repair_domain_pilot_s1234/followup_contrasts.json",
+        "/scratch/juno/jvl210002/bidir/results/2026-10-11/py_cpp_typed_v2/llama31-8b/repair_domain_pilot_s1234/trials.jsonl",
+        "/scratch/juno/jvl210002/bidir/results/2026-10-11/py_cpp_typed_v2/llama31-8b/repair_domain_pilot_s42/followup_contrasts.json",
+        "/scratch/juno/jvl210002/bidir/results/2026-10-11/py_cpp_typed_v2/llama31-8b/repair_domain_pilot_s42/trials.jsonl"
+      ]
+    },
+    "main-code-mix1-backward": {
+      "value": "55.8",
+      "sources": [
+        "/work/jvl210002/migration/bidirectional/paper/MAIN_RESULTS.json",
+        "/scratch/juno/jvl210002/bidir/results/2026-09-17/code/llama32-3b/small_s17/trials.jsonl",
+        "/scratch/juno/jvl210002/bidir/results/2026-09-17/code/llama32-3b/small_s17/summary.json"
+      ]
+    },
+    "main-code-mix1-forward": {
+      "value": "82.8",
+      "sources": [
+        "/work/jvl210002/migration/bidirectional/paper/MAIN_RESULTS.json",
+        "/scratch/juno/jvl210002/bidir/results/2026-09-17/code/llama32-3b/small_s17/trials.jsonl",
+        "/scratch/juno/jvl210002/bidir/results/2026-09-17/code/llama32-3b/small_s17/summary.json"
+      ]
+    },
+    "main-code-sft-backward": {
+      "value": "3.8",
+      "sources": [
+        "/work/jvl210002/migration/bidirectional/paper/MAIN_RESULTS.json",
+        "/scratch/juno/jvl210002/bidir/results/2026-09-17/code/llama32-3b/small_s17/trials.jsonl",
+        "/scratch/juno/jvl210002/bidir/results/2026-09-17/code/llama32-3b/small_s17/summary.json"
+      ]
+    },
+    "main-code-sft-forward": {
+      "value": "82.4",
+      "sources": [
+        "/work/jvl210002/migration/bidirectional/paper/MAIN_RESULTS.json",
+        "/scratch/juno/jvl210002/bidir/results/2026-09-17/code/llama32-3b/small_s17/trials.jsonl",
+        "/scratch/juno/jvl210002/bidir/results/2026-09-17/code/llama32-3b/small_s17/summary.json"
+      ]
+    },
+    "main-fmt-base-backward": {
+      "value": "51.1",
+      "sources": [
+        "/work/jvl210002/migration/bidirectional/paper/MAIN_RESULTS.json",
+        "/scratch/juno/jvl210002/bidir/results/2026-09-17/fmt/llama32-3b/small_s17/trials.jsonl",
+        "/scratch/juno/jvl210002/bidir/results/2026-09-17/fmt/llama32-3b/small_s17/summary.json"
+      ]
+    },
+    "main-fmt-base-forward": {
+      "value": "60.2",
+      "sources": [
+        "/work/jvl210002/migration/bidirectional/paper/MAIN_RESULTS.json",
+        "/scratch/juno/jvl210002/bidir/results/2026-09-17/fmt/llama32-3b/small_s17/trials.jsonl",
+        "/scratch/juno/jvl210002/bidir/results/2026-09-17/fmt/llama32-3b/small_s17/summary.json"
+      ]
+    },
+    "main-fmt-mix1-backward": {
+      "value": "90.2",
+      "sources": [
+        "/work/jvl210002/migration/bidirectional/paper/MAIN_RESULTS.json",
+        "/scratch/juno/jvl210002/bidir/results/2026-09-17/fmt/llama32-3b/small_s17/trials.jsonl",
+        "/scratch/juno/jvl210002/bidir/results/2026-09-17/fmt/llama32-3b/small_s17/summary.json"
+      ]
+    },
+    "main-fmt-mix1-forward": {
+      "value": "99.6",
+      "sources": [
+        "/work/jvl210002/migration/bidirectional/paper/MAIN_RESULTS.json",
+        "/scratch/juno/jvl210002/bidir/results/2026-09-17/fmt/llama32-3b/small_s17/trials.jsonl",
+        "/scratch/juno/jvl210002/bidir/results/2026-09-17/fmt/llama32-3b/small_s17/summary.json"
+      ]
+    },
+    "main-fmt-mix5-backward": {
+      "value": "96.2",
+      "sources": [
+        "/work/jvl210002/migration/bidirectional/paper/MAIN_RESULTS.json",
+        "/scratch/juno/jvl210002/bidir/results/2026-09-17/fmt/llama32-3b/small_s17/trials.jsonl",
+        "/scratch/juno/jvl210002/bidir/results/2026-09-17/fmt/llama32-3b/small_s17/summary.json"
+      ]
+    },
+    "main-fmt-sft-backward": {
+      "value": "0.4",
+      "sources": [
+        "/work/jvl210002/migration/bidirectional/paper/MAIN_RESULTS.json",
+        "/scratch/juno/jvl210002/bidir/results/2026-09-17/fmt/llama32-3b/small_s17/trials.jsonl",
+        "/scratch/juno/jvl210002/bidir/results/2026-09-17/fmt/llama32-3b/small_s17/summary.json"
+      ]
+    },
+    "main-fmt-sft-forward": {
+      "value": "99.7",
+      "sources": [
+        "/work/jvl210002/migration/bidirectional/paper/MAIN_RESULTS.json",
+        "/scratch/juno/jvl210002/bidir/results/2026-09-17/fmt/llama32-3b/small_s17/trials.jsonl",
+        "/scratch/juno/jvl210002/bidir/results/2026-09-17/fmt/llama32-3b/small_s17/summary.json"
       ]
     }
   },

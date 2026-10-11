@@ -38,7 +38,8 @@ def redact(value):
 
 def selected_paths():
     paths=set()
-    for name,key in [('EVIDENCE_SNAPSHOT.json','sources'),('PUBLICATION_ANALYSIS.json','source_sha256')]:
+    for name,key in [('EVIDENCE_SNAPSHOT.json','sources'),('PUBLICATION_ANALYSIS.json','source_sha256'),
+                     ('MAIN_RESULTS.json','source_sha256')]:
         file=ROOT/'paper'/name
         if file.exists():
             document=json.loads(file.read_text());paths.add(file)
@@ -56,7 +57,7 @@ def selected_paths():
                  'env/extras.txt','paper/main.tex','paper/planned_evaluations.tex','paper/refs.bib',
                  'paper/numbers.tex','paper/numbers_provenance.json','paper/check_arr.py','paper/Makefile',
                  'paper/acl.sty','paper/acl_natbib.bst','paper/page_limit.txt','paper/evidence_snapshot.tex',
-                 'paper/PROVENANCE.json','paper/PUBLICATION_PROVENANCE.json',
+                 'paper/PROVENANCE.json','paper/PUBLICATION_PROVENANCE.json','paper/MAIN_RESULTS.json',
                  'paper/MECHANISM_REVIEW.json','paper/MECHANISM_DIAGNOSTICS.json','paper/MECHANISM_SETUP.json','paper/MECHANISM_TEXT_GRAPH_REPAIR.json',
                  'runs/feeder/paper_finish_preflight.json','runs/feeder/paper_finish_status.json',
                  'runs/feeder/h100_overflow_admission.json','runs/feeder/repair_backfill_admission.json']:
