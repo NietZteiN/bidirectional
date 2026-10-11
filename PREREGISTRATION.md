@@ -2120,3 +2120,21 @@ production reservations and H100/H200 eligibility after the four seed17 full run
 completed in under ten minutes, including Gemma12B on H100. Layer jobs retain original
 validated partitions/bounds. Samples, controls and checkpoints are unchanged; pending
 updates preserve their original Slurm specifications in background_resume.json.
+
+
+## Amendment 56 — October 10, 2026: pause experiments and complete the manuscript
+
+User instruction: “pause all current experiments and fill in the blank — that's your priority.”
+This supersedes Amendment 55's active background admission until the user requests resume.
+The persistent controller STOP sentinel disables automatic launches across CPU-host renewals.
+All current project experiment jobs are held in Slurm; running batch jobs are requeued into
+held state to release GPUs while retaining job IDs, dependencies and saved outputs. Completed
+adapters, trials and manifests remain intact; an unfinished training arm can require restarting
+on resume. The shared CPU host and its renewal are retained for analysis and writing.
+
+The immediate priority is completing unfinished manuscript interpretation/reporting from
+existing proof-valid results. CPU analysis, evidence collection, drafting, PDF checks and local
+artifact verification remain authorized. No new experimental measurements, changed criteria,
+favorable-outcome selection or invented values are introduced. Unmeasured/failed cells remain
+explicit. The operational pause receipt is `runs/feeder/experiment_pause.json`; the resumption
+procedure and the current manuscript priority are documented in `docs/EXPERIMENT_PAUSE.md`.

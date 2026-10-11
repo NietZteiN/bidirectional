@@ -1,0 +1,633 @@
+{
+  "generator_sha256": "bcc8f685b2c16330d3cd753952987fa565b4016aeb5f91a7ca3ca7d83dad5f0c",
+  "revised_domain_campaigns": [
+    {
+      "domain": "fmt_contract_v2",
+      "model": "llama31-8b",
+      "seed": 17,
+      "run": "/scratch/juno/jvl210002/bidir/results/2026-10-10/fmt_contract_v2/llama31-8b/repair_domain_pilot_s17",
+      "means": {
+        "mix50": {
+          "forward": 0.999,
+          "reverse": 1.0
+        },
+        "replay": {
+          "forward": 0.999,
+          "reverse": 0.548
+        },
+        "rev": {
+          "forward": 0.0,
+          "reverse": 0.999
+        },
+        "sft": {
+          "forward": 0.999,
+          "reverse": 0.63
+        },
+        "base": {
+          "forward": 0.344,
+          "reverse": 0.6
+        }
+      }
+    },
+    {
+      "domain": "fmt_contract_v2",
+      "model": "llama31-8b",
+      "seed": 42,
+      "run": "/scratch/juno/jvl210002/bidir/results/2026-10-11/fmt_contract_v2/llama31-8b/repair_domain_pilot_s42",
+      "means": {
+        "mix50": {
+          "forward": 0.999,
+          "reverse": 1.0
+        },
+        "replay": {
+          "forward": 0.997,
+          "reverse": 0.165
+        },
+        "rev": {
+          "forward": 0.001,
+          "reverse": 0.999
+        },
+        "sft": {
+          "forward": 0.999,
+          "reverse": 0.616
+        },
+        "base": {
+          "forward": 0.349,
+          "reverse": 0.609
+        }
+      }
+    },
+    {
+      "domain": "fmt_contract_v2",
+      "model": "llama31-8b",
+      "seed": 1234,
+      "run": "/scratch/juno/jvl210002/bidir/results/2026-10-11/fmt_contract_v2/llama31-8b/repair_domain_pilot_s1234",
+      "means": {
+        "mix50": {
+          "forward": 1.0,
+          "reverse": 1.0
+        },
+        "replay": {
+          "forward": 0.997,
+          "reverse": 0.157
+        },
+        "rev": {
+          "forward": 0.011,
+          "reverse": 0.999
+        },
+        "sft": {
+          "forward": 0.999,
+          "reverse": 0.666
+        },
+        "base": {
+          "forward": 0.344,
+          "reverse": 0.6
+        }
+      }
+    },
+    {
+      "domain": "units_contract_v2",
+      "model": "gemma3-12b",
+      "seed": 17,
+      "run": "/scratch/juno/jvl210002/bidir/results/2026-10-10/units_contract_v2/gemma3-12b/repair_domain_pilot_s17",
+      "means": {
+        "mix50": {
+          "forward": 0.951,
+          "reverse": 0.899
+        },
+        "replay": {
+          "forward": 0.922,
+          "reverse": 0.65
+        },
+        "rev": {
+          "forward": 0.387,
+          "reverse": 0.957
+        },
+        "sft": {
+          "forward": 0.97,
+          "reverse": 0.703
+        },
+        "base": {
+          "forward": 0.399,
+          "reverse": 0.469
+        }
+      }
+    },
+    {
+      "domain": "units_contract_v2",
+      "model": "gemma3-12b",
+      "seed": 42,
+      "run": "/scratch/juno/jvl210002/bidir/results/2026-10-10/units_contract_v2/gemma3-12b/repair_domain_pilot_s42",
+      "means": {
+        "mix50": {
+          "forward": 0.938,
+          "reverse": 0.88
+        },
+        "replay": {
+          "forward": 0.929,
+          "reverse": 0.73
+        },
+        "rev": {
+          "forward": 0.272,
+          "reverse": 0.956
+        },
+        "sft": {
+          "forward": 0.973,
+          "reverse": 0.733
+        },
+        "base": {
+          "forward": 0.399,
+          "reverse": 0.469
+        }
+      }
+    },
+    {
+      "domain": "units_contract_v2",
+      "model": "gemma3-12b",
+      "seed": 1234,
+      "run": "/scratch/juno/jvl210002/bidir/results/2026-10-10/units_contract_v2/gemma3-12b/repair_domain_pilot_s1234",
+      "means": {
+        "mix50": {
+          "forward": 0.944,
+          "reverse": 0.886
+        },
+        "replay": {
+          "forward": 0.944,
+          "reverse": 0.704
+        },
+        "rev": {
+          "forward": 0.091,
+          "reverse": 0.959
+        },
+        "sft": {
+          "forward": 0.972,
+          "reverse": 0.712
+        },
+        "base": {
+          "forward": 0.399,
+          "reverse": 0.469
+        }
+      }
+    },
+    {
+      "domain": "py_cpp_typed_v2",
+      "model": "gemma3-12b",
+      "seed": 17,
+      "run": "/scratch/juno/jvl210002/bidir/results/2026-10-10/py_cpp_typed_v2/gemma3-12b/repair_domain_pilot_s17",
+      "means": {
+        "mix50": {
+          "forward": 1.0,
+          "reverse": 1.0
+        },
+        "replay": {
+          "forward": 0.092,
+          "reverse": 0.0
+        },
+        "rev": {
+          "forward": 0.0,
+          "reverse": 1.0
+        },
+        "sft": {
+          "forward": 1.0,
+          "reverse": 0.35
+        },
+        "base": {
+          "forward": 0.862,
+          "reverse": 0.95
+        }
+      }
+    },
+    {
+      "domain": "py_cpp_typed_v2",
+      "model": "gemma3-12b",
+      "seed": 42,
+      "run": "/scratch/juno/jvl210002/bidir/results/2026-10-10/py_cpp_typed_v2/gemma3-12b/repair_domain_pilot_s42",
+      "means": {
+        "mix50": {
+          "forward": 0.85,
+          "reverse": 1.0
+        },
+        "replay": {
+          "forward": 0.361,
+          "reverse": 0.305
+        },
+        "rev": {
+          "forward": 0.0,
+          "reverse": 1.0
+        },
+        "sft": {
+          "forward": 1.0,
+          "reverse": 0.727
+        },
+        "base": {
+          "forward": 0.862,
+          "reverse": 0.95
+        }
+      }
+    },
+    {
+      "domain": "py_cpp_typed_v2",
+      "model": "gemma3-12b",
+      "seed": 1234,
+      "run": "/scratch/juno/jvl210002/bidir/results/2026-10-10/py_cpp_typed_v2/gemma3-12b/repair_domain_pilot_s1234",
+      "means": {
+        "mix50": {
+          "forward": 0.735,
+          "reverse": 1.0
+        },
+        "replay": {
+          "forward": 0.023,
+          "reverse": 0.0
+        },
+        "rev": {
+          "forward": 0.0,
+          "reverse": 1.0
+        },
+        "sft": {
+          "forward": 0.748,
+          "reverse": 0.558
+        },
+        "base": {
+          "forward": 0.862,
+          "reverse": 0.95
+        }
+      }
+    },
+    {
+      "domain": "py_cpp_typed_v2",
+      "model": "llama31-8b",
+      "seed": 17,
+      "run": "/scratch/juno/jvl210002/bidir/results/2026-10-10/py_cpp_typed_v2/llama31-8b/repair_domain_pilot_s17",
+      "means": {
+        "mix50": {
+          "forward": 1.0,
+          "reverse": 0.484
+        },
+        "replay": {
+          "forward": 0.996,
+          "reverse": 0.994
+        },
+        "rev": {
+          "forward": 0.0,
+          "reverse": 0.0
+        },
+        "sft": {
+          "forward": 1.0,
+          "reverse": 0.0
+        },
+        "base": {
+          "forward": 0.842,
+          "reverse": 1.0
+        }
+      }
+    },
+    {
+      "domain": "py_cpp_typed_v2",
+      "model": "llama31-8b",
+      "seed": 42,
+      "run": "/scratch/juno/jvl210002/bidir/results/2026-10-11/py_cpp_typed_v2/llama31-8b/repair_domain_pilot_s42",
+      "means": {
+        "mix50": {
+          "forward": 0.018,
+          "reverse": 0.0
+        },
+        "replay": {
+          "forward": 0.999,
+          "reverse": 0.994
+        },
+        "rev": {
+          "forward": 0.0,
+          "reverse": 0.0
+        },
+        "sft": {
+          "forward": 1.0,
+          "reverse": 0.0
+        },
+        "base": {
+          "forward": 0.859,
+          "reverse": 1.0
+        }
+      }
+    },
+    {
+      "domain": "py_cpp_typed_v2",
+      "model": "llama31-8b",
+      "seed": 1234,
+      "run": "/scratch/juno/jvl210002/bidir/results/2026-10-11/py_cpp_typed_v2/llama31-8b/repair_domain_pilot_s1234",
+      "means": {
+        "mix50": {
+          "forward": 1.0,
+          "reverse": 0.001
+        },
+        "replay": {
+          "forward": 0.959,
+          "reverse": 0.978
+        },
+        "rev": {
+          "forward": 0.0,
+          "reverse": 0.0
+        },
+        "sft": {
+          "forward": 1.0,
+          "reverse": 0.0
+        },
+        "base": {
+          "forward": 0.859,
+          "reverse": 1.0
+        }
+      }
+    }
+  ],
+  "reference_methods": [
+    {
+      "domain": "mt_de-en",
+      "built_counts": {
+        "train": 6500,
+        "val": 500,
+        "test": 1012
+      },
+      "recorded_training_rows": 6500,
+      "evaluated_pairs": 1012,
+      "steps": 306,
+      "per_device_batch": 16,
+      "gradient_accumulation": 4
+    },
+    {
+      "domain": "mt_en-de",
+      "built_counts": {
+        "train": 6500,
+        "val": 500,
+        "test": 1012
+      },
+      "recorded_training_rows": 6500,
+      "evaluated_pairs": 1012,
+      "steps": 306,
+      "per_device_batch": 4,
+      "gradient_accumulation": 16
+    },
+    {
+      "domain": "mt_en-zh",
+      "built_counts": {
+        "train": 6500,
+        "val": 500,
+        "test": 1012
+      },
+      "recorded_training_rows": 6500,
+      "evaluated_pairs": 1012,
+      "steps": 306,
+      "per_device_batch": 4,
+      "gradient_accumulation": 16
+    },
+    {
+      "domain": "mt_zh-en",
+      "built_counts": {
+        "train": 6500,
+        "val": 500,
+        "test": 1012
+      },
+      "recorded_training_rows": 6500,
+      "evaluated_pairs": 1012,
+      "steps": 306,
+      "per_device_batch": 4,
+      "gradient_accumulation": 16
+    },
+    {
+      "domain": "code",
+      "built_counts": {
+        "train": 6500,
+        "val": 500,
+        "test": 2060
+      },
+      "recorded_training_rows": 6499,
+      "evaluated_pairs": 2060,
+      "steps": 306,
+      "per_device_batch": 4,
+      "gradient_accumulation": 16
+    },
+    {
+      "domain": "sql",
+      "built_counts": {
+        "train": 6499,
+        "val": 500,
+        "test": 1034
+      },
+      "recorded_training_rows": 6499,
+      "evaluated_pairs": 1034,
+      "steps": 306,
+      "per_device_batch": 16,
+      "gradient_accumulation": 4
+    },
+    {
+      "domain": "fmt",
+      "built_counts": {
+        "train": 6500,
+        "val": 500,
+        "test": 2500
+      },
+      "recorded_training_rows": 6500,
+      "evaluated_pairs": 2500,
+      "steps": 306,
+      "per_device_batch": 16,
+      "gradient_accumulation": 4
+    },
+    {
+      "domain": "relation",
+      "built_counts": {
+        "train": 504,
+        "val": 69,
+        "test": 135
+      },
+      "recorded_training_rows": 504,
+      "evaluated_pairs": 135,
+      "steps": 24,
+      "per_device_batch": 16,
+      "gradient_accumulation": 4
+    },
+    {
+      "domain": "algebra",
+      "built_counts": {
+        "train": 6500,
+        "val": 500,
+        "test": 2500
+      },
+      "recorded_training_rows": 6500,
+      "evaluated_pairs": 2500,
+      "steps": 306,
+      "per_device_batch": 4,
+      "gradient_accumulation": 16
+    },
+    {
+      "domain": "algebra_rev",
+      "built_counts": {
+        "train": 6500,
+        "val": 500,
+        "test": 2500
+      },
+      "recorded_training_rows": 6500,
+      "evaluated_pairs": 2500,
+      "steps": 306,
+      "per_device_batch": 4,
+      "gradient_accumulation": 16
+    },
+    {
+      "domain": "exec",
+      "built_counts": {
+        "train": 302,
+        "val": 100,
+        "test": 200
+      },
+      "recorded_training_rows": 302,
+      "evaluated_pairs": 200,
+      "steps": 15,
+      "per_device_batch": 16,
+      "gradient_accumulation": 4
+    }
+  ],
+  "reference_recipe": {
+    "peft": {
+      "r": 32,
+      "alpha": 64,
+      "dropout": 0.05,
+      "target_modules": [
+        "q_proj",
+        "k_proj",
+        "v_proj",
+        "o_proj",
+        "gate_proj",
+        "up_proj",
+        "down_proj"
+      ],
+      "task_type": "CAUSAL_LM"
+    },
+    "train": {
+      "lr": 0.0001,
+      "epochs": 3,
+      "dtype": "bfloat16",
+      "lr_scheduler_type": "cosine",
+      "warmup_ratio": 0.03,
+      "weight_decay": 0.0,
+      "max_grad_norm": 1.0,
+      "max_seq_len": 2048,
+      "save_strategy": "no"
+    },
+    "effective_batch": 64
+  },
+  "source_sha256": {
+    "/work/jvl210002/migration/bidirectional/configs/gate_repair.json": "c31544636218222ff5672a59f782ad2bfd785af3cbf5daf449d6d45919bd2d78",
+    "/work/jvl210002/migration/bidirectional/runs/status/ev_fmt_contract_v2_llama31-8b_s17_repair_domain_pilot.450548.json": "4a2a5a349b3d03e1e0dc787619b38f8f1dd0e4eb4ab8f93bc94ce9f0557bc744",
+    "/scratch/juno/jvl210002/bidir/results/2026-10-10/fmt_contract_v2/llama31-8b/repair_domain_pilot_s17/trials.jsonl": "c3b6eba5666b3b68179925d7a248775d4859570dca3875bac394aa717aa6f4de",
+    "/scratch/juno/jvl210002/bidir/results/2026-10-10/fmt_contract_v2/llama31-8b/repair_domain_pilot_s17/summary.json": "317a408367f39f095d930c5b8e8783b606c4436fc76a43c6968eac0845b631fe",
+    "/work/jvl210002/migration/bidirectional/runs/status/ev_py_cpp_typed_v2_gemma3-12b_s1234_repair_domain_pilot.451173.json": "c188301801f22d1a130c0c4179633be154d1d2bb4ec0898dcdcd40bf12a3f5a6",
+    "/scratch/juno/jvl210002/bidir/results/2026-10-10/py_cpp_typed_v2/gemma3-12b/repair_domain_pilot_s1234/trials.jsonl": "7b3d2141f44552be90384570278621c45730af2a71b0f812f225d2f3c333c773",
+    "/scratch/juno/jvl210002/bidir/results/2026-10-10/py_cpp_typed_v2/gemma3-12b/repair_domain_pilot_s1234/summary.json": "2d08d34bef29e68d172f8520d9e75e6fa9422ac9f062e2923a2af1839d5a814e",
+    "/work/jvl210002/migration/bidirectional/runs/status/ev_py_cpp_typed_v2_gemma3-12b_s17_repair_domain_pilot.450542.json": "bee2c12c5b0f55b361219cd561e42a326f345a2245221396f9bb414074b913e1",
+    "/scratch/juno/jvl210002/bidir/results/2026-10-10/py_cpp_typed_v2/gemma3-12b/repair_domain_pilot_s17/trials.jsonl": "3e1ccd6e3e6a3cad75b20c3dcd41810c5210b93523f3d5009a67d03ada4df16e",
+    "/scratch/juno/jvl210002/bidir/results/2026-10-10/py_cpp_typed_v2/gemma3-12b/repair_domain_pilot_s17/summary.json": "4e390187c5937d322602033bae94347ffae7ef9212cdf9022a158cd5ea8875e8",
+    "/work/jvl210002/migration/bidirectional/runs/status/ev_py_cpp_typed_v2_gemma3-12b_s42_repair_domain_pilot.451171.json": "8ff7d05a4cb8ff12ebc1d8dda9debd8e08adf65b9e5d0d6e7021348037a94c90",
+    "/scratch/juno/jvl210002/bidir/results/2026-10-10/py_cpp_typed_v2/gemma3-12b/repair_domain_pilot_s42/trials.jsonl": "776b46a0305785f601df09e675febfb79715777392beef334cbfc8ceca57859f",
+    "/scratch/juno/jvl210002/bidir/results/2026-10-10/py_cpp_typed_v2/gemma3-12b/repair_domain_pilot_s42/summary.json": "2515fea1592350c63bf206095461f3271c15b94be07d7cf7d5207ab14513df2f",
+    "/work/jvl210002/migration/bidirectional/runs/status/ev_py_cpp_typed_v2_llama31-8b_s17_repair_domain_pilot.450546.json": "e149b9a3f6a5da24ad6650f06553b1249e5327d28621dc38f56a7cf6f9a7c9af",
+    "/scratch/juno/jvl210002/bidir/results/2026-10-10/py_cpp_typed_v2/llama31-8b/repair_domain_pilot_s17/trials.jsonl": "c9e17b85dfd3af24daa7fc2a551a84028ab8adf21b71e700045c434faa977022",
+    "/scratch/juno/jvl210002/bidir/results/2026-10-10/py_cpp_typed_v2/llama31-8b/repair_domain_pilot_s17/summary.json": "6d50f1da36a0eefaf1511d33afb0651b1a1519de8729618d29d7701e12b6ac1c",
+    "/work/jvl210002/migration/bidirectional/runs/status/ev_units_contract_v2_gemma3-12b_s1234_repair_domain_pilot.451174.json": "c90f4adb7821b871c8f5ca33432e160ab4856d7c18206a7ba9aaf8c4a82060d9",
+    "/scratch/juno/jvl210002/bidir/results/2026-10-10/units_contract_v2/gemma3-12b/repair_domain_pilot_s1234/trials.jsonl": "8b285291bae49705cc300fd9ba3779002ce3da81587ea7304631640ab68c1302",
+    "/scratch/juno/jvl210002/bidir/results/2026-10-10/units_contract_v2/gemma3-12b/repair_domain_pilot_s1234/summary.json": "4319a9e9d03531fe9471690c6bb3176aaeab61563f06cc4245265f6f5b78ec55",
+    "/work/jvl210002/migration/bidirectional/runs/status/ev_units_contract_v2_gemma3-12b_s17_repair_domain_pilot.450544.json": "361f59e3a61d73e853dde308413f6619fac8dbb3150ec3da487301c47ad6e7f9",
+    "/scratch/juno/jvl210002/bidir/results/2026-10-10/units_contract_v2/gemma3-12b/repair_domain_pilot_s17/trials.jsonl": "0a8609e3e5ba58bbc4ea6f9e696d9e7794e02a0f3a72a460e0acc41baebae38c",
+    "/scratch/juno/jvl210002/bidir/results/2026-10-10/units_contract_v2/gemma3-12b/repair_domain_pilot_s17/summary.json": "b5fd419059c21d8f61464cb5fd2dc78b542b53cb8cf4eb59d2d1a57d6c329931",
+    "/work/jvl210002/migration/bidirectional/runs/status/ev_units_contract_v2_gemma3-12b_s42_repair_domain_pilot.451172.json": "9293386d3a625a7df0777f3521b5c2cc08d445f349a0c289e92dd7f01284c47d",
+    "/scratch/juno/jvl210002/bidir/results/2026-10-10/units_contract_v2/gemma3-12b/repair_domain_pilot_s42/trials.jsonl": "220e0b4be43a7bc87acc2571341a8db90d0c4ac28b9a9aa9d223568b75adf981",
+    "/scratch/juno/jvl210002/bidir/results/2026-10-10/units_contract_v2/gemma3-12b/repair_domain_pilot_s42/summary.json": "5fea6e21b25aa095b2a8075455347323bbd59b493f15b98c9ac71cd68875039a",
+    "/work/jvl210002/migration/bidirectional/runs/status/ev_fmt_contract_v2_llama31-8b_s1234_repair_domain_pilot.451178.json": "6cb8f2b8b15bfaf3e744b8b0b0bcb77f8baa6f55197c1e3393d80aca2458b9a5",
+    "/scratch/juno/jvl210002/bidir/results/2026-10-11/fmt_contract_v2/llama31-8b/repair_domain_pilot_s1234/trials.jsonl": "5952a4b4a4c3723a5faabb08931e80b6fd61b70a776725b4c7535daa03b6709e",
+    "/scratch/juno/jvl210002/bidir/results/2026-10-11/fmt_contract_v2/llama31-8b/repair_domain_pilot_s1234/summary.json": "7aadcb96626a82c8689e5bf3245e58c848f37f25817e0975324be7c530919a30",
+    "/work/jvl210002/migration/bidirectional/runs/status/ev_fmt_contract_v2_llama31-8b_s42_repair_domain_pilot.451176.json": "bddc226871426e5de3483cffb4a19bb1135175bf75f1204eab5e0e99d6848a1d",
+    "/scratch/juno/jvl210002/bidir/results/2026-10-11/fmt_contract_v2/llama31-8b/repair_domain_pilot_s42/trials.jsonl": "c67ed7d72691722136b749dab9b828a82b5753b0bfe1bf1137a1d4e4824d3db3",
+    "/scratch/juno/jvl210002/bidir/results/2026-10-11/fmt_contract_v2/llama31-8b/repair_domain_pilot_s42/summary.json": "ea50aed365d5658bc4e4ade36b69f225a77f9cd124d21d7c7796997c7db234da",
+    "/work/jvl210002/migration/bidirectional/runs/status/ev_py_cpp_typed_v2_llama31-8b_s1234_repair_domain_pilot.451177.json": "3e57d34b0589e65bc5a11ee9369e57f8d652dfb802cf71330e97072d585976e9",
+    "/scratch/juno/jvl210002/bidir/results/2026-10-11/py_cpp_typed_v2/llama31-8b/repair_domain_pilot_s1234/trials.jsonl": "beb32a3b19566d30c7b879c4d29810bcafd2c46caa426467ccbf2c60455ed784",
+    "/scratch/juno/jvl210002/bidir/results/2026-10-11/py_cpp_typed_v2/llama31-8b/repair_domain_pilot_s1234/summary.json": "185645e9f91fb74b0ca650bc260738d3568bbbf57cbc707cb5abd4c4e0dfc902",
+    "/work/jvl210002/migration/bidirectional/runs/status/ev_py_cpp_typed_v2_llama31-8b_s42_repair_domain_pilot.451175.json": "d81d13116ab42cea95e0d61da2ffdcd27348b5a521f02dae90884f9e8b2d8acc",
+    "/scratch/juno/jvl210002/bidir/results/2026-10-11/py_cpp_typed_v2/llama31-8b/repair_domain_pilot_s42/trials.jsonl": "df16936eaece2bd028d61f636fdc221b63b615667e5861a56a0ca2e556ef034f",
+    "/scratch/juno/jvl210002/bidir/results/2026-10-11/py_cpp_typed_v2/llama31-8b/repair_domain_pilot_s42/summary.json": "c270be0b22c840df5943e43ee9c28b70cd2cfb5940389b61926bf1ad558437a5",
+    "/work/jvl210002/migration/bidirectional/data/mt_de-en/train.jsonl": "c15d680a115de281b92f06182e73056f7e581b1338a7a3bfb2b8073bdb70c24d",
+    "/work/jvl210002/migration/bidirectional/data/mt_de-en/val.jsonl": "90be36d8bd24608938894b8f942b43cbaf9a1f646041a154858d988751727678",
+    "/work/jvl210002/migration/bidirectional/data/mt_de-en/test.jsonl": "34c5a09c4b9f772474dde167ab34ae6ce5407b5ac5a6464027941f0c7affdc30",
+    "/work/jvl210002/migration/bidirectional/data/mt_de-en/build_report.json": "24bc06359e135763dce3ef86ec3fb674a6c3bca2ee90b0ca7a2e3e1a4af6dbc4",
+    "/scratch/juno/jvl210002/bidir/runs/adapters/mt_de-en/llama32-3b/sft_r32_s17/run_manifest.json": "579de3a84f0414ee27a81ec31ca51904c218eb513fd73fef8d6203ef391ee851",
+    "/scratch/juno/jvl210002/bidir/runs/adapters/mt_de-en/llama32-3b/sft_r32_s17/training_summary.json": "719cac90f33019d13464943027345b40ee6479f845dadf65da58c81eefbfb501",
+    "/scratch/juno/jvl210002/bidir/results/2026-09-17/mt_de-en/llama32-3b/small_s17/summary.json": "e42bab2e0d4b24781dc3110d1590a8aedc6635b97ae214e09428cf07462c69fd",
+    "/work/jvl210002/migration/bidirectional/data/mt_en-de/train.jsonl": "981988ffc41fb98c490ab554056c56b92d16b54145e0491d2f3cb0a2d50abe5c",
+    "/work/jvl210002/migration/bidirectional/data/mt_en-de/val.jsonl": "8e9b677fb8fb26cb7ec0d50c8931d1f604946b1758514a28af39d4e97627482a",
+    "/work/jvl210002/migration/bidirectional/data/mt_en-de/test.jsonl": "61a9cd6b1ff067eb29e6e3b67c44ef43aaffe25e059911b400802f0ca762e146",
+    "/work/jvl210002/migration/bidirectional/data/mt_en-de/build_report.json": "ea45e2688e77dfa475824e13bab3ce531cdbed29329a5fa07c87c9795f56c61f",
+    "/scratch/juno/jvl210002/bidir/runs/adapters/mt_en-de/llama32-3b/sft_r32_s17/run_manifest.json": "3eaceaa34ad836f421f3dc372262b390e3ddf074d311823e29470170022ec303",
+    "/scratch/juno/jvl210002/bidir/runs/adapters/mt_en-de/llama32-3b/sft_r32_s17/training_summary.json": "92ea7697cf5b8c552c1ed93dccb9c75769115c9dbf55903d13b989f625aa19e4",
+    "/scratch/juno/jvl210002/bidir/results/2026-09-17/mt_en-de/llama32-3b/small_s17/summary.json": "79b88c74dd9faedf2e4249386e5addb8eb2085e98109ebf506a284f57f91cd62",
+    "/work/jvl210002/migration/bidirectional/data/mt_en-zh/train.jsonl": "2e2a0dcbf30537ed0e98a885ce0a646deb559e96977d64823db3b22977da804b",
+    "/work/jvl210002/migration/bidirectional/data/mt_en-zh/val.jsonl": "6c6c4a0a9430f79615aa280654ec677d53959ef687ad4b3b3dd0498d1e7ce759",
+    "/work/jvl210002/migration/bidirectional/data/mt_en-zh/test.jsonl": "ddecd447cff4aa3b394b3146d8b89a3b317a972a57a78b6e505c0efb2e689bef",
+    "/work/jvl210002/migration/bidirectional/data/mt_en-zh/build_report.json": "7e272ce2a99a040f48b0b492468dd7abe9305f219f89c25f5abe36cfbbb51b1c",
+    "/scratch/juno/jvl210002/bidir/runs/adapters/mt_en-zh/llama32-3b/sft_r32_s17/run_manifest.json": "2c97423a430983ae860271750a4672feff9e46d4f0e32dbe8b6a907fe54ede64",
+    "/scratch/juno/jvl210002/bidir/runs/adapters/mt_en-zh/llama32-3b/sft_r32_s17/training_summary.json": "4308b27f7ba1e017910a42650830817be7590d25bdb37d6b5c1bd182ed361afe",
+    "/scratch/juno/jvl210002/bidir/results/2026-09-17/mt_en-zh/llama32-3b/small_s17/summary.json": "871b7ed612933296831d67f0fd27d24dabacc13df4a8cf7127e820695b71a581",
+    "/work/jvl210002/migration/bidirectional/data/mt_zh-en/train.jsonl": "2432b8546487d188e72ca53074ca0d32634a7cd6cdeadcd9763d7f12a27d4859",
+    "/work/jvl210002/migration/bidirectional/data/mt_zh-en/val.jsonl": "511a4e5d4df1d064abcc0fb2b4f1248d62579fb7293677dc575f0387a995729e",
+    "/work/jvl210002/migration/bidirectional/data/mt_zh-en/test.jsonl": "7d577c801dda49fb94bfb4ee82872330c63009e1621bfd28e9b1b1db3020f2e8",
+    "/work/jvl210002/migration/bidirectional/data/mt_zh-en/build_report.json": "7865524b66144ad012d0b32ae631ee4931356f8b07e57a569e8cf79f6b3fba19",
+    "/scratch/juno/jvl210002/bidir/runs/adapters/mt_zh-en/llama32-3b/sft_r32_s17/run_manifest.json": "621da63339cedf598e011eb2e8faf859dba5e50ac17057c72acb458d20518419",
+    "/scratch/juno/jvl210002/bidir/runs/adapters/mt_zh-en/llama32-3b/sft_r32_s17/training_summary.json": "85db64f4c3722992ad55c8c0511a925b064ca138188ea258974009f1ec1aa33d",
+    "/scratch/juno/jvl210002/bidir/results/2026-09-18/mt_zh-en/llama32-3b/small_s17/summary.json": "3bcdee83b1afa543a947d6223e6048d9ab987bbd3ea7c378660dae5626a242fa",
+    "/work/jvl210002/migration/bidirectional/data/code/train.jsonl": "193ef889b52b2302c58a4a15702097b70c2cd9c66356b089fe8a83105e100de2",
+    "/work/jvl210002/migration/bidirectional/data/code/val.jsonl": "0670cf3e7e637f74d7c1bbcc56f67892abe01a6b5e1cc5c8478a3c292037f21a",
+    "/work/jvl210002/migration/bidirectional/data/code/test.jsonl": "29ac93f51e12a9ce8aa68f07c66d8465c81d17b40a01a1bf5bc4ad952a4c73c7",
+    "/work/jvl210002/migration/bidirectional/data/code/build_report.json": "74b945662158dd370e31fdbd3505e59c4afd86bf9e166a3c21a89ff16613d5a3",
+    "/scratch/juno/jvl210002/bidir/runs/adapters/code/llama32-3b/sft_r32_s17/run_manifest.json": "caffdf15ccfb0692aba4c477bb336cb62d28d0a87985e6236b867f44c7b3fbdf",
+    "/scratch/juno/jvl210002/bidir/runs/adapters/code/llama32-3b/sft_r32_s17/training_summary.json": "127d429ffd075efbe669e1cf072154540aa0967d64c560a92a7f81fc80c1e41f",
+    "/scratch/juno/jvl210002/bidir/results/2026-09-17/code/llama32-3b/small_s17/summary.json": "e262585f5367431458b74d6be28150592266daee4b3a88416c0c777ace8d0c49",
+    "/work/jvl210002/migration/bidirectional/data/sql/train.jsonl": "50c11eaee074925feb4790e13941bb459ee28720cac9d57a88545a8fdf6c76f7",
+    "/work/jvl210002/migration/bidirectional/data/sql/val.jsonl": "c8ce930ec554fd949be003ba26c99760a73f0686029e420efbf8650bd7ea1013",
+    "/work/jvl210002/migration/bidirectional/data/sql/test.jsonl": "ee2ba3d6aadc909aa1c5b8af0a501311029e4440af6d61568d1eb5682c5e526d",
+    "/work/jvl210002/migration/bidirectional/data/sql/build_report.json": "c62ee362615d62c48d89f26a78d30987abdc7fbb50174277e2b24303094f3af9",
+    "/scratch/juno/jvl210002/bidir/runs/adapters/sql/llama32-3b/sft_r32_s17/run_manifest.json": "b147dca8180770e5aeb8f55b6c91ad2f84b421ac2823414de2eade6206b2d355",
+    "/scratch/juno/jvl210002/bidir/runs/adapters/sql/llama32-3b/sft_r32_s17/training_summary.json": "995c46f31229c88565b7db14879fb85e97e6dc48fe32da735c5be46ea0d25a8c",
+    "/scratch/juno/jvl210002/bidir/results/2026-09-17/sql/llama32-3b/small_s17/summary.json": "ee79a9fad72dd19e283b748f29efe2c13db2790023a24dc2c8cedc1485f0058c",
+    "/work/jvl210002/migration/bidirectional/data/fmt/train.jsonl": "e274c8ee9fc381fce9e488f88cb2db57034fadec0a0bf2557b990ad09afdc306",
+    "/work/jvl210002/migration/bidirectional/data/fmt/val.jsonl": "aeea55ee9f471b44bf55e88d8caeb1cdfb9b10c70aa8ac193ace8fddc51b2879",
+    "/work/jvl210002/migration/bidirectional/data/fmt/test.jsonl": "bc4166be65ac883e92e0a85a716d70d37fb164cccf7eb4b9bf02b24759caaf83",
+    "/work/jvl210002/migration/bidirectional/data/fmt/build_report.json": "58c3fefbe722d9b83c2575413d124be651eb99b394da0e2b0c6e20608818e416",
+    "/scratch/juno/jvl210002/bidir/runs/adapters/fmt/llama32-3b/sft_r32_s17/run_manifest.json": "da514396850f8dfda20ff3bd126a7cd08f1a99c4394dd0a6d7a0febb6393a4b1",
+    "/scratch/juno/jvl210002/bidir/runs/adapters/fmt/llama32-3b/sft_r32_s17/training_summary.json": "1361a0529d04e2f6145bfe2df4e6fc666860ec0c214af1f820fb4eadaab7bccf",
+    "/scratch/juno/jvl210002/bidir/results/2026-09-17/fmt/llama32-3b/small_s17/summary.json": "31bea55ac8176c28bbea79830187f7425826c657a0a903d5e4924697048b12d3",
+    "/work/jvl210002/migration/bidirectional/data/relation/train.jsonl": "c3c0580174bb2efa10f1d94257c19f56cc23fe6c3c3c9362c17967ece6f8667c",
+    "/work/jvl210002/migration/bidirectional/data/relation/val.jsonl": "6f3cc06ba55e37679315acad440176d3979e36b713ea3e849049df134305e97d",
+    "/work/jvl210002/migration/bidirectional/data/relation/test.jsonl": "471f87ac4d7b3faf9e4ceb39120c9bd894411911ed2469fe7bc2179b22900aa9",
+    "/work/jvl210002/migration/bidirectional/data/relation/build_report.json": "ec048498d206492a2a4e323f403eee698b664e7b80d0fed4b0368d9703e2ddc6",
+    "/scratch/juno/jvl210002/bidir/runs/adapters/relation/llama32-3b/sft_r32_s17/run_manifest.json": "e9894dd0a6147fef42f670d4ee1616dda9b419c9e092af299da30cb70b86c135",
+    "/scratch/juno/jvl210002/bidir/runs/adapters/relation/llama32-3b/sft_r32_s17/training_summary.json": "f5d13ddfd7a16745c1632b39b8c4fcf77c8cc5ed02176bad1e5d0a927d0a16bc",
+    "/scratch/juno/jvl210002/bidir/results/2026-09-17/relation/llama32-3b/small_s17/summary.json": "bf41edca0b606b5719279a4d71f2a39362413b0b319d2fd4b7bc337ce0d47c17",
+    "/work/jvl210002/migration/bidirectional/data/algebra/train.jsonl": "75f6a4b55c58f4e65b8176d4921d9d7ca0ea6c1290bb5c80a5b6b9d4cdc6e89d",
+    "/work/jvl210002/migration/bidirectional/data/algebra/val.jsonl": "01f6238054278cf4a25a8899e032e64b6678d687a9273c37f875f530ad3a612d",
+    "/work/jvl210002/migration/bidirectional/data/algebra/test.jsonl": "6bc8f252a58b22d17f98acdc05acc2c47440ee39101d965b3e46115d670f513b",
+    "/work/jvl210002/migration/bidirectional/data/algebra/build_report.json": "17df0746a4a6ba655ff94ff264184300acd56581b484d337e09e2e05e4043fca",
+    "/scratch/juno/jvl210002/bidir/runs/adapters/algebra/llama32-3b/sft_r32_s17/run_manifest.json": "9d7a8810f5f332622056b7ac89deb8a0f6d51337b1729be424deb6f408cb5543",
+    "/scratch/juno/jvl210002/bidir/runs/adapters/algebra/llama32-3b/sft_r32_s17/training_summary.json": "80019c028ed6adb803bcfcc72f2fce0cc1c95144899c267b54687041e0d4db3e",
+    "/scratch/juno/jvl210002/bidir/results/2026-09-17/algebra/llama32-3b/small_s17/summary.json": "4c08425afb7a4f257142e14b907a4386476fbed113b987cc94253c5d6f946e7a",
+    "/work/jvl210002/migration/bidirectional/data/algebra_rev/train.jsonl": "fab2ff9863618077369953d57f2c14209ff3f080f94f9acc7368fffcca2fbba7",
+    "/work/jvl210002/migration/bidirectional/data/algebra_rev/val.jsonl": "c62b292643e653cab36b14f2e856cc528892098873e08abcade3642c0a87212e",
+    "/work/jvl210002/migration/bidirectional/data/algebra_rev/test.jsonl": "fa9edc8155b9a5b7a25756c7fa7d4bfd9dfb192af76a093810e712fa9ea2395a",
+    "/work/jvl210002/migration/bidirectional/data/algebra_rev/build_report.json": "5500472c95637e1d8de7289003efc20a60ca483c63da96d0f2a4a0682b1b0a10",
+    "/scratch/juno/jvl210002/bidir/runs/adapters/algebra_rev/llama32-3b/sft_r32_s17/run_manifest.json": "098ab35121dd00fec0040659af6b6c0110370e0c4c0865e319b591dc9a620ad2",
+    "/scratch/juno/jvl210002/bidir/runs/adapters/algebra_rev/llama32-3b/sft_r32_s17/training_summary.json": "e819c5c2cbb90f33ae81a8c5c1a1bc3ec3d7cf347e66fffc974cdedfe281e5ee",
+    "/scratch/juno/jvl210002/bidir/results/2026-09-17/algebra_rev/llama32-3b/small_s17/summary.json": "44eb24c4a0af79960e362004e21aba8fa11a82e1b0331fba789126c944ea3b53",
+    "/work/jvl210002/migration/bidirectional/data/exec/train.jsonl": "2974a17d862ae6dec9e0574380be899fed9e4549813f56f71cbafab007cd5307",
+    "/work/jvl210002/migration/bidirectional/data/exec/val.jsonl": "d4fe5cb76051ea17e2e620b6f3bf4c9c8cee681dce14b6771cc9aae9bbaa8c30",
+    "/work/jvl210002/migration/bidirectional/data/exec/test.jsonl": "8e4ec61f8c665cff6f90a5f07620ddcab78f69baaa9e2b3ba396987aeabcee55",
+    "/work/jvl210002/migration/bidirectional/data/exec/build_report.json": "21ec90b8a241641b5718526732643bd8f5fa082b2b1bafad5a99427410ba6a4c",
+    "/scratch/juno/jvl210002/bidir/runs/adapters/exec/llama32-3b/sft_r32_s17/run_manifest.json": "1eec8e675fbcf5f64ea0b434222527e79545ae6e643a1278a1ad7b90f654ae1e",
+    "/scratch/juno/jvl210002/bidir/runs/adapters/exec/llama32-3b/sft_r32_s17/training_summary.json": "4e651cdfeda1a6fb7e27552bc8f571601488c1fdf1b34aef70ebfbc1da9b922a",
+    "/scratch/juno/jvl210002/bidir/results/2026-09-26/exec/llama32-3b/small_s17/summary.json": "4493bd926251f5b7787bf3783a5b9fcc01dd4e62eef88f59d92c641826bdd539"
+  },
+  "selection": "Every completed versioned-domain pilot; all arms and seeds, no effect-sign selection.",
+  "limitations": "No new measurements; reused corpora are not independent new domains; historical data hashes are not reconstructed."
+}

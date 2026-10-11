@@ -40,7 +40,13 @@ def main():
                     'audit/fullft_saved_repair_*.json']:
         tracked.update(RESULTS_DIR.glob(pattern))
     tracked.update(STATUS.glob('*.json'))
-    tracked.update([Path(__file__),PAPER/'main.tex',ROOT/'scripts/93_numbers.py',ROOT/'scripts/117_main_results.py'])
+    tracked.update([Path(__file__),PAPER/'main.tex',ROOT/'scripts/93_numbers.py',ROOT/'scripts/117_main_results.py',
+                    ROOT/'scripts/118_manuscript_completion.py'])
+    tracked.update((ROOT/'data').glob('*/build_report.json'))
+    tracked.update((ROOT/'data').glob('*/*.jsonl'))
+    from bidir.config import RUNS_DIR
+    for filename in ['training_summary.json','run_manifest.json']:
+        tracked.update(RUNS_DIR.glob(f'adapters/*/llama32-3b/sft_r32_s17/{filename}'))
     for path in [PAPER/'MECHANISM_DIAGNOSTICS.json',ROOT/'configs/paper_sprint.json',
                  PAPER/'tables/mechanism_sprint.tex']:
         if path.exists():tracked.add(path)
@@ -55,7 +61,8 @@ def main():
     if args.if_changed and snapshot.exists():
         unchanged=json.loads(snapshot.read_text()).get('input_signature')==signature
         main_outputs = [PAPER/'MAIN_RESULTS.json', PAPER/'tables/main_adaptations.tex',
-                        PAPER/'tables/main_loss_baselines.tex']
+                        PAPER/'tables/main_loss_baselines.tex',PAPER/'MANUSCRIPT_COMPLETION.json',
+                        PAPER/'tables/methods_details.tex',PAPER/'tables/revised_domain_results.tex']
         if unchanged and (not args.build or (all(p.exists() for p in main_outputs) and (PAPER/'main.pdf').exists()
                                             and (PAPER/'main.pdf').stat().st_mtime>=snapshot.stat().st_mtime)):
             print('paper evidence unchanged');return 0
@@ -213,7 +220,7 @@ def main():
         superseded_core_campaigns=superseded,
         core_selection_rule='latest validated completion timestamp per domain/model/training seed; no effect-sign selection',
         rejected_runs=rejected,sources=sources,
-        mechanism_claims='pending audit; no cross-model/seed pooling',
+        mechanism_claims='five audited sprint diagnostic campaigns; additional registered diagnostics unmeasured; no cross-model/seed pooling',
         legacy_auxiliary_arms='requires current withdrawal/exposure audit in scripts/117_main_results.py before main-table inclusion'))
     atomic_json(PAPER/'PROVENANCE.json',dict(
         generated_by='scripts/99_paper_evidence.py',updated_utc=datetime.now(timezone.utc).isoformat(),
@@ -253,6 +260,7 @@ def plot_core(cells):
 def build_paper():
     import subprocess
     subprocess.run([sys.executable,str(ROOT/'scripts/117_main_results.py')],cwd=ROOT,check=True,timeout=180)
+    subprocess.run([sys.executable,str(ROOT/'scripts/118_manuscript_completion.py')],cwd=ROOT,check=True,timeout=180)
     subprocess.run([sys.executable,str(ROOT/'scripts/93_numbers.py')],cwd=ROOT,check=True,timeout=180)
     completed=subprocess.run(['make','paper'],cwd=ROOT,capture_output=True,text=True,timeout=180)
     (ROOT/'runs/feeder/paper_build_latest.log').write_text(completed.stdout+completed.stderr)

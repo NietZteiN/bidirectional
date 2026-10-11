@@ -21,7 +21,7 @@
 \usepackage{xcolor}
 
 % ---------------------------------------------------------------------------
-% An unfilled number must be impossible to miss. \NUM{key} resolves to the value that
+% An unfilled number must be impossible to miss. \NUM{...} resolves to the value that
 % scripts/93_numbers.py computed from a recorded run, and renders <<key>> IN RED when no such
 % value exists -- so a key that has not been measured yet is visible in the PDF and in a grep,
 % and can never quietly become a blank.  % grep-skip
@@ -161,6 +161,8 @@ independent domains. The invented-format never-had control is excluded from this
 
 \paragraph{Models.} The current audited results cover Llama 3B/8B, Gemma 4B/12B, and
 OLMo 1B. Eligibility and seed coverage vary by task and model; failed gates are retained.
+Appendix~\ref{app:reference-methods} records split sizes, the reference training recipe,
+and realized training/evaluation counts.
 
 \paragraph{Arms and budget.}
 The forward-only baseline (\textsc{sft}) trains on forward pairs. Each \textsc{mix}$k$ arm
@@ -238,7 +240,6 @@ equivalent. Figure~\ref{fig:dose-tradeoff-draft} retains the units null alongsid
 cells. Forward retention, general-ability endpoints, measured runtime and token exposure
 are separate quantities; Appendix~\ref{app:dose-summary} reports their joint audit.
 
-\IfFileExists{figures/preservation_frontier.pdf}{%
 \begin{figure*}[t]
 \centering
 \includegraphics[width=\textwidth]{figures/preservation_frontier.pdf}
@@ -250,20 +251,6 @@ retained with measured runtime/exposure records in the source-backed analysis. T
 null-collapse boundary case is included. No cross-campaign pooled test is implied.}
 \label{fig:dose-tradeoff-draft}
 \end{figure*}
-}{%
-\begin{figure}[t]
-\centering
-\fbox{\parbox{0.9\columnwidth}{\textbf{Draft figure slot: preservation frontier.}
-Forward strict success on the horizontal axis; reverse strict success on the vertical axis.
-Show base, SFT, replay, reversed-pair doses, and registered contrastive controls in
-model--task panels. Add paired intervals, seed variation, and a separate measured-cost panel.
-\par\NUM{dose-sentence}}}
-\caption{Planned dose--performance--compute summary. No result is drawn in this slot.
-Comparisons must share an evaluation campaign; independent campaigns remain separate.
-See Appendix~\ref{app:dose-summary} for the reporting protocol.}
-\label{fig:dose-tradeoff-draft}
-\end{figure}
-}
 
 \section{Boundary conditions: information and inverse difficulty}
 \label{sec:invertibility}
@@ -315,8 +302,8 @@ Local backward updates improve held-out loss even in the units null cell, so imp
 alone is not a collapse-specific signature or a demonstrated generation repair. Total and
 per-token candidate rankings are both reported; candidate lengths and valid alternative
 translations limit their interpretation. Direction probes still need input-cue controls.
-Gemma diagnostics exclude inactive vision factors. Further registered diagnostics are
-running; pending results supply no evidence.
+Gemma diagnostics exclude inactive vision factors. Further registered diagnostics remain
+unmeasured and supply no evidence.
 
 \paragraph{Recovery checks remain complementary.}
 Prompt elicitation, adapter scaling, and model/seed-matched relearning against a never-had
@@ -370,6 +357,10 @@ valid replicated campaigns (Table~\ref{tab:generality-snapshot}). Forward-only S
 both directions; this is retained as a replicated null-collapse result. Replication seeds are admitted by validity,
 independently of effect sign. Llama8B also passes Python--C++ translation after a technical parser retry; its pilot is
 evaluated under the registered same-pass protocol. Boolean gates remain failed, with correctness criteria unchanged.
+Completed versioned-contract pilots retain all seeds and controls
+(Appendix~\ref{app:independent-transfer}). They include a typed Python/C++ Llama8B
+case where replay preserves backward behavior much better than the direction mixture,
+bounding the remedy beyond the main-grid examples.
 \IfFileExists{tables/domain_gates_snapshot.tex}{\input{tables/domain_gates_snapshot.tex}}{}
 \IfFileExists{tables/generality_snapshot.tex}{\input{tables/generality_snapshot.tex}}{}
 
@@ -457,13 +448,13 @@ estimate in our tasks. The full-FT check covers only the registered Llama 3B see
 it cannot bound directional loss across other models or training recipes.
 
 \paragraph{Resolution of the dose ladder.} Adjacent rungs differ by a couple of points, which
-our evaluation sets may not separate reliably. Final dose claims require intervals and seed
-ranges; an interval spanning zero does not establish equivalence.
+our evaluation sets may not separate reliably. Dose comparisons use paired intervals and
+seed ranges; an interval spanning zero does not establish equivalence.
 
 \paragraph{Criteria with a model in them.} Two directions are scored by round-tripping through a
 frozen model rather than by execution. Each reports that model's own accuracy on the references
 as the criterion's ceiling where measured. Extractor/parser errors can reject valid generations;
-the D2T measurement is still undergoing validation.
+the D2T extractor fails its reference-text oracle, preventing a tuned comparison.
 
 \paragraph{Languages and domains.} The original code-transformation cell is Python only;
 the translation cells cover two

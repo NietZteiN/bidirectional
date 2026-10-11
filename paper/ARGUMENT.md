@@ -1,7 +1,7 @@
-> Current scheduling scope, October10: Amendment55 reopens all unfinished registered
-> eligible work in the background, including replications, after the completed sprint.
-> Sprint limits below are historical; commit34de8d0 preserves that draft and receipts.
-> See [background plan](../docs/BACKGROUND_RUN_PLAN.md).
+> Current scope, October 10: Amendment 56 pauses all experiments and automatic admission.
+> Manuscript completion from existing evidence is the priority. All 32 experiment jobs are
+> held; the controller is stopped. See [pause plan](../docs/EXPERIMENT_PAUSE.md).
+> Amendment 55's resumed campaign and the completed sprint remain historical records.
 
 # Workshop framing and the current extension — October 10, 2026
 
@@ -39,7 +39,7 @@ Current mixed-direction contrastive wins and task-specific forward costs stay in
 argument. The manuscript uses this framing directly; it does not fabricate a bibliographic
 entry or public publication status for the local anonymous workshop draft. All new prose
 rates come from `MAIN_RESULTS.json` and the existing audited campaigns, with within-pass
-comparisons only. The background queue remains active under Amendment 55.
+comparisons only. The experiment queue is paused under Amendment 56.
 
 # Current paper story — October 10, 2026
 
@@ -64,8 +64,8 @@ established by failed backward generation. Mechanism evidence motivates selectiv
 interference in one cell; it is supporting diagnosis, not the central practical claim.
 [MAIN_RESULTS.json](MAIN_RESULTS.json) records every displayed campaign and source hash;
 `scripts/117_main_results.py` regenerates both main tables before the paper builds.
-The background campaign continues under Amendment 55. Earlier sprint scope below is
-historical and does not restrict the active experiment queue.
+The experiment campaign is paused under Amendment 56. Earlier sprint scope below is
+historical; the current user-requested pause governs experimental work.
 
 # Active drafting scope — October10, 2026
 
@@ -104,17 +104,17 @@ The manuscript now follows this spine:
 5. Recovery instruments test accessibility without presupposing universal suppression.
 6. The practical contribution is evaluation in both directions and direction/compute-accounted attribution.
 
-This replaces the stronger historical spine below. Quantitative statements await audited
-integration. The generated snapshot now deduplicates repeated main evaluation campaigns by
+This replaces the stronger historical spine below. Quantitative statements are integrated
+through the source-backed generators. The snapshot deduplicates repeated main evaluation campaigns by
 model/task/training seed, using the latest valid completion timestamp and retaining earlier
 passes in the audit. These observations are not independent domains. Blocked invertibility
 experiments do not support a universal repair bound.
 The title is now “Directional Collapse in Fine-Tuning: Preserving the Way Back.”
 
-October 8 draft additions: the main preservation section now reserves a dose/forward/reverse/
-compute figure. [The draft appendix](planned_evaluations.tex) specifies audited general-ability
+October 8 additions, completed in the current manuscript: the main preservation section reports a dose/forward/reverse/
+compute figure. [The appendix](planned_evaluations.tex) reports audited general-ability
 controls, independent real-data transfer, frozen prompt/recipe robustness, and an anonymous
-reproducibility package, with a reporting checklist and visible conclusion placeholders.
+reproducibility package, with completed interpretation and an explicit reporting audit.
 These protocols are now registered as Amendment 50 and implemented in the autonomous
 smoke-gated queue; registration is distinct from completed measurements. Existing
 new-domain/contrastive jobs retain first priority. Keep the replicated units null-collapse
@@ -138,7 +138,8 @@ learning-rate recipe includes reverse loss and improvement across seeds; keep th
 qualification in the story. Python/C++ has large seed-dependent forward mixture costs, so
 preservation cannot be described as uniformly inexpensive. All OPUS campaigns fail the
 unchanged echo gate; they establish a criterion boundary and supply no eligible tuned
-transfer comparison. All nine general-ability campaigns are now complete; interpretation remains pending.
+transfer comparison. All nine general-ability campaigns are complete; their endpoint-specific
+findings are integrated. Reverse-task recovery does not establish general-ability preservation.
 
 October9 mechanism review: we have stronger evidence about recoverability than about why
 a small reverse dose preserves it. Existing prompt recovery, model/seed-matched relearning,
@@ -428,5 +429,6 @@ vision factors in the legacy adapters. All42 fixed-panel Gemma checkpoints have 
 zero vision B factors, so the existing layer delta-norm controls remain valid. Local
 gradients and equal-norm updates now use text LoRA factors only, with strict checks
 retained for disconnected text parameters. Two revised GPU smokes precede the six Gemma
-HF production slots; they are still pending validation. Preserve the failed original
+HF production slots; both revised smokes and the selected translation/unit HF diagnostics
+are now proof-valid. Other registered diagnostics remain unmeasured. Preserve the failed original
 attempts and do not interpret an implementation failure as a scientific null.

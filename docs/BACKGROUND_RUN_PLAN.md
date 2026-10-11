@@ -1,3 +1,7 @@
+> Paused October 10 under Amendment 56. All experiment jobs are held and the controller
+> is stopped; completing manuscript blanks takes priority. See [pause plan](EXPERIMENT_PAUSE.md).
+> The admission plan and checkpoint below describe the earlier Amendment 55 resumption.
+
 # Registered background campaign — Amendment55
 
 User decision, October10, after completed draft delivery: run all remaining registered

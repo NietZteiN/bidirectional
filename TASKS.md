@@ -1,31 +1,38 @@
 # Experiment and task checklist
 
-Updated October 10, 2026, 18:37 CDT. Background campaign reopened by user request, Amendment55.
+Updated October 10, 2026. Experiments paused by user request, Amendment56; manuscript completion is the priority.
 The completed sprint draft is frozen at Git commit34de8d0; its
 [completion checklist](archive/task_checklists/TASKS-2026-10-10-sprint-complete.md) and
 [receipts](paper/SPRINT_COMPLETION.json) remain historical evidence.
 
-## Active background queue
+## Paused experiment queue
 
-Resume all unfinished previously registered eligible experiments, including replications.
+- [x] Stop automatic scheduling and hold all 32 current experiment jobs, including four
+      running training packs requeued into held state; verify zero running experiments.
+- [x] Preserve completed results, dependencies and the shared CPU host; record the pause
+      and resume procedure in [the pause plan](docs/EXPERIMENT_PAUSE.md).
+- [x] Complete the remaining manuscript/reporting blanks using existing evidence;
+      unmeasured rungs and ineligible comparisons remain explicitly unavailable.
+
+All unfinished experiment jobs are held until an explicit user resume request.
 New-domain and contrastive work retains first priority. Completed adapters are reused;
 training packs resume only missing arms. Engineering proofs, capability gates, quarantine,
 bounded retries, same-pass base comparisons and null/adverse reporting remain enforced.
-The detached Slurm controller and CPU-host renewal continue after logout.
+The controller STOP sentinel persists after logout and CPU-host renewal.
 
 - [x] Reopen the original campaign by disabling the completed sprint's admission guard.
 - [ ] Finish the remaining19 registered explanatory production jobs across all three seeds,
       both modes and the mandatory units null control. The original panel remains24 jobs.
 - [ ] Finish repaired-format Gemma12B contrastive seed17, then automatically admit42/1234
       only after a proof-valid seed17 evaluation, regardless of measured effect sign.
-- [ ] Finish eight ready repaired-domain seed42/1234 evaluations: typed Python/C++ at
+- [x] Finish eight ready repaired-domain seed42/1234 evaluations: typed Python/C++ at
       Llama8B/Gemma12B, formatting contract at Llama8B and units contract at Gemma12B.
 - [ ] Resume six missing invertibility-ladder training/evaluation packs at Llama8B,
       covering fmt_det75/50/25 and seeds42/1234; retain fully saved arms.
-- [ ] Collect checked contrasts, preserve trials and refresh the working paper evidence.
+- [x] Collect completed checked contrasts, preserve trials and refresh the working paper evidence.
 - [x] Verify a complete healthy controller pass, detached stdin and CPU-host renewal.
       All five health checks and43 distinct targeted regression tests pass. Initial admission queues
-      41 GPU jobs across34 experiment cells; Slurm priority/dependencies currently govern starts.
+      41 GPU jobs across34 experiment cells at that historical checkpoint. Amendment56 now holds all remaining jobs.
 
 Live states: [mechanism scheduler](runs/feeder/mechanism_status.json),
 [repair scheduler](runs/feeder/gate_repair_status.json), and
@@ -41,8 +48,8 @@ protocols require implementation and registration before GPU admission.
       orientations, from103 valid campaigns.52 cells meet the descriptive reverse-loss threshold.
 - [x] Original contrastive panel: 24/27 evaluations complete; three original fmt/Gemma12B
       cells remain failed-gate boundaries. All five primary comparisons remain reported.
-- [x] Four repaired new-domain seed17 pilot evaluations:typed Python/C++ at Llama8B and
-      Gemma12B, formatting contract at Llama8B, and units contract at Gemma12B.
+- [x] All twelve repaired-domain pilot evaluations across three seeds: typed Python/C++ at
+      Llama8B/Gemma12B, formatting contract at Llama8B and units contract at Gemma12B.
       These variants reuse semantic corpora and are exploratory, not independent new domains.
 - [x] Original units/Gemma12B and Python/C++ Llama8B campaigns already include three seeds.
       Preserve the unit-conversion null-collapse result and seed-dependent forward costs.
@@ -71,11 +78,23 @@ Amendment53 text-graph repair. Training seed17 is fixed throughout; no new model
 
 Live states:[mechanism scheduler](runs/feeder/mechanism_status.json).
 Proof-valid counts:[paper diagnostic report](paper/MECHANISM_DIAGNOSTICS.json), sprint subsection.
-The sprint snapshot contains five proof-valid production jobs. Amendment55 resumes the
- other19; the full registered production denominator remains24.
+The sprint snapshot contains five proof-valid production jobs. The other19 registered
+jobs are now held under Amendment56; the full registered production denominator remains24.
 
 ## Current manuscript revision — October 10
 
+- [x] Integrate all twelve completed versioned-domain pilots, including all seeds,
+      replay wins, mixture failures and forward costs; distinguish reused-corpus
+      diagnostics and 50% mixtures from independent domains and low-dose results.
+- [x] Add source-generated split sizes, actual reference training counts and shared
+      recipe details; retain the historical/current code-corpus count discrepancy.
+- [x] Replace stale pending interpretation and running/validation prose with completed
+      findings or explicit unmeasured/ineligible status; remove the draft figure fallback.
+- [x] Rebuild and visually inspect the manuscript and independently copied paper folder:
+      eight body pages, twenty total, 175 abstract words, all numbers/references resolved
+      and fonts embedded. All 34 targeted reporting/evidence regressions pass.
+- [x] Verify local packaged hashes and replay all 227 retained trial reports;
+      upstream licenses and missing historical training versions remain external-release requirements.
 - [x] Build from the local ATTRIB/NeurIPS workshop's objective-versus-data-direction
       framing; extend the argument across fields, doses and explanatory diagnostics.
 - [x] Add source-generated translation, semantic-parsing and algebra examples, and
@@ -117,7 +136,7 @@ The sprint snapshot contains five proof-valid production jobs. Amendment55 resum
   extra probes without a complete registered/tested worker and admission path.
 
 The former sprint deferrals (registered seeds, contrastive packs and layer panels) now
-belong to the active background queue above. Configs/paper_sprint.json remains disabled
+belong to the paused experiment queue above. Configs/paper_sprint.json remains disabled
 under explicit user authorization. All experiment artifacts are retained. The immutable
 sprint receipts describe delivery at34de8d0; subsequent results update the working evidence.
 
