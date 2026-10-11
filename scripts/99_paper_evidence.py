@@ -41,7 +41,8 @@ def main():
         tracked.update(RESULTS_DIR.glob(pattern))
     tracked.update(STATUS.glob('*.json'))
     tracked.update([Path(__file__),PAPER/'main.tex',ROOT/'scripts/93_numbers.py',ROOT/'scripts/117_main_results.py',
-                    ROOT/'scripts/118_manuscript_completion.py',ROOT/'scripts/121_table_audit.py'])
+                    ROOT/'scripts/118_manuscript_completion.py',ROOT/'scripts/121_table_audit.py',
+                    ROOT/'scripts/122_task_presentation.py',PAPER/'refs.bib'])
     tracked.update((ROOT/'data').glob('*/build_report.json'))
     tracked.update((ROOT/'data').glob('*/*.jsonl'))
     from bidir.config import RUNS_DIR
@@ -63,7 +64,8 @@ def main():
         main_outputs = [PAPER/'MAIN_RESULTS.json', PAPER/'tables/main_adaptations.tex',
                         PAPER/'tables/main_loss_baselines.tex',PAPER/'MANUSCRIPT_COMPLETION.json',
                         PAPER/'tables/methods_details.tex',PAPER/'tables/revised_domain_results.tex',
-                        PAPER/'TABLE_COMPLETION_AUDIT.json']
+                        PAPER/'TABLE_COMPLETION_AUDIT.json',PAPER/'TASK_METHODS.json',
+                        PAPER/'tables/main_adaptations_full.tex',PAPER/'figures/preservation_focus.pdf']
         if unchanged and (not args.build or (all(p.exists() for p in main_outputs) and (PAPER/'main.pdf').exists()
                                             and (PAPER/'main.pdf').stat().st_mtime>=snapshot.stat().st_mtime)):
             print('paper evidence unchanged');return 0
@@ -97,7 +99,7 @@ def main():
         ['Task','Model','Seed',r'$\Delta$ CL-fwd versus SFT',r'$\Delta$ CL-mix5 versus mix5'],rows,
         'Completed exploratory reverse-generation contrasts (percentage points), with 99\\% paired cluster-bootstrap intervals. '
         'Five primary contrasts are adjusted within each cell; no adjustment across cells. '
-        'All proof-valid original and scale/domain-extension cells are included; failed-gate cells '
+        'All completed original and scale/domain-extension comparisons are included; excluded cells '
         'remain eligibility boundaries rather than tuned comparisons.',
         'contrastive-snapshot'))
     (PAPER/'tables/contrastive_controls.tex').write_text(table(
@@ -106,7 +108,7 @@ def main():
         'paired cluster-bootstrap intervals. Together with Table~\\ref{tab:contrastive-snapshot}, these display '
         'all five primary comparisons for every completed cell. Extra CE is an exposure/compute proxy, not '
         'matched measured FLOPs. Degenerate zero intervals at an observed generation floor do not establish '
-        'equivalence. Results remain exploratory; new scale/domain extensions are pending.', 'contrastive-controls'))
+        'equivalence. These intervals are exploratory.', 'contrastive-controls'))
     gates=[]
     for domain in ['units','logic','py_cpp']:
         for model in ['llama32-3b','gemma3-4b']:
@@ -117,7 +119,8 @@ def main():
                           f"{100*d['directions']['reverse']['rate']:.1f}", 'Pass' if d['passes_gate'] else 'Fail'])
     (PAPER/'tables/domain_gates_snapshot.tex').write_text(table(
         ['Task','Model','Forward','Reverse','Eligibility'],gates,
-        'Original new-domain base gates: strict success in percent. Failed cells are retained and receive no tuned pilot. '
+        'Initial task feasibility: base-model strict success in percent. Comparisons require '
+        'adequate performance in both directions and a scorer that rejects copied outputs. '
         'Explicit-output diagnostics use the same semantic splits and are separate exploratory variants.', 'domain-gates-snapshot'))
     diagnostic_gates=[]
     for domain in ['units_explicit','logic_explicit','py_cpp_explicit']:
@@ -188,16 +191,14 @@ def main():
                                        f"{100*m['forward']:.1f}",f"{100*m['reverse']:.1f}"])
     (PAPER/'tables/fullft_snapshot.tex').write_text(table(
         ['Task','Seed','Direction','Base','Full SFT','Full mix5'],full_rows,
-        'Completed Llama3B full-weight campaign rates in percent, with forward and reverse retention. '
+        'Llama3B full-weight fine-tuning, with forward and backward success in percent. '
         'Checkpoints use isolated engines and identical held-out instances; '
-        'these comparisons span engine restarts. Paired intervals are recorded in followup contrasts. '
-        'An empty body means no validated full campaign has completed.', 'fullft-snapshot'))
+        'these comparisons span engine restarts. Paired intervals accompany the result data.', 'fullft-snapshot'))
     (PAPER/'tables/generality_snapshot.tex').write_text(table(
         ['Task','Model','Seed','Arm','Forward','Reverse'],generality_rows,
-        'Eligible larger-model generality campaigns: strict success in percent, with all arms and the base '
-        'evaluated in one fresh pass per model/task/seed. The completed unit-conversion replications '
-        'improve both directions under SFT and are retained null-collapse boundary cases. '
-        'Additional eligible campaigns enter this table after validated analysis.', 'generality-snapshot'))
+        'Larger-model task comparisons: strict success in percent, with all adaptations and the base '
+        'evaluated on the same examples per training run. Unit-conversion replications '
+        'improve both directions under SFT, providing a null case for directional collapse.', 'generality-snapshot'))
     # Keep every model/seed separate. These summaries are inventories, not pooled tests.
     macros={'contrastive-completed-cells':len(reports),'contrastive-planned-cells':27,
             'audited-core-cells':len(cells),'failed-new-domain-gates':sum(r[-1]=='Fail' for r in gates),
@@ -212,8 +213,8 @@ def main():
         group=[c for c in cells if c['model']==model]
         model_rows.append([escape(model),len({c['domain'] for c in group}),len(group),sum(c['collapse'] is True for c in group)])
     (PAPER/'tables/core_inventory.tex').write_text(table(
-        ['Model','Task orientations','Cells','Threshold met'],model_rows,
-        'Audited model--task--seed cells. Threshold met means SFT reverse strict success is at most half the same-pass base rate. '
+        ['Model','Task orientations','Training runs','Severe losses'],model_rows,
+        'Evaluated model--task--training-run combinations. Severe loss means SFT backward success is at most half the base rate on the same examples. '
         'Counts are descriptive and are not independent task counts or pooled significance tests.', 'core-inventory'))
     plot_core(cells)
     atomic_json(PAPER/'EVIDENCE_SNAPSHOT.json',dict(updated_utc=datetime.now(timezone.utc).isoformat(),
@@ -264,6 +265,7 @@ def build_paper():
     import subprocess
     subprocess.run([sys.executable,str(ROOT/'scripts/117_main_results.py')],cwd=ROOT,check=True,timeout=180)
     subprocess.run([sys.executable,str(ROOT/'scripts/118_manuscript_completion.py')],cwd=ROOT,check=True,timeout=180)
+    subprocess.run([sys.executable,str(ROOT/'scripts/122_task_presentation.py')],cwd=ROOT,check=True,timeout=180)
     subprocess.run([sys.executable,str(ROOT/'scripts/121_table_audit.py')],cwd=ROOT,check=True,timeout=180)
     subprocess.run([sys.executable,str(ROOT/'scripts/93_numbers.py')],cwd=ROOT,check=True,timeout=180)
     completed=subprocess.run(['make','paper'],cwd=ROOT,capture_output=True,text=True,timeout=180)

@@ -22,12 +22,18 @@ section of [ARGUMENT.md](ARGUMENT.md) for the provenance and limits of this exte
 
 The main presentation now has two percentage tables:
 
-- Table 1: all eleven Llama3B seed-17 task orientations, forward/backward rows, base,
-  SFT, every reversal dose and every registered main-grid control. Blue identifies low
+- Preservation table: all eleven Llama3B reference task orientations, forward/backward rows,
+  base, forward SFT, 1% reversal and 5% reversal. The full ladder and controls are in the appendix. Blue identifies low
   doses; red identifies SFT backward rates at or below half of the same-pass base.
-- Table 2: every eligible original seed-17 contrastive task/model cell and every audited
+- Objective table: every eligible original reference contrastive task/model comparison and every measured
   seed-17 auxiliary-objective cell, with both directions and fresh within-pass baselines.
   Preserve mixed-direction contrastive gains, round-trip tradeoffs and the units null.
+
+A task-definition table comes before results. `task_methods.tex` consolidates datasets,
+splits, exact prompts, actual predicates, model/direction translation thresholds and
+round-trip checks. `TASK_METHODS.json` records source hashes, realized doses, paired
+uncertainty and repeat-run variation. The simpler four-system figure and repeat-run findings
+support the central preservation comparison. See [revision details](../docs/PAPER_REVIEW_REVISION.md).
 
 Highlighting is descriptive. Missing dose rungs are dashes. Model/seed coverage and paired
 intervals remain in the appendix and source audit. Memorization or memory erasure is not

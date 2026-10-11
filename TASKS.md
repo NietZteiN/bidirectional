@@ -27,8 +27,8 @@ The completed sprint draft is frozen at Git commit34de8d0; its
       skip broad scheduling and old shell-queue launches while this priority is active.
 - [x] Pass 43 targeted regression tests and all five detached-controller health checks;
       rebuild the eight-body-page draft with resolved numeric macros and references.
-      GPU checks are queued, not yet validated; 33 numeric table positions remain pending,
-      including nine duplicate legacy positions.
+      GPU checks are queued, not yet validated. The gap report distinguishes missing
+      arm combinations from duplicate positions in the primary and appendix tables.
 
 See [table completion plan](docs/TABLE_COMPLETION_PLAN.md). Current job/phase progress:
 [table scheduler](runs/feeder/table_completion_status.json). New results enter the paper
@@ -111,7 +111,21 @@ Proof-valid counts:[paper diagnostic report](paper/MECHANISM_DIAGNOSTICS.json), 
 The sprint snapshot contains five proof-valid production jobs. The other19 registered
 jobs are now held under Amendment56; the full registered production denominator remains24.
 
-## Current manuscript revision — October 10
+## Task-first manuscript revision — October 10
+
+- [x] Explain each task's input, requested outputs, data source and actual correctness check
+      before presenting results; show training sizes and realized 1%/5% pair counts.
+- [x] Consolidate exact prompts, parsing rules, translation thresholds and round-trip checks
+      in a dedicated appendix, including missing historical dataset versions and scorer limits.
+- [x] Simplify the main table and figure; retain the full ladder, paired intervals, all
+      measured auxiliary contrasts and training-run variation in the appendix.
+- [x] Lead results with findings; put objective attribution before supporting diagnostics.
+- [x] Remove project-status prose and bibliography reading notes; fix citation authors
+      and the reversed algebra orientation labels without changing any experiment.
+
+See [revision details](docs/PAPER_REVIEW_REVISION.md) and [updated manuscript](paper/main.pdf).
+
+## Previous manuscript checkpoint — retained history
 
 - [x] Integrate all twelve completed versioned-domain pilots, including all seeds,
       replay wins, mixture failures and forward costs; distinguish reused-corpus

@@ -1,5 +1,5 @@
 {
-  "generator_sha256": "bcc8f685b2c16330d3cd753952987fa565b4016aeb5f91a7ca3ca7d83dad5f0c",
+  "generator_sha256": "a0a9d54c66de75d50f1be4445093a509c98f3ee31339545347b59fd32a3546e3",
   "revised_domain_campaigns": [
     {
       "domain": "fmt_contract_v2",
@@ -7,25 +7,25 @@
       "seed": 17,
       "run": "/scratch/juno/jvl210002/bidir/results/2026-10-10/fmt_contract_v2/llama31-8b/repair_domain_pilot_s17",
       "means": {
-        "base": {
-          "forward": 0.344,
-          "reverse": 0.6
-        },
-        "replay": {
-          "forward": 0.999,
-          "reverse": 0.548
+        "rev": {
+          "forward": 0.0,
+          "reverse": 0.999
         },
         "sft": {
           "forward": 0.999,
           "reverse": 0.63
         },
-        "rev": {
-          "forward": 0.0,
-          "reverse": 0.999
+        "replay": {
+          "forward": 0.999,
+          "reverse": 0.548
         },
         "mix50": {
           "forward": 0.999,
           "reverse": 1.0
+        },
+        "base": {
+          "forward": 0.344,
+          "reverse": 0.6
         }
       }
     },
@@ -35,25 +35,25 @@
       "seed": 42,
       "run": "/scratch/juno/jvl210002/bidir/results/2026-10-11/fmt_contract_v2/llama31-8b/repair_domain_pilot_s42",
       "means": {
-        "base": {
-          "forward": 0.349,
-          "reverse": 0.609
-        },
-        "replay": {
-          "forward": 0.997,
-          "reverse": 0.165
+        "rev": {
+          "forward": 0.001,
+          "reverse": 0.999
         },
         "sft": {
           "forward": 0.999,
           "reverse": 0.616
         },
-        "rev": {
-          "forward": 0.001,
-          "reverse": 0.999
+        "replay": {
+          "forward": 0.997,
+          "reverse": 0.165
         },
         "mix50": {
           "forward": 0.999,
           "reverse": 1.0
+        },
+        "base": {
+          "forward": 0.349,
+          "reverse": 0.609
         }
       }
     },
@@ -63,25 +63,25 @@
       "seed": 1234,
       "run": "/scratch/juno/jvl210002/bidir/results/2026-10-11/fmt_contract_v2/llama31-8b/repair_domain_pilot_s1234",
       "means": {
-        "base": {
-          "forward": 0.344,
-          "reverse": 0.6
-        },
-        "replay": {
-          "forward": 0.997,
-          "reverse": 0.157
+        "rev": {
+          "forward": 0.011,
+          "reverse": 0.999
         },
         "sft": {
           "forward": 0.999,
           "reverse": 0.666
         },
-        "rev": {
-          "forward": 0.011,
-          "reverse": 0.999
+        "replay": {
+          "forward": 0.997,
+          "reverse": 0.157
         },
         "mix50": {
           "forward": 1.0,
           "reverse": 1.0
+        },
+        "base": {
+          "forward": 0.344,
+          "reverse": 0.6
         }
       }
     },
@@ -91,25 +91,25 @@
       "seed": 17,
       "run": "/scratch/juno/jvl210002/bidir/results/2026-10-10/units_contract_v2/gemma3-12b/repair_domain_pilot_s17",
       "means": {
-        "base": {
-          "forward": 0.399,
-          "reverse": 0.469
-        },
-        "replay": {
-          "forward": 0.922,
-          "reverse": 0.65
+        "rev": {
+          "forward": 0.387,
+          "reverse": 0.957
         },
         "sft": {
           "forward": 0.97,
           "reverse": 0.703
         },
-        "rev": {
-          "forward": 0.387,
-          "reverse": 0.957
+        "replay": {
+          "forward": 0.922,
+          "reverse": 0.65
         },
         "mix50": {
           "forward": 0.951,
           "reverse": 0.899
+        },
+        "base": {
+          "forward": 0.399,
+          "reverse": 0.469
         }
       }
     },
@@ -119,25 +119,25 @@
       "seed": 42,
       "run": "/scratch/juno/jvl210002/bidir/results/2026-10-10/units_contract_v2/gemma3-12b/repair_domain_pilot_s42",
       "means": {
-        "base": {
-          "forward": 0.399,
-          "reverse": 0.469
-        },
-        "replay": {
-          "forward": 0.929,
-          "reverse": 0.73
+        "rev": {
+          "forward": 0.272,
+          "reverse": 0.956
         },
         "sft": {
           "forward": 0.973,
           "reverse": 0.733
         },
-        "rev": {
-          "forward": 0.272,
-          "reverse": 0.956
+        "replay": {
+          "forward": 0.929,
+          "reverse": 0.73
         },
         "mix50": {
           "forward": 0.938,
           "reverse": 0.88
+        },
+        "base": {
+          "forward": 0.399,
+          "reverse": 0.469
         }
       }
     },
@@ -147,25 +147,25 @@
       "seed": 1234,
       "run": "/scratch/juno/jvl210002/bidir/results/2026-10-10/units_contract_v2/gemma3-12b/repair_domain_pilot_s1234",
       "means": {
-        "base": {
-          "forward": 0.399,
-          "reverse": 0.469
-        },
-        "replay": {
-          "forward": 0.944,
-          "reverse": 0.704
+        "rev": {
+          "forward": 0.091,
+          "reverse": 0.959
         },
         "sft": {
           "forward": 0.972,
           "reverse": 0.712
         },
-        "rev": {
-          "forward": 0.091,
-          "reverse": 0.959
+        "replay": {
+          "forward": 0.944,
+          "reverse": 0.704
         },
         "mix50": {
           "forward": 0.944,
           "reverse": 0.886
+        },
+        "base": {
+          "forward": 0.399,
+          "reverse": 0.469
         }
       }
     },
@@ -175,25 +175,25 @@
       "seed": 17,
       "run": "/scratch/juno/jvl210002/bidir/results/2026-10-10/py_cpp_typed_v2/gemma3-12b/repair_domain_pilot_s17",
       "means": {
-        "base": {
-          "forward": 0.862,
-          "reverse": 0.95
-        },
-        "replay": {
-          "forward": 0.092,
-          "reverse": 0.0
+        "rev": {
+          "forward": 0.0,
+          "reverse": 1.0
         },
         "sft": {
           "forward": 1.0,
           "reverse": 0.35
         },
-        "rev": {
-          "forward": 0.0,
-          "reverse": 1.0
+        "replay": {
+          "forward": 0.092,
+          "reverse": 0.0
         },
         "mix50": {
           "forward": 1.0,
           "reverse": 1.0
+        },
+        "base": {
+          "forward": 0.862,
+          "reverse": 0.95
         }
       }
     },
@@ -203,25 +203,25 @@
       "seed": 42,
       "run": "/scratch/juno/jvl210002/bidir/results/2026-10-10/py_cpp_typed_v2/gemma3-12b/repair_domain_pilot_s42",
       "means": {
-        "base": {
-          "forward": 0.862,
-          "reverse": 0.95
-        },
-        "replay": {
-          "forward": 0.361,
-          "reverse": 0.305
+        "rev": {
+          "forward": 0.0,
+          "reverse": 1.0
         },
         "sft": {
           "forward": 1.0,
           "reverse": 0.727
         },
-        "rev": {
-          "forward": 0.0,
-          "reverse": 1.0
+        "replay": {
+          "forward": 0.361,
+          "reverse": 0.305
         },
         "mix50": {
           "forward": 0.85,
           "reverse": 1.0
+        },
+        "base": {
+          "forward": 0.862,
+          "reverse": 0.95
         }
       }
     },
@@ -231,25 +231,25 @@
       "seed": 1234,
       "run": "/scratch/juno/jvl210002/bidir/results/2026-10-10/py_cpp_typed_v2/gemma3-12b/repair_domain_pilot_s1234",
       "means": {
-        "base": {
-          "forward": 0.862,
-          "reverse": 0.95
-        },
-        "replay": {
-          "forward": 0.023,
-          "reverse": 0.0
+        "rev": {
+          "forward": 0.0,
+          "reverse": 1.0
         },
         "sft": {
           "forward": 0.748,
           "reverse": 0.558
         },
-        "rev": {
-          "forward": 0.0,
-          "reverse": 1.0
+        "replay": {
+          "forward": 0.023,
+          "reverse": 0.0
         },
         "mix50": {
           "forward": 0.735,
           "reverse": 1.0
+        },
+        "base": {
+          "forward": 0.862,
+          "reverse": 0.95
         }
       }
     },
@@ -259,25 +259,25 @@
       "seed": 17,
       "run": "/scratch/juno/jvl210002/bidir/results/2026-10-10/py_cpp_typed_v2/llama31-8b/repair_domain_pilot_s17",
       "means": {
-        "base": {
-          "forward": 0.842,
-          "reverse": 1.0
-        },
-        "replay": {
-          "forward": 0.996,
-          "reverse": 0.994
+        "rev": {
+          "forward": 0.0,
+          "reverse": 0.0
         },
         "sft": {
           "forward": 1.0,
           "reverse": 0.0
         },
-        "rev": {
-          "forward": 0.0,
-          "reverse": 0.0
+        "replay": {
+          "forward": 0.996,
+          "reverse": 0.994
         },
         "mix50": {
           "forward": 1.0,
           "reverse": 0.484
+        },
+        "base": {
+          "forward": 0.842,
+          "reverse": 1.0
         }
       }
     },
@@ -287,25 +287,25 @@
       "seed": 42,
       "run": "/scratch/juno/jvl210002/bidir/results/2026-10-11/py_cpp_typed_v2/llama31-8b/repair_domain_pilot_s42",
       "means": {
-        "base": {
-          "forward": 0.859,
-          "reverse": 1.0
-        },
-        "replay": {
-          "forward": 0.999,
-          "reverse": 0.994
+        "rev": {
+          "forward": 0.0,
+          "reverse": 0.0
         },
         "sft": {
           "forward": 1.0,
           "reverse": 0.0
         },
-        "rev": {
-          "forward": 0.0,
-          "reverse": 0.0
+        "replay": {
+          "forward": 0.999,
+          "reverse": 0.994
         },
         "mix50": {
           "forward": 0.018,
           "reverse": 0.0
+        },
+        "base": {
+          "forward": 0.859,
+          "reverse": 1.0
         }
       }
     },
@@ -315,25 +315,25 @@
       "seed": 1234,
       "run": "/scratch/juno/jvl210002/bidir/results/2026-10-11/py_cpp_typed_v2/llama31-8b/repair_domain_pilot_s1234",
       "means": {
-        "base": {
-          "forward": 0.859,
-          "reverse": 1.0
-        },
-        "replay": {
-          "forward": 0.959,
-          "reverse": 0.978
+        "rev": {
+          "forward": 0.0,
+          "reverse": 0.0
         },
         "sft": {
           "forward": 1.0,
           "reverse": 0.0
         },
-        "rev": {
-          "forward": 0.0,
-          "reverse": 0.0
+        "replay": {
+          "forward": 0.959,
+          "reverse": 0.978
         },
         "mix50": {
           "forward": 1.0,
           "reverse": 0.001
+        },
+        "base": {
+          "forward": 0.859,
+          "reverse": 1.0
         }
       }
     }

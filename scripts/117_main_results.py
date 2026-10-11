@@ -20,7 +20,7 @@ TASKS = {'mt_de-en':'German $\\to$ English', 'mt_en-de':'English $\\to$ German',
          'mt_en-zh':'English $\\to$ Chinese', 'mt_zh-en':'Chinese $\\to$ English',
          'code':'Code transformation', 'sql':'Question $\\to$ SQL',
          'fmt':'Format conversion', 'relation':'Factual relations',
-         'algebra':'Expand $\\to$ factor', 'algebra_rev':'Factor $\\to$ expand',
+         'algebra':'Polynomial expansion', 'algebra_rev':'Polynomial factorization',
          'exec':'Execution prediction', 'units':'Unit conversion'}
 MODELS = {'llama32-3b':'L3B','llama31-8b':'L8B','gemma3-4b':'G4B',
           'gemma3-12b':'G12B','olmo2-1b':'O1B'}
@@ -108,21 +108,35 @@ def grid(campaigns, arms, labels, with_model=False, dose_groups=False):
     return '\n'.join(lines+[r'\bottomrule',r'\end{tabular}'])
 
 
+def full_adaptations(core):
+    return '\n'.join([r'\begin{table*}[t]',r'\centering\footnotesize',
+        grid(core,CORE_ARMS,['Base','SFT',r'1\%',r'5\%',r'10\%',r'25\%',r'50\%',
+                            'Replay','Rev.',r'Fwd2$\times$','Flip','Multi'],dose_groups=True),
+        r'\caption{Full dose ladder and secondary controls, strict success (\%). '
+        r'Llama 3.2-3B, training seed 17. F/B means forward/backward. '
+        r'Replay replaces half of task examples with generic instructions; Rev. trains '
+        r'backward only; Fwd2$\times$ doubles forward training; Flip trains both directions '
+        r'at doubled budget; Multi mixes other tasks. Each task uses the base model '
+        r'evaluated on the same examples as every adaptation. Dashes denote proportions '
+        r'not yet evaluated. Low-dose relation/execution experiments have fewer than one '
+        r'effective batch of distinct reversed pairs; these exploratory additions are '
+        r'excluded from the original dose-knee analysis.}\label{tab:full-adaptations}',r'\end{table*}'])
+
+
 def render(core, contrastive, auxiliary):
     intro = (r'Strict success (\%); F/B denotes forward/backward. '
              r'Blue highlights small reversed-pair doses; red highlights SFT backward '
-             r'success at most half the same-pass base (a descriptive threshold). ')
+             r'success at most half the base rate (a descriptive threshold). ')
     primary = '\n'.join([r'\begin{table*}[!t]',r'\centering\footnotesize',
-        grid(core,CORE_ARMS,['Base','SFT',r'1\%',r'5\%',r'10\%',r'25\%',r'50\%',
-                            'Replay','Rev.',r'Fwd2$\times$','Flip','Multi'],dose_groups=True),
-        r'\caption{'+intro+r'Llama 3.2-3B, fixed seed 17, all eleven audited task orientations. '
+        grid(core,['base','sft','mix1','mix5'],['Base','Forward SFT',r'1\% reversal',r'5\% reversal']),
+        r'\caption{'+intro+r'Llama 3.2-3B, training seed 17, all eleven task orientations. '
         r'Dose columns replace that share of forward pairs with their reversals, keeping '
-        r'instances and steps fixed. Replay replaces $50\%$ with generic instructions; '
-        r'Rev. trains backward only; Fwd2$\times$ doubles forward training; Flip trains both '
-        r'directions at doubled budget; Multi mixes other tasks. Dashes are unresolved '
-        r'dose rungs, not zeros. The relation/execution low-dose extension (Amendment57) '
-        r'uses fewer than one effective batch of distinct reversed pairs; it is exploratory '
-        r'and excluded from the original registered knee analysis.}\label{tab:main-adaptations}',r'\end{table*}'])
+        r'instances and optimizer steps fixed. Preservation starts from the base checkpoint; '
+        r'this is not repair after forward-only training. Full doses and controls appear '
+        r'in Table~\ref{tab:full-adaptations}, and variation across training runs in '
+        r'Table~\ref{tab:main-seed-variation}. Dashes denote proportions not yet evaluated. '
+        r'Relation/execution low doses are exploratory small-corpus additions.}'
+        r'\label{tab:main-adaptations}',r'\end{table*}'])
     pieces = [r'\begin{table*}[!t]',r'\centering\footnotesize',
               r'\textbf{(a) Contrastive objectives and exposure controls}\par\smallskip',
         grid(contrastive,CL_ARMS,['Base','SFT',r'5\%','Replay','Rev.','CL-F','CL-M',
@@ -131,16 +145,17 @@ def render(core, contrastive, auxiliary):
         pieces += [r'\par\medskip\textbf{(b) Other auxiliary objectives}\par\smallskip',
             grid(auxiliary,['base','sft','mix5','cft','unlikelihood','roundtrip'],
                  ['Base','SFT',r'5\%','CFT','Unlikelihood','Round-trip'],True)]
-    pieces += [r'\caption{'+intro+r'All eligible original contrastive and audited '
-        r'auxiliary-objective cells at fixed seed 17. Each task/model row pair uses its own '
-        r'fresh evaluation pass and base; scores across campaigns are not treatment contrasts. '
+    pieces += [r'\caption{Strict success (\%); F/B means forward/backward. '
+        r'Colors follow Table~\ref{tab:main-adaptations}. Contrastive and other auxiliary '
+        r'objectives, training seed 17. Each task/model comparison evaluates its own '
+        r'base and adaptations on the same examples. '
         r'L/G denotes Llama/Gemma; B denotes billions of parameters. The $5\%$ column is '
         r'ordinary reversed-pair SFT. CL-F/M adds alignment to forward/mixed-direction CE; '
         r'Shuffle randomizes positive pairs; CE-F+/M+ adds CE as an exposure proxy; '
         r'CFT is the reconstructed code-equivalence contrastive fine-tuning recipe. '
-        r'Dashes denote pending compatible objectives; n/a marks code-equivalence CFT '
-        r'outside code. Failed gates, other seeds and paired intervals '
-        r'remain in the appendix/audit.}'
+        r'Dashes denote objectives not yet evaluated; n/a marks code-equivalence CFT '
+        r'outside code. Paired contrasts and variation across training runs appear '
+        r'in Appendix~\ref{app:complete-main-comparisons}.}'
         r'\label{tab:main-loss-baselines}',r'\end{table*}']
     return primary, '\n'.join(pieces)
 
@@ -161,6 +176,10 @@ def main():
         run = Path(c['run'])
         admission[str(run)] = dict(withdrawn=(run/'WITHDRAWN.txt').exists(),
                                   exposure=c.get('auxiliary_exposure',{}))
+        if c in core_records:
+            for arm in ['sft','mix1','mix5']:
+                path=adapter_dir(c['domain'],c['model'],arm,32,17)/'training_summary.json'
+                fingerprints[str(path)]=sha(path) if path.exists() else None
         for method in set(c.get('means',{})) & {'cft','unlikelihood','roundtrip'}:
             adapter = adapter_dir(c['domain'],c['model'],method,32,17)
             admission[str(adapter)] = (adapter/'WITHDRAWN.txt').exists()
@@ -171,7 +190,7 @@ def main():
     signature = hashlib.sha256(json.dumps([sha(__file__),fingerprints,admission,statuses],sort_keys=True).encode()).hexdigest()
     report_path = PAPER/'MAIN_RESULTS.json'
     if (report_path.exists() and json.loads(report_path.read_text()).get('signature') == signature
-            and all((PAPER/'tables'/f).exists() for f in ['main_adaptations.tex','main_loss_baselines.tex'])):
+            and all((PAPER/'tables'/f).exists() for f in ['main_adaptations.tex','main_adaptations_full.tex','main_loss_baselines.tex'])):
         print('main result tables unchanged');return 0
     sources = {}; core=[]; contrastive=[]; auxiliary=[]; rejected=[]
     for c in records:
@@ -213,7 +232,7 @@ def main():
     if {c['domain'] for c in core} != set(TASKS)-{'units'}:
         raise ValueError('reference panel incomplete; do not select a favorable subset')
     primary,losses = render(core,contrastive,auxiliary)
-    for name,content in [('main_adaptations.tex',primary),('main_loss_baselines.tex',losses)]:
+    for name,content in [('main_adaptations.tex',primary),('main_adaptations_full.tex',full_adaptations(core)),('main_loss_baselines.tex',losses)]:
         (PAPER/'tables'/name).write_text('% GENERATED by scripts/117_main_results.py\n'+content+'\n')
     numbers={}
     for c in core:
@@ -221,6 +240,20 @@ def main():
             if arm not in c['means']:continue
             for direction,label in [('forward','forward'),('reverse','backward')]:
                 numbers[f"main-{c['domain'].replace('_','-')}-{arm}-{label}"] = dict(
+                    value=f"{100*c['means'][arm][direction]:.1f}",run=c['run'],trial_sha256=c['trial_sha256'])
+        for arm in ['sft','mix1','mix5']:
+            path=adapter_dir(c['domain'],c['model'],arm,32,17)/'training_summary.json'
+            if not path.exists():continue
+            t=json.loads(path.read_text());sources[str(path)]=sha(path)
+            key=(f"main-{c['domain'].replace('_','-')}-training-pairs" if arm=='sft' else
+                 f"main-{c['domain'].replace('_','-')}-{arm}-pairs")
+            n=(t['lengths']['n_kept'] if arm=='sft' else
+               t['balance']['by_task'].get('rev',0)-t['lengths'].get('dropped_by_task',{}).get('rev',0))
+            numbers[key]=dict(value=str(n),run=c['run'],trial_sha256=c['trial_sha256'],sources=[str(path)])
+    for c in auxiliary+contrastive:
+        for arm in c['means']:
+            for direction,label in [('forward','forward'),('reverse','backward')]:
+                numbers[f"main-objective-{c['domain'].replace('_','-')}-{c['model']}-{arm}-{label}"]=dict(
                     value=f"{100*c['means'][arm][direction]:.1f}",run=c['run'],trial_sha256=c['trial_sha256'])
     atomic_json(report_path,dict(signature=signature,selection='Llama3B seed 17 all11 orientations; all original seed 17 CL and audited auxiliary cells',
         core=core,contrastive=contrastive,auxiliary=auxiliary,rejected=rejected,numbers=numbers,

@@ -1,0 +1,25 @@
+\begin{table*}[t]
+\centering\small
+\setlength{\tabcolsep}{4pt}
+\begin{tabular}{p{0.15\textwidth}p{0.38\textwidth}p{0.34\textwidth}r}
+\toprule
+Task & Input and required output & Primary success check & Train \\
+\midrule
+Code transformation & Readable Python $\to$ obfuscated Python; e.g. renaming \texttt{count} to \texttt{a0} without changing execution. Backward requests readable code. & Execution agrees on stored tests and output is not a copy. Original identifier names are not required. & 6499 \\
+\addlinespace[3pt]
+Format conversion & JSON $\to$ YAML/XML; Markdown table $\to$ CSV. Backward converts back; e.g. \texttt{\{"id": 3\}} $\leftrightarrow$ \texttt{id: 3}. & Target parser accepts output, data structures agree, and output is not a copy. YAML syntax need not be exclusive to YAML. & 6500 \\
+\addlinespace[3pt]
+Translation & English $\leftrightarrow$ German/Chinese; both training orientations. E.g. ``Good morning'' $\leftrightarrow$ ``Guten Morgen''. & Target-language check and COMET-22 above a fixed model/direction threshold; backward additionally rejects copies. & 6500 \\
+\addlinespace[3pt]
+Question $\to$ SQL & Question plus schema $\to$ SQLite query; backward produces a question. E.g. ``How many rows?'' $\leftrightarrow$ \texttt{SELECT COUNT(*) FROM t}. & Forward: equal database results. Backward: a frozen parser maps the question to a query with equal results. & 6499 \\
+\addlinespace[3pt]
+Factual relations & Country $\to$ capital, ISO code or TLD; backward identifies the country. E.g. France $\leftrightarrow$ Paris. & Normalized first-line exact match, excluding copies. Ambiguous relation values are removed before splitting. & 504 \\
+\addlinespace[3pt]
+Execution prediction & Function and argument $\to$ return value; backward finds an argument. For $f(x)=x^2$, $3\to9$; backward accepts $3$ or $-3$. & Forward: return value agrees with execution. Backward: any argument executing to the requested value is correct. & 302 \\
+\addlinespace[3pt]
+Algebra & Factored $\to$ expanded polynomial, and the opposite training orientation. E.g. $(x+1)(x-1)\leftrightarrow x^2-1$. & Symbolic equivalence and no copy; factoring also requires a nonexpanded product. Expansion has no separate form check. & 6500 \\
+\addlinespace[3pt]
+\bottomrule
+\end{tabular}
+\caption{Task definitions and small illustrative examples (not scored test items). Train is the number of retained forward-SFT pairs for the Llama3B reference run. Sources: local Python transformation corpus, synthetic formats/algebra, News Commentary (training) and FLORES-200 (test), Spider, country-relation instruction datasets, and CRUXEval, respectively. Appendix~\ref{app:task-scoring} gives splits, exact prompt templates, thresholds, parsing and exclusions.}\label{tab:task-definitions}
+\end{table*}

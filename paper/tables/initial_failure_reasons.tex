@@ -1,0 +1,11 @@
+\begin{table*}[t]\centering\small
+\begin{tabular}{llp{0.62\textwidth}}\toprule
+Task & Model & Reason an original comparison is excluded \\\midrule
+units & L3B & forward success below 10\%; forward format failures above 15\%; backward success below 10\%; backward format failures above 15\% \\
+units & G4B & forward format failures above 15\%; backward success below 10\%; backward format failures above 15\% \\
+logic & L3B & forward success below 10\%; forward format failures above 15\%; backward success below 10\%; backward format failures above 15\% \\
+logic & G4B & forward success below 10\%; forward format failures above 15\%; backward success below 10\% \\
+py\_cpp & L3B & forward format failures above 15\%; backward format failures above 15\% \\
+py\_cpp & G4B & forward success below 10\%; forward format failures above 15\% \\
+\bottomrule\end{tabular}
+\caption{Scientific reasons for excluding the original small-model task extensions. Correctness criteria are unchanged; revised-output versions are separate exploratory comparisons.}\label{tab:initial-failure-reasons}\end{table*}

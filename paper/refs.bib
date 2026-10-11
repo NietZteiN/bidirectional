@@ -1,7 +1,7 @@
 % Verified against the PDFs in this directory on 2026-09-10. Venue and year for every entry
 % were read off the paper itself, not from a search result.
 
-@inproceedings{nikiema2025contrastive,
+@misc{nikiema2025contrastive,
   title     = {Using Contrastive Learning to Improve Two-Way Reasoning in Large Language Models:
                The Obfuscation Task as a Case Study},
   author    = {Nikiema, Serge Lionel and Samhi, Jordan and Moumoula, Micheline and Dji{\'e}, Albarick
@@ -9,11 +9,7 @@
   year      = {2025},
   eprint    = {2509.05553},
   archivePrefix = {arXiv},
-  primaryClass  = {cs.CL},
-  note      = {Names ``cognitive specialization'': forward-only fine-tuning degrades pre-existing
-               bidirectional reasoning. Declares a Bidirectional Fine-Tuning baseline (p.~6) and
-               reports no number for it.}
-}
+  primaryClass  = {cs.CL},}
 
 @inproceedings{hasanov2026pathnottaken,
   title     = {The Path Not Taken: Duality in Reasoning about Program Execution},
@@ -22,10 +18,7 @@
   booktitle = {Proceedings of the 64th Annual Meeting of the Association for Computational Linguistics},
   year      = {2026},
   eprint    = {2604.20917},
-  archivePrefix = {arXiv},
-  note      = {DexBench: 445 paired instances, 13 LLMs evaluated. No fine-tuning.
-               Code and data at https://github.com/sail-ucf/dexbench}
-}
+  archivePrefix = {arXiv},}
 
 @inproceedings{zhu2024finetuning,
   title     = {Fine-Tuning Large Language Models to Translate: Will a Touch of Noisy Data in
@@ -34,41 +27,30 @@
                and Klakow, Dietrich},
   booktitle = {Proceedings of the 2024 Conference on Empirical Methods in Natural Language Processing},
   year      = {2024},
-  url       = {https://aclanthology.org/2024.emnlp-main.24/},
-  note      = {Single-direction fine-tuning generalizes, EXCEPT that English on the target side
-               causes task misinterpretation damaging translation into non-English.}
-}
+  url       = {https://aclanthology.org/2024.emnlp-main.24/},}
 
 @misc{dirasym2025synthetic,
   title  = {Directional Optimization Asymmetry in Transformers: A Synthetic Stress Test},
   year   = {2025},
   eprint = {2511.19997},
-  archivePrefix = {arXiv},
-  note   = {Random i.i.d. string mappings, branching factor K, entropy floor log K. Forward and
-            reverse converge identically at K=1; asymmetry appears only as the inverse becomes
-            one-to-many. GPT-2 Small scale.}
-}
+  archivePrefix = {arXiv},}
 
 @misc{inversedata2025pitfalls,
   title  = {When Inverse Data Outperforms: Exploring the Pitfalls of Mixed Data in Multi-Stage
             Fine-Tuning},
   year   = {2025},
   eprint = {2509.13079},
-  archivePrefix = {arXiv},
-  note   = {r1k (reverse) beats s1k (forward) by 1.6--6.8\%; a 1:1 mixture narrows the
-            preferred/dispreferred log-likelihood margin to 0.05--0.1.}
-}
+  archivePrefix = {arXiv},}
 
 @misc{latentgen2026illusion,
+  author = {Coda-Forno, Julian and Wang, Jane X. and Chaudhry, Arslan},
   title  = {The Illusion of Latent Generalization: Bi-directionality and the Reversal Curse},
   year   = {2026},
   eprint = {2604.04943},
-  archivePrefix = {arXiv},
-  note   = {Probes are consistent with forward and reverse stored as distinct entries rather than
-            one direction-agnostic representation.}
-}
+  archivePrefix = {arXiv},}
 
 @misc{spectral2026unforgetting,
+  author = {Abro, Aarash and Tahir, Muhammad},
   title  = {Spectral Unforgetting: Post-Hoc Recovery of Damaged Capabilities Without Retraining},
   year   = {2026},
   eprint = {2605.20296},
@@ -103,68 +85,48 @@
                Association for Computational Linguistics},
   year      = {2025},
   eprint    = {2411.19865},
-  archivePrefix = {arXiv},
-  note      = {Measures FORWARD accuracy: backward data added to improve forward reasoning.
-               Loss is a sum of three cross-entropy terms over a union of formats (p.~4), and no
-               baseline holds data direction fixed.}
-}
+  archivePrefix = {arXiv},}
 
 
 @misc{luo2023forgetting,
   title  = {An Empirical Study of Catastrophic Forgetting in Large Language Models During
             Continual Fine-tuning},
   author = {Luo, Yun and Yang, Zhen and Meng, Fandong and Li, Yafu and Zhou, Jie and Zhang, Yue},
-  year   = {2023}, eprint = {2308.08747}, archivePrefix = {arXiv},
-  note   = {Read 2026-09-11. Forgetting across 1b-7b during continual instruction tuning, worsening with scale in that range.}
-}
+  year   = {2023}, eprint = {2308.08747}, archivePrefix = {arXiv},}
 
 @inproceedings{kotha2024forgetting,
   title     = {Understanding Catastrophic Forgetting in Language Models via Implicit Inference},
   author    = {Kotha, Suhas and Springer, Jacob Mitchell and Raghunathan, Aditi},
-  booktitle = {International Conference on Learning Representations}, year = {2024},
-  note      = {Read 2026-09-11. Fine-tuning skews IMPLICIT TASK INFERENCE; conjugate prompting recovers pretraining capability. A precedent for H1, not merely for forgetting.}
-}
+  booktitle = {International Conference on Learning Representations}, year = {2024},}
 
 @article{biderman2024lora,
   title   = {LoRA Learns Less and Forgets Less},
   author  = {Biderman, Dan and Portes, Jacob and Ortiz, Jose Javier Gonzalez and others},
-  journal = {Transactions on Machine Learning Research}, year = {2024},
-  note    = {Read 2026-09-11. LoRA underperforms full fine-tuning on target domains but better maintains out-of-domain performance. Qualifies every LoRA-based claim here.}
-}
+  journal = {Transactions on Machine Learning Research}, year = {2024},}
 
 @inproceedings{scialom2022rehearsal,
   title     = {Fine-tuned Language Models are Continual Learners},
   author    = {Scialom, Thomas and Chakrabarty, Tuhin and Muresan, Smaranda},
   booktitle = {Proceedings of the 2022 Conference on Empirical Methods in Natural Language
-               Processing}, year = {2022},
-  note      = {Read 2026-09-11. 1 percent memory buffer preserves ~100 percent of prior performance across 8 sequential tasks. The buffer replays ACTUAL earlier-task examples and ADDS to the budget; our dose is the same pairs reversed and REPLACES. Our replay arm is their rehearsal, and the prediction is that it does NOT cure directional collapse.}
-}
+               Processing}, year = {2022},}
 
 @inproceedings{jain2024wrapper,
   title     = {Mechanistically Analyzing the Effects of Fine-Tuning on Procedurally Defined Tasks},
   author    = {Jain, Samyak and Kirk, Robert and Lubana, Ekdeep Singh and others},
-  booktitle = {International Conference on Learning Representations}, year = {2024},
-  note      = {Read 2026-09-11. Fine-tuning rarely alters underlying capabilities; a minimal 'wrapper' is learned on top.}
-}
+  booktitle = {International Conference on Learning Representations}, year = {2024},}
 
 @inproceedings{lee2024dpo,
   title     = {A Mechanistic Understanding of Alignment Algorithms: A Case Study on DPO and
                Toxicity},
   author    = {Lee, Andrew and Bai, Xiaoyan and Pres, Itamar and others},
-  booktitle = {International Conference on Machine Learning}, year = {2024},
-  note      = {Read 2026-09-11. Pretraining capabilities are NOT removed but BYPASSED, via an offset distributed amongst layers. Bears on the layer-ablation experiment.}
-}
+  booktitle = {International Conference on Machine Learning}, year = {2024},}
 
 @inproceedings{longpre2023flan,
   title     = {The Flan Collection: Designing Data and Methods for Effective Instruction Tuning},
   author    = {Longpre, Shayne and Hou, Le and Vu, Tu and others},
-  booktitle = {International Conference on Machine Learning}, year = {2023},
-  note      = {Read 2026-09-11. Task balancing and enrichment are critical and overlooked; gains attributed to method often belong to the mixture.}
-}
+  booktitle = {International Conference on Machine Learning}, year = {2023},}
 
 @article{lipton2018troubling,
   title   = {Troubling Trends in Machine Learning Scholarship},
   author  = {Lipton, Zachary C. and Steinhardt, Jacob},
-  journal = {arXiv preprint arXiv:1807.03341}, year = {2018},
-  note    = {Read 2026-09-11. Names 'failure to identify the sources of empirical gains' as a trend; our attribution section is an instance with direction in place of hyper-parameters.}
-}
+  journal = {arXiv preprint arXiv:1807.03341}, year = {2018},}

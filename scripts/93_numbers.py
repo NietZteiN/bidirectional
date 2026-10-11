@@ -136,13 +136,21 @@ def _snapshot_number(c: Ctx, key: str) -> Optional[str]:
 
 
 def _main_result_number(c: Ctx, key: str) -> Optional[str]:
+    if key.startswith('main-repeat-'):
+        path=PAPER/'TASK_METHODS.json'
+        if not path.exists():return None
+        item=json.loads(path.read_text()).get('numbers',{}).get(key)
+        if item is None:return None
+        c.note(path,*[Path(p) for p in item['sources']])
+        return item['value']
     path = PAPER / 'MAIN_RESULTS.json'
     if not path.exists():
         return None
     item = json.loads(path.read_text()).get('numbers', {}).get(key)
     if item is None:
         return None
-    c.note(path, Path(item['run'])/'trials.jsonl', Path(item['run'])/'summary.json')
+    c.note(path, Path(item['run'])/'trials.jsonl', Path(item['run'])/'summary.json',
+           *[Path(p) for p in item.get('sources',[])])
     return item['value']
 
 

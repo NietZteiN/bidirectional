@@ -40,7 +40,7 @@ def selected_paths():
     paths=set()
     for name,key in [('EVIDENCE_SNAPSHOT.json','sources'),('PUBLICATION_ANALYSIS.json','source_sha256'),
                      ('MAIN_RESULTS.json','source_sha256'),('MANUSCRIPT_COMPLETION.json','source_sha256'),
-                     ('TABLE_COMPLETION_AUDIT.json','source_sha256')]:
+                     ('TABLE_COMPLETION_AUDIT.json','source_sha256'),('TASK_METHODS.json','source_sha256')]:
         file=ROOT/'paper'/name
         if file.exists():
             document=json.loads(file.read_text());paths.add(file)
@@ -54,6 +54,7 @@ def selected_paths():
                  'docs/GATE_REPAIR_PLAN.md','docs/MECHANISM_PLAN.md',
                  'docs/PAPER_SPRINT_PLAN.md','docs/BACKGROUND_RUN_PLAN.md','docs/EXPERIMENT_PAUSE.md',
                  'docs/TABLE_COMPLETION_PLAN.md',
+                 'docs/PAPER_REVIEW_REVISION.md',
                  'paper/SPRINT_COMPLETION.json','runs/feeder/paper_sprint_admission.json',
                  'runs/feeder/background_resume.json','runs/feeder/experiment_pause.json',
                  'env/extras.txt','paper/main.tex','paper/planned_evaluations.tex','paper/refs.bib',

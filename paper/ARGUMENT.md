@@ -52,10 +52,10 @@ do not claim a universal 1% optimum or universal superiority over auxiliary loss
 
 The main presentation now has two percentage tables:
 
-- Table 1: all eleven Llama3B seed-17 task orientations, forward/backward rows, base,
-  SFT, every reversal dose and every registered main-grid control. Blue identifies low
+- Preservation table: all eleven Llama3B reference task orientations, forward/backward rows,
+  base, forward SFT, 1% reversal and 5% reversal. Full controls move to the appendix. Blue identifies low
   doses; red identifies SFT backward rates at or below half of the same-pass base.
-- Table 2: every eligible original seed-17 contrastive task/model cell and every audited
+- Objective table: every eligible original reference contrastive task/model comparison and every measured
   seed-17 auxiliary-objective cell, with both directions and fresh within-pass baselines.
   Preserve mixed-direction contrastive gains, round-trip tradeoffs and the units null.
 

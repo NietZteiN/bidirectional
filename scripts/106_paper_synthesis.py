@@ -83,7 +83,7 @@ def publication_range_table(results, mode):
             +'\n'.join(rendered)+'\n\\bottomrule\n\\end{tabular}}\n'
             +'\\caption{Completed '+mode+' panel: ranges across training seeds of '
             'within-campaign strict-success changes (percentage points). '
-            '$S$, $B$, and $M$ denote forward SFT, same-pass base, and the registered '
+            '$S$, $B$, and $M$ denote forward SFT, the base evaluated on the same examples, and the '
             'directional mixture. Recipe rows compare matched SFT/mixture variants. '
             'Mixture doses are 5\\% for translation/format and 50\\% for units/Python--C++; '
             'L/G identify Llama/Gemma and B denotes billions of parameters. '
@@ -305,14 +305,14 @@ def main():
         panel='; '.join(c['domain'].replace('_',r'\_')+'/'+c['model'].replace('_',r'\_') for c in cells)
         protocol_rows.append(f"{label} & {len(cells)} & {','.join(map(str,cfg['seeds']))} & {len(cells)*len(cfg['seeds'])} "+r'\\')
     protocol=('\\begin{table*}[t]\n\\centering\\small\n\\begin{tabular}{llll}\n\\toprule\n'
-        +'Registered evaluation & Model/task cells & Training seeds & Campaigns '+r'\\'+'\n\\midrule\n'
+        +'Evaluation & Model/task combinations & Training seeds & Runs '+r'\\'+'\n\\midrule\n'
         +'\n'.join(protocol_rows)+'\n\\bottomrule\n\\end{tabular}\n'
-        +'\\caption{Frozen paper-completion panel. Probe corpora retain '+str(manifest['n_instances']['ifeval'])
+        +'\\caption{Additional evaluation design. Probe corpora contain '+str(manifest['n_instances']['ifeval'])
         +' IFEval prompts and '+str(manifest['n_instances']['gsm8k'])+' GSM8K questions; independent transfer retains '
         +str(manifest['n_instances']['opus'])+' OPUS translation pairs. Synthetic magnitude/template tests retain '
-        +str(manifest['n_instances']['units_magnitude'])+' instances each. Recipe packs train '
-        +str(len(cfg['recipe_panel'])*len(cfg['seeds'])*len(cfg['recipe_variants'])*2)+' new adapters in isolated directories. '
-        +'Counts are planned workloads and audited corpus sizes, not completed results.}\n'
+        +str(manifest['n_instances']['units_magnitude'])+' instances each. Recipe experiments compare '
+        +str(len(cfg['recipe_panel'])*len(cfg['seeds'])*len(cfg['recipe_variants'])*2)+' separately trained variants. '
+        +'Numbers describe corpus sizes and the fixed experimental design; results appear in the corresponding tables.}\n'
         +'\\label{tab:paper-finish-protocol}\n\\end{table*}\n')
     (PAPER/'tables/paper_finish_protocol.tex').write_text(protocol)
     boundary_rows=[]

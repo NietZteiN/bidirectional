@@ -1,15 +1,11 @@
-% Paper-completion protocols registered in Amendment 50, October 8, 2026.
-% Fill measured outcomes through source-backed generators, never by hand.
-\section{Additional evaluations, methods, and reporting audit}
+% Additional scientific methods and experiments; project schedules live in repository notes.
+\section{Additional methods, experiments and boundary conditions}
 \label{app:planned-evaluations}
-
-This appendix reports the exploratory additions registered before their measurements,
-their completed findings, and the boundaries that prevented eligible tuned comparisons.
-Allocation-local engineering smokes preceded production admission; passing a smoke alone
-did not establish a scientific result. The retained diagnostic subset comprises the five
-completed campaigns specified in Amendment54; broader registered diagnostics remain unmeasured.
-Failed gates and the replicated Gemma12B unit-conversion null-collapse result remain visible.
-\IfFileExists{tables/paper_finish_protocol.tex}{\input{tables/paper_finish_protocol.tex}}{}
+These experiments test forward retention, general ability, sensitivity to prompts and
+training recipes, and the scope of preservation on other tasks. Exclusions and revised
+criteria are reported with their scientific reasons. Test outcomes were not used to choose
+a favorable training run or diagnostic subset.
+\input{tables/paper_finish_protocol.tex}
 
 \subsection{Paired data and reference training recipe}
 \label{app:reference-methods}
@@ -28,11 +24,12 @@ evaluated base and all declared arms on the same retained instance set.
 \subsection{Dose, forward retention, and computational cost}
 \label{app:dose-summary}
 
-The main figure plots forward and reverse strict success for the base model, forward SFT,
-generic replay, available reversed-pair doses, and contrastive/control arms. Panels retain
+The main figure plots forward and backward strict success for the base model, forward SFT,
+and the two smallest reversed-pair doses. The full ladder and secondary controls are
+reported separately. Panels retain
 model, task orientation, and seed identity. Arms lacking a common evaluation campaign are not
 connected as paired observations. The units boundary case is shown alongside collapse cells.
-Repeated passes use the latest validated completion time, with earlier passes retained in the
+Repeated passes use the latest complete evaluation, with earlier passes retained in the
 audit; selection never uses effect sign.
 
 Paired contrasts use the domain's instance/cluster unit. Training-seed variation is separate:
@@ -69,7 +66,8 @@ sources, using normalized exact/contained strings. Fixed demonstrations are chec
 the retained test set. Lexical auditing does not establish semantic or pretraining independence;
 shared numerical structure limits interpretation of the units/GSM8K comparison.
 
-All systems were evaluated together in fresh campaigns with adapter-effectiveness checks.
+All systems were evaluated on the same examples; generated-output differences from the
+base were checked to detect an adapter that failed to load.
 Strict IFEval and strict GSM8K endpoints are reported separately; loose instruction checks and flexible
 numeric extraction remain secondary. Endpoint changes are paired within each campaign and seed
 variation is retained. A concentration claim is scoped to this declared panel; unrelated benchmark scales
@@ -89,7 +87,7 @@ disproportionate-loss claim across benchmarks.
 
 Existing German-to-English checkpoints are evaluated on the independently sourced OPUS-100
 German--English test split.\footnote{\url{https://huggingface.co/datasets/Helsinki-NLP/opus-100}.}
-The panel includes Llama3B and Gemma4B with the registered seeds and the same SFT, replay,
+The panel includes Llama3B and Gemma4B across the fixed training runs and the same SFT, replay,
 mixed-direction, contrastive, and additional-CE systems. Dataset revision, character-length
 inclusion rules, directions, overlap exclusions, and scorer are frozen before generations.
 A new prompt on an existing semantic corpus remains a diagnostic rather than independent
@@ -100,37 +98,38 @@ Gold, echo, empty, and invalid-output oracles run on compute. Original model-spe
 thresholds are retained. Strict success, continuous COMET, chrF++, echo, and off-target rates
 remain separate; checkpoint choice, decoding, and scoring are not tuned on this corpus.
 
-The full fresh base was generated and scored first, with the resident engine reserved for
-tuned systems. Failure of the unchanged eligibility conjunction remains boundary evidence
-and blocks tuned generation. Small smokes establish engineering behavior, not production
-eligibility. Paired forward/reverse changes require an eligible campaign.
+The base model is evaluated first. A task comparison requires initial success of at least
+10\% in each direction, format failures at most 15\%, and copied-input strict success at
+most 2\%. These requirements separate an existing bidirectional ability from a scoring
+failure or a capability that the model did not possess.
 \paragraph{Completed measurements.}
-Every registered production transfer campaign fails the unchanged echo-validity conjunction.
+On every transfer subset, copying the input exceeds the permitted strict-success rate.
+This violates the scorer-validity requirement and excludes tuned-model comparisons.
 The base-only boundary trials are retained in Table~\ref{tab:transfer-boundaries}; no tuned
 checkpoint comparison is eligible. These measurements therefore do not establish preservation
 on this independent corpus, and the failed criterion is not evidence of adapter collapse.
 
 \paragraph{Versioned diagnostics.}
-Amendment51 registers an exploratory repair extension after inspection of failed cells.
-The original failed gates remain intact. Separate versions test bounded signed C++ literal
+Revised output contracts were specified after inspecting unsuccessful task/scorer
+checks. The original exclusions remain reported separately. Separate versions test bounded signed C++ literal
 syntax, explicit serialization/conversion/logic contracts, and a WebNLG extractor supplied
 with a global training-only predicate schema. Translation transfer additionally excludes
-source copies in both directions, retaining the original thresholds. Fresh compute-local
-oracles and base gates precede any tuned comparison. Revised criteria and prompts define
+source copies in both directions, retaining the original thresholds. Reference-answer, copied-input and invalid-answer tests check the revised scorers before
+comparing tuned models; the base model must have adequate performance in both directions. Revised criteria and prompts define
 new cells; their results do not replace original failures or support cross-version paired
 contrasts. Failed oracles and genuine capability limits remain reported boundaries.
 
 \paragraph{Completed versioned-domain pilots.}
 Table~\ref{tab:revised-domain-results} reports every completed pilot under the revised
-contracts, including all registered seeds and both directions. Formatting/Llama8B and
+contracts, including all training runs and both directions. Formatting/Llama8B and
 units/Gemma12B improve backward performance under forward-only SFT; their mixed-direction
 gains are additional backward learning rather than restoration of a collapsed capability.
 Typed Python/C++ at Gemma12B recovers backward success with mixed-direction SFT, with
 seed-dependent forward costs. At Llama8B, the mixture fails to recover backward behavior
 consistently, whereas generic replay retains it much better; backward-only training also
 fails. These results bound the remedy and separate backward learnability from directional
-preservation. This panel tests only the registered half-reversal mixture, so it supplies
-no evidence for a small-dose optimum. Revised boolean gates remain failed. The WebNLG
+preservation. This panel tests only the half-reversal mixture, so it supplies
+no evidence for a small-dose optimum. Boolean tasks still lack adequate initial bidirectional performance. The WebNLG
 extractor fails its reference-text oracle, so no D2T tuned comparison is eligible.
 \input{tables/revised_domain_results.tex}
 
@@ -145,7 +144,7 @@ and measurement failure. Best-prompt summaries remain exploratory recovery diagn
 
 Synthetic extrapolation additionally uses exact unit magnitudes outside original support and
 behavior-disjoint piecewise-quadratic Python/C++ functions. Original allowlisted scorers and
-input ranges remain unchanged; gold outputs are audited on all generated instances on compute.
+input ranges remain unchanged; reference outputs are checked on all generated instances.
 These tests do not establish unrestricted natural-code, loop/list, or independent-domain
 generality.
 
@@ -172,57 +171,42 @@ the original recipe. Every frozen prompt and recipe is retained; selecting the b
 does not support the primary claim. These seed ranges are descriptive, and endpoint scales
 are not pooled into an overall preservation score.
 
-\begin{table*}[t]
-\centering\small
-\begin{tabular}{p{0.22\textwidth}p{0.46\textwidth}p{0.23\textwidth}}
-\toprule
-Deliverable & Required evidence & Current status \\
-\midrule
-Preservation figure & Both directions, intervals, seeds, doses, exposure and measured cost &
-Audited synthesis and scoped interpretation integrated \\
-General-ability table & Frozen panel, overlap exclusions, same-pass changes and intervals &
-All frozen campaigns complete; endpoint-specific findings integrated \\
-Independent transfer & Corpus/version, eligibility, both directions, failures and hashes &
-All frozen OPUS gates fail; base-only boundaries retained \\
-Robustness table & Frozen prompts/recipes, both directions, costs and all outcomes &
-All prompt/recipe campaigns complete; scoped results integrated \\
-Reproducibility manifest & Splits/scorers, environment, manifests, trial hashes and analysis commands &
-Local hash/replay and standalone-build checks; external release requirements recorded \\
-\bottomrule
-\end{tabular}
-\caption{Evidence coverage audit. Registration, auditing, and queue admission are separate from
-completed experimental evidence.}
-\label{tab:draft-deliverables}
-\end{table*}
+\subsection{Initial task feasibility and full-weight checks}
+\label{app:boundaries}
+Proposed task comparisons require the base model to perform both directions and require
+correctness checks that accept reference answers while rejecting copies and invalid outputs.
+Table~\ref{tab:initial-failure-reasons} states which requirements fail for the original
+small-model extensions. Excluding these comparisons avoids interpreting an initial floor
+or a scorer failure as fine-tuning damage.
+\input{tables/initial_failure_reasons.tex}
+\input{tables/domain_gates_snapshot.tex}
+\input{tables/generality_snapshot.tex}
+Original unit-conversion experiments at Gemma12B improve both directions under forward SFT;
+these repeated null results show that degradation is not inherent to every paired task.
+Python/C++ translation at Llama8B provides an additional successful starting-task comparison.
+The revised-contract results above reuse their underlying corpora; they are not new domains.
 
-\subsection{Contribution and reproducibility}
+Full-weight fine-tuning compares selected Llama3B runs with forward-only and 5\\% replacement
+training (Table~\ref{tab:fullft-snapshot}). Each full checkpoint uses an isolated inference
+engine with identical held-out instances, prompts, tokenizer and scoring settings. Small
+changes must be interpreted against the measured decoding floor across engine restarts.
+The separate saved-checkpoint spectral repair experiment concerns later repair, whereas
+replacement mixtures preserve during training. Its improvement in both directions is a
+scoped result and does not establish a general internal cause.
+\input{tables/fullft_snapshot.tex}
+
+\subsection{Result selection and reproducibility}
 \label{app:reproducibility}
+All completed comparisons and null/adverse outcomes are retained. Repeated evaluations use
+the latest complete evaluation, independently of effect sign. Revised scorers and prompts
+are separate exploratory measurements, with their original failures preserved; differences
+across versions are not paired treatment effects. Test-pair bootstrap uncertainty is reported
+separately from variation across training seeds. An interval spanning zero does not show
+equivalence, and a degenerate interval at a generation floor needs particular caution.
 
-The abstract and conclusion state the supported contribution relative to prior
-directional degradation and reverse-training work: the preservation frontier, direction and
-exposure controls for objective attribution, and limits revealed by gates and null cells.
-Generality, disproportionate loss, inexpensive preservation, and recovery are separate claims
-with separate evidence requirements. A favorable contrastive result supports a scoped
-objective contribution; a null or generation-floor result does not establish equivalence.
-\paragraph{Supported contribution.} The study tests preservation of an existing reverse
-capability using ordinary supervised training with direction and exposure controls. Its
-contribution is the audited comparison of both task directions, objective attribution
-against matched baselines, and explicit limits from failed gates, null cells and sensitivity
-to training recipes. Exploratory recovery diagnostics qualify hypotheses about accessibility;
-they do not establish a universal internal mechanism.
-
-The local review package includes recorded corpora and versioned reconstruction
-metadata; overlap and scorer audits; manifests and environment settings; irreplaceable
-per-instance generations and their hashes; analysis entrypoints; and figure/table provenance.
-Failed gates, withdrawals, and corrected replacements remain traceable. Dataset/weight
-redistribution follows their licenses.
-
-The source-backed generators revalidate trial hashes, complete paired coverage, successful
-evaluation statuses, and adapter effectiveness before rendering the result tables. The local
-bundle records original and packaged hashes after path redaction and supplies independent
-hash verification and strict-mean replay. Its manuscript folder builds separately from the
-experiment workspace and passes the strict review-format checks. These checks establish
-local result and document reproducibility, not reconstruction of historical training.
-Missing historical code/data versions and upstream dataset license/reconstruction requirements
-remain explicit external-release requirements. Model and adapter weights are excluded.
-No public artifact release or conference submission has been performed.
+The accompanying data record fixed corpora, prompts, scorer sources, training configurations,
+per-instance generations and analysis commands. Hashes and complete paired coverage are
+checked before table generation; failed adapter loading excludes an evaluation. Some
+historical training code and upstream dataset revisions were not retained, so reproducible
+result analysis does not imply exact historical training reconstruction. These missing
+versions are explicit limitations, rather than inferred from a current cached dataset.

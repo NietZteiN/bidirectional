@@ -56,8 +56,8 @@ def revised_table(cells):
             lines.append(' & '.join(row)+r' \\')
         lines.append(r'\addlinespace[2pt]')
     lines += [r'\bottomrule', r'\end{tabular}',
-        r'\caption{All completed Amendment51 versioned-domain pilot campaigns, strict success (\%). '
-        r'Each F/B pair uses its own fresh same-pass base and all registered controls; seeds are '
+        r'\caption{Revised-output task comparisons, strict success (\%). '
+        r'Each F/B pair uses its own base evaluated on the same examples and all controls; training seeds are '
         r'reported separately. These post-inspection contracts reuse the original semantic corpora '
         r'and are exploratory diagnostics, not independent task replication. Only the $50\%$ '
         r'reversal dose was tested here. Red uses the descriptive SFT backward-loss threshold '
@@ -102,7 +102,7 @@ def methods(snapshot, sources):
         raise ValueError('reference training recipes differ; report them separately')
     r = recipes[0]; t = r['train']; p = r['peft']
     lines = [r'\paragraph{Recorded reference recipe.}',
-        'The main-table Llama3B reference campaigns use the common recorded recipe: '
+        'The main-table Llama3B experiments use the common training recipe: '
         f"LoRA rank ${p['r']}$, scaling ${p['alpha']}$, dropout ${p['dropout']:g}$, "
         f"learning rate ${t['lr']:g}$, ${t['epochs']}$ epochs, effective batch ${r['effective_batch']}$, "
         f"and maximum sequence length ${t['max_seq_len']}$ tokens. "

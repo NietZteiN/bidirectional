@@ -69,19 +69,23 @@ def likelihood_report(job):
 
 def sprint_tables(document):
     config=paper_sprint.plan()
+    # The frozen diagnostic subset remains reportable after its admission policy is disabled.
+    # Reading it for presentation does not reopen scheduling or select new measurements.
+    if config is None and paper_sprint.POLICY.exists():
+        config=json.loads(paper_sprint.POLICY.read_text())
     if config is None:return
     selected=[r for r in document['items'] if r.get('execution_name',r['name']) in config['production_jobs']]
     document['sprint']=dict(config,production_total=len(selected),
         production_complete=sum(r['state']=='complete' for r in selected))
     esc=lambda value:str(value).replace('_',r'\_')
     interval=lambda c:f"{c['mean']:+.3f} [{c['ci95'][0]:+.3f}, {c['ci95'][1]:+.3f}]"
-    text=[r'\section{Budget-limited explanatory diagnostics}',r'\label{app:mechanism-sprint}',
-        'Amendment54 limits new compute to five fixed seed-17 diagnostics and required engineering smokes. '
-        'The original 24-job panel remains registered; unrun jobs are deferred. Selection uses the time budget '
-        'and distinct scientific questions, not new diagnostic outcomes. Completed earlier seeds are retained. '
+    text=[r'\section{Likelihood, candidate selection and layer interventions}',r'\label{app:mechanism-sprint}',
+        'Five experiments study candidate likelihood, local gradients and layer-specific interference. '
+        'The subset was chosen before these diagnostic outcomes to cover distinct questions '
+        'within the available computational budget. '
         'These single-seed analyses are exploratory; paired intervals measure test-pair uncertainty, '
         'not training-seed stability. All candidates, controls, bands and local steps remain in the evidence bundle.',
-        f"Proof-valid diagnostic jobs at this snapshot: {document['sprint']['production_complete']} of {len(selected)}."]
+        f"Completed diagnostic experiments: {document['sprint']['production_complete']}."]
     hf_rows=[];candidate_rows=[];gradient_rows=[];layer_rows=[]
     for record in selected:
         if record['state']!='complete':continue

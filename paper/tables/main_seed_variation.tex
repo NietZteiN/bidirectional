@@ -1,0 +1,14 @@
+\begin{table*}[t]\centering\small
+\begin{tabular}{llrrrr}\toprule
+Task & Runs & $\Delta F_{1-S}$ & $\Delta B_{1-S}$ & $\Delta F_{5-S}$ & $\Delta B_{5-S}$ \\\midrule
+German $\to$ English & 3 & [-1.0, +0.1] & [+76.1, +79.6] & [-0.6, +0.3] & [+80.0, +82.0] \\
+English $\to$ German & 3 & [-0.9, -0.2] & [+6.2, +8.6] & [-1.6, +0.7] & [+4.1, +5.8] \\
+English $\to$ Chinese & 3 & [-1.7, -0.8] & [+49.5, +64.2] & [-1.5, -0.5] & [+49.1, +64.3] \\
+Chinese $\to$ English & 3 & [-0.7, +1.5] & [+76.2, +77.5] & [-0.1, +0.6] & [+77.1, +77.8] \\
+Code transformation & 3 & [-0.2, +1.7] & [+52.0, +60.0] & [+0.0, +1.9] & [+68.8, +71.4] \\
+Question $\to$ SQL & 3 & [-0.5, +2.0] & [+13.9, +33.4] & [-1.6, -0.5] & [+19.3, +40.0] \\
+Format conversion & 3 & [-0.5, -0.0] & [+86.1, +89.8] & [-0.2, +0.2] & [+92.2, +95.8] \\
+Polynomial expansion & 3 & [-1.6, -0.6] & [+6.8, +8.3] & [-2.2, +0.7] & [+12.8, +14.0] \\
+Polynomial factorization & 3 & [-3.4, +0.4] & [-4.1, -3.4] & [-2.3, +0.1] & [-0.1, +1.1] \\
+\bottomrule\end{tabular}
+\caption{Training-run variation for every Llama3B task orientation with at least two runs measuring both 1\% and 5\% reversal. Entries are minimum/maximum within-run differences from forward SFT, in percentage points; they are not confidence intervals. Every available qualifying run is included regardless of outcome. $F/B$ means forward/backward; subscripts 1 and 5 identify reversal proportions. Other tasks and model coverage remain in Table~\ref{tab:core-inventory}.}\label{tab:main-seed-variation}\end{table*}

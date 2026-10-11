@@ -1,0 +1,3483 @@
+{
+  "tasks": {
+    "code": {
+      "build": {
+        "domain": "code",
+        "name": "code",
+        "built_utc": "2026-09-10T19:06:13.951705+00:00",
+        "counts": {
+          "train": 6500,
+          "val": 500,
+          "test": 2060
+        },
+        "overlaps": {
+          "train_x_test": {
+            "content": 0,
+            "pair_id": 0
+          },
+          "val_x_test": {
+            "content": 0,
+            "pair_id": 0
+          },
+          "train_x_val": {
+            "content": 0,
+            "pair_id": 0
+          }
+        },
+        "dropped_for_leakage": {
+          "train": 0,
+          "val": 0
+        },
+        "subtasks": {
+          "train": {
+            "L1b": 1362,
+            "L1r": 1386,
+            "L2": 1359,
+            "S1": 1025,
+            "S2": 1368
+          },
+          "val": {
+            "L1b": 104,
+            "L1r": 104,
+            "L2": 104,
+            "S1": 82,
+            "S2": 106
+          },
+          "test": {
+            "L1b": 412,
+            "L1r": 412,
+            "L2": 412,
+            "S1": 412,
+            "S2": 412
+          }
+        },
+        "config": {
+          "conditions": [
+            "L1b",
+            "L1r",
+            "L2",
+            "S1",
+            "S2"
+          ],
+          "n_train": 6500,
+          "n_val": 500,
+          "n_test": 500,
+          "seed": 17,
+          "n_shots": 2,
+          "exec_timeout_s": 2.0,
+          "exec_workers": 32,
+          "reverse_sim_threshold": 0.4,
+          "reverse_readability_tolerance": 0.1,
+          "sampling": {
+            "temperature": 0.0,
+            "top_p": 1.0,
+            "max_tokens": 1536,
+            "seed": 17
+          },
+          "engine": {
+            "max_model_len": 4096,
+            "max_loras": 8,
+            "gpu_memory_utilization": 0.85,
+            "seed": 17
+          }
+        }
+      },
+      "training_counts": {
+        "train": 6499,
+        "mix1": {
+          "reverse_pairs": 62,
+          "retained_pairs": 6499
+        },
+        "mix5": {
+          "reverse_pairs": 326,
+          "retained_pairs": 6499
+        }
+      },
+      "prompt_templates": [
+        {
+          "subtask": "<TRANSFORMATION>",
+          "direction": "forward",
+          "user": "Rewrite the following Python program so that it is obfuscated in the same style as the transformation named below, without changing what it computes.\n\nTransformation: <TRANSFORMATION>\n\nProgram:\n<INPUT A>"
+        },
+        {
+          "subtask": "<TRANSFORMATION>",
+          "direction": "reverse",
+          "user": "Recover the original, readable Python source that this obfuscated program was produced from.\n\nProgram:\n<INPUT B>"
+        }
+      ],
+      "resolved_configuration": {
+        "conditions": [
+          "L1b",
+          "L1r",
+          "L2",
+          "S1",
+          "S2"
+        ],
+        "n_train": 6500,
+        "n_val": 500,
+        "n_test": 500,
+        "seed": 17,
+        "n_shots": 2,
+        "exec_timeout_s": 2.0,
+        "reverse_sim_threshold": 0.4,
+        "reverse_readability_tolerance": 0.1,
+        "sampling": {
+          "temperature": 0.0,
+          "top_p": 1.0,
+          "max_tokens": 1536,
+          "seed": 17
+        },
+        "engine": {
+          "max_model_len": 4096,
+          "max_loras": 8,
+          "gpu_memory_utilization": 0.85,
+          "seed": 17
+        },
+        "_config_path": "/work/jvl210002/migration/bidirectional/configs/domains/code.yaml"
+      },
+      "upstream_revision": null,
+      "scorer_source": "/work/jvl210002/migration/bidirectional/src/bidir/domains/code.py"
+    },
+    "fmt": {
+      "build": {
+        "domain": "fmt",
+        "name": "fmt",
+        "built_utc": "2026-09-10T19:03:37.385288+00:00",
+        "counts": {
+          "train": 6500,
+          "val": 500,
+          "test": 2500
+        },
+        "overlaps": {
+          "train_x_test": {
+            "content": 0,
+            "pair_id": 0
+          },
+          "val_x_test": {
+            "content": 0,
+            "pair_id": 0
+          },
+          "train_x_val": {
+            "content": 0,
+            "pair_id": 0
+          }
+        },
+        "dropped_for_leakage": {
+          "train": 0,
+          "val": 0
+        },
+        "subtasks": {
+          "train": {
+            "json-xml": 2167,
+            "json-yaml": 2167,
+            "mdtable-csv": 2166
+          },
+          "val": {
+            "json-xml": 167,
+            "json-yaml": 167,
+            "mdtable-csv": 166
+          },
+          "test": {
+            "json-xml": 833,
+            "json-yaml": 834,
+            "mdtable-csv": 833
+          }
+        },
+        "config": {
+          "subtasks": [
+            "json-yaml",
+            "json-xml",
+            "mdtable-csv"
+          ],
+          "lossy_share": 0.0,
+          "n_train": 6500,
+          "n_val": 500,
+          "n_test": 2500,
+          "seed": 17,
+          "n_shots": 2,
+          "sampling": {
+            "temperature": 0.0,
+            "top_p": 1.0,
+            "max_tokens": 1024,
+            "seed": 17
+          },
+          "engine": {
+            "max_model_len": 4096,
+            "max_loras": 8,
+            "gpu_memory_utilization": 0.85,
+            "seed": 17
+          }
+        }
+      },
+      "training_counts": {
+        "train": 6500,
+        "mix1": {
+          "reverse_pairs": 65,
+          "retained_pairs": 6500
+        },
+        "mix5": {
+          "reverse_pairs": 325,
+          "retained_pairs": 6500
+        }
+      },
+      "prompt_templates": [
+        {
+          "subtask": "json-yaml",
+          "direction": "forward",
+          "user": "Convert the following JSON document into YAML, preserving every key and value.\n\nJSON:\n<INPUT A>"
+        },
+        {
+          "subtask": "json-yaml",
+          "direction": "reverse",
+          "user": "Convert the following YAML document into JSON, preserving every key and value.\n\nYAML:\n<INPUT B>"
+        },
+        {
+          "subtask": "json-xml",
+          "direction": "forward",
+          "user": "Convert the following JSON document into XML, preserving every key and value.\n\nJSON:\n<INPUT A>"
+        },
+        {
+          "subtask": "json-xml",
+          "direction": "reverse",
+          "user": "Convert the following XML document into JSON, preserving every key and value.\n\nXML:\n<INPUT B>"
+        },
+        {
+          "subtask": "mdtable-csv",
+          "direction": "forward",
+          "user": "Convert the following Markdown table document into CSV, preserving every key and value.\n\nMarkdown table:\n<INPUT A>"
+        },
+        {
+          "subtask": "mdtable-csv",
+          "direction": "reverse",
+          "user": "Convert the following CSV document into Markdown table, preserving every key and value.\n\nCSV:\n<INPUT B>"
+        }
+      ],
+      "resolved_configuration": {
+        "subtasks": [
+          "json-yaml",
+          "json-xml",
+          "mdtable-csv"
+        ],
+        "lossy_share": 0.0,
+        "n_train": 6500,
+        "n_val": 500,
+        "n_test": 2500,
+        "seed": 17,
+        "n_shots": 2,
+        "sampling": {
+          "temperature": 0.0,
+          "top_p": 1.0,
+          "max_tokens": 1024,
+          "seed": 17
+        },
+        "engine": {
+          "max_model_len": 4096,
+          "max_loras": 8,
+          "gpu_memory_utilization": 0.85,
+          "seed": 17
+        },
+        "_config_path": "/work/jvl210002/migration/bidirectional/configs/domains/fmt.yaml"
+      },
+      "upstream_revision": null,
+      "scorer_source": "/work/jvl210002/migration/bidirectional/src/bidir/domains/fmt.py"
+    },
+    "mt_en-de": {
+      "build": {
+        "domain": "mt_en-de",
+        "name": "mt_en-de",
+        "built_utc": "2026-09-10T19:05:23.577323+00:00",
+        "counts": {
+          "train": 6500,
+          "val": 500,
+          "test": 1012
+        },
+        "overlaps": {
+          "train_x_test": {
+            "content": 0,
+            "pair_id": 0
+          },
+          "val_x_test": {
+            "content": 0,
+            "pair_id": 0
+          },
+          "train_x_val": {
+            "content": 0,
+            "pair_id": 0
+          }
+        },
+        "dropped_for_leakage": {
+          "train": 0,
+          "val": 0
+        },
+        "subtasks": {
+          "train": {
+            "en-de": 6500
+          },
+          "val": {
+            "en-de": 500
+          },
+          "test": {
+            "en-de": 1012
+          }
+        },
+        "config": {
+          "train_hf_id": "Helsinki-NLP/news_commentary",
+          "train_pairs": {
+            "en-de": "de-en",
+            "en-zh": "en-zh"
+          },
+          "eval_hf_id": "haoranxu/FLORES-200",
+          "n_train": 6500,
+          "n_val": 500,
+          "n_test": 1012,
+          "min_chars": 20,
+          "max_chars": 400,
+          "seed": 17,
+          "n_shots": 2,
+          "comet_model": "Unbabel/wmt22-comet-da",
+          "comet_batch_size": 64,
+          "sampling": {
+            "temperature": 0.0,
+            "top_p": 1.0,
+            "max_tokens": 512,
+            "seed": 17
+          },
+          "engine": {
+            "max_model_len": 4096,
+            "max_loras": 8,
+            "gpu_memory_utilization": 0.85,
+            "seed": 17
+          }
+        }
+      },
+      "training_counts": {
+        "train": 6500,
+        "mix1": {
+          "reverse_pairs": 65,
+          "retained_pairs": 6500
+        },
+        "mix5": {
+          "reverse_pairs": 325,
+          "retained_pairs": 6500
+        }
+      },
+      "prompt_templates": [
+        {
+          "subtask": "<TRANSFORMATION>",
+          "direction": "forward",
+          "user": "Translate the following English text into German.\n\nEnglish:\n<INPUT A>"
+        },
+        {
+          "subtask": "<TRANSFORMATION>",
+          "direction": "reverse",
+          "user": "Translate the following German text into English.\n\nGerman:\n<INPUT B>"
+        }
+      ],
+      "resolved_configuration": {
+        "train_hf_id": "Helsinki-NLP/news_commentary",
+        "train_pairs": {
+          "en-de": "de-en",
+          "en-zh": "en-zh"
+        },
+        "eval_hf_id": "haoranxu/FLORES-200",
+        "n_train": 6500,
+        "n_val": 500,
+        "n_test": 1012,
+        "min_chars": 20,
+        "max_chars": 400,
+        "seed": 17,
+        "n_shots": 2,
+        "comet_model": "Unbabel/wmt22-comet-da",
+        "comet_batch_size": 64,
+        "sampling": {
+          "temperature": 0.0,
+          "top_p": 1.0,
+          "max_tokens": 512,
+          "seed": 17
+        },
+        "engine": {
+          "max_model_len": 4096,
+          "max_loras": 8,
+          "gpu_memory_utilization": 0.85,
+          "seed": 17
+        },
+        "thresholds": {
+          "forward": {
+            "comet": 0.764888
+          },
+          "reverse": {
+            "comet": 0.86191
+          }
+        },
+        "thresholds_provenance": {
+          "model": "llama32-3b",
+          "date": "2026-09-12",
+          "quantile": 0.25,
+          "n": 200,
+          "note": "read from the BASE model's score distribution before any fine-tuned model was scored"
+        },
+        "thresholds_by_model": {
+          "gemma3-4b": {
+            "forward": {
+              "comet": 0.836251
+            },
+            "reverse": {
+              "comet": 0.869601
+            }
+          },
+          "olmo2-1b": {
+            "forward": {
+              "comet": 0.555442
+            },
+            "reverse": {
+              "comet": 0.77969
+            }
+          },
+          "llama31-8b": {
+            "forward": {
+              "comet": 0.839859
+            },
+            "reverse": {
+              "comet": 0.871522
+            }
+          },
+          "gemma3-12b": {
+            "forward": {
+              "comet": 0.866418
+            },
+            "reverse": {
+              "comet": 0.874782
+            }
+          }
+        },
+        "thresholds_provenance_by_model": {
+          "gemma3-4b": {
+            "model": "gemma3-4b",
+            "date": "2026-09-18",
+            "quantile": 0.25,
+            "n": 200,
+            "note": "read from the BASE model's score distribution before any fine-tuned model was scored"
+          },
+          "olmo2-1b": {
+            "model": "olmo2-1b",
+            "date": "2026-09-18",
+            "quantile": 0.25,
+            "n": 200,
+            "note": "read from the BASE model's score distribution before any fine-tuned model was scored"
+          },
+          "llama31-8b": {
+            "model": "llama31-8b",
+            "date": "2026-09-21",
+            "quantile": 0.25,
+            "n": 200,
+            "note": "read from the BASE model's score distribution before any fine-tuned model was scored"
+          },
+          "gemma3-12b": {
+            "model": "gemma3-12b",
+            "date": "2026-09-21",
+            "quantile": 0.25,
+            "n": 200,
+            "note": "read from the BASE model's score distribution before any fine-tuned model was scored"
+          }
+        },
+        "_config_path": "/work/jvl210002/migration/bidirectional/configs/domains/mt_en-de.yaml"
+      },
+      "upstream_revision": null,
+      "scorer_source": "/work/jvl210002/migration/bidirectional/src/bidir/domains/mt.py",
+      "other_orientations": {
+        "mt_de-en": [
+          {
+            "direction": "forward",
+            "user": "Translate the following German text into English.\n\nGerman:\n<INPUT A>"
+          },
+          {
+            "direction": "reverse",
+            "user": "Translate the following English text into German.\n\nEnglish:\n<INPUT B>"
+          }
+        ],
+        "mt_en-zh": [
+          {
+            "direction": "forward",
+            "user": "Translate the following English text into Chinese.\n\nEnglish:\n<INPUT A>"
+          },
+          {
+            "direction": "reverse",
+            "user": "Translate the following Chinese text into English.\n\nChinese:\n<INPUT B>"
+          }
+        ],
+        "mt_zh-en": [
+          {
+            "direction": "forward",
+            "user": "Translate the following Chinese text into English.\n\nChinese:\n<INPUT A>"
+          },
+          {
+            "direction": "reverse",
+            "user": "Translate the following English text into Chinese.\n\nEnglish:\n<INPUT B>"
+          }
+        ]
+      }
+    },
+    "sql": {
+      "build": {
+        "domain": "sql",
+        "name": "sql",
+        "built_utc": "2026-09-10T19:03:19.338624+00:00",
+        "counts": {
+          "train": 6499,
+          "val": 500,
+          "test": 1034
+        },
+        "overlaps": {
+          "train_x_test": {
+            "content": 0,
+            "pair_id": 0
+          },
+          "val_x_test": {
+            "content": 0,
+            "pair_id": 0
+          },
+          "train_x_val": {
+            "content": 4,
+            "pair_id": 0
+          }
+        },
+        "dropped_for_leakage": {
+          "train": 1,
+          "val": 0
+        },
+        "subtasks": {
+          "train": {
+            "activity_1": 82,
+            "aircraft": 43,
+            "allergy_1": 90,
+            "apartment_rentals": 74,
+            "architecture": 17,
+            "assets_maintenance": 29,
+            "baseball_1": 75,
+            "behavior_monitoring": 37,
+            "bike_1": 100,
+            "body_builder": 22,
+            "book_2": 17,
+            "browser_web": 17,
+            "candidate_poll": 36,
+            "chinook_1": 80,
+            "cinema": 25,
+            "city_record": 38,
+            "climbing": 36,
+            "club_1": 63,
+            "coffee_shop": 18,
+            "college_1": 150,
+            "college_2": 159,
+            "college_3": 69,
+            "company_1": 7,
+            "company_employee": 13,
+            "company_office": 35,
+            "county_public_safety": 35,
+            "cre_Doc_Control_Systems": 30,
+            "cre_Doc_Tracking_DB": 85,
+            "cre_Docs_and_Epenses": 76,
+            "cre_Drama_Workshop_Groups": 79,
+            "cre_Theme_park": 80,
+            "csu_1": 66,
+            "culture_company": 36,
+            "customer_complaints": 42,
+            "customer_deliveries": 13,
+            "customers_and_addresses": 81,
+            "customers_and_invoices": 73,
+            "customers_and_products_contacts": 14,
+            "customers_campaigns_ecommerce": 14,
+            "customers_card_transactions": 75,
+            "debate": 14,
+            "decoration_competition": 15,
+            "department_management": 16,
+            "department_store": 78,
+            "device": 38,
+            "document_management": 40,
+            "dorm_1": 97,
+            "driving_school": 85,
+            "e_government": 36,
+            "e_learning": 78,
+            "election": 60,
+            "election_representative": 19,
+            "entertainment_awards": 22,
+            "entrepreneur": 39,
+            "epinions_1": 29,
+            "farm": 39,
+            "film_rank": 43,
+            "flight_1": 89,
+            "flight_4": 80,
+            "flight_company": 18,
+            "formula_1": 73,
+            "game_1": 79,
+            "game_injury": 19,
+            "gas_company": 44,
+            "gymnast": 34,
+            "hospital_1": 91,
+            "hr_1": 115,
+            "icfp_1": 61,
+            "inn_1": 64,
+            "insurance_and_eClaims": 37,
+            "insurance_fnol": 39,
+            "insurance_policies": 44,
+            "journal_committee": 17,
+            "loan_1": 74,
+            "local_govt_and_lot": 16,
+            "local_govt_in_alabama": 14,
+            "local_govt_mdm": 14,
+            "machine_repair": 29,
+            "manufactory_1": 76,
+            "manufacturer": 14,
+            "match_season": 55,
+            "medicine_enzyme_interaction": 42,
+            "mountain_photos": 17,
+            "movie_1": 91,
+            "music_1": 92,
+            "music_2": 92,
+            "music_4": 53,
+            "musical": 39,
+            "network_2": 74,
+            "news_report": 18,
+            "party_host": 28,
+            "party_people": 37,
+            "performance_attendance": 15,
+            "perpetrator": 19,
+            "phone_1": 26,
+            "phone_market": 12,
+            "pilot_record": 14,
+            "product_catalog": 42,
+            "products_for_hire": 18,
+            "products_gen_characteristics": 82,
+            "program_share": 37,
+            "protein_institute": 20,
+            "race_track": 39,
+            "railway": 20,
+            "restaurant_1": 22,
+            "riding_club": 14,
+            "roller_coaster": 15,
+            "sakila_1": 77,
+            "school_bus": 18,
+            "school_finance": 24,
+            "school_player": 40,
+            "scientist_1": 45,
+            "ship_1": 43,
+            "ship_mission": 30,
+            "shop_membership": 42,
+            "small_bank_1": 47,
+            "soccer_1": 14,
+            "soccer_2": 101,
+            "solvency_ii": 15,
+            "sports_competition": 49,
+            "station_weather": 16,
+            "store_1": 102,
+            "store_product": 42,
+            "storm_record": 41,
+            "student_1": 63,
+            "student_assessment": 46,
+            "swimming": 25,
+            "theme_gallery": 38,
+            "tracking_grants_for_research": 71,
+            "tracking_orders": 54,
+            "tracking_share_transactions": 39,
+            "tracking_software_problems": 44,
+            "train_station": 22,
+            "twitter_1": 25,
+            "university_basketball": 42,
+            "voter_2": 71,
+            "wedding": 19,
+            "wine_1": 75,
+            "workshop_paper": 28,
+            "wrestler": 38
+          },
+          "val": {
+            "activity_1": 6,
+            "aircraft": 3,
+            "allergy_1": 8,
+            "apartment_rentals": 6,
+            "assets_maintenance": 2,
+            "baseball_1": 7,
+            "behavior_monitoring": 3,
+            "bike_1": 4,
+            "body_builder": 2,
+            "book_2": 4,
+            "browser_web": 1,
+            "candidate_poll": 4,
+            "chinook_1": 4,
+            "cinema": 5,
+            "city_record": 2,
+            "climbing": 4,
+            "club_1": 7,
+            "college_1": 14,
+            "college_2": 11,
+            "college_3": 5,
+            "company_employee": 3,
+            "company_office": 5,
+            "county_public_safety": 5,
+            "cre_Doc_Control_Systems": 3,
+            "cre_Doc_Tracking_DB": 5,
+            "cre_Docs_and_Epenses": 7,
+            "cre_Drama_Workshop_Groups": 3,
+            "cre_Theme_park": 4,
+            "csu_1": 4,
+            "culture_company": 2,
+            "customer_complaints": 4,
+            "customer_deliveries": 3,
+            "customers_and_addresses": 7,
+            "customers_and_invoices": 9,
+            "customers_and_products_contacts": 1,
+            "customers_campaigns_ecommerce": 1,
+            "customers_card_transactions": 5,
+            "debate": 1,
+            "department_store": 10,
+            "device": 2,
+            "document_management": 4,
+            "dorm_1": 3,
+            "driving_school": 8,
+            "e_government": 4,
+            "e_learning": 4,
+            "election": 8,
+            "election_representative": 1,
+            "entrepreneur": 1,
+            "epinions_1": 1,
+            "farm": 1,
+            "film_rank": 5,
+            "flight_1": 7,
+            "flight_4": 2,
+            "flight_company": 1,
+            "formula_1": 7,
+            "game_1": 7,
+            "gas_company": 2,
+            "gymnast": 6,
+            "hospital_1": 9,
+            "hr_1": 9,
+            "icfp_1": 5,
+            "inn_1": 10,
+            "insurance_and_eClaims": 3,
+            "insurance_fnol": 3,
+            "insurance_policies": 4,
+            "journal_committee": 1,
+            "loan_1": 6,
+            "local_govt_and_lot": 1,
+            "local_govt_in_alabama": 1,
+            "machine_repair": 1,
+            "manufactory_1": 4,
+            "manufacturer": 2,
+            "match_season": 3,
+            "medicine_enzyme_interaction": 2,
+            "movie_1": 7,
+            "music_1": 8,
+            "music_2": 8,
+            "music_4": 7,
+            "musical": 1,
+            "network_2": 12,
+            "party_host": 2,
+            "party_people": 7,
+            "perpetrator": 2,
+            "phone_1": 3,
+            "phone_market": 3,
+            "pilot_record": 1,
+            "products_gen_characteristics": 4,
+            "program_share": 3,
+            "race_track": 3,
+            "railway": 1,
+            "riding_club": 3,
+            "roller_coaster": 2,
+            "sakila_1": 5,
+            "school_finance": 2,
+            "scientist_1": 3,
+            "ship_1": 5,
+            "shop_membership": 2,
+            "small_bank_1": 3,
+            "soccer_2": 5,
+            "sports_competition": 3,
+            "store_1": 10,
+            "store_product": 2,
+            "storm_record": 3,
+            "student_1": 5,
+            "student_assessment": 7,
+            "swimming": 5,
+            "theme_gallery": 2,
+            "tracking_grants_for_research": 7,
+            "tracking_orders": 6,
+            "tracking_share_transactions": 2,
+            "tracking_software_problems": 4,
+            "train_station": 1,
+            "twitter_1": 2,
+            "university_basketball": 4,
+            "voter_2": 1,
+            "wedding": 1,
+            "wine_1": 7,
+            "workshop_paper": 2,
+            "wrestler": 2
+          },
+          "test": {
+            "battle_death": 16,
+            "car_1": 92,
+            "concert_singer": 45,
+            "course_teach": 30,
+            "cre_Doc_Template_Mgt": 84,
+            "dog_kennels": 82,
+            "employee_hire_evaluation": 38,
+            "flight_2": 80,
+            "museum_visit": 18,
+            "network_1": 56,
+            "orchestra": 40,
+            "pets_1": 42,
+            "poker_player": 40,
+            "real_estate_properties": 4,
+            "singer": 30,
+            "student_transcripts_tracking": 78,
+            "tvshow": 62,
+            "voter_1": 15,
+            "world_1": 120,
+            "wta_1": 62
+          }
+        },
+        "config": {
+          "questions_hf_id": "xlangai/spider",
+          "n_train": 6500,
+          "n_val": 500,
+          "n_test": 1034,
+          "seed": 17,
+          "n_shots": 2,
+          "roundtrip_parser": "ibm-granite/granite-3.1-8b-instruct",
+          "roundtrip_max_tokens": 256,
+          "sampling": {
+            "temperature": 0.0,
+            "top_p": 1.0,
+            "max_tokens": 512,
+            "seed": 17
+          },
+          "engine": {
+            "max_model_len": 4096,
+            "max_loras": 8,
+            "gpu_memory_utilization": 0.85,
+            "seed": 17
+          }
+        }
+      },
+      "training_counts": {
+        "train": 6499,
+        "mix1": {
+          "reverse_pairs": 65,
+          "retained_pairs": 6499
+        },
+        "mix5": {
+          "reverse_pairs": 325,
+          "retained_pairs": 6499
+        }
+      },
+      "prompt_templates": [
+        {
+          "subtask": "<TRANSFORMATION>",
+          "direction": "forward",
+          "user": "Database schema:\n<DATABASE SCHEMA>\n\nWrite one SQLite query that answers this question.\n\nQuestion:\n<INPUT A>"
+        },
+        {
+          "subtask": "<TRANSFORMATION>",
+          "direction": "reverse",
+          "user": "Database schema:\n<DATABASE SCHEMA>\n\nWrite the question, in plain English, that this SQLite query answers.\n\nQuery:\n<INPUT B>"
+        }
+      ],
+      "resolved_configuration": {
+        "questions_hf_id": "xlangai/spider",
+        "n_train": 6500,
+        "n_val": 500,
+        "n_test": 1034,
+        "seed": 17,
+        "n_shots": 2,
+        "roundtrip_parser": "ibm-granite/granite-3.1-8b-instruct",
+        "roundtrip_max_tokens": 256,
+        "sampling": {
+          "temperature": 0.0,
+          "top_p": 1.0,
+          "max_tokens": 512,
+          "seed": 17
+        },
+        "engine": {
+          "max_model_len": 4096,
+          "max_loras": 8,
+          "gpu_memory_utilization": 0.45,
+          "seed": 17
+        },
+        "roundtrip_gpu_memory_utilization": 0.45,
+        "_config_path": "/work/jvl210002/migration/bidirectional/configs/domains/sql.yaml"
+      },
+      "upstream_revision": null,
+      "scorer_source": "/work/jvl210002/migration/bidirectional/src/bidir/domains/sql.py"
+    },
+    "relation": {
+      "build": {
+        "domain": "relation",
+        "name": "relation",
+        "built_utc": "2026-09-14T14:28:48.047415+00:00",
+        "counts": {
+          "train": 504,
+          "val": 69,
+          "test": 135
+        },
+        "overlaps": {
+          "train_x_test": {
+            "content": 0,
+            "pair_id": 0
+          },
+          "val_x_test": {
+            "content": 0,
+            "pair_id": 0
+          },
+          "train_x_val": {
+            "content": 0,
+            "pair_id": 0
+          }
+        },
+        "dropped_for_leakage": {
+          "train": 0,
+          "val": 0
+        },
+        "subtasks": {
+          "train": {
+            "abbrev": 169,
+            "capital": 159,
+            "tld": 176
+          },
+          "val": {
+            "abbrev": 24,
+            "capital": 23,
+            "tld": 22
+          },
+          "test": {
+            "abbrev": 44,
+            "capital": 37,
+            "tld": 54
+          }
+        },
+        "config": {
+          "n_test_countries": 60,
+          "n_val_countries": 30,
+          "seed": 17,
+          "n_shots": 2,
+          "sampling": {
+            "temperature": 0.0,
+            "top_p": 1.0,
+            "max_tokens": 32,
+            "seed": 17
+          },
+          "engine": {
+            "max_model_len": 2048,
+            "max_loras": 8,
+            "gpu_memory_utilization": 0.85,
+            "seed": 17
+          }
+        }
+      },
+      "training_counts": {
+        "train": 504,
+        "mix1": {
+          "reverse_pairs": 6,
+          "retained_pairs": 504
+        },
+        "mix5": {
+          "reverse_pairs": 20,
+          "retained_pairs": 504
+        }
+      },
+      "prompt_templates": [
+        {
+          "subtask": "capital",
+          "direction": "forward",
+          "user": "Name the capital city of the following. Answer with the name only.\n\n<INPUT A>"
+        },
+        {
+          "subtask": "capital",
+          "direction": "reverse",
+          "user": "Name the country whose capital is the following. Answer with the name only.\n\n<INPUT B>"
+        },
+        {
+          "subtask": "abbrev",
+          "direction": "forward",
+          "user": "Name the two-letter ISO country code for the following. Answer with the name only.\n\n<INPUT A>"
+        },
+        {
+          "subtask": "abbrev",
+          "direction": "reverse",
+          "user": "Name the country whose two-letter ISO code is the following. Answer with the name only.\n\n<INPUT B>"
+        },
+        {
+          "subtask": "tld",
+          "direction": "forward",
+          "user": "Name the internet top-level domain of the following. Answer with the name only.\n\n<INPUT A>"
+        },
+        {
+          "subtask": "tld",
+          "direction": "reverse",
+          "user": "Name the country whose internet top-level domain is the following. Answer with the name only.\n\n<INPUT B>"
+        }
+      ],
+      "resolved_configuration": {
+        "n_test_countries": 60,
+        "n_val_countries": 30,
+        "seed": 17,
+        "n_shots": 2,
+        "sampling": {
+          "temperature": 0.0,
+          "top_p": 1.0,
+          "max_tokens": 32,
+          "seed": 17
+        },
+        "engine": {
+          "max_model_len": 2048,
+          "max_loras": 8,
+          "gpu_memory_utilization": 0.85,
+          "seed": 17
+        },
+        "_config_path": "/work/jvl210002/migration/bidirectional/configs/domains/relation.yaml"
+      },
+      "upstream_revision": null,
+      "scorer_source": "/work/jvl210002/migration/bidirectional/src/bidir/domains/relation.py"
+    },
+    "exec": {
+      "build": {
+        "domain": "exec",
+        "name": "exec",
+        "built_utc": "2026-09-12T14:56:03.855588+00:00",
+        "counts": {
+          "train": 302,
+          "val": 100,
+          "test": 200
+        },
+        "overlaps": {
+          "train_x_test": {
+            "content": 0,
+            "pair_id": 0
+          },
+          "val_x_test": {
+            "content": 0,
+            "pair_id": 0
+          },
+          "train_x_val": {
+            "content": 0,
+            "pair_id": 0
+          }
+        },
+        "dropped_for_leakage": {
+          "train": 0,
+          "val": 0
+        },
+        "subtasks": {
+          "train": {
+            "cruxeval": 302
+          },
+          "val": {
+            "cruxeval": 100
+          },
+          "test": {
+            "cruxeval": 200
+          }
+        },
+        "config": {
+          "hf_id": "cruxeval-org/cruxeval",
+          "hf_split": "test",
+          "n_train": 0,
+          "n_val": 100,
+          "n_test": 200,
+          "seed": 17,
+          "n_shots": 2,
+          "exec_timeout_s": 2.0,
+          "sampling": {
+            "temperature": 0.0,
+            "top_p": 1.0,
+            "max_tokens": 256,
+            "seed": 17
+          },
+          "engine": {
+            "max_model_len": 4096,
+            "max_loras": 8,
+            "gpu_memory_utilization": 0.85,
+            "seed": 17
+          }
+        }
+      },
+      "training_counts": {
+        "train": 302
+      },
+      "prompt_templates": [
+        {
+          "subtask": "<TRANSFORMATION>",
+          "direction": "forward",
+          "user": "Given this Python function, what does it return for the input shown?\n\n<FUNCTION CODE>\n\nCall:\nf(<INPUT A>)\n\nWrite only the returned value, as a Python literal."
+        },
+        {
+          "subtask": "<TRANSFORMATION>",
+          "direction": "reverse",
+          "user": "Given this Python function, find an argument that makes it return the value shown.\n\n<FUNCTION CODE>\n\nRequired return value:\n<INPUT B>\n\nWrite only the argument, as a Python literal."
+        }
+      ],
+      "resolved_configuration": {
+        "hf_id": "cruxeval-org/cruxeval",
+        "hf_split": "test",
+        "n_train": 0,
+        "n_val": 100,
+        "n_test": 200,
+        "seed": 17,
+        "n_shots": 2,
+        "exec_timeout_s": 2.0,
+        "sampling": {
+          "temperature": 0.0,
+          "top_p": 1.0,
+          "max_tokens": 256,
+          "seed": 17
+        },
+        "engine": {
+          "max_model_len": 4096,
+          "max_loras": 8,
+          "gpu_memory_utilization": 0.85,
+          "seed": 17
+        },
+        "_config_path": "/work/jvl210002/migration/bidirectional/configs/domains/exec.yaml"
+      },
+      "upstream_revision": null,
+      "scorer_source": "/work/jvl210002/migration/bidirectional/src/bidir/domains/exec_pred.py"
+    },
+    "algebra": {
+      "build": {
+        "domain": "algebra",
+        "name": "algebra",
+        "built_utc": "2026-09-10T19:04:36.399774+00:00",
+        "counts": {
+          "train": 6500,
+          "val": 500,
+          "test": 2500
+        },
+        "overlaps": {
+          "train_x_test": {
+            "content": 0,
+            "pair_id": 0
+          },
+          "val_x_test": {
+            "content": 0,
+            "pair_id": 0
+          },
+          "train_x_val": {
+            "content": 0,
+            "pair_id": 0
+          }
+        },
+        "dropped_for_leakage": {
+          "train": 0,
+          "val": 0
+        },
+        "subtasks": {
+          "train": {
+            "deg2_1var": 716,
+            "deg2_2var": 584,
+            "deg3_1var": 1539,
+            "deg3_2var": 1061,
+            "deg4_1var": 1577,
+            "deg4_2var": 1023
+          },
+          "val": {
+            "deg2_1var": 51,
+            "deg2_2var": 49,
+            "deg3_1var": 115,
+            "deg3_2var": 85,
+            "deg4_1var": 122,
+            "deg4_2var": 78
+          },
+          "test": {
+            "deg2_1var": 254,
+            "deg2_2var": 246,
+            "deg3_1var": 584,
+            "deg3_2var": 416,
+            "deg4_1var": 619,
+            "deg4_2var": 381
+          }
+        },
+        "config": {
+          "n_train": 6500,
+          "n_val": 500,
+          "n_test": 2500,
+          "seed": 17,
+          "n_shots": 2,
+          "degrees": [
+            2,
+            3,
+            3,
+            4,
+            4
+          ],
+          "max_root": 15,
+          "sampling": {
+            "temperature": 0.0,
+            "top_p": 1.0,
+            "max_tokens": 256,
+            "seed": 17
+          },
+          "engine": {
+            "max_model_len": 4096,
+            "max_loras": 8,
+            "gpu_memory_utilization": 0.85,
+            "seed": 17
+          }
+        }
+      },
+      "training_counts": {
+        "train": 6500,
+        "mix1": {
+          "reverse_pairs": 65,
+          "retained_pairs": 6500
+        },
+        "mix5": {
+          "reverse_pairs": 325,
+          "retained_pairs": 6500
+        }
+      },
+      "prompt_templates": [
+        {
+          "subtask": "<TRANSFORMATION>",
+          "direction": "forward",
+          "user": "Expand this expression and collect like terms. Write the result as a polynomial.\n\nExpression:\n<INPUT A>"
+        },
+        {
+          "subtask": "<TRANSFORMATION>",
+          "direction": "reverse",
+          "user": "Factor this polynomial completely over the integers. Write it as a product of factors.\n\nPolynomial:\n<INPUT B>"
+        }
+      ],
+      "resolved_configuration": {
+        "n_train": 6500,
+        "n_val": 500,
+        "n_test": 2500,
+        "seed": 17,
+        "n_shots": 2,
+        "degrees": [
+          2,
+          3,
+          3,
+          4,
+          4
+        ],
+        "max_root": 15,
+        "sampling": {
+          "temperature": 0.0,
+          "top_p": 1.0,
+          "max_tokens": 256,
+          "seed": 17
+        },
+        "engine": {
+          "max_model_len": 4096,
+          "max_loras": 8,
+          "gpu_memory_utilization": 0.85,
+          "seed": 17
+        },
+        "_config_path": "/work/jvl210002/migration/bidirectional/configs/domains/algebra.yaml"
+      },
+      "upstream_revision": null,
+      "scorer_source": "/work/jvl210002/migration/bidirectional/src/bidir/domains/algebra.py",
+      "other_orientations": {
+        "algebra_rev": [
+          {
+            "direction": "forward",
+            "user": "Factor this polynomial completely over the integers. Write it as a product of factors.\n\nPolynomial:\n<INPUT A>"
+          },
+          {
+            "direction": "reverse",
+            "user": "Expand this expression and collect like terms. Write the result as a polynomial.\n\nExpression:\n<INPUT B>"
+          }
+        ]
+      }
+    }
+  },
+  "translation_thresholds": [
+    {
+      "domain": "mt_en-de",
+      "model": "llama32-3b",
+      "thresholds": {
+        "forward": {
+          "comet": 0.764888
+        },
+        "reverse": {
+          "comet": 0.86191
+        }
+      }
+    },
+    {
+      "domain": "mt_en-de",
+      "model": "llama31-8b",
+      "thresholds": {
+        "forward": {
+          "comet": 0.839859
+        },
+        "reverse": {
+          "comet": 0.871522
+        }
+      }
+    },
+    {
+      "domain": "mt_en-de",
+      "model": "gemma3-4b",
+      "thresholds": {
+        "forward": {
+          "comet": 0.836251
+        },
+        "reverse": {
+          "comet": 0.869601
+        }
+      }
+    },
+    {
+      "domain": "mt_en-de",
+      "model": "gemma3-12b",
+      "thresholds": {
+        "forward": {
+          "comet": 0.866418
+        },
+        "reverse": {
+          "comet": 0.874782
+        }
+      }
+    },
+    {
+      "domain": "mt_en-de",
+      "model": "olmo2-1b",
+      "thresholds": {
+        "forward": {
+          "comet": 0.555442
+        },
+        "reverse": {
+          "comet": 0.77969
+        }
+      }
+    },
+    {
+      "domain": "mt_de-en",
+      "model": "llama32-3b",
+      "thresholds": {
+        "forward": {
+          "comet": 0.860885
+        },
+        "reverse": {
+          "comet": 0.764888
+        }
+      }
+    },
+    {
+      "domain": "mt_de-en",
+      "model": "llama31-8b",
+      "thresholds": {
+        "forward": {
+          "comet": 0.871522
+        },
+        "reverse": {
+          "comet": 0.83664
+        }
+      }
+    },
+    {
+      "domain": "mt_de-en",
+      "model": "gemma3-4b",
+      "thresholds": {
+        "forward": {
+          "comet": 0.869446
+        },
+        "reverse": {
+          "comet": 0.832958
+        }
+      }
+    },
+    {
+      "domain": "mt_de-en",
+      "model": "gemma3-12b",
+      "thresholds": {
+        "forward": {
+          "comet": 0.874782
+        },
+        "reverse": {
+          "comet": 0.866888
+        }
+      }
+    },
+    {
+      "domain": "mt_de-en",
+      "model": "olmo2-1b",
+      "thresholds": {
+        "forward": {
+          "comet": 0.77969
+        },
+        "reverse": {
+          "comet": 0.555477
+        }
+      }
+    },
+    {
+      "domain": "mt_en-zh",
+      "model": "llama32-3b",
+      "thresholds": {
+        "forward": {
+          "comet": 0.787774
+        },
+        "reverse": {
+          "comet": 0.823006
+        }
+      }
+    },
+    {
+      "domain": "mt_en-zh",
+      "model": "llama31-8b",
+      "thresholds": {
+        "forward": {
+          "comet": 0.843215
+        },
+        "reverse": {
+          "comet": 0.84409
+        }
+      }
+    },
+    {
+      "domain": "mt_en-zh",
+      "model": "gemma3-4b",
+      "thresholds": {
+        "forward": {
+          "comet": 0.850115
+        },
+        "reverse": {
+          "comet": 0.844765
+        }
+      }
+    },
+    {
+      "domain": "mt_en-zh",
+      "model": "gemma3-12b",
+      "thresholds": {
+        "forward": {
+          "comet": 0.86364
+        },
+        "reverse": {
+          "comet": 0.85914
+        }
+      }
+    },
+    {
+      "domain": "mt_en-zh",
+      "model": "olmo2-1b",
+      "thresholds": {
+        "forward": {
+          "comet": 0.636863
+        },
+        "reverse": {
+          "comet": 0.696096
+        }
+      }
+    },
+    {
+      "domain": "mt_zh-en",
+      "model": "llama32-3b",
+      "thresholds": {
+        "forward": {
+          "comet": 0.82238
+        },
+        "reverse": {
+          "comet": 0.787968
+        }
+      }
+    },
+    {
+      "domain": "mt_zh-en",
+      "model": "llama31-8b",
+      "thresholds": {
+        "forward": {
+          "comet": 0.84409
+        },
+        "reverse": {
+          "comet": 0.844345
+        }
+      }
+    },
+    {
+      "domain": "mt_zh-en",
+      "model": "gemma3-4b",
+      "thresholds": {
+        "forward": {
+          "comet": 0.84506
+        },
+        "reverse": {
+          "comet": 0.850115
+        }
+      }
+    },
+    {
+      "domain": "mt_zh-en",
+      "model": "gemma3-12b",
+      "thresholds": {
+        "forward": {
+          "comet": 0.85914
+        },
+        "reverse": {
+          "comet": 0.865201
+        }
+      }
+    },
+    {
+      "domain": "mt_zh-en",
+      "model": "olmo2-1b",
+      "thresholds": {
+        "forward": {
+          "comet": 0.698151
+        },
+        "reverse": {
+          "comet": 0.625003
+        }
+      }
+    }
+  ],
+  "parser_calibration": [
+    {
+      "model": "gemma3-12b",
+      "n": 200,
+      "reference_accuracy": 0.63,
+      "source": "/scratch/juno/jvl210002/bidir/results/base_gates/sql/gemma3-12b_2026-09-21.json"
+    },
+    {
+      "model": "gemma3-4b",
+      "n": 200,
+      "reference_accuracy": 0.63,
+      "source": "/scratch/juno/jvl210002/bidir/results/base_gates/sql/gemma3-4b_2026-09-18.json"
+    },
+    {
+      "model": "llama31-8b",
+      "n": 200,
+      "reference_accuracy": 0.625,
+      "source": "/scratch/juno/jvl210002/bidir/results/base_gates/sql/llama31-8b_2026-09-21.json"
+    },
+    {
+      "model": "llama32-3b",
+      "n": 200,
+      "reference_accuracy": 0.645,
+      "source": "/scratch/juno/jvl210002/bidir/results/base_gates/sql/llama32-3b_2026-09-12.json"
+    },
+    {
+      "model": "olmo2-1b",
+      "n": 200,
+      "reference_accuracy": 0.625,
+      "source": "/scratch/juno/jvl210002/bidir/results/base_gates/sql/olmo2-1b_2026-09-18.json"
+    }
+  ],
+  "presentation_intervals": {
+    "fmt": {
+      "run": "/scratch/juno/jvl210002/bidir/results/2026-09-17/fmt/llama32-3b/small_s17",
+      "intervals": {
+        "rates": {
+          "base": {
+            "forward": {
+              "mean": 0.6016,
+              "lo": 0.58279,
+              "hi": 0.62
+            },
+            "reverse": {
+              "mean": 0.5108,
+              "lo": 0.4912,
+              "hi": 0.5288
+            }
+          },
+          "sft": {
+            "forward": {
+              "mean": 0.9968,
+              "lo": 0.9944,
+              "hi": 0.9988
+            },
+            "reverse": {
+              "mean": 0.004,
+              "lo": 0.0016,
+              "hi": 0.0068
+            }
+          },
+          "mix1": {
+            "forward": {
+              "mean": 0.9964,
+              "lo": 0.994,
+              "hi": 0.9984
+            },
+            "reverse": {
+              "mean": 0.902,
+              "lo": 0.89,
+              "hi": 0.9132
+            }
+          },
+          "mix5": {
+            "forward": {
+              "mean": 0.9988,
+              "lo": 0.9972,
+              "hi": 1.0
+            },
+            "reverse": {
+              "mean": 0.9616,
+              "lo": 0.954,
+              "hi": 0.9688
+            }
+          }
+        },
+        "deltas": {
+          "base": {
+            "forward": {
+              "mean": -0.3952,
+              "lo": -0.4144,
+              "hi": -0.376
+            },
+            "reverse": {
+              "mean": 0.5068,
+              "lo": 0.48719,
+              "hi": 0.5252
+            }
+          },
+          "mix1": {
+            "forward": {
+              "mean": -0.0004,
+              "lo": -0.0028,
+              "hi": 0.0024
+            },
+            "reverse": {
+              "mean": 0.898,
+              "lo": 0.8855900000000001,
+              "hi": 0.9092
+            }
+          },
+          "mix5": {
+            "forward": {
+              "mean": 0.002,
+              "lo": -0.0004,
+              "hi": 0.0044
+            },
+            "reverse": {
+              "mean": 0.9576,
+              "lo": 0.9496,
+              "hi": 0.9652
+            }
+          }
+        }
+      }
+    },
+    "code": {
+      "run": "/scratch/juno/jvl210002/bidir/results/2026-09-17/code/llama32-3b/small_s17",
+      "intervals": {
+        "rates": {
+          "base": {
+            "forward": {
+              "mean": 0.37475728155339805,
+              "lo": 0.33154126213592233,
+              "hi": 0.4179733009708737
+            },
+            "reverse": {
+              "mean": 0.32038834951456313,
+              "lo": 0.29610436893203884,
+              "hi": 0.3446601941747573
+            }
+          },
+          "sft": {
+            "forward": {
+              "mean": 0.8237864077669903,
+              "lo": 0.8033980582524272,
+              "hi": 0.8432038834951456
+            },
+            "reverse": {
+              "mean": 0.0383495145631068,
+              "lo": 0.03058252427184466,
+              "hi": 0.04611650485436893
+            }
+          },
+          "mix1": {
+            "forward": {
+              "mean": 0.8281553398058252,
+              "lo": 0.8087378640776699,
+              "hi": 0.8475728155339806
+            },
+            "reverse": {
+              "mean": 0.558252427184466,
+              "lo": 0.5330097087378641,
+              "hi": 0.583495145631068
+            }
+          },
+          "mix5": {
+            "forward": {
+              "mean": 0.8427184466019417,
+              "lo": 0.8232888349514563,
+              "hi": 0.8611650485436894
+            },
+            "reverse": {
+              "mean": 0.7524271844660194,
+              "lo": 0.7286407766990292,
+              "hi": 0.7757281553398059
+            }
+          }
+        },
+        "deltas": {
+          "base": {
+            "forward": {
+              "mean": -0.44902912621359226,
+              "lo": -0.49466019417475726,
+              "hi": -0.40436893203883495
+            },
+            "reverse": {
+              "mean": 0.2820388349514563,
+              "lo": 0.2558252427184466,
+              "hi": 0.30777912621359216
+            }
+          },
+          "mix1": {
+            "forward": {
+              "mean": 0.004368932038834952,
+              "lo": -0.009223300970873786,
+              "hi": 0.017487864077669838
+            },
+            "reverse": {
+              "mean": 0.5199029126213592,
+              "lo": 0.4936893203883495,
+              "hi": 0.5451577669902913
+            }
+          },
+          "mix5": {
+            "forward": {
+              "mean": 0.018932038834951457,
+              "lo": 0.0048543689320388345,
+              "hi": 0.03349514563106796
+            },
+            "reverse": {
+              "mean": 0.7140776699029127,
+              "lo": 0.6888349514563107,
+              "hi": 0.737876213592233
+            }
+          }
+        }
+      }
+    },
+    "mt_de-en": {
+      "run": "/scratch/juno/jvl210002/bidir/results/2026-09-17/mt_de-en/llama32-3b/small_s17",
+      "intervals": {
+        "rates": {
+          "base": {
+            "forward": {
+              "mean": 0.7371541501976284,
+              "lo": 0.7114624505928854,
+              "hi": 0.7638339920948617
+            },
+            "reverse": {
+              "mean": 0.7924901185770751,
+              "lo": 0.766798418972332,
+              "hi": 0.817193675889328
+            }
+          },
+          "sft": {
+            "forward": {
+              "mean": 0.6709486166007905,
+              "lo": 0.6413043478260869,
+              "hi": 0.6986166007905138
+            },
+            "reverse": {
+              "mean": 0.0,
+              "lo": 0.0,
+              "hi": 0.0
+            }
+          },
+          "mix1": {
+            "forward": {
+              "mean": 0.6699604743083004,
+              "lo": 0.6403162055335968,
+              "hi": 0.6996047430830039
+            },
+            "reverse": {
+              "mean": 0.7944664031620553,
+              "lo": 0.7687747035573123,
+              "hi": 0.8191699604743083
+            }
+          },
+          "mix5": {
+            "forward": {
+              "mean": 0.6739130434782609,
+              "lo": 0.6452569169960475,
+              "hi": 0.7015810276679841
+            },
+            "reverse": {
+              "mean": 0.8201581027667985,
+              "lo": 0.7964426877470355,
+              "hi": 0.8429100790513833
+            }
+          }
+        },
+        "deltas": {
+          "base": {
+            "forward": {
+              "mean": 0.06620553359683795,
+              "lo": 0.040513833992094864,
+              "hi": 0.09288537549407115
+            },
+            "reverse": {
+              "mean": 0.7924901185770751,
+              "lo": 0.766798418972332,
+              "hi": 0.817193675889328
+            }
+          },
+          "mix1": {
+            "forward": {
+              "mean": -0.0009881422924901185,
+              "lo": -0.015810276679841896,
+              "hi": 0.014822134387351778
+            },
+            "reverse": {
+              "mean": 0.7944664031620553,
+              "lo": 0.7687747035573123,
+              "hi": 0.8191699604743083
+            }
+          },
+          "mix5": {
+            "forward": {
+              "mean": 0.0029644268774703555,
+              "lo": -0.01383399209486166,
+              "hi": 0.019762845849802372
+            },
+            "reverse": {
+              "mean": 0.8201581027667985,
+              "lo": 0.7964426877470355,
+              "hi": 0.8429100790513833
+            }
+          }
+        }
+      }
+    },
+    "sql": {
+      "run": "/scratch/juno/jvl210002/bidir/results/2026-09-17/sql/llama32-3b/small_s17",
+      "intervals": {
+        "rates": {
+          "base": {
+            "forward": {
+              "mean": 0.4951644100580271,
+              "lo": 0.46421663442940037,
+              "hi": 0.5261121856866537
+            },
+            "reverse": {
+              "mean": 0.5106382978723404,
+              "lo": 0.4796905222437137,
+              "hi": 0.5415860735009671
+            }
+          },
+          "sft": {
+            "forward": {
+              "mean": 0.6237911025145068,
+              "lo": 0.5957446808510638,
+              "hi": 0.6547388781431335
+            },
+            "reverse": {
+              "mean": 0.23210831721470018,
+              "lo": 0.2059961315280464,
+              "hi": 0.25824468085106367
+            }
+          },
+          "mix1": {
+            "forward": {
+              "mean": 0.6228239845261122,
+              "lo": 0.5947533849129594,
+              "hi": 0.6537717601547389
+            },
+            "reverse": {
+              "mean": 0.48452611218568664,
+              "lo": 0.45357833655706,
+              "hi": 0.5145067698259188
+            }
+          },
+          "mix5": {
+            "forward": {
+              "mean": 0.6083172147001934,
+              "lo": 0.5802707930367504,
+              "hi": 0.6382978723404256
+            },
+            "reverse": {
+              "mean": 0.5502901353965184,
+              "lo": 0.5203094777562862,
+              "hi": 0.5802707930367504
+            }
+          }
+        },
+        "deltas": {
+          "base": {
+            "forward": {
+              "mean": -0.1286266924564797,
+              "lo": -0.15667311411992263,
+              "hi": -0.10154738878143134
+            },
+            "reverse": {
+              "mean": 0.27852998065764023,
+              "lo": 0.24661508704061896,
+              "hi": 0.3114361702127658
+            }
+          },
+          "mix1": {
+            "forward": {
+              "mean": -0.0009671179883945841,
+              "lo": -0.014506769825918761,
+              "hi": 0.012572533849129593
+            },
+            "reverse": {
+              "mean": 0.2524177949709865,
+              "lo": 0.2205029013539652,
+              "hi": 0.28338974854932286
+            }
+          },
+          "mix5": {
+            "forward": {
+              "mean": -0.015473887814313346,
+              "lo": -0.031914893617021274,
+              "hi": 0.0
+            },
+            "reverse": {
+              "mean": 0.3181818181818182,
+              "lo": 0.2852998065764023,
+              "hi": 0.35009671179883944
+            }
+          }
+        }
+      }
+    }
+  },
+  "training_run_variation": [
+    {
+      "domain": "mt_de-en",
+      "seeds": [
+        17,
+        42,
+        1234
+      ],
+      "runs": [
+        "/scratch/juno/jvl210002/bidir/results/2026-09-17/mt_de-en/llama32-3b/small_s17",
+        "/scratch/juno/jvl210002/bidir/results/2026-09-17/mt_de-en/llama32-3b/small_s42",
+        "/scratch/juno/jvl210002/bidir/results/2026-09-18/mt_de-en/llama32-3b/small_s1234"
+      ],
+      "ranges": [
+        [
+          -0.9881422924901129,
+          0.09881422924901129
+        ],
+        [
+          76.08695652173914,
+          79.64426877470355
+        ],
+        [
+          -0.5928853754940677,
+          0.29644268774703386
+        ],
+        [
+          80.03952569169961,
+          82.01581027667984
+        ]
+      ]
+    },
+    {
+      "domain": "mt_en-de",
+      "seeds": [
+        17,
+        42,
+        1234
+      ],
+      "runs": [
+        "/scratch/juno/jvl210002/bidir/results/2026-09-17/mt_en-de/llama32-3b/small_s17",
+        "/scratch/juno/jvl210002/bidir/results/2026-09-17/mt_en-de/llama32-3b/small_s42",
+        "/scratch/juno/jvl210002/bidir/results/2026-09-18/mt_en-de/llama32-3b/small_s1234"
+      ],
+      "ranges": [
+        [
+          -0.8893280632411127,
+          -0.19762845849802257
+        ],
+        [
+          6.225296442687744,
+          8.596837944664026
+        ],
+        [
+          -1.5810276679841917,
+          0.691699604743079
+        ],
+        [
+          4.0513833992094845,
+          5.830039525691699
+        ]
+      ]
+    },
+    {
+      "domain": "mt_en-zh",
+      "seeds": [
+        17,
+        42,
+        1234
+      ],
+      "runs": [
+        "/scratch/juno/jvl210002/bidir/results/2026-09-17/mt_en-zh/llama32-3b/small_s17",
+        "/scratch/juno/jvl210002/bidir/results/2026-10-02/mt_en-zh/llama32-3b/small_s1234",
+        "/scratch/juno/jvl210002/bidir/results/2026-10-03/mt_en-zh/llama32-3b/small_s42"
+      ],
+      "ranges": [
+        [
+          -1.679841897233203,
+          -0.7905138339920903
+        ],
+        [
+          49.505928853754945,
+          64.2292490118577
+        ],
+        [
+          -1.4822134387351804,
+          -0.49407114624505644
+        ],
+        [
+          49.1106719367589,
+          64.32806324110672
+        ]
+      ]
+    },
+    {
+      "domain": "mt_zh-en",
+      "seeds": [
+        17,
+        42,
+        1234
+      ],
+      "runs": [
+        "/scratch/juno/jvl210002/bidir/results/2026-09-18/mt_zh-en/llama32-3b/small_s17",
+        "/scratch/juno/jvl210002/bidir/results/2026-10-02/mt_zh-en/llama32-3b/small_s1234",
+        "/scratch/juno/jvl210002/bidir/results/2026-10-03/mt_zh-en/llama32-3b/small_s42"
+      ],
+      "ranges": [
+        [
+          -0.6916996047430901,
+          1.4822134387351693
+        ],
+        [
+          76.18577075098814,
+          77.4703557312253
+        ],
+        [
+          -0.09881422924901129,
+          0.5928853754940788
+        ],
+        [
+          77.07509881422925,
+          77.76679841897233
+        ]
+      ]
+    },
+    {
+      "domain": "code",
+      "seeds": [
+        17,
+        42,
+        1234
+      ],
+      "runs": [
+        "/scratch/juno/jvl210002/bidir/results/2026-09-17/code/llama32-3b/small_s17",
+        "/scratch/juno/jvl210002/bidir/results/2026-09-18/code/llama32-3b/small_s42",
+        "/scratch/juno/jvl210002/bidir/results/2026-09-18/code/llama32-3b/small_s1234"
+      ],
+      "ranges": [
+        [
+          -0.24271844660194164,
+          1.650485436893201
+        ],
+        [
+          51.990291262135926,
+          59.95145631067961
+        ],
+        [
+          0.04854368932039055,
+          1.8932038834951426
+        ],
+        [
+          68.83495145631069,
+          71.40776699029126
+        ]
+      ]
+    },
+    {
+      "domain": "sql",
+      "seeds": [
+        17,
+        42,
+        1234
+      ],
+      "runs": [
+        "/scratch/juno/jvl210002/bidir/results/2026-09-17/sql/llama32-3b/small_s17",
+        "/scratch/juno/jvl210002/bidir/results/2026-09-18/sql/llama32-3b/small_s42",
+        "/scratch/juno/jvl210002/bidir/results/2026-09-18/sql/llama32-3b/small_s1234"
+      ],
+      "ranges": [
+        [
+          -0.4835589941972862,
+          2.030947775628622
+        ],
+        [
+          13.926499032882006,
+          33.36557059961315
+        ],
+        [
+          -1.6441005802707909,
+          -0.4835589941972973
+        ],
+        [
+          19.342359767891676,
+          40.03868471953578
+        ]
+      ]
+    },
+    {
+      "domain": "fmt",
+      "seeds": [
+        17,
+        42,
+        1234
+      ],
+      "runs": [
+        "/scratch/juno/jvl210002/bidir/results/2026-09-17/fmt/llama32-3b/small_s17",
+        "/scratch/juno/jvl210002/bidir/results/2026-10-03/fmt/llama32-3b/small_s42",
+        "/scratch/juno/jvl210002/bidir/results/2026-10-03/fmt/llama32-3b/small_s1234"
+      ],
+      "ranges": [
+        [
+          -0.48000000000000265,
+          -0.0400000000000067
+        ],
+        [
+          86.12,
+          89.8
+        ],
+        [
+          -0.20000000000000018,
+          0.20000000000000018
+        ],
+        [
+          92.16,
+          95.76
+        ]
+      ]
+    },
+    {
+      "domain": "algebra",
+      "seeds": [
+        17,
+        42,
+        1234
+      ],
+      "runs": [
+        "/scratch/juno/jvl210002/bidir/results/2026-09-17/algebra/llama32-3b/small_s17",
+        "/scratch/juno/jvl210002/bidir/results/2026-10-02/algebra/llama32-3b/small_s1234",
+        "/scratch/juno/jvl210002/bidir/results/2026-10-03/algebra/llama32-3b/small_s42"
+      ],
+      "ranges": [
+        [
+          -1.5600000000000003,
+          -0.6399999999999961
+        ],
+        [
+          6.760000000000001,
+          8.32
+        ],
+        [
+          -2.160000000000001,
+          0.720000000000004
+        ],
+        [
+          12.8,
+          13.96
+        ]
+      ]
+    },
+    {
+      "domain": "algebra_rev",
+      "seeds": [
+        17,
+        42,
+        1234
+      ],
+      "runs": [
+        "/scratch/juno/jvl210002/bidir/results/2026-09-17/algebra_rev/llama32-3b/small_s17",
+        "/scratch/juno/jvl210002/bidir/results/2026-10-03/algebra_rev/llama32-3b/small_s42",
+        "/scratch/juno/jvl210002/bidir/results/2026-10-03/algebra_rev/llama32-3b/small_s1234"
+      ],
+      "ranges": [
+        [
+          -3.400000000000003,
+          0.40000000000000036
+        ],
+        [
+          -4.120000000000001,
+          -3.4000000000000004
+        ],
+        [
+          -2.32,
+          0.11999999999999789
+        ],
+        [
+          -0.11999999999999789,
+          1.1199999999999988
+        ]
+      ]
+    }
+  ],
+  "initial_exclusions": [
+    {
+      "domain": "units",
+      "model": "llama32-3b",
+      "reasons": [
+        "forward success below 10\\%",
+        "forward format failures above 15\\%",
+        "backward success below 10\\%",
+        "backward format failures above 15\\%"
+      ],
+      "source": "/scratch/juno/jvl210002/bidir/results/base_gates/units/llama32-3b_2026-10-03.json"
+    },
+    {
+      "domain": "units",
+      "model": "gemma3-4b",
+      "reasons": [
+        "forward format failures above 15\\%",
+        "backward success below 10\\%",
+        "backward format failures above 15\\%"
+      ],
+      "source": "/scratch/juno/jvl210002/bidir/results/base_gates/units/gemma3-4b_2026-10-03.json"
+    },
+    {
+      "domain": "logic",
+      "model": "llama32-3b",
+      "reasons": [
+        "forward success below 10\\%",
+        "forward format failures above 15\\%",
+        "backward success below 10\\%",
+        "backward format failures above 15\\%"
+      ],
+      "source": "/scratch/juno/jvl210002/bidir/results/base_gates/logic/llama32-3b_2026-10-03.json"
+    },
+    {
+      "domain": "logic",
+      "model": "gemma3-4b",
+      "reasons": [
+        "forward success below 10\\%",
+        "forward format failures above 15\\%",
+        "backward success below 10\\%"
+      ],
+      "source": "/scratch/juno/jvl210002/bidir/results/base_gates/logic/gemma3-4b_2026-10-03.json"
+    },
+    {
+      "domain": "py_cpp",
+      "model": "llama32-3b",
+      "reasons": [
+        "forward format failures above 15\\%",
+        "backward format failures above 15\\%"
+      ],
+      "source": "/scratch/juno/jvl210002/bidir/results/base_gates/py_cpp/llama32-3b_2026-10-03.json"
+    },
+    {
+      "domain": "py_cpp",
+      "model": "gemma3-4b",
+      "reasons": [
+        "forward success below 10\\%",
+        "forward format failures above 15\\%"
+      ],
+      "source": "/scratch/juno/jvl210002/bidir/results/base_gates/py_cpp/gemma3-4b_2026-10-03.json"
+    }
+  ],
+  "auxiliary_intervals": [
+    {
+      "domain": "mt_en-de",
+      "model": "llama31-8b",
+      "method": "unlikelihood",
+      "reference": "sft",
+      "run": "/scratch/juno/jvl210002/bidir/results/2026-09-26/mt_en-de/llama31-8b/attrib_unlikelihood_s17",
+      "contrasts": [
+        {
+          "a": "unlikelihood",
+          "b": "sft",
+          "metric": "strict",
+          "direction": "forward",
+          "n_clusters": 1012,
+          "mean_a": 74.01185770750988,
+          "mean_b": 73.12252964426878,
+          "delta_pp": 0.8893280632411016,
+          "confidence": 0.95,
+          "ci_lo": -1.1857707509881354,
+          "ci_hi": 2.8656126482213495,
+          "spans_zero": true,
+          "ci_halfwidth_pp": 2.0256916996047423
+        },
+        {
+          "a": "unlikelihood",
+          "b": "sft",
+          "metric": "strict",
+          "direction": "reverse",
+          "n_clusters": 1012,
+          "mean_a": 0.09881422924901186,
+          "mean_b": 58.69565217391305,
+          "delta_pp": -58.59683794466404,
+          "confidence": 0.95,
+          "ci_lo": -61.462450592885375,
+          "ci_hi": -55.533596837944664,
+          "spans_zero": false,
+          "ci_halfwidth_pp": 2.9644268774703555
+        }
+      ]
+    },
+    {
+      "domain": "mt_en-de",
+      "model": "llama31-8b",
+      "method": "unlikelihood",
+      "reference": "mix5",
+      "run": "/scratch/juno/jvl210002/bidir/results/2026-09-26/mt_en-de/llama31-8b/attrib_unlikelihood_s17",
+      "contrasts": [
+        {
+          "a": "unlikelihood",
+          "b": "mix5",
+          "metric": "strict",
+          "direction": "forward",
+          "n_clusters": 1012,
+          "mean_a": 74.01185770750988,
+          "mean_b": 73.02371541501977,
+          "delta_pp": 0.9881422924901129,
+          "confidence": 0.95,
+          "ci_lo": -1.1857707509881354,
+          "ci_hi": 3.1620553359683834,
+          "spans_zero": true,
+          "ci_halfwidth_pp": 2.1739130434782594
+        },
+        {
+          "a": "unlikelihood",
+          "b": "mix5",
+          "metric": "strict",
+          "direction": "reverse",
+          "n_clusters": 1012,
+          "mean_a": 0.09881422924901186,
+          "mean_b": 69.1699604743083,
+          "delta_pp": -69.0711462450593,
+          "confidence": 0.95,
+          "ci_lo": -71.83794466403161,
+          "ci_hi": -66.30434782608695,
+          "spans_zero": false,
+          "ci_halfwidth_pp": 2.7667984189723285
+        }
+      ]
+    },
+    {
+      "domain": "mt_en-de",
+      "model": "llama32-3b",
+      "method": "unlikelihood",
+      "reference": "sft",
+      "run": "/scratch/juno/jvl210002/bidir/results/2026-10-08/mt_en-de/llama32-3b/attrib_unlikelihood_s17",
+      "contrasts": [
+        {
+          "a": "unlikelihood",
+          "b": "sft",
+          "metric": "strict",
+          "direction": "forward",
+          "n_clusters": 1012,
+          "mean_a": 85.0790513833992,
+          "mean_b": 84.78260869565217,
+          "delta_pp": 0.29644268774703386,
+          "confidence": 0.95,
+          "ci_lo": -1.5810276679841806,
+          "ci_hi": 2.0750988142292592,
+          "spans_zero": true,
+          "ci_halfwidth_pp": 1.82806324110672
+        },
+        {
+          "a": "unlikelihood",
+          "b": "sft",
+          "metric": "strict",
+          "direction": "reverse",
+          "n_clusters": 1012,
+          "mean_a": 0.0,
+          "mean_b": 63.63636363636363,
+          "delta_pp": -63.63636363636363,
+          "confidence": 0.95,
+          "ci_lo": -66.40316205533597,
+          "ci_hi": -60.573122529644266,
+          "spans_zero": false,
+          "ci_halfwidth_pp": 2.9150197628458514
+        }
+      ]
+    },
+    {
+      "domain": "mt_en-de",
+      "model": "llama32-3b",
+      "method": "unlikelihood",
+      "reference": "mix5",
+      "run": "/scratch/juno/jvl210002/bidir/results/2026-10-08/mt_en-de/llama32-3b/attrib_unlikelihood_s17",
+      "contrasts": [
+        {
+          "a": "unlikelihood",
+          "b": "mix5",
+          "metric": "strict",
+          "direction": "forward",
+          "n_clusters": 1012,
+          "mean_a": 85.0790513833992,
+          "mean_b": 85.37549407114624,
+          "delta_pp": -0.29644268774703386,
+          "confidence": 0.95,
+          "ci_lo": -2.2727272727272707,
+          "ci_hi": 1.6798418972331919,
+          "spans_zero": true,
+          "ci_halfwidth_pp": 1.9762845849802313
+        },
+        {
+          "a": "unlikelihood",
+          "b": "mix5",
+          "metric": "strict",
+          "direction": "reverse",
+          "n_clusters": 1012,
+          "mean_a": 0.0,
+          "mean_b": 68.77470355731225,
+          "delta_pp": -68.77470355731225,
+          "confidence": 0.95,
+          "ci_lo": -71.6403162055336,
+          "ci_hi": -65.9090909090909,
+          "spans_zero": false,
+          "ci_halfwidth_pp": 2.8656126482213438
+        }
+      ]
+    },
+    {
+      "domain": "code",
+      "model": "llama32-3b",
+      "method": "cft",
+      "reference": "sft",
+      "run": "/scratch/juno/jvl210002/bidir/results/2026-09-26/code/llama32-3b/attrib_cft_s17",
+      "contrasts": [
+        {
+          "a": "cft",
+          "b": "sft",
+          "metric": "strict",
+          "direction": "forward",
+          "n_clusters": 412,
+          "mean_a": 84.12621359223301,
+          "mean_b": 81.35922330097087,
+          "delta_pp": 2.766990291262139,
+          "confidence": 0.95,
+          "ci_lo": 1.116504854368927,
+          "ci_hi": 4.3689320388349495,
+          "spans_zero": false,
+          "ci_halfwidth_pp": 1.6262135922330112
+        },
+        {
+          "a": "cft",
+          "b": "sft",
+          "metric": "strict",
+          "direction": "reverse",
+          "n_clusters": 412,
+          "mean_a": 6.699029126213592,
+          "mean_b": 3.640776699029126,
+          "delta_pp": 3.058252427184466,
+          "confidence": 0.95,
+          "ci_lo": 1.8446601941747576,
+          "ci_hi": 4.223300970873786,
+          "spans_zero": false,
+          "ci_halfwidth_pp": 1.1893203883495143
+        }
+      ]
+    },
+    {
+      "domain": "code",
+      "model": "llama32-3b",
+      "method": "cft",
+      "reference": "mix5",
+      "run": "/scratch/juno/jvl210002/bidir/results/2026-09-26/code/llama32-3b/attrib_cft_s17",
+      "contrasts": [
+        {
+          "a": "cft",
+          "b": "mix5",
+          "metric": "strict",
+          "direction": "forward",
+          "n_clusters": 412,
+          "mean_a": 84.12621359223301,
+          "mean_b": 84.22330097087378,
+          "delta_pp": -0.09708737864077,
+          "confidence": 0.95,
+          "ci_lo": -1.6990291262135915,
+          "ci_hi": 1.4563106796116498,
+          "spans_zero": true,
+          "ci_halfwidth_pp": 1.5776699029126207
+        },
+        {
+          "a": "cft",
+          "b": "mix5",
+          "metric": "strict",
+          "direction": "reverse",
+          "n_clusters": 412,
+          "mean_a": 6.699029126213592,
+          "mean_b": 75.4368932038835,
+          "delta_pp": -68.7378640776699,
+          "confidence": 0.95,
+          "ci_lo": -71.11650485436894,
+          "ci_hi": -66.31067961165049,
+          "spans_zero": false,
+          "ci_halfwidth_pp": 2.402912621359228
+        }
+      ]
+    },
+    {
+      "domain": "sql",
+      "model": "llama31-8b",
+      "method": "roundtrip",
+      "reference": "sft",
+      "run": "/scratch/juno/jvl210002/bidir/results/2026-09-26/sql/llama31-8b/attrib_roundtrip_s17",
+      "contrasts": [
+        {
+          "a": "roundtrip",
+          "b": "sft",
+          "metric": "strict",
+          "direction": "forward",
+          "n_clusters": 1034,
+          "mean_a": 71.27659574468085,
+          "mean_b": 72.05029013539652,
+          "delta_pp": -0.7736943907156735,
+          "confidence": 0.95,
+          "ci_lo": -2.224371373307543,
+          "ci_hi": 0.5802707930367523,
+          "spans_zero": true,
+          "ci_halfwidth_pp": 1.4023210831721478
+        },
+        {
+          "a": "roundtrip",
+          "b": "sft",
+          "metric": "strict",
+          "direction": "reverse",
+          "n_clusters": 1034,
+          "mean_a": 58.80077369439072,
+          "mean_b": 51.25725338491296,
+          "delta_pp": 7.543520309477758,
+          "confidence": 0.95,
+          "ci_lo": 5.029013539651839,
+          "ci_hi": 9.961315280464223,
+          "spans_zero": false,
+          "ci_halfwidth_pp": 2.4661508704061923
+        }
+      ]
+    },
+    {
+      "domain": "sql",
+      "model": "llama31-8b",
+      "method": "roundtrip",
+      "reference": "mix5",
+      "run": "/scratch/juno/jvl210002/bidir/results/2026-09-26/sql/llama31-8b/attrib_roundtrip_s17",
+      "contrasts": [
+        {
+          "a": "roundtrip",
+          "b": "mix5",
+          "metric": "strict",
+          "direction": "forward",
+          "n_clusters": 1034,
+          "mean_a": 71.27659574468085,
+          "mean_b": 71.85686653771761,
+          "delta_pp": -0.5802707930367523,
+          "confidence": 0.95,
+          "ci_lo": -2.3210831721470093,
+          "ci_hi": 1.1605415860735047,
+          "spans_zero": true,
+          "ci_halfwidth_pp": 1.740812379110257
+        },
+        {
+          "a": "roundtrip",
+          "b": "mix5",
+          "metric": "strict",
+          "direction": "reverse",
+          "n_clusters": 1034,
+          "mean_a": 58.80077369439072,
+          "mean_b": 57.83365570599614,
+          "delta_pp": 0.9671179883945835,
+          "confidence": 0.95,
+          "ci_lo": -1.0638297872340385,
+          "ci_hi": 2.9980657640232056,
+          "spans_zero": true,
+          "ci_halfwidth_pp": 2.030947775628622
+        }
+      ]
+    },
+    {
+      "domain": "sql",
+      "model": "llama32-3b",
+      "method": "roundtrip",
+      "reference": "sft",
+      "run": "/scratch/juno/jvl210002/bidir/results/2026-09-26/sql/llama32-3b/attrib_roundtrip_s17",
+      "contrasts": [
+        {
+          "a": "roundtrip",
+          "b": "sft",
+          "metric": "strict",
+          "direction": "forward",
+          "n_clusters": 1034,
+          "mean_a": 61.50870406189555,
+          "mean_b": 62.28239845261122,
+          "delta_pp": -0.7736943907156735,
+          "confidence": 0.95,
+          "ci_lo": -2.224371373307543,
+          "ci_hi": 0.7736943907156735,
+          "spans_zero": true,
+          "ci_halfwidth_pp": 1.4990328820116083
+        },
+        {
+          "a": "roundtrip",
+          "b": "sft",
+          "metric": "strict",
+          "direction": "reverse",
+          "n_clusters": 1034,
+          "mean_a": 48.16247582205029,
+          "mean_b": 23.30754352030948,
+          "delta_pp": 24.85493230174081,
+          "confidence": 0.95,
+          "ci_lo": 21.66344294003869,
+          "ci_hi": 28.046421663442946,
+          "spans_zero": false,
+          "ci_halfwidth_pp": 3.1914893617021285
+        }
+      ]
+    },
+    {
+      "domain": "sql",
+      "model": "llama32-3b",
+      "method": "roundtrip",
+      "reference": "mix5",
+      "run": "/scratch/juno/jvl210002/bidir/results/2026-09-26/sql/llama32-3b/attrib_roundtrip_s17",
+      "contrasts": [
+        {
+          "a": "roundtrip",
+          "b": "mix5",
+          "metric": "strict",
+          "direction": "forward",
+          "n_clusters": 1034,
+          "mean_a": 61.50870406189555,
+          "mean_b": 61.02514506769826,
+          "delta_pp": 0.4835589941972862,
+          "confidence": 0.95,
+          "ci_lo": -1.1605415860735047,
+          "ci_hi": 2.127659574468088,
+          "spans_zero": true,
+          "ci_halfwidth_pp": 1.6441005802707964
+        },
+        {
+          "a": "roundtrip",
+          "b": "mix5",
+          "metric": "strict",
+          "direction": "reverse",
+          "n_clusters": 1034,
+          "mean_a": 48.16247582205029,
+          "mean_b": 55.22243713733076,
+          "delta_pp": -7.059961315280471,
+          "confidence": 0.95,
+          "ci_lo": -9.477756286266924,
+          "ci_hi": -4.835589941972918,
+          "spans_zero": false,
+          "ci_halfwidth_pp": 2.321083172147003
+        }
+      ]
+    }
+  ],
+  "numbers": {
+    "main-repeat-mt-de-en-runs": {
+      "value": "3",
+      "sources": [
+        "/scratch/juno/jvl210002/bidir/results/2026-09-17/mt_de-en/llama32-3b/small_s17/trials.jsonl",
+        "/scratch/juno/jvl210002/bidir/results/2026-09-17/mt_de-en/llama32-3b/small_s42/trials.jsonl",
+        "/scratch/juno/jvl210002/bidir/results/2026-09-18/mt_de-en/llama32-3b/small_s1234/trials.jsonl"
+      ]
+    },
+    "main-repeat-mt-de-en-mix1-forward-lo": {
+      "value": "-1.0",
+      "sources": [
+        "/scratch/juno/jvl210002/bidir/results/2026-09-17/mt_de-en/llama32-3b/small_s17/trials.jsonl",
+        "/scratch/juno/jvl210002/bidir/results/2026-09-17/mt_de-en/llama32-3b/small_s42/trials.jsonl",
+        "/scratch/juno/jvl210002/bidir/results/2026-09-18/mt_de-en/llama32-3b/small_s1234/trials.jsonl"
+      ]
+    },
+    "main-repeat-mt-de-en-mix1-forward-hi": {
+      "value": "0.1",
+      "sources": [
+        "/scratch/juno/jvl210002/bidir/results/2026-09-17/mt_de-en/llama32-3b/small_s17/trials.jsonl",
+        "/scratch/juno/jvl210002/bidir/results/2026-09-17/mt_de-en/llama32-3b/small_s42/trials.jsonl",
+        "/scratch/juno/jvl210002/bidir/results/2026-09-18/mt_de-en/llama32-3b/small_s1234/trials.jsonl"
+      ]
+    },
+    "main-repeat-mt-de-en-mix1-backward-lo": {
+      "value": "76.1",
+      "sources": [
+        "/scratch/juno/jvl210002/bidir/results/2026-09-17/mt_de-en/llama32-3b/small_s17/trials.jsonl",
+        "/scratch/juno/jvl210002/bidir/results/2026-09-17/mt_de-en/llama32-3b/small_s42/trials.jsonl",
+        "/scratch/juno/jvl210002/bidir/results/2026-09-18/mt_de-en/llama32-3b/small_s1234/trials.jsonl"
+      ]
+    },
+    "main-repeat-mt-de-en-mix1-backward-hi": {
+      "value": "79.6",
+      "sources": [
+        "/scratch/juno/jvl210002/bidir/results/2026-09-17/mt_de-en/llama32-3b/small_s17/trials.jsonl",
+        "/scratch/juno/jvl210002/bidir/results/2026-09-17/mt_de-en/llama32-3b/small_s42/trials.jsonl",
+        "/scratch/juno/jvl210002/bidir/results/2026-09-18/mt_de-en/llama32-3b/small_s1234/trials.jsonl"
+      ]
+    },
+    "main-repeat-mt-de-en-mix5-forward-lo": {
+      "value": "-0.6",
+      "sources": [
+        "/scratch/juno/jvl210002/bidir/results/2026-09-17/mt_de-en/llama32-3b/small_s17/trials.jsonl",
+        "/scratch/juno/jvl210002/bidir/results/2026-09-17/mt_de-en/llama32-3b/small_s42/trials.jsonl",
+        "/scratch/juno/jvl210002/bidir/results/2026-09-18/mt_de-en/llama32-3b/small_s1234/trials.jsonl"
+      ]
+    },
+    "main-repeat-mt-de-en-mix5-forward-hi": {
+      "value": "0.3",
+      "sources": [
+        "/scratch/juno/jvl210002/bidir/results/2026-09-17/mt_de-en/llama32-3b/small_s17/trials.jsonl",
+        "/scratch/juno/jvl210002/bidir/results/2026-09-17/mt_de-en/llama32-3b/small_s42/trials.jsonl",
+        "/scratch/juno/jvl210002/bidir/results/2026-09-18/mt_de-en/llama32-3b/small_s1234/trials.jsonl"
+      ]
+    },
+    "main-repeat-mt-de-en-mix5-backward-lo": {
+      "value": "80.0",
+      "sources": [
+        "/scratch/juno/jvl210002/bidir/results/2026-09-17/mt_de-en/llama32-3b/small_s17/trials.jsonl",
+        "/scratch/juno/jvl210002/bidir/results/2026-09-17/mt_de-en/llama32-3b/small_s42/trials.jsonl",
+        "/scratch/juno/jvl210002/bidir/results/2026-09-18/mt_de-en/llama32-3b/small_s1234/trials.jsonl"
+      ]
+    },
+    "main-repeat-mt-de-en-mix5-backward-hi": {
+      "value": "82.0",
+      "sources": [
+        "/scratch/juno/jvl210002/bidir/results/2026-09-17/mt_de-en/llama32-3b/small_s17/trials.jsonl",
+        "/scratch/juno/jvl210002/bidir/results/2026-09-17/mt_de-en/llama32-3b/small_s42/trials.jsonl",
+        "/scratch/juno/jvl210002/bidir/results/2026-09-18/mt_de-en/llama32-3b/small_s1234/trials.jsonl"
+      ]
+    },
+    "main-repeat-mt-en-de-runs": {
+      "value": "3",
+      "sources": [
+        "/scratch/juno/jvl210002/bidir/results/2026-09-17/mt_en-de/llama32-3b/small_s17/trials.jsonl",
+        "/scratch/juno/jvl210002/bidir/results/2026-09-17/mt_en-de/llama32-3b/small_s42/trials.jsonl",
+        "/scratch/juno/jvl210002/bidir/results/2026-09-18/mt_en-de/llama32-3b/small_s1234/trials.jsonl"
+      ]
+    },
+    "main-repeat-mt-en-de-mix1-forward-lo": {
+      "value": "-0.9",
+      "sources": [
+        "/scratch/juno/jvl210002/bidir/results/2026-09-17/mt_en-de/llama32-3b/small_s17/trials.jsonl",
+        "/scratch/juno/jvl210002/bidir/results/2026-09-17/mt_en-de/llama32-3b/small_s42/trials.jsonl",
+        "/scratch/juno/jvl210002/bidir/results/2026-09-18/mt_en-de/llama32-3b/small_s1234/trials.jsonl"
+      ]
+    },
+    "main-repeat-mt-en-de-mix1-forward-hi": {
+      "value": "-0.2",
+      "sources": [
+        "/scratch/juno/jvl210002/bidir/results/2026-09-17/mt_en-de/llama32-3b/small_s17/trials.jsonl",
+        "/scratch/juno/jvl210002/bidir/results/2026-09-17/mt_en-de/llama32-3b/small_s42/trials.jsonl",
+        "/scratch/juno/jvl210002/bidir/results/2026-09-18/mt_en-de/llama32-3b/small_s1234/trials.jsonl"
+      ]
+    },
+    "main-repeat-mt-en-de-mix1-backward-lo": {
+      "value": "6.2",
+      "sources": [
+        "/scratch/juno/jvl210002/bidir/results/2026-09-17/mt_en-de/llama32-3b/small_s17/trials.jsonl",
+        "/scratch/juno/jvl210002/bidir/results/2026-09-17/mt_en-de/llama32-3b/small_s42/trials.jsonl",
+        "/scratch/juno/jvl210002/bidir/results/2026-09-18/mt_en-de/llama32-3b/small_s1234/trials.jsonl"
+      ]
+    },
+    "main-repeat-mt-en-de-mix1-backward-hi": {
+      "value": "8.6",
+      "sources": [
+        "/scratch/juno/jvl210002/bidir/results/2026-09-17/mt_en-de/llama32-3b/small_s17/trials.jsonl",
+        "/scratch/juno/jvl210002/bidir/results/2026-09-17/mt_en-de/llama32-3b/small_s42/trials.jsonl",
+        "/scratch/juno/jvl210002/bidir/results/2026-09-18/mt_en-de/llama32-3b/small_s1234/trials.jsonl"
+      ]
+    },
+    "main-repeat-mt-en-de-mix5-forward-lo": {
+      "value": "-1.6",
+      "sources": [
+        "/scratch/juno/jvl210002/bidir/results/2026-09-17/mt_en-de/llama32-3b/small_s17/trials.jsonl",
+        "/scratch/juno/jvl210002/bidir/results/2026-09-17/mt_en-de/llama32-3b/small_s42/trials.jsonl",
+        "/scratch/juno/jvl210002/bidir/results/2026-09-18/mt_en-de/llama32-3b/small_s1234/trials.jsonl"
+      ]
+    },
+    "main-repeat-mt-en-de-mix5-forward-hi": {
+      "value": "0.7",
+      "sources": [
+        "/scratch/juno/jvl210002/bidir/results/2026-09-17/mt_en-de/llama32-3b/small_s17/trials.jsonl",
+        "/scratch/juno/jvl210002/bidir/results/2026-09-17/mt_en-de/llama32-3b/small_s42/trials.jsonl",
+        "/scratch/juno/jvl210002/bidir/results/2026-09-18/mt_en-de/llama32-3b/small_s1234/trials.jsonl"
+      ]
+    },
+    "main-repeat-mt-en-de-mix5-backward-lo": {
+      "value": "4.1",
+      "sources": [
+        "/scratch/juno/jvl210002/bidir/results/2026-09-17/mt_en-de/llama32-3b/small_s17/trials.jsonl",
+        "/scratch/juno/jvl210002/bidir/results/2026-09-17/mt_en-de/llama32-3b/small_s42/trials.jsonl",
+        "/scratch/juno/jvl210002/bidir/results/2026-09-18/mt_en-de/llama32-3b/small_s1234/trials.jsonl"
+      ]
+    },
+    "main-repeat-mt-en-de-mix5-backward-hi": {
+      "value": "5.8",
+      "sources": [
+        "/scratch/juno/jvl210002/bidir/results/2026-09-17/mt_en-de/llama32-3b/small_s17/trials.jsonl",
+        "/scratch/juno/jvl210002/bidir/results/2026-09-17/mt_en-de/llama32-3b/small_s42/trials.jsonl",
+        "/scratch/juno/jvl210002/bidir/results/2026-09-18/mt_en-de/llama32-3b/small_s1234/trials.jsonl"
+      ]
+    },
+    "main-repeat-mt-en-zh-runs": {
+      "value": "3",
+      "sources": [
+        "/scratch/juno/jvl210002/bidir/results/2026-09-17/mt_en-zh/llama32-3b/small_s17/trials.jsonl",
+        "/scratch/juno/jvl210002/bidir/results/2026-10-02/mt_en-zh/llama32-3b/small_s1234/trials.jsonl",
+        "/scratch/juno/jvl210002/bidir/results/2026-10-03/mt_en-zh/llama32-3b/small_s42/trials.jsonl"
+      ]
+    },
+    "main-repeat-mt-en-zh-mix1-forward-lo": {
+      "value": "-1.7",
+      "sources": [
+        "/scratch/juno/jvl210002/bidir/results/2026-09-17/mt_en-zh/llama32-3b/small_s17/trials.jsonl",
+        "/scratch/juno/jvl210002/bidir/results/2026-10-02/mt_en-zh/llama32-3b/small_s1234/trials.jsonl",
+        "/scratch/juno/jvl210002/bidir/results/2026-10-03/mt_en-zh/llama32-3b/small_s42/trials.jsonl"
+      ]
+    },
+    "main-repeat-mt-en-zh-mix1-forward-hi": {
+      "value": "-0.8",
+      "sources": [
+        "/scratch/juno/jvl210002/bidir/results/2026-09-17/mt_en-zh/llama32-3b/small_s17/trials.jsonl",
+        "/scratch/juno/jvl210002/bidir/results/2026-10-02/mt_en-zh/llama32-3b/small_s1234/trials.jsonl",
+        "/scratch/juno/jvl210002/bidir/results/2026-10-03/mt_en-zh/llama32-3b/small_s42/trials.jsonl"
+      ]
+    },
+    "main-repeat-mt-en-zh-mix1-backward-lo": {
+      "value": "49.5",
+      "sources": [
+        "/scratch/juno/jvl210002/bidir/results/2026-09-17/mt_en-zh/llama32-3b/small_s17/trials.jsonl",
+        "/scratch/juno/jvl210002/bidir/results/2026-10-02/mt_en-zh/llama32-3b/small_s1234/trials.jsonl",
+        "/scratch/juno/jvl210002/bidir/results/2026-10-03/mt_en-zh/llama32-3b/small_s42/trials.jsonl"
+      ]
+    },
+    "main-repeat-mt-en-zh-mix1-backward-hi": {
+      "value": "64.2",
+      "sources": [
+        "/scratch/juno/jvl210002/bidir/results/2026-09-17/mt_en-zh/llama32-3b/small_s17/trials.jsonl",
+        "/scratch/juno/jvl210002/bidir/results/2026-10-02/mt_en-zh/llama32-3b/small_s1234/trials.jsonl",
+        "/scratch/juno/jvl210002/bidir/results/2026-10-03/mt_en-zh/llama32-3b/small_s42/trials.jsonl"
+      ]
+    },
+    "main-repeat-mt-en-zh-mix5-forward-lo": {
+      "value": "-1.5",
+      "sources": [
+        "/scratch/juno/jvl210002/bidir/results/2026-09-17/mt_en-zh/llama32-3b/small_s17/trials.jsonl",
+        "/scratch/juno/jvl210002/bidir/results/2026-10-02/mt_en-zh/llama32-3b/small_s1234/trials.jsonl",
+        "/scratch/juno/jvl210002/bidir/results/2026-10-03/mt_en-zh/llama32-3b/small_s42/trials.jsonl"
+      ]
+    },
+    "main-repeat-mt-en-zh-mix5-forward-hi": {
+      "value": "-0.5",
+      "sources": [
+        "/scratch/juno/jvl210002/bidir/results/2026-09-17/mt_en-zh/llama32-3b/small_s17/trials.jsonl",
+        "/scratch/juno/jvl210002/bidir/results/2026-10-02/mt_en-zh/llama32-3b/small_s1234/trials.jsonl",
+        "/scratch/juno/jvl210002/bidir/results/2026-10-03/mt_en-zh/llama32-3b/small_s42/trials.jsonl"
+      ]
+    },
+    "main-repeat-mt-en-zh-mix5-backward-lo": {
+      "value": "49.1",
+      "sources": [
+        "/scratch/juno/jvl210002/bidir/results/2026-09-17/mt_en-zh/llama32-3b/small_s17/trials.jsonl",
+        "/scratch/juno/jvl210002/bidir/results/2026-10-02/mt_en-zh/llama32-3b/small_s1234/trials.jsonl",
+        "/scratch/juno/jvl210002/bidir/results/2026-10-03/mt_en-zh/llama32-3b/small_s42/trials.jsonl"
+      ]
+    },
+    "main-repeat-mt-en-zh-mix5-backward-hi": {
+      "value": "64.3",
+      "sources": [
+        "/scratch/juno/jvl210002/bidir/results/2026-09-17/mt_en-zh/llama32-3b/small_s17/trials.jsonl",
+        "/scratch/juno/jvl210002/bidir/results/2026-10-02/mt_en-zh/llama32-3b/small_s1234/trials.jsonl",
+        "/scratch/juno/jvl210002/bidir/results/2026-10-03/mt_en-zh/llama32-3b/small_s42/trials.jsonl"
+      ]
+    },
+    "main-repeat-mt-zh-en-runs": {
+      "value": "3",
+      "sources": [
+        "/scratch/juno/jvl210002/bidir/results/2026-09-18/mt_zh-en/llama32-3b/small_s17/trials.jsonl",
+        "/scratch/juno/jvl210002/bidir/results/2026-10-02/mt_zh-en/llama32-3b/small_s1234/trials.jsonl",
+        "/scratch/juno/jvl210002/bidir/results/2026-10-03/mt_zh-en/llama32-3b/small_s42/trials.jsonl"
+      ]
+    },
+    "main-repeat-mt-zh-en-mix1-forward-lo": {
+      "value": "-0.7",
+      "sources": [
+        "/scratch/juno/jvl210002/bidir/results/2026-09-18/mt_zh-en/llama32-3b/small_s17/trials.jsonl",
+        "/scratch/juno/jvl210002/bidir/results/2026-10-02/mt_zh-en/llama32-3b/small_s1234/trials.jsonl",
+        "/scratch/juno/jvl210002/bidir/results/2026-10-03/mt_zh-en/llama32-3b/small_s42/trials.jsonl"
+      ]
+    },
+    "main-repeat-mt-zh-en-mix1-forward-hi": {
+      "value": "1.5",
+      "sources": [
+        "/scratch/juno/jvl210002/bidir/results/2026-09-18/mt_zh-en/llama32-3b/small_s17/trials.jsonl",
+        "/scratch/juno/jvl210002/bidir/results/2026-10-02/mt_zh-en/llama32-3b/small_s1234/trials.jsonl",
+        "/scratch/juno/jvl210002/bidir/results/2026-10-03/mt_zh-en/llama32-3b/small_s42/trials.jsonl"
+      ]
+    },
+    "main-repeat-mt-zh-en-mix1-backward-lo": {
+      "value": "76.2",
+      "sources": [
+        "/scratch/juno/jvl210002/bidir/results/2026-09-18/mt_zh-en/llama32-3b/small_s17/trials.jsonl",
+        "/scratch/juno/jvl210002/bidir/results/2026-10-02/mt_zh-en/llama32-3b/small_s1234/trials.jsonl",
+        "/scratch/juno/jvl210002/bidir/results/2026-10-03/mt_zh-en/llama32-3b/small_s42/trials.jsonl"
+      ]
+    },
+    "main-repeat-mt-zh-en-mix1-backward-hi": {
+      "value": "77.5",
+      "sources": [
+        "/scratch/juno/jvl210002/bidir/results/2026-09-18/mt_zh-en/llama32-3b/small_s17/trials.jsonl",
+        "/scratch/juno/jvl210002/bidir/results/2026-10-02/mt_zh-en/llama32-3b/small_s1234/trials.jsonl",
+        "/scratch/juno/jvl210002/bidir/results/2026-10-03/mt_zh-en/llama32-3b/small_s42/trials.jsonl"
+      ]
+    },
+    "main-repeat-mt-zh-en-mix5-forward-lo": {
+      "value": "-0.1",
+      "sources": [
+        "/scratch/juno/jvl210002/bidir/results/2026-09-18/mt_zh-en/llama32-3b/small_s17/trials.jsonl",
+        "/scratch/juno/jvl210002/bidir/results/2026-10-02/mt_zh-en/llama32-3b/small_s1234/trials.jsonl",
+        "/scratch/juno/jvl210002/bidir/results/2026-10-03/mt_zh-en/llama32-3b/small_s42/trials.jsonl"
+      ]
+    },
+    "main-repeat-mt-zh-en-mix5-forward-hi": {
+      "value": "0.6",
+      "sources": [
+        "/scratch/juno/jvl210002/bidir/results/2026-09-18/mt_zh-en/llama32-3b/small_s17/trials.jsonl",
+        "/scratch/juno/jvl210002/bidir/results/2026-10-02/mt_zh-en/llama32-3b/small_s1234/trials.jsonl",
+        "/scratch/juno/jvl210002/bidir/results/2026-10-03/mt_zh-en/llama32-3b/small_s42/trials.jsonl"
+      ]
+    },
+    "main-repeat-mt-zh-en-mix5-backward-lo": {
+      "value": "77.1",
+      "sources": [
+        "/scratch/juno/jvl210002/bidir/results/2026-09-18/mt_zh-en/llama32-3b/small_s17/trials.jsonl",
+        "/scratch/juno/jvl210002/bidir/results/2026-10-02/mt_zh-en/llama32-3b/small_s1234/trials.jsonl",
+        "/scratch/juno/jvl210002/bidir/results/2026-10-03/mt_zh-en/llama32-3b/small_s42/trials.jsonl"
+      ]
+    },
+    "main-repeat-mt-zh-en-mix5-backward-hi": {
+      "value": "77.8",
+      "sources": [
+        "/scratch/juno/jvl210002/bidir/results/2026-09-18/mt_zh-en/llama32-3b/small_s17/trials.jsonl",
+        "/scratch/juno/jvl210002/bidir/results/2026-10-02/mt_zh-en/llama32-3b/small_s1234/trials.jsonl",
+        "/scratch/juno/jvl210002/bidir/results/2026-10-03/mt_zh-en/llama32-3b/small_s42/trials.jsonl"
+      ]
+    },
+    "main-repeat-code-runs": {
+      "value": "3",
+      "sources": [
+        "/scratch/juno/jvl210002/bidir/results/2026-09-17/code/llama32-3b/small_s17/trials.jsonl",
+        "/scratch/juno/jvl210002/bidir/results/2026-09-18/code/llama32-3b/small_s42/trials.jsonl",
+        "/scratch/juno/jvl210002/bidir/results/2026-09-18/code/llama32-3b/small_s1234/trials.jsonl"
+      ]
+    },
+    "main-repeat-code-mix1-forward-lo": {
+      "value": "-0.2",
+      "sources": [
+        "/scratch/juno/jvl210002/bidir/results/2026-09-17/code/llama32-3b/small_s17/trials.jsonl",
+        "/scratch/juno/jvl210002/bidir/results/2026-09-18/code/llama32-3b/small_s42/trials.jsonl",
+        "/scratch/juno/jvl210002/bidir/results/2026-09-18/code/llama32-3b/small_s1234/trials.jsonl"
+      ]
+    },
+    "main-repeat-code-mix1-forward-hi": {
+      "value": "1.7",
+      "sources": [
+        "/scratch/juno/jvl210002/bidir/results/2026-09-17/code/llama32-3b/small_s17/trials.jsonl",
+        "/scratch/juno/jvl210002/bidir/results/2026-09-18/code/llama32-3b/small_s42/trials.jsonl",
+        "/scratch/juno/jvl210002/bidir/results/2026-09-18/code/llama32-3b/small_s1234/trials.jsonl"
+      ]
+    },
+    "main-repeat-code-mix1-backward-lo": {
+      "value": "52.0",
+      "sources": [
+        "/scratch/juno/jvl210002/bidir/results/2026-09-17/code/llama32-3b/small_s17/trials.jsonl",
+        "/scratch/juno/jvl210002/bidir/results/2026-09-18/code/llama32-3b/small_s42/trials.jsonl",
+        "/scratch/juno/jvl210002/bidir/results/2026-09-18/code/llama32-3b/small_s1234/trials.jsonl"
+      ]
+    },
+    "main-repeat-code-mix1-backward-hi": {
+      "value": "60.0",
+      "sources": [
+        "/scratch/juno/jvl210002/bidir/results/2026-09-17/code/llama32-3b/small_s17/trials.jsonl",
+        "/scratch/juno/jvl210002/bidir/results/2026-09-18/code/llama32-3b/small_s42/trials.jsonl",
+        "/scratch/juno/jvl210002/bidir/results/2026-09-18/code/llama32-3b/small_s1234/trials.jsonl"
+      ]
+    },
+    "main-repeat-code-mix5-forward-lo": {
+      "value": "0.0",
+      "sources": [
+        "/scratch/juno/jvl210002/bidir/results/2026-09-17/code/llama32-3b/small_s17/trials.jsonl",
+        "/scratch/juno/jvl210002/bidir/results/2026-09-18/code/llama32-3b/small_s42/trials.jsonl",
+        "/scratch/juno/jvl210002/bidir/results/2026-09-18/code/llama32-3b/small_s1234/trials.jsonl"
+      ]
+    },
+    "main-repeat-code-mix5-forward-hi": {
+      "value": "1.9",
+      "sources": [
+        "/scratch/juno/jvl210002/bidir/results/2026-09-17/code/llama32-3b/small_s17/trials.jsonl",
+        "/scratch/juno/jvl210002/bidir/results/2026-09-18/code/llama32-3b/small_s42/trials.jsonl",
+        "/scratch/juno/jvl210002/bidir/results/2026-09-18/code/llama32-3b/small_s1234/trials.jsonl"
+      ]
+    },
+    "main-repeat-code-mix5-backward-lo": {
+      "value": "68.8",
+      "sources": [
+        "/scratch/juno/jvl210002/bidir/results/2026-09-17/code/llama32-3b/small_s17/trials.jsonl",
+        "/scratch/juno/jvl210002/bidir/results/2026-09-18/code/llama32-3b/small_s42/trials.jsonl",
+        "/scratch/juno/jvl210002/bidir/results/2026-09-18/code/llama32-3b/small_s1234/trials.jsonl"
+      ]
+    },
+    "main-repeat-code-mix5-backward-hi": {
+      "value": "71.4",
+      "sources": [
+        "/scratch/juno/jvl210002/bidir/results/2026-09-17/code/llama32-3b/small_s17/trials.jsonl",
+        "/scratch/juno/jvl210002/bidir/results/2026-09-18/code/llama32-3b/small_s42/trials.jsonl",
+        "/scratch/juno/jvl210002/bidir/results/2026-09-18/code/llama32-3b/small_s1234/trials.jsonl"
+      ]
+    },
+    "main-repeat-sql-runs": {
+      "value": "3",
+      "sources": [
+        "/scratch/juno/jvl210002/bidir/results/2026-09-17/sql/llama32-3b/small_s17/trials.jsonl",
+        "/scratch/juno/jvl210002/bidir/results/2026-09-18/sql/llama32-3b/small_s42/trials.jsonl",
+        "/scratch/juno/jvl210002/bidir/results/2026-09-18/sql/llama32-3b/small_s1234/trials.jsonl"
+      ]
+    },
+    "main-repeat-sql-mix1-forward-lo": {
+      "value": "-0.5",
+      "sources": [
+        "/scratch/juno/jvl210002/bidir/results/2026-09-17/sql/llama32-3b/small_s17/trials.jsonl",
+        "/scratch/juno/jvl210002/bidir/results/2026-09-18/sql/llama32-3b/small_s42/trials.jsonl",
+        "/scratch/juno/jvl210002/bidir/results/2026-09-18/sql/llama32-3b/small_s1234/trials.jsonl"
+      ]
+    },
+    "main-repeat-sql-mix1-forward-hi": {
+      "value": "2.0",
+      "sources": [
+        "/scratch/juno/jvl210002/bidir/results/2026-09-17/sql/llama32-3b/small_s17/trials.jsonl",
+        "/scratch/juno/jvl210002/bidir/results/2026-09-18/sql/llama32-3b/small_s42/trials.jsonl",
+        "/scratch/juno/jvl210002/bidir/results/2026-09-18/sql/llama32-3b/small_s1234/trials.jsonl"
+      ]
+    },
+    "main-repeat-sql-mix1-backward-lo": {
+      "value": "13.9",
+      "sources": [
+        "/scratch/juno/jvl210002/bidir/results/2026-09-17/sql/llama32-3b/small_s17/trials.jsonl",
+        "/scratch/juno/jvl210002/bidir/results/2026-09-18/sql/llama32-3b/small_s42/trials.jsonl",
+        "/scratch/juno/jvl210002/bidir/results/2026-09-18/sql/llama32-3b/small_s1234/trials.jsonl"
+      ]
+    },
+    "main-repeat-sql-mix1-backward-hi": {
+      "value": "33.4",
+      "sources": [
+        "/scratch/juno/jvl210002/bidir/results/2026-09-17/sql/llama32-3b/small_s17/trials.jsonl",
+        "/scratch/juno/jvl210002/bidir/results/2026-09-18/sql/llama32-3b/small_s42/trials.jsonl",
+        "/scratch/juno/jvl210002/bidir/results/2026-09-18/sql/llama32-3b/small_s1234/trials.jsonl"
+      ]
+    },
+    "main-repeat-sql-mix5-forward-lo": {
+      "value": "-1.6",
+      "sources": [
+        "/scratch/juno/jvl210002/bidir/results/2026-09-17/sql/llama32-3b/small_s17/trials.jsonl",
+        "/scratch/juno/jvl210002/bidir/results/2026-09-18/sql/llama32-3b/small_s42/trials.jsonl",
+        "/scratch/juno/jvl210002/bidir/results/2026-09-18/sql/llama32-3b/small_s1234/trials.jsonl"
+      ]
+    },
+    "main-repeat-sql-mix5-forward-hi": {
+      "value": "-0.5",
+      "sources": [
+        "/scratch/juno/jvl210002/bidir/results/2026-09-17/sql/llama32-3b/small_s17/trials.jsonl",
+        "/scratch/juno/jvl210002/bidir/results/2026-09-18/sql/llama32-3b/small_s42/trials.jsonl",
+        "/scratch/juno/jvl210002/bidir/results/2026-09-18/sql/llama32-3b/small_s1234/trials.jsonl"
+      ]
+    },
+    "main-repeat-sql-mix5-backward-lo": {
+      "value": "19.3",
+      "sources": [
+        "/scratch/juno/jvl210002/bidir/results/2026-09-17/sql/llama32-3b/small_s17/trials.jsonl",
+        "/scratch/juno/jvl210002/bidir/results/2026-09-18/sql/llama32-3b/small_s42/trials.jsonl",
+        "/scratch/juno/jvl210002/bidir/results/2026-09-18/sql/llama32-3b/small_s1234/trials.jsonl"
+      ]
+    },
+    "main-repeat-sql-mix5-backward-hi": {
+      "value": "40.0",
+      "sources": [
+        "/scratch/juno/jvl210002/bidir/results/2026-09-17/sql/llama32-3b/small_s17/trials.jsonl",
+        "/scratch/juno/jvl210002/bidir/results/2026-09-18/sql/llama32-3b/small_s42/trials.jsonl",
+        "/scratch/juno/jvl210002/bidir/results/2026-09-18/sql/llama32-3b/small_s1234/trials.jsonl"
+      ]
+    },
+    "main-repeat-fmt-runs": {
+      "value": "3",
+      "sources": [
+        "/scratch/juno/jvl210002/bidir/results/2026-09-17/fmt/llama32-3b/small_s17/trials.jsonl",
+        "/scratch/juno/jvl210002/bidir/results/2026-10-03/fmt/llama32-3b/small_s42/trials.jsonl",
+        "/scratch/juno/jvl210002/bidir/results/2026-10-03/fmt/llama32-3b/small_s1234/trials.jsonl"
+      ]
+    },
+    "main-repeat-fmt-mix1-forward-lo": {
+      "value": "-0.5",
+      "sources": [
+        "/scratch/juno/jvl210002/bidir/results/2026-09-17/fmt/llama32-3b/small_s17/trials.jsonl",
+        "/scratch/juno/jvl210002/bidir/results/2026-10-03/fmt/llama32-3b/small_s42/trials.jsonl",
+        "/scratch/juno/jvl210002/bidir/results/2026-10-03/fmt/llama32-3b/small_s1234/trials.jsonl"
+      ]
+    },
+    "main-repeat-fmt-mix1-forward-hi": {
+      "value": "-0.0",
+      "sources": [
+        "/scratch/juno/jvl210002/bidir/results/2026-09-17/fmt/llama32-3b/small_s17/trials.jsonl",
+        "/scratch/juno/jvl210002/bidir/results/2026-10-03/fmt/llama32-3b/small_s42/trials.jsonl",
+        "/scratch/juno/jvl210002/bidir/results/2026-10-03/fmt/llama32-3b/small_s1234/trials.jsonl"
+      ]
+    },
+    "main-repeat-fmt-mix1-backward-lo": {
+      "value": "86.1",
+      "sources": [
+        "/scratch/juno/jvl210002/bidir/results/2026-09-17/fmt/llama32-3b/small_s17/trials.jsonl",
+        "/scratch/juno/jvl210002/bidir/results/2026-10-03/fmt/llama32-3b/small_s42/trials.jsonl",
+        "/scratch/juno/jvl210002/bidir/results/2026-10-03/fmt/llama32-3b/small_s1234/trials.jsonl"
+      ]
+    },
+    "main-repeat-fmt-mix1-backward-hi": {
+      "value": "89.8",
+      "sources": [
+        "/scratch/juno/jvl210002/bidir/results/2026-09-17/fmt/llama32-3b/small_s17/trials.jsonl",
+        "/scratch/juno/jvl210002/bidir/results/2026-10-03/fmt/llama32-3b/small_s42/trials.jsonl",
+        "/scratch/juno/jvl210002/bidir/results/2026-10-03/fmt/llama32-3b/small_s1234/trials.jsonl"
+      ]
+    },
+    "main-repeat-fmt-mix5-forward-lo": {
+      "value": "-0.2",
+      "sources": [
+        "/scratch/juno/jvl210002/bidir/results/2026-09-17/fmt/llama32-3b/small_s17/trials.jsonl",
+        "/scratch/juno/jvl210002/bidir/results/2026-10-03/fmt/llama32-3b/small_s42/trials.jsonl",
+        "/scratch/juno/jvl210002/bidir/results/2026-10-03/fmt/llama32-3b/small_s1234/trials.jsonl"
+      ]
+    },
+    "main-repeat-fmt-mix5-forward-hi": {
+      "value": "0.2",
+      "sources": [
+        "/scratch/juno/jvl210002/bidir/results/2026-09-17/fmt/llama32-3b/small_s17/trials.jsonl",
+        "/scratch/juno/jvl210002/bidir/results/2026-10-03/fmt/llama32-3b/small_s42/trials.jsonl",
+        "/scratch/juno/jvl210002/bidir/results/2026-10-03/fmt/llama32-3b/small_s1234/trials.jsonl"
+      ]
+    },
+    "main-repeat-fmt-mix5-backward-lo": {
+      "value": "92.2",
+      "sources": [
+        "/scratch/juno/jvl210002/bidir/results/2026-09-17/fmt/llama32-3b/small_s17/trials.jsonl",
+        "/scratch/juno/jvl210002/bidir/results/2026-10-03/fmt/llama32-3b/small_s42/trials.jsonl",
+        "/scratch/juno/jvl210002/bidir/results/2026-10-03/fmt/llama32-3b/small_s1234/trials.jsonl"
+      ]
+    },
+    "main-repeat-fmt-mix5-backward-hi": {
+      "value": "95.8",
+      "sources": [
+        "/scratch/juno/jvl210002/bidir/results/2026-09-17/fmt/llama32-3b/small_s17/trials.jsonl",
+        "/scratch/juno/jvl210002/bidir/results/2026-10-03/fmt/llama32-3b/small_s42/trials.jsonl",
+        "/scratch/juno/jvl210002/bidir/results/2026-10-03/fmt/llama32-3b/small_s1234/trials.jsonl"
+      ]
+    },
+    "main-repeat-algebra-runs": {
+      "value": "3",
+      "sources": [
+        "/scratch/juno/jvl210002/bidir/results/2026-09-17/algebra/llama32-3b/small_s17/trials.jsonl",
+        "/scratch/juno/jvl210002/bidir/results/2026-10-02/algebra/llama32-3b/small_s1234/trials.jsonl",
+        "/scratch/juno/jvl210002/bidir/results/2026-10-03/algebra/llama32-3b/small_s42/trials.jsonl"
+      ]
+    },
+    "main-repeat-algebra-mix1-forward-lo": {
+      "value": "-1.6",
+      "sources": [
+        "/scratch/juno/jvl210002/bidir/results/2026-09-17/algebra/llama32-3b/small_s17/trials.jsonl",
+        "/scratch/juno/jvl210002/bidir/results/2026-10-02/algebra/llama32-3b/small_s1234/trials.jsonl",
+        "/scratch/juno/jvl210002/bidir/results/2026-10-03/algebra/llama32-3b/small_s42/trials.jsonl"
+      ]
+    },
+    "main-repeat-algebra-mix1-forward-hi": {
+      "value": "-0.6",
+      "sources": [
+        "/scratch/juno/jvl210002/bidir/results/2026-09-17/algebra/llama32-3b/small_s17/trials.jsonl",
+        "/scratch/juno/jvl210002/bidir/results/2026-10-02/algebra/llama32-3b/small_s1234/trials.jsonl",
+        "/scratch/juno/jvl210002/bidir/results/2026-10-03/algebra/llama32-3b/small_s42/trials.jsonl"
+      ]
+    },
+    "main-repeat-algebra-mix1-backward-lo": {
+      "value": "6.8",
+      "sources": [
+        "/scratch/juno/jvl210002/bidir/results/2026-09-17/algebra/llama32-3b/small_s17/trials.jsonl",
+        "/scratch/juno/jvl210002/bidir/results/2026-10-02/algebra/llama32-3b/small_s1234/trials.jsonl",
+        "/scratch/juno/jvl210002/bidir/results/2026-10-03/algebra/llama32-3b/small_s42/trials.jsonl"
+      ]
+    },
+    "main-repeat-algebra-mix1-backward-hi": {
+      "value": "8.3",
+      "sources": [
+        "/scratch/juno/jvl210002/bidir/results/2026-09-17/algebra/llama32-3b/small_s17/trials.jsonl",
+        "/scratch/juno/jvl210002/bidir/results/2026-10-02/algebra/llama32-3b/small_s1234/trials.jsonl",
+        "/scratch/juno/jvl210002/bidir/results/2026-10-03/algebra/llama32-3b/small_s42/trials.jsonl"
+      ]
+    },
+    "main-repeat-algebra-mix5-forward-lo": {
+      "value": "-2.2",
+      "sources": [
+        "/scratch/juno/jvl210002/bidir/results/2026-09-17/algebra/llama32-3b/small_s17/trials.jsonl",
+        "/scratch/juno/jvl210002/bidir/results/2026-10-02/algebra/llama32-3b/small_s1234/trials.jsonl",
+        "/scratch/juno/jvl210002/bidir/results/2026-10-03/algebra/llama32-3b/small_s42/trials.jsonl"
+      ]
+    },
+    "main-repeat-algebra-mix5-forward-hi": {
+      "value": "0.7",
+      "sources": [
+        "/scratch/juno/jvl210002/bidir/results/2026-09-17/algebra/llama32-3b/small_s17/trials.jsonl",
+        "/scratch/juno/jvl210002/bidir/results/2026-10-02/algebra/llama32-3b/small_s1234/trials.jsonl",
+        "/scratch/juno/jvl210002/bidir/results/2026-10-03/algebra/llama32-3b/small_s42/trials.jsonl"
+      ]
+    },
+    "main-repeat-algebra-mix5-backward-lo": {
+      "value": "12.8",
+      "sources": [
+        "/scratch/juno/jvl210002/bidir/results/2026-09-17/algebra/llama32-3b/small_s17/trials.jsonl",
+        "/scratch/juno/jvl210002/bidir/results/2026-10-02/algebra/llama32-3b/small_s1234/trials.jsonl",
+        "/scratch/juno/jvl210002/bidir/results/2026-10-03/algebra/llama32-3b/small_s42/trials.jsonl"
+      ]
+    },
+    "main-repeat-algebra-mix5-backward-hi": {
+      "value": "14.0",
+      "sources": [
+        "/scratch/juno/jvl210002/bidir/results/2026-09-17/algebra/llama32-3b/small_s17/trials.jsonl",
+        "/scratch/juno/jvl210002/bidir/results/2026-10-02/algebra/llama32-3b/small_s1234/trials.jsonl",
+        "/scratch/juno/jvl210002/bidir/results/2026-10-03/algebra/llama32-3b/small_s42/trials.jsonl"
+      ]
+    },
+    "main-repeat-algebra-rev-runs": {
+      "value": "3",
+      "sources": [
+        "/scratch/juno/jvl210002/bidir/results/2026-09-17/algebra_rev/llama32-3b/small_s17/trials.jsonl",
+        "/scratch/juno/jvl210002/bidir/results/2026-10-03/algebra_rev/llama32-3b/small_s42/trials.jsonl",
+        "/scratch/juno/jvl210002/bidir/results/2026-10-03/algebra_rev/llama32-3b/small_s1234/trials.jsonl"
+      ]
+    },
+    "main-repeat-algebra-rev-mix1-forward-lo": {
+      "value": "-3.4",
+      "sources": [
+        "/scratch/juno/jvl210002/bidir/results/2026-09-17/algebra_rev/llama32-3b/small_s17/trials.jsonl",
+        "/scratch/juno/jvl210002/bidir/results/2026-10-03/algebra_rev/llama32-3b/small_s42/trials.jsonl",
+        "/scratch/juno/jvl210002/bidir/results/2026-10-03/algebra_rev/llama32-3b/small_s1234/trials.jsonl"
+      ]
+    },
+    "main-repeat-algebra-rev-mix1-forward-hi": {
+      "value": "0.4",
+      "sources": [
+        "/scratch/juno/jvl210002/bidir/results/2026-09-17/algebra_rev/llama32-3b/small_s17/trials.jsonl",
+        "/scratch/juno/jvl210002/bidir/results/2026-10-03/algebra_rev/llama32-3b/small_s42/trials.jsonl",
+        "/scratch/juno/jvl210002/bidir/results/2026-10-03/algebra_rev/llama32-3b/small_s1234/trials.jsonl"
+      ]
+    },
+    "main-repeat-algebra-rev-mix1-backward-lo": {
+      "value": "-4.1",
+      "sources": [
+        "/scratch/juno/jvl210002/bidir/results/2026-09-17/algebra_rev/llama32-3b/small_s17/trials.jsonl",
+        "/scratch/juno/jvl210002/bidir/results/2026-10-03/algebra_rev/llama32-3b/small_s42/trials.jsonl",
+        "/scratch/juno/jvl210002/bidir/results/2026-10-03/algebra_rev/llama32-3b/small_s1234/trials.jsonl"
+      ]
+    },
+    "main-repeat-algebra-rev-mix1-backward-hi": {
+      "value": "-3.4",
+      "sources": [
+        "/scratch/juno/jvl210002/bidir/results/2026-09-17/algebra_rev/llama32-3b/small_s17/trials.jsonl",
+        "/scratch/juno/jvl210002/bidir/results/2026-10-03/algebra_rev/llama32-3b/small_s42/trials.jsonl",
+        "/scratch/juno/jvl210002/bidir/results/2026-10-03/algebra_rev/llama32-3b/small_s1234/trials.jsonl"
+      ]
+    },
+    "main-repeat-algebra-rev-mix5-forward-lo": {
+      "value": "-2.3",
+      "sources": [
+        "/scratch/juno/jvl210002/bidir/results/2026-09-17/algebra_rev/llama32-3b/small_s17/trials.jsonl",
+        "/scratch/juno/jvl210002/bidir/results/2026-10-03/algebra_rev/llama32-3b/small_s42/trials.jsonl",
+        "/scratch/juno/jvl210002/bidir/results/2026-10-03/algebra_rev/llama32-3b/small_s1234/trials.jsonl"
+      ]
+    },
+    "main-repeat-algebra-rev-mix5-forward-hi": {
+      "value": "0.1",
+      "sources": [
+        "/scratch/juno/jvl210002/bidir/results/2026-09-17/algebra_rev/llama32-3b/small_s17/trials.jsonl",
+        "/scratch/juno/jvl210002/bidir/results/2026-10-03/algebra_rev/llama32-3b/small_s42/trials.jsonl",
+        "/scratch/juno/jvl210002/bidir/results/2026-10-03/algebra_rev/llama32-3b/small_s1234/trials.jsonl"
+      ]
+    },
+    "main-repeat-algebra-rev-mix5-backward-lo": {
+      "value": "-0.1",
+      "sources": [
+        "/scratch/juno/jvl210002/bidir/results/2026-09-17/algebra_rev/llama32-3b/small_s17/trials.jsonl",
+        "/scratch/juno/jvl210002/bidir/results/2026-10-03/algebra_rev/llama32-3b/small_s42/trials.jsonl",
+        "/scratch/juno/jvl210002/bidir/results/2026-10-03/algebra_rev/llama32-3b/small_s1234/trials.jsonl"
+      ]
+    },
+    "main-repeat-algebra-rev-mix5-backward-hi": {
+      "value": "1.1",
+      "sources": [
+        "/scratch/juno/jvl210002/bidir/results/2026-09-17/algebra_rev/llama32-3b/small_s17/trials.jsonl",
+        "/scratch/juno/jvl210002/bidir/results/2026-10-03/algebra_rev/llama32-3b/small_s42/trials.jsonl",
+        "/scratch/juno/jvl210002/bidir/results/2026-10-03/algebra_rev/llama32-3b/small_s1234/trials.jsonl"
+      ]
+    }
+  },
+  "source_sha256": {
+    "/work/jvl210002/migration/bidirectional/scripts/122_task_presentation.py": "9eb7d0bf41b6d662f15b3f4f047cae0e904144b5b20e84a6da522028f36e11df",
+    "/work/jvl210002/migration/bidirectional/src/bidir/prompts.py": "e1e433487269c0c83eff392bc3ac8cb670c52836f18a0d80bbb2c69f5670316f",
+    "/scratch/juno/jvl210002/bidir/runs/adapters/code/llama32-3b/sft_r32_s17/training_summary.json": "127d429ffd075efbe669e1cf072154540aa0967d64c560a92a7f81fc80c1e41f",
+    "/scratch/juno/jvl210002/bidir/runs/adapters/code/llama32-3b/mix1_r32_s17/training_summary.json": "e4b038e73a71c93d5259f4036b4d65e04bb79a4346293d7358288da388dd34b6",
+    "/scratch/juno/jvl210002/bidir/runs/adapters/code/llama32-3b/mix5_r32_s17/training_summary.json": "e85286efdca3e12af62adc93abcbea82da2b982499f27b1507c37460d21c27ce",
+    "/scratch/juno/jvl210002/bidir/runs/adapters/fmt/llama32-3b/sft_r32_s17/training_summary.json": "1361a0529d04e2f6145bfe2df4e6fc666860ec0c214af1f820fb4eadaab7bccf",
+    "/scratch/juno/jvl210002/bidir/runs/adapters/fmt/llama32-3b/mix1_r32_s17/training_summary.json": "53e95ac1ae6a805064b3fbeb43125c7a67b56463c1d1a88a9671ced275c032ce",
+    "/scratch/juno/jvl210002/bidir/runs/adapters/fmt/llama32-3b/mix5_r32_s17/training_summary.json": "f5370cfbaba97fc9915d97efcd9b6bca68383ed708a4ece0f09bd16e12cff981",
+    "/scratch/juno/jvl210002/bidir/runs/adapters/mt_en-de/llama32-3b/sft_r32_s17/training_summary.json": "92ea7697cf5b8c552c1ed93dccb9c75769115c9dbf55903d13b989f625aa19e4",
+    "/scratch/juno/jvl210002/bidir/runs/adapters/mt_en-de/llama32-3b/mix1_r32_s17/training_summary.json": "5d3dc3aa3c53b4471fe07af8ffc5045d30c23fbe75696939fd08ff5720b94f20",
+    "/scratch/juno/jvl210002/bidir/runs/adapters/mt_en-de/llama32-3b/mix5_r32_s17/training_summary.json": "f9d3d7ade152498cd2d641cea840b8a3353cc7c434c788c57b815a16880d2733",
+    "/scratch/juno/jvl210002/bidir/runs/adapters/sql/llama32-3b/sft_r32_s17/training_summary.json": "995c46f31229c88565b7db14879fb85e97e6dc48fe32da735c5be46ea0d25a8c",
+    "/scratch/juno/jvl210002/bidir/runs/adapters/sql/llama32-3b/mix1_r32_s17/training_summary.json": "080565406cbd669cf6ac5c11fe29a6a8b5c0fb0227a4d009adae5ed2f6aeff2c",
+    "/scratch/juno/jvl210002/bidir/runs/adapters/sql/llama32-3b/mix5_r32_s17/training_summary.json": "c0edd5859a05f3552536690ad63cfa4777320b6b0dfb83e4275403e1a699870b",
+    "/scratch/juno/jvl210002/bidir/runs/adapters/relation/llama32-3b/sft_r32_s17/training_summary.json": "f5d13ddfd7a16745c1632b39b8c4fcf77c8cc5ed02176bad1e5d0a927d0a16bc",
+    "/scratch/juno/jvl210002/bidir/runs/adapters/relation/llama32-3b/mix1_r32_s17/training_summary.json": "3c2889a4b733de34e3f9ef57911515af3a8f4e7c4bf7cd98f30216ed6e4ead10",
+    "/scratch/juno/jvl210002/bidir/runs/adapters/relation/llama32-3b/mix5_r32_s17/training_summary.json": "7a4518da7bebd1fa0203944e592ba11d6a798c4f11561c87c506e4b14b578ad2",
+    "/scratch/juno/jvl210002/bidir/runs/adapters/exec/llama32-3b/sft_r32_s17/training_summary.json": "4e651cdfeda1a6fb7e27552bc8f571601488c1fdf1b34aef70ebfbc1da9b922a",
+    "/scratch/juno/jvl210002/bidir/runs/adapters/algebra/llama32-3b/sft_r32_s17/training_summary.json": "80019c028ed6adb803bcfcc72f2fce0cc1c95144899c267b54687041e0d4db3e",
+    "/scratch/juno/jvl210002/bidir/runs/adapters/algebra/llama32-3b/mix1_r32_s17/training_summary.json": "dfa3208ff4c2aa5fd6c0201784ad8d0bf2130805886e9eec79dcef59f6dd235c",
+    "/scratch/juno/jvl210002/bidir/runs/adapters/algebra/llama32-3b/mix5_r32_s17/training_summary.json": "6c2f93ca0ee3a221aa20bde7b366585d259a07edecb8da4d23e992891a515c8d",
+    "/work/jvl210002/migration/bidirectional/configs/domains/code.yaml": "292871ace8d06a5d1c4c608bd610bfe452e24f6ca388165e9887cd33c3c3e26f",
+    "/work/jvl210002/migration/bidirectional/src/bidir/domains/code.py": "a82837d1565ca0b47c5a058c465a12695e7391818672cf7fe9cad12d77cf3348",
+    "/work/jvl210002/migration/bidirectional/data/code/build_report.json": "74b945662158dd370e31fdbd3505e59c4afd86bf9e166a3c21a89ff16613d5a3",
+    "/work/jvl210002/migration/bidirectional/data/code/train.jsonl": "193ef889b52b2302c58a4a15702097b70c2cd9c66356b089fe8a83105e100de2",
+    "/work/jvl210002/migration/bidirectional/data/code/val.jsonl": "0670cf3e7e637f74d7c1bbcc56f67892abe01a6b5e1cc5c8478a3c292037f21a",
+    "/work/jvl210002/migration/bidirectional/data/code/test.jsonl": "29ac93f51e12a9ce8aa68f07c66d8465c81d17b40a01a1bf5bc4ad952a4c73c7",
+    "/work/jvl210002/migration/bidirectional/configs/domains/fmt.yaml": "5a1bcc4ed2e463c20d9a608dd5644efece1012c9417ba44eb74f2e003015c8c1",
+    "/work/jvl210002/migration/bidirectional/src/bidir/domains/fmt.py": "4a20a33c326def1267a681204c7037c4b69dd64f69f3f051d5f2571648c14d97",
+    "/work/jvl210002/migration/bidirectional/data/fmt/build_report.json": "58c3fefbe722d9b83c2575413d124be651eb99b394da0e2b0c6e20608818e416",
+    "/work/jvl210002/migration/bidirectional/data/fmt/train.jsonl": "e274c8ee9fc381fce9e488f88cb2db57034fadec0a0bf2557b990ad09afdc306",
+    "/work/jvl210002/migration/bidirectional/data/fmt/val.jsonl": "aeea55ee9f471b44bf55e88d8caeb1cdfb9b10c70aa8ac193ace8fddc51b2879",
+    "/work/jvl210002/migration/bidirectional/data/fmt/test.jsonl": "bc4166be65ac883e92e0a85a716d70d37fb164cccf7eb4b9bf02b24759caaf83",
+    "/work/jvl210002/migration/bidirectional/configs/domains/mt_en-de.yaml": "59acfeb1d3f4ac83ab0196e1030b9113622523058129376369e003a43eaf222d",
+    "/work/jvl210002/migration/bidirectional/src/bidir/domains/mt.py": "345c54c8a83a681adfb34c222bff0a0f4d7df4ae8ccc45e028a19634f472c4f3",
+    "/work/jvl210002/migration/bidirectional/data/mt_en-de/build_report.json": "ea45e2688e77dfa475824e13bab3ce531cdbed29329a5fa07c87c9795f56c61f",
+    "/work/jvl210002/migration/bidirectional/data/mt_en-de/train.jsonl": "981988ffc41fb98c490ab554056c56b92d16b54145e0491d2f3cb0a2d50abe5c",
+    "/work/jvl210002/migration/bidirectional/data/mt_en-de/val.jsonl": "8e9b677fb8fb26cb7ec0d50c8931d1f604946b1758514a28af39d4e97627482a",
+    "/work/jvl210002/migration/bidirectional/data/mt_en-de/test.jsonl": "61a9cd6b1ff067eb29e6e3b67c44ef43aaffe25e059911b400802f0ca762e146",
+    "/work/jvl210002/migration/bidirectional/configs/domains/sql.yaml": "4fe6ebd57fb18436b7e9b13ddce872004a1a3c6c9072505934fd8998a9eb1040",
+    "/work/jvl210002/migration/bidirectional/src/bidir/domains/sql.py": "93519b849f3bfd6cc872d45c8f418c96d93621a1ee18c933a43ac4def7da605a",
+    "/work/jvl210002/migration/bidirectional/data/sql/build_report.json": "c62ee362615d62c48d89f26a78d30987abdc7fbb50174277e2b24303094f3af9",
+    "/work/jvl210002/migration/bidirectional/data/sql/train.jsonl": "50c11eaee074925feb4790e13941bb459ee28720cac9d57a88545a8fdf6c76f7",
+    "/work/jvl210002/migration/bidirectional/data/sql/val.jsonl": "c8ce930ec554fd949be003ba26c99760a73f0686029e420efbf8650bd7ea1013",
+    "/work/jvl210002/migration/bidirectional/data/sql/test.jsonl": "ee2ba3d6aadc909aa1c5b8af0a501311029e4440af6d61568d1eb5682c5e526d",
+    "/work/jvl210002/migration/bidirectional/configs/domains/relation.yaml": "add6c3898b817fc3ed3473748c8fe555d44deee10d374692e41e84b3694e7f33",
+    "/work/jvl210002/migration/bidirectional/src/bidir/domains/relation.py": "7e60475bc7aaf2d69870cc8eeb353ebd5908e3a2d78afd833227c95d195a6cb7",
+    "/work/jvl210002/migration/bidirectional/data/relation/build_report.json": "ec048498d206492a2a4e323f403eee698b664e7b80d0fed4b0368d9703e2ddc6",
+    "/work/jvl210002/migration/bidirectional/data/relation/train.jsonl": "c3c0580174bb2efa10f1d94257c19f56cc23fe6c3c3c9362c17967ece6f8667c",
+    "/work/jvl210002/migration/bidirectional/data/relation/val.jsonl": "6f3cc06ba55e37679315acad440176d3979e36b713ea3e849049df134305e97d",
+    "/work/jvl210002/migration/bidirectional/data/relation/test.jsonl": "471f87ac4d7b3faf9e4ceb39120c9bd894411911ed2469fe7bc2179b22900aa9",
+    "/work/jvl210002/migration/bidirectional/configs/domains/exec.yaml": "aaba684392db24981d3bccb3f77f55695bcae678b7a2ed74698edaede2846684",
+    "/work/jvl210002/migration/bidirectional/src/bidir/domains/exec_pred.py": "fec7e1c8a10fa0f5fd7197e772d1dc4b109e830febb018e024bc98634e937f17",
+    "/work/jvl210002/migration/bidirectional/data/exec/build_report.json": "21ec90b8a241641b5718526732643bd8f5fa082b2b1bafad5a99427410ba6a4c",
+    "/work/jvl210002/migration/bidirectional/data/exec/train.jsonl": "2974a17d862ae6dec9e0574380be899fed9e4549813f56f71cbafab007cd5307",
+    "/work/jvl210002/migration/bidirectional/data/exec/val.jsonl": "d4fe5cb76051ea17e2e620b6f3bf4c9c8cee681dce14b6771cc9aae9bbaa8c30",
+    "/work/jvl210002/migration/bidirectional/data/exec/test.jsonl": "8e4ec61f8c665cff6f90a5f07620ddcab78f69baaa9e2b3ba396987aeabcee55",
+    "/work/jvl210002/migration/bidirectional/configs/domains/algebra.yaml": "3de40b36b2bced02ab6c2a993d09d05ded5db4a9680403c9650c58cf1722035a",
+    "/work/jvl210002/migration/bidirectional/src/bidir/domains/algebra.py": "ac81f5a5ff41fc2d77dc1b7b4ed210c9796477505739da14d8cc4484c2693f71",
+    "/work/jvl210002/migration/bidirectional/data/algebra/build_report.json": "17df0746a4a6ba655ff94ff264184300acd56581b484d337e09e2e05e4043fca",
+    "/work/jvl210002/migration/bidirectional/data/algebra/train.jsonl": "75f6a4b55c58f4e65b8176d4921d9d7ca0ea6c1290bb5c80a5b6b9d4cdc6e89d",
+    "/work/jvl210002/migration/bidirectional/data/algebra/val.jsonl": "01f6238054278cf4a25a8899e032e64b6678d687a9273c37f875f530ad3a612d",
+    "/work/jvl210002/migration/bidirectional/data/algebra/test.jsonl": "6bc8f252a58b22d17f98acdc05acc2c47440ee39101d965b3e46115d670f513b",
+    "/work/jvl210002/migration/bidirectional/src/bidir/domains/algebra_rev.py": "8d7db360ced338bb9c2c0f6ec21186f2c414335d108b45eea8a0e1e333a1719a",
+    "/work/jvl210002/migration/bidirectional/configs/domains/mt_de-en.yaml": "19ee954d13302264a26307c8ae750ec30ffce906243f9f1eab68d2d505431189",
+    "/work/jvl210002/migration/bidirectional/configs/domains/mt_en-zh.yaml": "ffa649ab25b78ef96d58e80f430b4e017cd5d136576c98c1819ad595f524f873",
+    "/work/jvl210002/migration/bidirectional/configs/domains/mt_zh-en.yaml": "a333f9c3a35bb3eb4601b12e39dd0596a93aa156631510a68ad06ce6d2039553",
+    "/scratch/juno/jvl210002/bidir/results/base_gates/sql/gemma3-12b_2026-09-21.json": "1db8cf3e4c56dc0abe3121821e3efe9c6b01fda692a6af95f7bae3b6861ea734",
+    "/scratch/juno/jvl210002/bidir/results/base_gates/sql/gemma3-4b_2026-09-18.json": "5b56922a221f802edfda823c1a8beae1e3c0e9758b908087a5034b55e167e7c4",
+    "/scratch/juno/jvl210002/bidir/results/base_gates/sql/llama31-8b_2026-09-21.json": "cc78f8ee2abd5c1f49420c039cfdc1a5ff2339eeb1d605a786465c991b42fb42",
+    "/scratch/juno/jvl210002/bidir/results/base_gates/sql/llama32-3b_2026-09-12.json": "c3265209ece59ce6744babe3a55a25a49bec748c06c73b6b42a4f4c6f3414018",
+    "/scratch/juno/jvl210002/bidir/results/base_gates/sql/olmo2-1b_2026-09-18.json": "c80815ecaf4fab02a4aeb85eadb15cf7f2b8e518cbf6529f3b6202f0c8d20bfe",
+    "/scratch/juno/jvl210002/bidir/results/2026-09-17/fmt/llama32-3b/small_s17/trials.jsonl": "a0ca6766a80e190fcd26e029ec23a39b30264fa35b4d1cce23c6e81091fc399d",
+    "/scratch/juno/jvl210002/bidir/results/2026-09-17/fmt/llama32-3b/small_s17/summary.json": "31bea55ac8176c28bbea79830187f7425826c657a0a903d5e4924697048b12d3",
+    "/scratch/juno/jvl210002/bidir/results/2026-09-17/code/llama32-3b/small_s17/trials.jsonl": "a6db0a7b61da0b0d22062f4b5cec46121cdf0e519a97b3fee808511377f0afc6",
+    "/scratch/juno/jvl210002/bidir/results/2026-09-17/code/llama32-3b/small_s17/summary.json": "e262585f5367431458b74d6be28150592266daee4b3a88416c0c777ace8d0c49",
+    "/scratch/juno/jvl210002/bidir/results/2026-09-17/mt_de-en/llama32-3b/small_s17/trials.jsonl": "559b34bf664e8c2a8a6fa8f98442e28b7b1b996dbaab367152707afcba7473d6",
+    "/scratch/juno/jvl210002/bidir/results/2026-09-17/mt_de-en/llama32-3b/small_s17/summary.json": "e42bab2e0d4b24781dc3110d1590a8aedc6635b97ae214e09428cf07462c69fd",
+    "/scratch/juno/jvl210002/bidir/results/2026-09-17/sql/llama32-3b/small_s17/trials.jsonl": "8741dcc110e1295156f335209f2b89f6f1fd771d2ac7f247f49380624c727eea",
+    "/scratch/juno/jvl210002/bidir/results/2026-09-17/sql/llama32-3b/small_s17/summary.json": "ee79a9fad72dd19e283b748f29efe2c13db2790023a24dc2c8cedc1485f0058c",
+    "/scratch/juno/jvl210002/bidir/results/2026-09-17/mt_en-de/llama32-3b/small_s17/trials.jsonl": "7c80bed5711e3db0846839056a75908bc8b0d32e418366954d1f6a0f599c5ec6",
+    "/scratch/juno/jvl210002/bidir/results/2026-09-17/mt_en-de/llama32-3b/small_s17/summary.json": "79b88c74dd9faedf2e4249386e5addb8eb2085e98109ebf506a284f57f91cd62",
+    "/scratch/juno/jvl210002/bidir/results/2026-09-17/mt_en-zh/llama32-3b/small_s17/trials.jsonl": "575818e0338439fda9a1431f36d113a1338ed457df8e1e8d413812a354c40dbe",
+    "/scratch/juno/jvl210002/bidir/results/2026-09-17/mt_en-zh/llama32-3b/small_s17/summary.json": "871b7ed612933296831d67f0fd27d24dabacc13df4a8cf7127e820695b71a581",
+    "/scratch/juno/jvl210002/bidir/results/2026-09-18/mt_zh-en/llama32-3b/small_s17/trials.jsonl": "c2138a20203b908e3ec8b6f0383e8982a64810e3c65e75226f7e7733d9deb7e4",
+    "/scratch/juno/jvl210002/bidir/results/2026-09-18/mt_zh-en/llama32-3b/small_s17/summary.json": "3bcdee83b1afa543a947d6223e6048d9ab987bbd3ea7c378660dae5626a242fa",
+    "/scratch/juno/jvl210002/bidir/results/2026-09-17/relation/llama32-3b/small_s17/trials.jsonl": "a2ea81bcbfd86e6e3949d0e19e113b49d3725058fb522a4f5a111175163d5497",
+    "/scratch/juno/jvl210002/bidir/results/2026-09-17/relation/llama32-3b/small_s17/summary.json": "bf41edca0b606b5719279a4d71f2a39362413b0b319d2fd4b7bc337ce0d47c17",
+    "/scratch/juno/jvl210002/bidir/results/2026-09-17/algebra_rev/llama32-3b/small_s17/trials.jsonl": "c06a1e79a2739a3f113143105beb0ec9005903aafec08793ff5d67cf99eed259",
+    "/scratch/juno/jvl210002/bidir/results/2026-09-17/algebra_rev/llama32-3b/small_s17/summary.json": "44eb24c4a0af79960e362004e21aba8fa11a82e1b0331fba789126c944ea3b53",
+    "/scratch/juno/jvl210002/bidir/results/2026-09-17/algebra/llama32-3b/small_s17/trials.jsonl": "69f561bf869247e60edb7f0897a4442cadae6cea46af8c0a5783aefcb960efc1",
+    "/scratch/juno/jvl210002/bidir/results/2026-09-17/algebra/llama32-3b/small_s17/summary.json": "4c08425afb7a4f257142e14b907a4386476fbed113b987cc94253c5d6f946e7a",
+    "/scratch/juno/jvl210002/bidir/results/2026-09-17/mt_de-en/llama32-3b/small_s42/trials.jsonl": "0790c309383980301fd7849c348033ebfa2f052fcbcec1647c0f10c4b309c319",
+    "/scratch/juno/jvl210002/bidir/results/2026-09-17/mt_de-en/llama32-3b/small_s42/summary.json": "184d620be18cefac39da744daf664e856132be8bf4fc8edd0d11d61cdfc29d3e",
+    "/scratch/juno/jvl210002/bidir/results/2026-09-17/mt_en-de/llama32-3b/small_s42/trials.jsonl": "400477efd94d063bde9cc96ef347bb5f1a819a16fc5bf35280c2e78b1f916500",
+    "/scratch/juno/jvl210002/bidir/results/2026-09-17/mt_en-de/llama32-3b/small_s42/summary.json": "5e5a9815975ea626452e5c50e22e385ba3564c033799f7ea52eaa3c406b5456c",
+    "/scratch/juno/jvl210002/bidir/results/2026-09-18/sql/llama32-3b/small_s42/trials.jsonl": "237209f2338e94f65d3ffbb000c6b3e488e3be6d47dcaefc21abe025c4eff765",
+    "/scratch/juno/jvl210002/bidir/results/2026-09-18/sql/llama32-3b/small_s42/summary.json": "49d8cdea2ff8bfe8e1f8085353ff41c45ace0262c388da5e89fc7340a4fc577d",
+    "/scratch/juno/jvl210002/bidir/results/2026-09-18/mt_de-en/llama32-3b/small_s1234/trials.jsonl": "627db74a92ab75c1b6bfbe89df61adc65d3c396d946522f8a7074ec12eec16c9",
+    "/scratch/juno/jvl210002/bidir/results/2026-09-18/mt_de-en/llama32-3b/small_s1234/summary.json": "dd93b3415d248102a1de532d1d2530c9af8f88bbc22df3452f36badbd05ad764",
+    "/scratch/juno/jvl210002/bidir/results/2026-09-18/mt_en-de/llama32-3b/small_s1234/trials.jsonl": "dfb1471a57af5861423be400480207e36323fea64d07a5a1967c12b5fd281465",
+    "/scratch/juno/jvl210002/bidir/results/2026-09-18/mt_en-de/llama32-3b/small_s1234/summary.json": "c262b8df6820d952d4c30cc9ae4c379ca6e4904977600506f1131fc9551f7301",
+    "/scratch/juno/jvl210002/bidir/results/2026-09-18/code/llama32-3b/small_s42/trials.jsonl": "db6b419e95a0cbd7f3a03398f3cb14b3dcb4a29683e83bf2464e4975fb55f006",
+    "/scratch/juno/jvl210002/bidir/results/2026-09-18/code/llama32-3b/small_s42/summary.json": "41bf25722a4ddd75b8763c44470e1d24d2e41bb1e0b1eccd61cd45a73bd92ab8",
+    "/scratch/juno/jvl210002/bidir/results/2026-09-18/sql/llama32-3b/small_s1234/trials.jsonl": "932b2e19c2de22599a2b77f47f4a106f20fbc11f7a20c67ca57bcd46213d8936",
+    "/scratch/juno/jvl210002/bidir/results/2026-09-18/sql/llama32-3b/small_s1234/summary.json": "4f2ef4aa62d050f4ea594731292a743c6076236d38fa3f0b5dbbb5da7b72804c",
+    "/scratch/juno/jvl210002/bidir/results/2026-09-18/code/llama32-3b/small_s1234/trials.jsonl": "1d6d651f795640f2ba45201fd2038147a13128a2ab49732369f1d3b7cbf92565",
+    "/scratch/juno/jvl210002/bidir/results/2026-09-18/code/llama32-3b/small_s1234/summary.json": "111c25940f1750feccab61ab4df9633d37187390a42cf7e020d20f16676d0a46",
+    "/scratch/juno/jvl210002/bidir/results/2026-09-26/exec/llama32-3b/small_s17/trials.jsonl": "cbc506f922473353c281b805671dc0c11fe3ea93408ede18d4a43fc3e4d1b3e7",
+    "/scratch/juno/jvl210002/bidir/results/2026-09-26/exec/llama32-3b/small_s17/summary.json": "4493bd926251f5b7787bf3783a5b9fcc01dd4e62eef88f59d92c641826bdd539",
+    "/scratch/juno/jvl210002/bidir/results/2026-10-02/relation/llama32-3b/small_s1234/trials.jsonl": "48b1bb464bfffff058c3f624847f44300f76f2df91e317e04fd845bb6af102d1",
+    "/scratch/juno/jvl210002/bidir/results/2026-10-02/relation/llama32-3b/small_s1234/summary.json": "58f5654c696dc75c50d2e1e08cceae735869fe6e0a7c397c64090bf2a02c5a6a",
+    "/scratch/juno/jvl210002/bidir/results/2026-10-02/mt_en-zh/llama32-3b/small_s1234/trials.jsonl": "0c10d4a00bb08280ade41b55bce2f5341f5b4f94c3b1a26dd5852c1f3e2662b0",
+    "/scratch/juno/jvl210002/bidir/results/2026-10-02/mt_en-zh/llama32-3b/small_s1234/summary.json": "789d4581630391c59d6acedb6f7024456e256be08d98b1b21f4f608b0a856510",
+    "/scratch/juno/jvl210002/bidir/results/2026-10-02/mt_zh-en/llama32-3b/small_s1234/trials.jsonl": "b8cb9b389d0453dec105f6629369ed0425241f9d8bd9e0473b8ad423f707dd11",
+    "/scratch/juno/jvl210002/bidir/results/2026-10-02/mt_zh-en/llama32-3b/small_s1234/summary.json": "e472c5ff98e50181e7c5ce9c6d7a3fc2f7d5a2d6843d53d4b9ca6e6cbc79c4ac",
+    "/scratch/juno/jvl210002/bidir/results/2026-10-02/exec/llama32-3b/small_s42/trials.jsonl": "4ea219efaf1d0ce2247324936cace2e596153bd48995ab95ae4a098ce175cf1b",
+    "/scratch/juno/jvl210002/bidir/results/2026-10-02/exec/llama32-3b/small_s42/summary.json": "ffa4d89be83246f7b6e2594eb84fa2b848d6cf11c3adb3dbb860b963dda65cc8",
+    "/scratch/juno/jvl210002/bidir/results/2026-10-02/exec/llama32-3b/small_s1234/trials.jsonl": "da7a583135992a337db8f0809a35875a92ed5578b84eccce68c2890554365601",
+    "/scratch/juno/jvl210002/bidir/results/2026-10-02/exec/llama32-3b/small_s1234/summary.json": "97d2a615c4e3bb22c0d6680afe2f74080c9a92d02fa3a9ada1f2248639b9cdd1",
+    "/scratch/juno/jvl210002/bidir/results/2026-10-02/algebra/llama32-3b/small_s1234/trials.jsonl": "338f88a71be6229d752b760e38e1b2012471cd69c82553f01cd9149da4dc5385",
+    "/scratch/juno/jvl210002/bidir/results/2026-10-02/algebra/llama32-3b/small_s1234/summary.json": "8366cbbce175a3316acf6b60d3664f37a28d1da775e9e4f90f6c82c36ca02809",
+    "/scratch/juno/jvl210002/bidir/results/2026-10-03/algebra/llama32-3b/small_s42/trials.jsonl": "0ec8889ddb13bfb609b93ce5a18c5f422d155e12144153f28523993b5c883798",
+    "/scratch/juno/jvl210002/bidir/results/2026-10-03/algebra/llama32-3b/small_s42/summary.json": "c0a1deff14c831c2a42ad5f23a0527c285044f1209670e38adcdcc1e277d4a08",
+    "/scratch/juno/jvl210002/bidir/results/2026-10-03/algebra_rev/llama32-3b/small_s42/trials.jsonl": "462eeaeb88890b6331fc9ea82966708a54451ba912b7ed707e1225d5e7cba86b",
+    "/scratch/juno/jvl210002/bidir/results/2026-10-03/algebra_rev/llama32-3b/small_s42/summary.json": "fad47b4dd9dd5f76d6d974553db7ccda235912ddccae3ecbfd97b8c81a599428",
+    "/scratch/juno/jvl210002/bidir/results/2026-10-03/algebra_rev/llama32-3b/small_s1234/trials.jsonl": "7acddf9e45f910c0af98a27ff859396c44e6a2058aaa024af1b024f544eb3b60",
+    "/scratch/juno/jvl210002/bidir/results/2026-10-03/algebra_rev/llama32-3b/small_s1234/summary.json": "e9fa2beaeef9983d142f47d758b517266227123fb8acbb0e93970626e2fc41ae",
+    "/scratch/juno/jvl210002/bidir/results/2026-10-03/fmt/llama32-3b/small_s42/trials.jsonl": "e3cb97974202c2345014be7160a5eaeac49b38dafdf73551892467ca94d60153",
+    "/scratch/juno/jvl210002/bidir/results/2026-10-03/fmt/llama32-3b/small_s42/summary.json": "f79c3f17918780ac6fcd95ec3d712645c38dd5aacdbf330aae32178c0c445046",
+    "/scratch/juno/jvl210002/bidir/results/2026-10-03/fmt/llama32-3b/small_s1234/trials.jsonl": "d193a0c302c11750998f74b87607ec4d104753eb042a6c1886b88dbb66d4d7ae",
+    "/scratch/juno/jvl210002/bidir/results/2026-10-03/fmt/llama32-3b/small_s1234/summary.json": "069bdb8a1ace10718c6b65f1ec02eac6c56b3a8286026b325f60cee8c813448c",
+    "/scratch/juno/jvl210002/bidir/results/2026-10-03/mt_en-zh/llama32-3b/small_s42/trials.jsonl": "b21b9b84f8d479175d2958b8cb1018bccc0dbab87374d1491350ce845e145428",
+    "/scratch/juno/jvl210002/bidir/results/2026-10-03/mt_en-zh/llama32-3b/small_s42/summary.json": "3cb48f7e1a35b3819da6e6b2178a1268630fe2042603359de6bc2f4ba9e0c701",
+    "/scratch/juno/jvl210002/bidir/results/2026-10-03/mt_zh-en/llama32-3b/small_s42/trials.jsonl": "2c7311372d87f8436b2846e209a71e9e54e8c4cd00fff6d66dbc5aabbe21b0a1",
+    "/scratch/juno/jvl210002/bidir/results/2026-10-03/mt_zh-en/llama32-3b/small_s42/summary.json": "38becd63e6469954b5d026e583fa485f761408be2e1794b5e8e91725168961b0",
+    "/scratch/juno/jvl210002/bidir/results/base_gates/units/llama32-3b_2026-10-03.json": "1d580cc772d25043fff34231edcbeaa706923292624c5d65e76a335195a719a7",
+    "/scratch/juno/jvl210002/bidir/results/base_gates/units/gemma3-4b_2026-10-03.json": "4907469bd4b835fffbd474e6ddc28d21d788c20ef872681e50460567aa05590d",
+    "/scratch/juno/jvl210002/bidir/results/base_gates/logic/llama32-3b_2026-10-03.json": "a771b33811ead21175dc342da7ef445b86368ff5121e18b99402e1e7c6d3db94",
+    "/scratch/juno/jvl210002/bidir/results/base_gates/logic/gemma3-4b_2026-10-03.json": "485e1111a0d0544797dfe85a79a6474e99073adc5bb246d33cc3ce415b352e05",
+    "/scratch/juno/jvl210002/bidir/results/base_gates/py_cpp/llama32-3b_2026-10-03.json": "e5ffa2d55fb6364ca441a68cc9008e5035103e26c4be1387980c659222facee3",
+    "/scratch/juno/jvl210002/bidir/results/base_gates/py_cpp/gemma3-4b_2026-10-03.json": "37f236714467dbca779762b9c6de10510db076cf86b87bbdc8d6b6d6c70e1024",
+    "/scratch/juno/jvl210002/bidir/results/2026-09-26/mt_en-de/llama31-8b/attrib_unlikelihood_s17/trials.jsonl": "402de775c240d7bd1e323e76ae0eb5995f992f96868ea1ea9148c3669c81deec",
+    "/scratch/juno/jvl210002/bidir/results/2026-09-26/mt_en-de/llama31-8b/attrib_unlikelihood_s17/summary.json": "0188ffc4977a35b18ef24af3174de87f5c8f1073e11f5a0c1cd4e712d254afbf",
+    "/scratch/juno/jvl210002/bidir/results/2026-09-26/mt_en-de/llama31-8b/attrib_unlikelihood_s17/followup_contrasts.json": "a8c9fd959e2c2c5d635931febb3a08267dfc50594c200f0f07405eaa5530bad2",
+    "/scratch/juno/jvl210002/bidir/results/2026-10-08/mt_en-de/llama32-3b/attrib_unlikelihood_s17/trials.jsonl": "b7cac51b989acf1e20f37d54d2748fb2253d26b469979a6ef6535578943cbb6a",
+    "/scratch/juno/jvl210002/bidir/results/2026-10-08/mt_en-de/llama32-3b/attrib_unlikelihood_s17/summary.json": "56e3870b42c4e985d1e7cc757e3feec386ab4c6db65cb9c07e733ab4d43ad955",
+    "/scratch/juno/jvl210002/bidir/results/2026-10-08/mt_en-de/llama32-3b/attrib_unlikelihood_s17/followup_contrasts.json": "ddfb8e42e014091128758f769d0a1ff3898ded56592bc12bcbe11dcfb3dd5e04",
+    "/scratch/juno/jvl210002/bidir/results/2026-09-26/code/llama32-3b/attrib_cft_s17/trials.jsonl": "2e9434026ea97731fb129bb32c1c19807fe09cb94b966484ad544b91da8c720b",
+    "/scratch/juno/jvl210002/bidir/results/2026-09-26/code/llama32-3b/attrib_cft_s17/summary.json": "c18da883b48dcafb9571bac2d281e4b8cd3239fe5b524973f9f1ab6cd756525f",
+    "/scratch/juno/jvl210002/bidir/results/2026-09-26/code/llama32-3b/attrib_cft_s17/followup_contrasts.json": "e0252e499f885629f0dd55e1e46d3bef1c3eb7511fd4bf01564adb18957e7299",
+    "/scratch/juno/jvl210002/bidir/results/2026-09-26/sql/llama31-8b/attrib_roundtrip_s17/trials.jsonl": "c593c4e49769f4b3f93b0a3345ccf27a607d2a97b7878c2e94dd189b320ecf72",
+    "/scratch/juno/jvl210002/bidir/results/2026-09-26/sql/llama31-8b/attrib_roundtrip_s17/summary.json": "700ff3617ea0e9c292b8c6846a61a5b080f73321ef81ac1e6eabd5d83b893da1",
+    "/scratch/juno/jvl210002/bidir/results/2026-09-26/sql/llama31-8b/attrib_roundtrip_s17/followup_contrasts.json": "ff77eb2fffa0734a08fd6b4ed65218a0ec9066a38c9f7c5f2d0409a505318a8c",
+    "/scratch/juno/jvl210002/bidir/results/2026-09-26/sql/llama32-3b/attrib_roundtrip_s17/trials.jsonl": "b46040219d17db90aecd6b87fc7e232b5f775ed15389eeea5852544e19c34672",
+    "/scratch/juno/jvl210002/bidir/results/2026-09-26/sql/llama32-3b/attrib_roundtrip_s17/summary.json": "2ceb138d022a447a5709e447d637464fe4c81f571aec9e725083ea30c65ce0cb",
+    "/scratch/juno/jvl210002/bidir/results/2026-09-26/sql/llama32-3b/attrib_roundtrip_s17/followup_contrasts.json": "1b16f53d59dd92fda581c8040b64803332f9d82b0ccb1a589c04238990f1156a"
+  },
+  "generator_sha256": "9eb7d0bf41b6d662f15b3f4f047cae0e904144b5b20e84a6da522028f36e11df",
+  "note": "Presentation only: original prompts, training and scorers unchanged. Missing historical upstream revisions are not inferred."
+}
