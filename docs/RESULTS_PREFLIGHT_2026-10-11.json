@@ -1,0 +1,162 @@
+{
+  "checked_utc": "2026-10-11T13:30:57.950939+00:00",
+  "errors": {},
+  "auditor_sha256": "9ead6c53d3e511199e67794815b1e1bf1e2a918fd4a8ca954ef20d948728ab20",
+  "scope": "Replays stored scores and checks runtime prerequisites; does not regenerate model answers or prove future GPU success.",
+  "paper": {
+    "source_hashes": 758,
+    "replayed_campaigns": 125,
+    "report_sha256": {
+      "MAIN_RESULTS": "2d36005ecf8cdb9ed4292d09c23b8dc8324a869f5334d19bec70ee7e5a0c5636",
+      "EVIDENCE_SNAPSHOT": "8490ec2e9481240380c4fff922044fc09918638d19c694dab23543b8859fc379",
+      "TASK_METHODS": "4ce0e0ed629a7d30b0e2e0d5bd4b83789c38b288866563cb0250e5051cbf4814",
+      "MANUSCRIPT_COMPLETION": "3ff2b26fdb8d2a083b626cafd199e2fe53b1f466db669b55c5715eebef0f3a95",
+      "MECHANISM_DIAGNOSTICS": "3905fd83f52631e8e8e94865cd8832e562b6acfdb3a143ff79eaacb97f24cffc",
+      "PUBLICATION_ANALYSIS": "cdd772fc572b08bec42df40189c02ef1d19014c0adacbc930b3142f920f8ed40"
+    },
+    "presentation_sha256": {
+      "main.tex": "a70fb7e4e0300700723dc63afd155410e65202660f15fc665746353112321d53",
+      "planned_evaluations.tex": "c6021475a89beb541b6ea0c3745104234c9f295f0e53daea70a7bbb253d1bd14",
+      "task_methods.tex": "f7ae15984777dc4d02e1c894d49cc1aad5b072b7840ce32f44f493e4a02705fe",
+      "numbers.tex": "0616edc017ee4e54b9c3c78f6308604ff389ac3455526c6b7fbfcd8cee7b1a51",
+      "main.pdf": "1f80b437467c2f1901422e030051b19029de9152e72c9a7062c40b742b38dd3e",
+      "tables/main_adaptations.tex": "1bbdcf9c6242e28909fab85fce172689cb73afa29646b72d74a67847bb11910d",
+      "tables/main_adaptations_full.tex": "9418221b2507d8676dfe2354dad8a2678fe48dd7ddc5bda6dca7ae390f6cfb93",
+      "tables/main_loss_baselines.tex": "6d7518c39673160438365f4929bf9c8ac948fa481629268880f80116b67a92a0"
+    },
+    "corpus_splits": 21,
+    "translation_threshold_rows": 20,
+    "checked_means": 1906,
+    "main_table_scores": 562,
+    "registered_numeric_values": 331,
+    "core_combinations": 91,
+    "published_numeric_macros": 43,
+    "severe_losses": 52,
+    "matched_training_summaries": 66,
+    "repeat_task_orientations": 9,
+    "pending_campaign_arms": 1
+  },
+  "pipeline": {
+    "campaigns": [
+      {
+        "cell": "relation_llama32-3b_s17",
+        "ready": "complete",
+        "completed": [
+          "eval_smoke",
+          "eval"
+        ],
+        "live": {},
+        "microbatch": 16,
+        "gradient_accumulation": 4
+      },
+      {
+        "cell": "exec_llama32-3b_s17",
+        "ready": "complete",
+        "completed": [
+          "smoke",
+          "train",
+          "eval_smoke",
+          "eval"
+        ],
+        "live": {},
+        "microbatch": 16,
+        "gradient_accumulation": 4
+      },
+      {
+        "cell": "code_llama32-3b_s17",
+        "ready": "complete",
+        "completed": [
+          "smoke",
+          "train",
+          "eval_smoke",
+          "eval"
+        ],
+        "live": {},
+        "microbatch": 4,
+        "gradient_accumulation": 16
+      },
+      {
+        "cell": "mt_en-de_llama32-3b_s17",
+        "ready": "complete",
+        "completed": [
+          "smoke",
+          "train",
+          "eval_smoke",
+          "eval"
+        ],
+        "live": {},
+        "microbatch": 4,
+        "gradient_accumulation": 16
+      },
+      {
+        "cell": "mt_en-de_llama31-8b_s17",
+        "ready": "complete",
+        "completed": [
+          "smoke",
+          "train",
+          "eval_smoke",
+          "eval"
+        ],
+        "live": {},
+        "microbatch": 4,
+        "gradient_accumulation": 16
+      },
+      {
+        "cell": "sql_llama32-3b_s17",
+        "ready": "eval",
+        "completed": [
+          "smoke",
+          "train",
+          "eval_smoke"
+        ],
+        "live": {
+          "eval": {
+            "job": "451562",
+            "state": "RUNNING",
+            "reason": "g-04-02"
+          }
+        },
+        "microbatch": 4,
+        "gradient_accumulation": 16
+      },
+      {
+        "cell": "sql_llama31-8b_s17",
+        "ready": "complete",
+        "completed": [
+          "smoke",
+          "train",
+          "eval_smoke",
+          "eval"
+        ],
+        "live": {},
+        "microbatch": 4,
+        "gradient_accumulation": 16
+      }
+    ],
+    "verified_prerequisite_adapters": 43,
+    "runtime_modules": [
+      "torch",
+      "transformers",
+      "trl",
+      "peft",
+      "vllm",
+      "sacrebleu",
+      "sympy",
+      "yaml"
+    ],
+    "comet_environment": true,
+    "sql_combined_gpu_fraction": 0.9,
+    "scratch_free_gb": 25046.1
+  },
+  "recovery": {
+    "reviewed_utc": "2026-10-11T13:30:33.225463+00:00",
+    "cell": "sql_llama32-3b_s17",
+    "phase": "eval",
+    "previous_job": "451491",
+    "new_job": "451562",
+    "reason": "Slurm confirmed host RAM OOM at 64G; wrapped SIGKILL surfaced as worker exit 1",
+    "memory": "128G",
+    "protocol_signature": "46d92d2deb583deabd7bd35aa4cdd54d60eccfe4f53f298d4b8491d1918cf1e6",
+    "scientific_changes": false
+  }
+}

@@ -65,3 +65,30 @@ replay found no reported-score mismatches, and the full suite passes 441 tests.
 See `ACCURACY_AND_RUN_PREFLIGHT.md` and `ACCURACY_PREFLIGHT.json` for the dated
 checks, document hashes and remaining scope. The PDF has seven body pages and a
 126-word abstract; unresolved experiment percentages remain explicit dashes.
+
+## Overnight results and SQL recovery — October 11, 2026 morning CDT
+
+Six of seven campaigns are complete, filling eleven of twelve missing arm/task/model
+combinations. All primary 1%/5% comparisons are populated. Only SQL/Llama3B
+unlikelihood remains unreported (two directional percentages).
+
+- [x] Relation low-dose shared evaluation
+- [x] Execution low-dose training and shared evaluation
+- [x] Code unlikelihood and round-trip training/evaluation
+- [x] English→German round-trip, Llama3B
+- [x] English→German round-trip, Llama8B
+- [x] SQL unlikelihood, Llama8B
+- [ ] SQL unlikelihood full evaluation, Llama3B: job 451562
+
+SQL/Llama3B training and generation smoke passed. Full evaluation 451491 exhausted
+64 GiB of host RAM on g-04-02; Slurm recorded an OOM kill, although the worker's
+wrapped child failure produced exit 1. After diagnosis, job 451562 was submitted
+with 128 GiB and is running. Its protocol signature, data, model, adapters, scoring,
+seed and worker are unchanged. The admission journal records this second attempt
+and its diagnosis. No failed status was erased or rewritten, and the 32 earlier
+holds remain. The controller still handles evaluation completion and paper refresh.
+
+The refreshed numerical audit has no errors: 562 displayed percentages, 331
+registered numerical values and 758 source hashes match their sources. Strict PDF
+checks pass. See `RESULTS_PROGRESS_2026-10-11.md` for the measured comparisons and
+`RESULTS_PREFLIGHT_2026-10-11.json` for the exact audited snapshot.
