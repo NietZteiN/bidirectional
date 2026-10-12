@@ -9,18 +9,6 @@
       "seed": 17,
       "run": "/scratch/juno/jvl210002/bidir/results/paired_judgment_v1/mt_en-de/llama32-3b/production_s17",
       "means": {
-        "mix5": {
-          "forward": 0.849802371541502,
-          "reverse": 0.6788537549407114
-        },
-        "paired_judge_shuffle": {
-          "forward": 0.8557312252964426,
-          "reverse": 0.6818181818181818
-        },
-        "base": {
-          "forward": 0.7984189723320159,
-          "reverse": 0.733201581027668
-        },
         "sft": {
           "forward": 0.8507905138339921,
           "reverse": 0.642292490118577
@@ -28,6 +16,18 @@
         "paired_judge": {
           "forward": 0.8567193675889329,
           "reverse": 0.6857707509881423
+        },
+        "mix5": {
+          "forward": 0.849802371541502,
+          "reverse": 0.6788537549407114
+        },
+        "base": {
+          "forward": 0.7984189723320159,
+          "reverse": 0.733201581027668
+        },
+        "paired_judge_shuffle": {
+          "forward": 0.8557312252964426,
+          "reverse": 0.6818181818181818
         }
       },
       "contrasts": [
@@ -209,18 +209,6 @@
       "seed": 17,
       "run": "/scratch/juno/jvl210002/bidir/results/paired_judgment_v1/mt_en-de/llama31-8b/production_s17",
       "means": {
-        "mix5": {
-          "forward": 0.7361660079051383,
-          "reverse": 0.6956521739130435
-        },
-        "paired_judge_shuffle": {
-          "forward": 0.7312252964426877,
-          "reverse": 0.5513833992094862
-        },
-        "base": {
-          "forward": 0.7114624505928854,
-          "reverse": 0.7420948616600791
-        },
         "sft": {
           "forward": 0.7361660079051383,
           "reverse": 0.5988142292490118
@@ -228,6 +216,18 @@
         "paired_judge": {
           "forward": 0.7361660079051383,
           "reverse": 0.5108695652173914
+        },
+        "mix5": {
+          "forward": 0.7361660079051383,
+          "reverse": 0.6956521739130435
+        },
+        "base": {
+          "forward": 0.7114624505928854,
+          "reverse": 0.7420948616600791
+        },
+        "paired_judge_shuffle": {
+          "forward": 0.7312252964426877,
+          "reverse": 0.5513833992094862
         }
       },
       "contrasts": [
@@ -409,18 +409,6 @@
       "seed": 17,
       "run": "/scratch/juno/jvl210002/bidir/results/paired_judgment_v1/sql/llama32-3b/production_s17",
       "means": {
-        "mix5": {
-          "forward": 0.6063829787234043,
-          "reverse": 0.5483558994197292
-        },
-        "paired_judge_shuffle": {
-          "forward": 0.6237911025145068,
-          "reverse": 0.36847195357833656
-        },
-        "base": {
-          "forward": 0.4912959381044487,
-          "reverse": 0.5135396518375241
-        },
         "sft": {
           "forward": 0.620889748549323,
           "reverse": 0.23500967117988394
@@ -428,6 +416,18 @@
         "paired_judge": {
           "forward": 0.6150870406189555,
           "reverse": 0.3965183752417795
+        },
+        "mix5": {
+          "forward": 0.6063829787234043,
+          "reverse": 0.5483558994197292
+        },
+        "base": {
+          "forward": 0.4912959381044487,
+          "reverse": 0.5135396518375241
+        },
+        "paired_judge_shuffle": {
+          "forward": 0.6237911025145068,
+          "reverse": 0.36847195357833656
         }
       },
       "contrasts": [
@@ -609,18 +609,6 @@
       "seed": 17,
       "run": "/scratch/juno/jvl210002/bidir/results/paired_judgment_v1/sql/llama31-8b/production_s17",
       "means": {
-        "mix5": {
-          "forward": 0.718568665377176,
-          "reverse": 0.5783365570599613
-        },
-        "paired_judge_shuffle": {
-          "forward": 0.7127659574468085,
-          "reverse": 0.5425531914893617
-        },
-        "base": {
-          "forward": 0.6199226305609284,
-          "reverse": 0.5493230174081238
-        },
         "sft": {
           "forward": 0.7147001934235977,
           "reverse": 0.5096711798839458
@@ -628,6 +616,18 @@
         "paired_judge": {
           "forward": 0.7137330754352031,
           "reverse": 0.5328820116054158
+        },
+        "mix5": {
+          "forward": 0.718568665377176,
+          "reverse": 0.5783365570599613
+        },
+        "base": {
+          "forward": 0.6199226305609284,
+          "reverse": 0.5493230174081238
+        },
+        "paired_judge_shuffle": {
+          "forward": 0.7127659574468085,
+          "reverse": 0.5425531914893617
         }
       },
       "contrasts": [
@@ -806,13 +806,13 @@
   ],
   "pending": [],
   "source_sha256": {
-    "/work/jvl210002/migration/bidirectional/scripts/126_paired_judgment_report.py": "8011dc7968d1fab3c61ca7af90c57f3f71ae1cd7795291df6e0a78089299897c",
+    "/work/jvl210002/migration/bidirectional/scripts/126_paired_judgment_report.py": "f3df5142a7a2b860e8946b1bc465d7876b4fc021ce2349ab1e26c8b4d8349e9f",
     "/work/jvl210002/migration/bidirectional/scripts/124_paired_judgment_worker.py": "aad3721831ba182b405a553fa15acdd2ea827b42bc040d6a4cf11afc36012980",
     "/work/jvl210002/migration/bidirectional/configs/paired_judgment.json": "9ffeb44ab49188d2c6ed6e0b056dad18430c1f9adf31a32075073c602442cde8",
     "/scratch/juno/jvl210002/bidir/results/paired_judgment_v1/mt_en-de/llama32-3b/production_s17/trials.jsonl": "3938458e3958da94205aa038551c8626a6de0c4dd79f806f0834adb4b406e06a",
     "/scratch/juno/jvl210002/bidir/results/paired_judgment_v1/mt_en-de/llama32-3b/production_s17/summary.json": "6e1feff804e02401eacceaec9ff8a2c530c3abc35870be911e3785471e892b02",
     "/scratch/juno/jvl210002/bidir/runs/paired_judgment_v1/mt_en-de_llama32-3b_s17/eval.json": "175cc097e730603d56754a1a6da15222341e9e761268a1aade1797903d51d955",
-    "/scratch/juno/jvl210002/bidir/results/paired_judgment_v1/mt_en-de/llama32-3b/production_s17/paired_judgment_contrasts.json": "a2ea93edb5b7bb29cd086a0a020e0dedd086bd62c4183a77596e0f0c1969b26f",
+    "/scratch/juno/jvl210002/bidir/results/paired_judgment_v1/mt_en-de/llama32-3b/production_s17/paired_judgment_contrasts.json": "772b83bae4149f8e95dbe5b7a5ec867e16fa5825da09061dc2f777fca7042a6d",
     "/scratch/juno/jvl210002/bidir/runs/paired_judgment_v1/mt_en-de_llama32-3b_s17/adapters/paired_judge/training_summary.json": "3c268786fc230a0598ec2ae7ff85a549f6c1a8a76a943ad01febaa6110b74b75",
     "/scratch/juno/jvl210002/bidir/runs/paired_judgment_v1/mt_en-de_llama32-3b_s17/adapters/paired_judge/run_manifest.json": "868e64ddd21d682c669047297525bbf7b139088143176f42d9b2de8280615e90",
     "/scratch/juno/jvl210002/bidir/runs/paired_judgment_v1/mt_en-de_llama32-3b_s17/adapters/paired_judge/paired_judgment_protocol.json": "c4de27cb281bcd900d2aac8db0feb5ed4e52bc3bad116aa7dbf785dc161179b7",
@@ -822,7 +822,7 @@
     "/scratch/juno/jvl210002/bidir/results/paired_judgment_v1/mt_en-de/llama31-8b/production_s17/trials.jsonl": "7c12ff6c5986cbd2cc8b57312030638757f8f59ead1b451b6f028fb82bde60e7",
     "/scratch/juno/jvl210002/bidir/results/paired_judgment_v1/mt_en-de/llama31-8b/production_s17/summary.json": "fddaa5422cfc186c7af92a46b4c0bb05af8bea17f8e6004faedac7295b08c692",
     "/scratch/juno/jvl210002/bidir/runs/paired_judgment_v1/mt_en-de_llama31-8b_s17/eval.json": "fd29bd5807a88077c8e6dc4dbaa1d88a6db9b6bd55945fedb41c9e9e220eb084",
-    "/scratch/juno/jvl210002/bidir/results/paired_judgment_v1/mt_en-de/llama31-8b/production_s17/paired_judgment_contrasts.json": "988bd3e8f4dd807eced0eb695b652cbf71ec7d295a6ec3f2f779ba44cb2e5536",
+    "/scratch/juno/jvl210002/bidir/results/paired_judgment_v1/mt_en-de/llama31-8b/production_s17/paired_judgment_contrasts.json": "40a537ae38f425ae850fd50d04226ac37690d0354a1c7dd5256d6d0e0fe39821",
     "/scratch/juno/jvl210002/bidir/runs/paired_judgment_v1/mt_en-de_llama31-8b_s17/adapters/paired_judge/training_summary.json": "ed0e9ecdca4a127c4607bdcf0be8a81f0ef242b5e1a0c0ecdc7cd6a476419a83",
     "/scratch/juno/jvl210002/bidir/runs/paired_judgment_v1/mt_en-de_llama31-8b_s17/adapters/paired_judge/run_manifest.json": "f584808a15f4521a1d9c93aa44b97275b0eb9a826fab03d367479306f6d9603d",
     "/scratch/juno/jvl210002/bidir/runs/paired_judgment_v1/mt_en-de_llama31-8b_s17/adapters/paired_judge/paired_judgment_protocol.json": "a512b3d8a57cf8170ddc16b941ea6a887721f797f1445bd36e416dc61b0f31ef",
@@ -832,7 +832,7 @@
     "/scratch/juno/jvl210002/bidir/results/paired_judgment_v1/sql/llama32-3b/production_s17/trials.jsonl": "44a02d1587f859bcaf04345ff64d48b62a879c8e7a80d7c028d97200ca6b523b",
     "/scratch/juno/jvl210002/bidir/results/paired_judgment_v1/sql/llama32-3b/production_s17/summary.json": "0e632ce2860a8296a60c270769bb92709ec00d6e7025ec2cf3db677a9a077ba6",
     "/scratch/juno/jvl210002/bidir/runs/paired_judgment_v1/sql_llama32-3b_s17/eval.json": "53a771e6c9716b4c37ea646e6ca557edc3613838e6ead12cbabe5ea7025b7fa0",
-    "/scratch/juno/jvl210002/bidir/results/paired_judgment_v1/sql/llama32-3b/production_s17/paired_judgment_contrasts.json": "68f70bc184759292462f4186bcd07bc703f7ee0200f24ed33292056c7b042ea6",
+    "/scratch/juno/jvl210002/bidir/results/paired_judgment_v1/sql/llama32-3b/production_s17/paired_judgment_contrasts.json": "e545933e3f782a610375dd6410652270c290413d61d870d05a682f127697f141",
     "/scratch/juno/jvl210002/bidir/runs/paired_judgment_v1/sql_llama32-3b_s17/adapters/paired_judge/training_summary.json": "9a10e3d562a1363cea960b3742b7dd0d20ee4346dbdcb9163a664b2b3993934a",
     "/scratch/juno/jvl210002/bidir/runs/paired_judgment_v1/sql_llama32-3b_s17/adapters/paired_judge/run_manifest.json": "4345f75ed1d5db9ebf58418edbeb3c7d0852b4dbbd8f7ff410edd264fb81a249",
     "/scratch/juno/jvl210002/bidir/runs/paired_judgment_v1/sql_llama32-3b_s17/adapters/paired_judge/paired_judgment_protocol.json": "b77e2df046f5c4147d2f9f2eb24717503a3c6d0729b767c3bef10fd4296cf93d",
@@ -842,7 +842,7 @@
     "/scratch/juno/jvl210002/bidir/results/paired_judgment_v1/sql/llama31-8b/production_s17/trials.jsonl": "918281fa8933cda35cb856ae6176254f75191e6955e9713863960b0a4e1c32ea",
     "/scratch/juno/jvl210002/bidir/results/paired_judgment_v1/sql/llama31-8b/production_s17/summary.json": "f7d8cf6608e79e9017619a2de98d3cc965cb73bc880e202dafb177a9a7ec6a3e",
     "/scratch/juno/jvl210002/bidir/runs/paired_judgment_v1/sql_llama31-8b_s17/eval.json": "8a9ba9b35b3923755c67a673b7c5cee61fa5e1482d2bff805c01f6f6ad7d898b",
-    "/scratch/juno/jvl210002/bidir/results/paired_judgment_v1/sql/llama31-8b/production_s17/paired_judgment_contrasts.json": "8cd990d92834a0fffe469d5ff44e9245ba5463b69221be51e6b5fc816ff6cca0",
+    "/scratch/juno/jvl210002/bidir/results/paired_judgment_v1/sql/llama31-8b/production_s17/paired_judgment_contrasts.json": "26264674a8eb6f579008a9a5db1efdb3f4d792c3d2874de4d29e26575782f082",
     "/scratch/juno/jvl210002/bidir/runs/paired_judgment_v1/sql_llama31-8b_s17/adapters/paired_judge/training_summary.json": "8e3cc6e5a28915e396e3502b6ee6be6ed5b44b6f35eabcce2e22f7ddf782cb24",
     "/scratch/juno/jvl210002/bidir/runs/paired_judgment_v1/sql_llama31-8b_s17/adapters/paired_judge/run_manifest.json": "37ae2a6ce9ab2454fa67f47c8f57bc16e76431e9dcc286957bf71e48ee98fcbc",
     "/scratch/juno/jvl210002/bidir/runs/paired_judgment_v1/sql_llama31-8b_s17/adapters/paired_judge/paired_judgment_protocol.json": "7c6ae4b0fd857b2196dfbefb00eb18353425777adf3e7736df8f95baa043354e",

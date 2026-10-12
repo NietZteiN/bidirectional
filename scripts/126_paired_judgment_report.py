@@ -47,7 +47,7 @@ def main():
             for name in ['training_summary.json','run_manifest.json','paired_judgment_protocol.json']:
                 sources[str(out/name)]=worker.sha(out/name)
         records.append(dict(cell,seed=worker.plan()['seed'],run=str(run),means=means,contrasts=contrasts))
-    content=''
+    content='';interval_content=''
     if records:
         grid=renderer.grid(records,worker.plan()['evaluation_arms'],
                            ['Base','Forward SFT',r'5\% reversal','PJ-5','Shuffled labels'],True)
@@ -69,9 +69,11 @@ def main():
                 fields += [f"{c['delta_pp']:+.1f} [{c['ci_lo']:+.1f}, {c['ci_hi']:+.1f}]" for c in cs]
                 lines.append(' & '.join(fields)+r' \\')
         lines += [r'\bottomrule\end{tabular}',r'\caption{Paired-judgment changes in percentage points with 95\% paired cluster-bootstrap intervals (2,000 draws). Positive values favor the first method. Intervals are exploratory and unadjusted for multiple comparisons.}\label{tab:paired-judgment-intervals}\end{table*}']
-        content+='\n'+'\n'.join(lines)
-    path=paper/'tables/paired_judgment_results.tex'
-    if not path.exists() or path.read_text()!=content+'\n':path.write_text(content+'\n')
+        interval_content='\n'.join(lines)
+    for name,text in [('paired_judgment_results.tex',content),
+                      ('paired_judgment_intervals.tex',interval_content)]:
+        path=paper/'tables'/name
+        if not path.exists() or path.read_text()!=text+'\n':path.write_text(text+'\n')
     report=dict(protocol=worker.plan()['protocol'],complete=len(records),total=len(worker.plan()['cells']),
                 records=records,pending=pending,source_sha256=sources)
     destination=paper/'PAIRED_JUDGMENT_RESULTS.json'

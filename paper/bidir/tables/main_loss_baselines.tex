@@ -32,27 +32,34 @@ Unit conversion & G12B & F & 33.7 & 97.1 & \textcolor{blue!60!black}{\textbf{97.
  &  & B & 35.8 & 69.8 & \textcolor{blue!60!black}{\textbf{79.4}} & 56.5 & 94.9 & 70.3 & 80.1 & 74.1 & 58.7 & 79.6 \\
 \bottomrule
 \end{tabular}
-\par\medskip\textbf{(b) Other auxiliary objectives}\par\smallskip
+\par\medskip\textbf{(b) Code objectives}\par\smallskip
 \setlength{\tabcolsep}{3pt}
 \begin{tabular}{lllrrrrrr}
 \toprule
 Task & Model & Dir. & Base & SFT & 5\% & CFT & Unlikelihood & Round-trip \\
 \midrule
-English $\to$ German & L8B & F & 71.1 & 73.0 & \textcolor{blue!60!black}{\textbf{73.5}} & \textit{n/a} & 74.1 & 72.4 \\
- &  & B & 74.2 & 59.3 & \textcolor{blue!60!black}{\textbf{69.9}} & \textit{n/a} & 0.1 & 40.6 \\
-\addlinespace[2pt]
-English $\to$ German & L3B & F & 79.8 & 85.5 & \textcolor{blue!60!black}{\textbf{85.4}} & \textit{n/a} & 84.9 & 84.7 \\
- &  & B & 73.3 & 64.3 & \textcolor{blue!60!black}{\textbf{68.5}} & \textit{n/a} & 0.0 & 67.1 \\
-\addlinespace[2pt]
 Code transformation & L3B & F & 37.7 & 82.1 & \textcolor{blue!60!black}{\textbf{84.1}} & 83.9 & 84.5 & 81.6 \\
  &  & B & 32.8 & \textcolor{red!70!black}{\textbf{3.3}} & \textcolor{blue!60!black}{\textbf{75.3}} & 6.5 & 0.0 & 33.4 \\
-\addlinespace[2pt]
-Question $\to$ SQL & L8B & F & 62.0 & 71.5 & \textcolor{blue!60!black}{\textbf{71.9}} & \textit{n/a} & 70.2 & 71.1 \\
- &  & B & 54.9 & 51.5 & \textcolor{blue!60!black}{\textbf{57.8}} & \textit{n/a} & 6.5 & 58.6 \\
-\addlinespace[2pt]
-Question $\to$ SQL & L3B & F & 49.1 & 62.0 & \textcolor{blue!60!black}{\textbf{60.8}} & \textit{n/a} & 62.1 & 61.9 \\
- &  & B & 51.4 & \textcolor{red!70!black}{\textbf{24.1}} & \textcolor{blue!60!black}{\textbf{55.4}} & \textit{n/a} & 3.6 & 48.9 \\
 \bottomrule
 \end{tabular}
-\caption{Preservation objectives: forward (F) and backward (B) strict success (\%), seed 17. CL-F/M: contrastive alignment with forward/mixed CE; CE-F+/M+: additional CE; Shuffle: shuffled pairs. L/G: Llama/Gemma; suffix: billions of parameters. CFT is code-specific (n/a elsewhere). Colors follow Table~\ref{tab:main-adaptations}.}\label{tab:main-loss-baselines}
+\par\medskip\textbf{(c) Translation and SQL objectives}\par\smallskip
+\setlength{\tabcolsep}{3pt}
+\begin{tabular}{lllrrrrr}
+\toprule
+Task & Model & Dir. & Base & SFT & 5\% & Unlikelihood & Round-trip \\
+\midrule
+English $\to$ German & L8B & F & 71.1 & 73.0 & \textcolor{blue!60!black}{\textbf{73.5}} & 74.1 & 72.4 \\
+ &  & B & 74.2 & 59.3 & \textcolor{blue!60!black}{\textbf{69.9}} & 0.1 & 40.6 \\
+\addlinespace[2pt]
+English $\to$ German & L3B & F & 79.8 & 85.5 & \textcolor{blue!60!black}{\textbf{85.4}} & 84.9 & 84.7 \\
+ &  & B & 73.3 & 64.3 & \textcolor{blue!60!black}{\textbf{68.5}} & 0.0 & 67.1 \\
+\addlinespace[2pt]
+Question $\to$ SQL & L8B & F & 62.0 & 71.5 & \textcolor{blue!60!black}{\textbf{71.9}} & 70.2 & 71.1 \\
+ &  & B & 54.9 & 51.5 & \textcolor{blue!60!black}{\textbf{57.8}} & 6.5 & 58.6 \\
+\addlinespace[2pt]
+Question $\to$ SQL & L3B & F & 49.1 & 62.0 & \textcolor{blue!60!black}{\textbf{60.8}} & 62.1 & 61.9 \\
+ &  & B & 51.4 & \textcolor{red!70!black}{\textbf{24.1}} & \textcolor{blue!60!black}{\textbf{55.4}} & 3.6 & 48.9 \\
+\bottomrule
+\end{tabular}
+\caption{Preservation objectives: forward (F) and backward (B) strict success (\%), seed 17. CL-F/M: contrastive alignment with forward/mixed CE; CE-F+/M+: additional CE; Shuffle: shuffled pairs. L/G: Llama/Gemma; suffix: billions of parameters. CFT is evaluated only on code. Colors follow Table~\ref{tab:main-adaptations}.}\label{tab:main-loss-baselines}
 \end{table*}

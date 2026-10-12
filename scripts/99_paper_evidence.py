@@ -68,7 +68,8 @@ def main():
                         PAPER/'tables/main_loss_baselines.tex',PAPER/'MANUSCRIPT_COMPLETION.json',
                         PAPER/'tables/methods_details.tex',PAPER/'tables/revised_domain_results.tex',
                         PAPER/'TABLE_COMPLETION_AUDIT.json',PAPER/'TASK_METHODS.json',
-                        PAPER/'tables/main_adaptations_full.tex',PAPER/'figures/preservation_focus.pdf']
+                        PAPER/'tables/main_adaptations_full.tex',PAPER/'figures/preservation_focus.pdf',
+                        PAPER/'tables/paired_judgment_results.tex',PAPER/'tables/paired_judgment_intervals.tex']
         if unchanged and (not args.build or (all(p.exists() for p in main_outputs) and (PAPER/'main.pdf').exists()
                                             and (PAPER/'main.pdf').stat().st_mtime>=snapshot.stat().st_mtime)):
             print('paper evidence unchanged');return 0

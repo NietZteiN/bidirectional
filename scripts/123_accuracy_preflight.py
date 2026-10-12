@@ -184,12 +184,16 @@ def paper_audit():
         ['base', 'sft', 'mix1', 'mix5'], raw, renderer.TASKS)
     table_count += verify_grid(PAPER / 'tables/main_adaptations_full.tex', main['core'],
         renderer.CORE_ARMS, raw, renderer.TASKS)
-    # The two objective grids share a file; check each block independently.
+    # CFT is displayed only on code; each grid retains its own evaluated controls.
     text = (PAPER / 'tables/main_loss_baselines.tex').read_text()
     blocks = re.findall(r'\\begin\{tabular\}.*?\\end\{tabular\}', text, re.S)
-    if len(blocks) != 2: raise ValueError('missing objective table block')
-    for block, cells, arms in zip(blocks, [main['contrastive'], main['auxiliary']],
-                                 [renderer.CL_ARMS, ['base','sft','mix5','cft','unlikelihood','roundtrip']]):
+    grids = [(main['contrastive'],renderer.CL_ARMS)]
+    code = [c for c in main['auxiliary'] if c['domain']=='code']
+    cross_domain = [c for c in main['auxiliary'] if c['domain']!='code']
+    if code: grids.append((code,['base','sft','mix5','cft','unlikelihood','roundtrip']))
+    if cross_domain: grids.append((cross_domain,['base','sft','mix5','unlikelihood','roundtrip']))
+    if len(blocks) != len(grids): raise ValueError('missing objective table block')
+    for block, (cells, arms) in zip(blocks, grids):
         table_count += verify_grid_text(block, cells, arms, raw, renderer.TASKS, renderer.MODELS)
     pj=reports.get('PAIRED_JUDGMENT_RESULTS',{})
     if pj:
@@ -203,11 +207,14 @@ def paper_audit():
                     raise ValueError('incorrect paired-judgment difference/confidence')
         text=(PAPER/'tables/paired_judgment_results.tex').read_text()
         blocks=re.findall(r'\\begin\{tabular\}.*?\\end\{tabular\}',text,re.S)
+        intervals=(PAPER/'tables/paired_judgment_intervals.tex').read_text()
+        interval_blocks=re.findall(r'\\begin\{tabular\}.*?\\end\{tabular\}',intervals,re.S)
         if pj['records']:
-            if len(blocks)!=2:raise ValueError('missing paired-judgment table block')
+            if len(blocks)!=1 or len(interval_blocks)!=1:
+                raise ValueError('missing paired-judgment table block')
             table_count += verify_grid_text(blocks[0],pj['records'],
                 ['base','sft','mix5','paired_judge','paired_judge_shuffle'],raw,renderer.TASKS,renderer.MODELS)
-        elif blocks:raise ValueError('unmeasured paired-judgment table')
+        elif blocks or interval_blocks:raise ValueError('unmeasured paired-judgment table')
 
     expected_numbers = {}
     matched = 0
@@ -278,7 +285,7 @@ def paper_audit():
         presentation_sha256={name:digest(PAPER/name) for name in [
             'main.tex','planned_evaluations.tex','task_methods.tex','numbers.tex','main.pdf',
         'tables/main_adaptations.tex','tables/main_adaptations_full.tex','tables/main_loss_baselines.tex',
-        *(['tables/paired_judgment_results.tex'] if pj else [])]},
+        *(['tables/paired_judgment_results.tex','tables/paired_judgment_intervals.tex'] if pj else [])]},
         corpus_splits=split_count, translation_threshold_rows=len(reports['TASK_METHODS']['translation_thresholds']),
         checked_means=mean_count, main_table_scores=table_count,
         registered_numeric_values=len(main['numbers']), core_combinations=len(ids),

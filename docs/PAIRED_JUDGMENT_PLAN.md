@@ -24,8 +24,8 @@ the new PJ-5 comparisons will appear separately after measurement.
   deterministic failure. SQL evaluation reserves192 GiB host memory; other phases64 GiB.
 - New sources/outputs use an isolated namespace and preserve all existing worker signatures.
   The detached controller runs `125_paired_judgment_queue.py`; paper refresh runs
-  `126_paired_judgment_report.py`. Completed tables/paired intervals appear automatically
-  in the appendix, including adverse outcomes. Pending runs never supply table values.
+  `126_paired_judgment_report.py`. Completed rates appear in the main paper and paired
+  intervals in the appendix, including adverse outcomes. Pending runs never supply values.
 
 Live queue: `runs/feeder/paired_judgment_status.json`. Configuration:
 `configs/paired_judgment.json`. Methods: `paper/bidir/planned_evaluations.tex`.
@@ -47,7 +47,8 @@ the paired-data plan and original results are unchanged.
 October12 completion: all four cells passed their four phases on the first attempt.
 The last full evaluation finished at 00:12 CDT; the priority guard released only its
 25 recorded holds at 00:13 CDT. Both-direction rates and paired intervals are in
-`paper/bidir/tables/paired_judgment_results.tex`. Five-percent reversed-pair SFT has
+`paper/bidir/tables/paired_judgment_results.tex`; intervals are in
+`paper/bidir/tables/paired_judgment_intervals.tex`. Five-percent reversed-pair SFT has
 higher backward success than PJ-5 in three cells; their translation/Llama3B difference
 is unresolved. PJ-5 versus shuffled labels is positive on SQL/Llama3B, negative on
 translation/Llama8B, and unresolved in the remaining two cells. These results do not

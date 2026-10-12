@@ -1,6 +1,6 @@
 {
   "source_sha256": {
-    "/work/jvl210002/migration/bidirectional/scripts/129_publication_captions.py": "7e4cca897e002f71185bf672ab2a8b2439be9f6c48adab39cb5b94ebd379ed48"
+    "/work/jvl210002/migration/bidirectional/scripts/129_publication_captions.py": "2b139f8a9d0172244a5c7df9ed0d06eb7e4908850b9c6ef8567fbe48404bd314"
   },
   "table_sha256": {
     "/work/jvl210002/migration/bidirectional/paper/bidir/tables/auxiliary_intervals.tex": "ba64836eb7689c41076965e29e0f6610c7abef7b615b5045eb38c7438e49c2bf",
@@ -13,11 +13,12 @@
     "/work/jvl210002/migration/bidirectional/paper/bidir/tables/initial_failure_reasons.tex": "1fd6b3ff118e9a20b177b2ae898fc9c5e55eb98fd4758eac6ae193d565f85401",
     "/work/jvl210002/migration/bidirectional/paper/bidir/tables/main_adaptations.tex": "656db9e683930ab5a3f0e2bd10a498a60252e1f170c61f370495c427a3cd693c",
     "/work/jvl210002/migration/bidirectional/paper/bidir/tables/main_adaptations_full.tex": "d0cc230ee1d649c940e982130ebd289b199490f4ed4ce8a638a92a35244ff444",
-    "/work/jvl210002/migration/bidirectional/paper/bidir/tables/main_loss_baselines.tex": "a114d156782eb44e606dd35d0bd95a9d1e776bbefe1c498bf2dd1354af0a1d97",
+    "/work/jvl210002/migration/bidirectional/paper/bidir/tables/main_loss_baselines.tex": "18163ed79435155ae02bbdb35962a44d1091d9d180857d5a861fdb66faefce3d",
     "/work/jvl210002/migration/bidirectional/paper/bidir/tables/main_seed_variation.tex": "f50f28e4a8adbe4682723dfa114f44bcc716d66354778fa7f61613195986e71e",
     "/work/jvl210002/migration/bidirectional/paper/bidir/tables/mechanism_sprint.tex": "e358f1db3dfd39d72927ef6c4f0281591775d035352e87a0db59788cce4a4270",
     "/work/jvl210002/migration/bidirectional/paper/bidir/tables/methods_details.tex": "b01c3ddc3f3cf65edc5c6d8531a19ffbccfb72c23dc65d8c0514ffa475c5d276",
-    "/work/jvl210002/migration/bidirectional/paper/bidir/tables/paired_judgment_results.tex": "c1010ca0a428b7e63afd40c655c3fd6e4305705ff0a891176242f15d8f7803ea",
+    "/work/jvl210002/migration/bidirectional/paper/bidir/tables/paired_judgment_intervals.tex": "28faffc4222d54e808b50ce35719770dd5007c90fee1cab93a1f81a62f5de962",
+    "/work/jvl210002/migration/bidirectional/paper/bidir/tables/paired_judgment_results.tex": "ea0d0a0a9ba4ff8e4702f87e7df68be37fec21432ceaa48bb9ed0ed74ddde04f",
     "/work/jvl210002/migration/bidirectional/paper/bidir/tables/paper_finish_protocol.tex": "68442e9c89b8ab4092da574aed1a916023cfb054c0594f30fcbea4224e74fd62",
     "/work/jvl210002/migration/bidirectional/paper/bidir/tables/preservation_costs.tex": "931c19d50835a9361582db9fefc0bfcae5860396449fb73484f64abf6658a3e6",
     "/work/jvl210002/migration/bidirectional/paper/bidir/tables/preservation_paired.tex": "33f72a44e0841e2f1bd362ca72d62698b466e69941f82f63925d867ea90eaf36",
@@ -47,8 +48,8 @@
     "sprint-candidates",
     "sprint-layer-controls",
     "reference-methods",
-    "paired-judgment",
     "paired-judgment-intervals",
+    "paired-judgment",
     "paper-finish-protocol",
     "preservation-costs",
     "preservation-paired",

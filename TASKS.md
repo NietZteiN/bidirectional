@@ -30,8 +30,8 @@ The completed sprint draft is frozen at Git commit34de8d0; its
       all twelve main-grid arms together. Below-batch doses remain exploratory.
 - [x] Train and evaluate code/Llama3B unlikelihood and round-trip; translation/Llama3B
       and Llama8B round-trip; SQL/Llama3B and Llama8B unlikelihood. Keep same-pass controls.
-- [x] Keep CFT code-specific, as requested. Mark its four translation/SQL combinations
-      as not applicable; no cross-domain CFT variant is queued.
+- [x] Keep CFT code-specific, as requested. Display it only on code rows; report the
+      completed translation/SQL paired-judgment baseline separately.
 - [x] Finish all eligible production table cells and verify the remaining-gap audit:
       zero pending campaign arms and zero missing numeric fields.
 - [x] Run the detached controller in exclusive table mode after logout/renewal;
@@ -49,6 +49,12 @@ only after full paired coverage, adapter effectiveness, source hashes and succes
 
 ## New priority: cross-domain paired judgments — October 11
 
+- [x] Bring all four completed PJ-5 comparisons into the main paper, with their own
+      evaluated controls; keep paired intervals in the appendix and omit inapplicable
+      CFT columns from translation/SQL rows.
+- [x] Recheck all 604 displayed percentages against stored evaluations after moving
+      the tables; 34 targeted tests pass, and the strict PDF check confirms seven body
+      pages with no unresolved numbers or references. PJ rates and intervals are unchanged.
 - [x] Simplify main preservation/objective captions and appendix interval descriptions;
       explain that CFT n/a means code-specific, rather than an unfinished measurement.
 - [x] Register PJ-5 and shuffled-label comparisons for translation/SQL at Llama3B/8B;

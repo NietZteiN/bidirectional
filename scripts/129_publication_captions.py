@@ -13,7 +13,7 @@ PAPER=ROOT/'paper/bidir'
 
 CAPTIONS={
  'main-adaptations':r'Forward (F) and backward (B) strict success (\%) on Llama 3.2-3B (seed 17). Blue: reversal mixtures; red: SFT backward success at most half the base rate.',
- 'main-loss-baselines':r'Preservation objectives: forward (F) and backward (B) strict success (\%), seed 17. CL-F/M: contrastive alignment with forward/mixed CE; CE-F+/M+: additional CE; Shuffle: shuffled pairs. L/G: Llama/Gemma; suffix: billions of parameters. CFT is code-specific (n/a elsewhere). Colors follow Table~\ref{tab:main-adaptations}.',
+ 'main-loss-baselines':r'Preservation objectives: forward (F) and backward (B) strict success (\%), seed 17. CL-F/M: contrastive alignment with forward/mixed CE; CE-F+/M+: additional CE; Shuffle: shuffled pairs. L/G: Llama/Gemma; suffix: billions of parameters. CFT is evaluated only on code. Colors follow Table~\ref{tab:main-adaptations}.',
  'full-adaptations':r'Full reversal-dose ladder and controls: forward (F) and backward (B) strict success (\%), Llama 3.2-3B, seed 17. Control definitions appear in Appendix~\ref{app:dose-ladder}.',
  'task-definitions':r'Task definitions, illustrative examples, scoring, and retained training pairs (Llama3B). Data and scoring details: Appendix~\ref{app:task-scoring}.',
  'auxiliary-intervals':r'Objective differences in strict success (percentage points), with 95\% paired bootstrap intervals. Positive values favor the first method; intervals are unadjusted.',

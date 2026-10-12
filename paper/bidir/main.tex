@@ -285,6 +285,16 @@ unlikelihood or periodically generate a forward answer and train on its reverse 
 with round-trip CE. Exact recipes and realized directional exposure are reported in the
 appendix.
 
+\paragraph{Cross-domain judgments.}
+For translation and SQL, we separately test paired judgments (PJ-5): replacing $5\%$
+of forward-generation targets with Yes/No judgments about matching input--output pairs.
+A shuffled-label control uses identical inputs. Table~\ref{tab:paired-judgment} reports
+these methods with their base, forward-SFT and reversed-pair controls, all evaluated
+together. Reversed-pair SFT generally gives higher backward success, and meaningful
+judgment labels do not consistently improve on shuffled labels. The construction and
+paired uncertainty are in Appendix~\ref{app:paired-judgment-method}.
+\input{tables/paired_judgment_results.tex}
+
 \paragraph{Generation results.}
 Forward-only representation alignment does not consistently improve backward generation
 beyond additional-CE or shuffled-pair controls. In code, CFT yields

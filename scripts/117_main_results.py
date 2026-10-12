@@ -142,17 +142,25 @@ def render(core, contrastive, auxiliary):
         grid(contrastive,CL_ARMS,['Base','SFT',r'5\%','Replay','Rev.','CL-F','CL-M',
                                'Shuffle','CE-F+','CE-M+'],True)]
     if auxiliary:
-        pieces += [r'\par\medskip\textbf{(b) Other auxiliary objectives}\par\smallskip',
-            grid(auxiliary,['base','sft','mix5','cft','unlikelihood','roundtrip'],
-                 ['Base','SFT',r'5\%','CFT','Unlikelihood','Round-trip'],True)]
+        code = [c for c in auxiliary if c['domain']=='code']
+        cross_domain = [c for c in auxiliary if c['domain']!='code']
+        if code:
+            pieces += [r'\par\medskip\textbf{(b) Code objectives}\par\smallskip',
+                grid(code,['base','sft','mix5','cft','unlikelihood','roundtrip'],
+                     ['Base','SFT',r'5\%','CFT','Unlikelihood','Round-trip'],True)]
+        if cross_domain:
+            panel = 'c' if code else 'b'
+            pieces += [r'\par\medskip\textbf{('+panel+r') Translation and SQL objectives}\par\smallskip',
+                grid(cross_domain,['base','sft','mix5','unlikelihood','roundtrip'],
+                     ['Base','SFT',r'5\%','Unlikelihood','Round-trip'],True)]
     pieces += [r'\caption{Forward (F) and backward (B) strict success (\%) for preservation '
         r'methods and controls (training seed 17). Each task/model comparison uses the same '
         r'test examples. L/G denotes Llama/Gemma; model size is in billions of parameters. '
         r'The $5\%$ column uses ordinary reversed-pair SFT. CL-F/M adds contrastive alignment '
         r'to forward-only/5\%-mixed CE; Shuffle breaks positive-pair correspondence; '
         r'CE-F+/M+ adds ordinary CE on those examples. CFT trains code-equivalence '
-        r'judgments: n/a means this code-specific method does not apply to translation '
-        r'or SQL. Colors follow Table~\ref{tab:main-adaptations}. Paired uncertainty and '
+        r'judgments and is evaluated only on code. Colors follow '
+        r'Table~\ref{tab:main-adaptations}. Paired uncertainty and '
         r'variation across training runs appear '
         r'in Appendix~\ref{app:complete-main-comparisons}.}'
         r'\label{tab:main-loss-baselines}',r'\end{table*}']
