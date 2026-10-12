@@ -170,7 +170,8 @@ supervises the backward conditional using the same underlying relationship.
 
 \paragraph{Models, controls and uncertainty.}
 We evaluate Llama 3B/8B, Gemma 4B/12B, and OLMo 1B, primarily with LoRA. The main
-reference comparison uses Llama 3B; additional models and training runs appear in
+reference comparison uses Llama 3B. Main preservation and objective comparisons use
+training seed 17; additional models and training runs appear in
 Appendix~\ref{app:complete-main-comparisons}. Generic instruction replay replaces half
 of task examples, backward-only training tests backward learnability, and longer-forward
 and both-direction controls use additional budget. The full dose ladder and controls are
@@ -273,12 +274,12 @@ question. Table~\ref{tab:main-loss-baselines} reports both task directions.
 
 \input{tables/main_loss_baselines.tex}
 \paragraph{Methods and controls.}
-Representation-alignment methods encode the two sides independently and train paired
-representations to be similar, using a symmetric contrastive loss alongside forward-only
-or mixed-direction CE. Negatives come only from training data. This exposes the paired
-correspondence without applying backward generation CE. Shuffling the positive pairs tests
-whether their correspondence matters; repeating ordinary CE on the same examples tests
-whether extra predictive training can reproduce the benefit.
+CL-F and CL-M encode the two sides independently and train paired representations to
+be similar, using a symmetric contrastive loss alongside forward-only or mixed-direction
+CE, respectively. Negatives come only from training data. This exposes the paired
+correspondence without applying backward generation CE. Shuffling the positive pairs
+(Shuffle) tests whether their correspondence matters; repeating ordinary CE on the same
+examples (CE-F+/CE-M+) tests whether extra predictive training can reproduce the benefit.
 Contrastive fine-tuning (CFT) is a separate, code-specific reconstruction that trains
 program-equivalence judgments with CE. Other baselines add instruction-conflict
 unlikelihood or periodically generate a forward answer and train on its reverse mapping

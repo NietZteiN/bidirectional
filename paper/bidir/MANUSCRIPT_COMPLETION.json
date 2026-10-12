@@ -7,9 +7,9 @@
       "seed": 17,
       "run": "/scratch/juno/jvl210002/bidir/results/2026-10-10/fmt_contract_v2/llama31-8b/repair_domain_pilot_s17",
       "means": {
-        "replay": {
+        "sft": {
           "forward": 0.999,
-          "reverse": 0.548
+          "reverse": 0.63
         },
         "rev": {
           "forward": 0.0,
@@ -19,9 +19,9 @@
           "forward": 0.999,
           "reverse": 1.0
         },
-        "sft": {
+        "replay": {
           "forward": 0.999,
-          "reverse": 0.63
+          "reverse": 0.548
         },
         "base": {
           "forward": 0.344,
@@ -35,9 +35,9 @@
       "seed": 42,
       "run": "/scratch/juno/jvl210002/bidir/results/2026-10-11/fmt_contract_v2/llama31-8b/repair_domain_pilot_s42",
       "means": {
-        "replay": {
-          "forward": 0.997,
-          "reverse": 0.165
+        "sft": {
+          "forward": 0.999,
+          "reverse": 0.616
         },
         "rev": {
           "forward": 0.001,
@@ -47,9 +47,9 @@
           "forward": 0.999,
           "reverse": 1.0
         },
-        "sft": {
-          "forward": 0.999,
-          "reverse": 0.616
+        "replay": {
+          "forward": 0.997,
+          "reverse": 0.165
         },
         "base": {
           "forward": 0.349,
@@ -63,9 +63,9 @@
       "seed": 1234,
       "run": "/scratch/juno/jvl210002/bidir/results/2026-10-11/fmt_contract_v2/llama31-8b/repair_domain_pilot_s1234",
       "means": {
-        "replay": {
-          "forward": 0.997,
-          "reverse": 0.157
+        "sft": {
+          "forward": 0.999,
+          "reverse": 0.666
         },
         "rev": {
           "forward": 0.011,
@@ -75,9 +75,9 @@
           "forward": 1.0,
           "reverse": 1.0
         },
-        "sft": {
-          "forward": 0.999,
-          "reverse": 0.666
+        "replay": {
+          "forward": 0.997,
+          "reverse": 0.157
         },
         "base": {
           "forward": 0.344,
@@ -91,9 +91,9 @@
       "seed": 17,
       "run": "/scratch/juno/jvl210002/bidir/results/2026-10-10/units_contract_v2/gemma3-12b/repair_domain_pilot_s17",
       "means": {
-        "replay": {
-          "forward": 0.922,
-          "reverse": 0.65
+        "sft": {
+          "forward": 0.97,
+          "reverse": 0.703
         },
         "rev": {
           "forward": 0.387,
@@ -103,9 +103,9 @@
           "forward": 0.951,
           "reverse": 0.899
         },
-        "sft": {
-          "forward": 0.97,
-          "reverse": 0.703
+        "replay": {
+          "forward": 0.922,
+          "reverse": 0.65
         },
         "base": {
           "forward": 0.399,
@@ -119,9 +119,9 @@
       "seed": 42,
       "run": "/scratch/juno/jvl210002/bidir/results/2026-10-10/units_contract_v2/gemma3-12b/repair_domain_pilot_s42",
       "means": {
-        "replay": {
-          "forward": 0.929,
-          "reverse": 0.73
+        "sft": {
+          "forward": 0.973,
+          "reverse": 0.733
         },
         "rev": {
           "forward": 0.272,
@@ -131,9 +131,9 @@
           "forward": 0.938,
           "reverse": 0.88
         },
-        "sft": {
-          "forward": 0.973,
-          "reverse": 0.733
+        "replay": {
+          "forward": 0.929,
+          "reverse": 0.73
         },
         "base": {
           "forward": 0.399,
@@ -147,9 +147,9 @@
       "seed": 1234,
       "run": "/scratch/juno/jvl210002/bidir/results/2026-10-10/units_contract_v2/gemma3-12b/repair_domain_pilot_s1234",
       "means": {
-        "replay": {
-          "forward": 0.944,
-          "reverse": 0.704
+        "sft": {
+          "forward": 0.972,
+          "reverse": 0.712
         },
         "rev": {
           "forward": 0.091,
@@ -159,9 +159,9 @@
           "forward": 0.944,
           "reverse": 0.886
         },
-        "sft": {
-          "forward": 0.972,
-          "reverse": 0.712
+        "replay": {
+          "forward": 0.944,
+          "reverse": 0.704
         },
         "base": {
           "forward": 0.399,
@@ -175,9 +175,9 @@
       "seed": 17,
       "run": "/scratch/juno/jvl210002/bidir/results/2026-10-10/py_cpp_typed_v2/gemma3-12b/repair_domain_pilot_s17",
       "means": {
-        "replay": {
-          "forward": 0.092,
-          "reverse": 0.0
+        "sft": {
+          "forward": 1.0,
+          "reverse": 0.35
         },
         "rev": {
           "forward": 0.0,
@@ -187,9 +187,9 @@
           "forward": 1.0,
           "reverse": 1.0
         },
-        "sft": {
-          "forward": 1.0,
-          "reverse": 0.35
+        "replay": {
+          "forward": 0.092,
+          "reverse": 0.0
         },
         "base": {
           "forward": 0.862,
@@ -203,9 +203,9 @@
       "seed": 42,
       "run": "/scratch/juno/jvl210002/bidir/results/2026-10-10/py_cpp_typed_v2/gemma3-12b/repair_domain_pilot_s42",
       "means": {
-        "replay": {
-          "forward": 0.361,
-          "reverse": 0.305
+        "sft": {
+          "forward": 1.0,
+          "reverse": 0.727
         },
         "rev": {
           "forward": 0.0,
@@ -215,9 +215,9 @@
           "forward": 0.85,
           "reverse": 1.0
         },
-        "sft": {
-          "forward": 1.0,
-          "reverse": 0.727
+        "replay": {
+          "forward": 0.361,
+          "reverse": 0.305
         },
         "base": {
           "forward": 0.862,
@@ -231,9 +231,9 @@
       "seed": 1234,
       "run": "/scratch/juno/jvl210002/bidir/results/2026-10-10/py_cpp_typed_v2/gemma3-12b/repair_domain_pilot_s1234",
       "means": {
-        "replay": {
-          "forward": 0.023,
-          "reverse": 0.0
+        "sft": {
+          "forward": 0.748,
+          "reverse": 0.558
         },
         "rev": {
           "forward": 0.0,
@@ -243,9 +243,9 @@
           "forward": 0.735,
           "reverse": 1.0
         },
-        "sft": {
-          "forward": 0.748,
-          "reverse": 0.558
+        "replay": {
+          "forward": 0.023,
+          "reverse": 0.0
         },
         "base": {
           "forward": 0.862,
@@ -259,9 +259,9 @@
       "seed": 17,
       "run": "/scratch/juno/jvl210002/bidir/results/2026-10-10/py_cpp_typed_v2/llama31-8b/repair_domain_pilot_s17",
       "means": {
-        "replay": {
-          "forward": 0.996,
-          "reverse": 0.994
+        "sft": {
+          "forward": 1.0,
+          "reverse": 0.0
         },
         "rev": {
           "forward": 0.0,
@@ -271,9 +271,9 @@
           "forward": 1.0,
           "reverse": 0.484
         },
-        "sft": {
-          "forward": 1.0,
-          "reverse": 0.0
+        "replay": {
+          "forward": 0.996,
+          "reverse": 0.994
         },
         "base": {
           "forward": 0.842,
@@ -287,9 +287,9 @@
       "seed": 42,
       "run": "/scratch/juno/jvl210002/bidir/results/2026-10-11/py_cpp_typed_v2/llama31-8b/repair_domain_pilot_s42",
       "means": {
-        "replay": {
-          "forward": 0.999,
-          "reverse": 0.994
+        "sft": {
+          "forward": 1.0,
+          "reverse": 0.0
         },
         "rev": {
           "forward": 0.0,
@@ -299,9 +299,9 @@
           "forward": 0.018,
           "reverse": 0.0
         },
-        "sft": {
-          "forward": 1.0,
-          "reverse": 0.0
+        "replay": {
+          "forward": 0.999,
+          "reverse": 0.994
         },
         "base": {
           "forward": 0.859,
@@ -315,9 +315,9 @@
       "seed": 1234,
       "run": "/scratch/juno/jvl210002/bidir/results/2026-10-11/py_cpp_typed_v2/llama31-8b/repair_domain_pilot_s1234",
       "means": {
-        "replay": {
-          "forward": 0.959,
-          "reverse": 0.978
+        "sft": {
+          "forward": 1.0,
+          "reverse": 0.0
         },
         "rev": {
           "forward": 0.0,
@@ -327,9 +327,9 @@
           "forward": 1.0,
           "reverse": 0.001
         },
-        "sft": {
-          "forward": 1.0,
-          "reverse": 0.0
+        "replay": {
+          "forward": 0.959,
+          "reverse": 0.978
         },
         "base": {
           "forward": 0.859,

@@ -140,8 +140,9 @@ extractor fails its reference-text oracle, so no D2T tuned comparison is eligibl
 \label{app:robustness}
 
 The prompt panel includes translation/Llama3B, format conversion/Gemma4B, units/Gemma12B,
-and Python--C++/Llama8B. Frozen variants retain the original primary instruction and add fixed
-task/contract prefixes. Both directions use the same semantic instances, decoding limits,
+and Python--C++/Llama8B. Reversal mixtures use $5\%$ replacement for translation and
+formatting, and $50\%$ for units and Python--C++. Frozen variants retain the original
+primary instruction and add fixed task/contract prefixes. Both directions use the same semantic instances, decoding limits,
 and scorers. Every frozen prompt is retained, separating echo/off-target output, semantic error,
 and measurement failure. Best-prompt summaries remain exploratory recovery diagnostics.
 

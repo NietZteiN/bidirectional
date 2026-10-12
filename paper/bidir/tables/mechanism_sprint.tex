@@ -20,7 +20,7 @@ units & gemma3-12b & forward & -2.587 [-2.829, -2.358] & +0.016 [-0.005, +0.053]
 units & gemma3-12b & reverse & -2.612 [-2.832, -2.405] & -0.381 [-0.503, -0.273] \\
 \bottomrule
 \end{tabular}
-\caption{Gold-answer negative log-likelihood per token on 128 pairs (seed 17). Differences have descriptive 95\% bootstrap intervals; negative values favor the first system.}
+\caption{Loss per token on correct answers (128 pairs). Differences have 95\% bootstrap intervals; negative values favor the first system.}
 \label{tab:sprint-likelihood}
 \end{table*}
 \begin{table*}[t]
@@ -35,7 +35,7 @@ mt\_de-en & gemma3-4b & +0.021 & +0.012 & +0.031 \\
 units & gemma3-12b & -0.013 & +0.009 & -0.026 \\
 \bottomrule
 \end{tabular}
-\caption{Forward/backward validation-gradient cosine on 16 pairs in LoRA coordinates. Inactive Gemma vision factors are excluded.}
+\caption{Forward/backward gradient cosine in active LoRA coordinates (16 pairs).}
 \label{tab:sprint-gradients}
 \end{table*}
 \begin{table*}[t]
@@ -54,7 +54,7 @@ units & gemma3-12b & forward & 0.828 / 0.875 & 1.000 / 1.000 & 0.992 / 1.000 \\
 units & gemma3-12b & reverse & 0.586 / 0.547 & 1.000 / 0.977 & 1.000 / 1.000 \\
 \bottomrule
 \end{tabular}
-\caption{Fraction of 128 pairs where the gold answer outranks the copied input by total/per-token negative log-likelihood (seed 17).}
+\caption{Fraction of pairs where correct answers outrank copied inputs by total/per-token loss (128 pairs).}
 \label{tab:sprint-candidates}
 \end{table*}
 \begin{table*}[t]
@@ -89,6 +89,6 @@ band3\_remove & band3\_random202 & forward & +0.008 [+0.002, +0.016] \\
 band3\_remove & band3\_random202 & reverse & +0.043 [+0.025, +0.061] \\
 \bottomrule
 \end{tabular}
-\caption{Layer-removal effects relative to controls matched on retained norm: strict-success differences (percentage points), with descriptive 95\% paired intervals; formatting/Llama3B, 512 pairs, seed 17.}
+\caption{Layer removal minus norm-matched controls: strict-success changes (percentage points), with 95\% paired intervals; formatting/Llama3B, 512 pairs.}
 \label{tab:sprint-layer-controls}
 \end{table*}

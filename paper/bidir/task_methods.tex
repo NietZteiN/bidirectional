@@ -182,7 +182,7 @@ Chinese $\to$ English & G4B & 0.845060 & 0.850115 \\
 Chinese $\to$ English & G12B & 0.859140 & 0.865201 \\
 Chinese $\to$ English & O1B & 0.698151 & 0.625003 \\
 \bottomrule\end{tabular}
-\caption{Frozen COMET-22 strict-success thresholds.}\label{tab:translation-thresholds}\end{table*}
+\caption{Frozen COMET-22 success thresholds.}\label{tab:translation-thresholds}\end{table*}
 \subsection{Model-based correctness checks}
 SQL-to-question is the model-based check in the main comparison: a frozen Granite parser maps a generated question back to SQL, whose database result is compared with the target. The other proposed round-trip direction is WebNLG triples-to-text: the same model family extracts triples from generated text. Its extractor fails on reference texts, so this task supplies no tuned-model result and is absent from the main task table. Neither check is executable or symbolic verification of the generated natural-language meaning itself.
 \begin{table}[t]\centering\small
@@ -193,4 +193,4 @@ L8B & 200 & 62.5\% \\
 L3B & 200 & 64.5\% \\
 O1B & 200 & 62.5\% \\
 \bottomrule\end{tabular}
-\caption{Frozen SQL parser calibration on reference questions in the corresponding initial evaluation subset. Variation reflects the subsets and execution layout, not a parser tuned to each evaluated model.}\label{tab:parser-calibration}\end{table}
+\caption{Frozen SQL parser accuracy on reference-question subsets.}\label{tab:parser-calibration}\end{table}
