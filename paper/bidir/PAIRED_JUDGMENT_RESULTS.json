@@ -1,0 +1,29 @@
+{
+  "protocol": "paired_judgment_v1",
+  "complete": 0,
+  "total": 4,
+  "records": [],
+  "pending": [
+    {
+      "domain": "mt_en-de",
+      "model": "llama32-3b"
+    },
+    {
+      "domain": "mt_en-de",
+      "model": "llama31-8b"
+    },
+    {
+      "domain": "sql",
+      "model": "llama32-3b"
+    },
+    {
+      "domain": "sql",
+      "model": "llama31-8b"
+    }
+  ],
+  "source_sha256": {
+    "/work/jvl210002/migration/bidirectional/scripts/126_paired_judgment_report.py": "8011dc7968d1fab3c61ca7af90c57f3f71ae1cd7795291df6e0a78089299897c",
+    "/work/jvl210002/migration/bidirectional/scripts/124_paired_judgment_worker.py": "aad3721831ba182b405a553fa15acdd2ea827b42bc040d6a4cf11afc36012980",
+    "/work/jvl210002/migration/bidirectional/configs/paired_judgment.json": "9ffeb44ab49188d2c6ed6e0b056dad18430c1f9adf31a32075073c602442cde8"
+  }
+}

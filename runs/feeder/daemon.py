@@ -108,7 +108,8 @@ def controller_stages():
         ('watchdog',[sys.executable,'runs/feeder/watchdog.py'],120),
         ('capacity',[sys.executable,'scripts/96_gpu_capacity.py'],90),
         ('a30_admission',[sys.executable,'scripts/103_a30_admission.py'],90),
-        ('runner',[sys.executable,'scripts/95_runner.py','--max-inflight','24'],600)])+[
+        ('runner',[sys.executable,'scripts/95_runner.py','--max-inflight','24'],600),
+        ('paired_judgment',[sys.executable,'scripts/125_paired_judgment_queue.py'],300)])+[
         ('followup_analysis',[sys.executable,'scripts/102_followup_analysis.py'],600),
         ('paper_snapshot',[sys.executable,'scripts/99_paper_evidence.py','--if-changed','--build'],600)]
     return exclusive,stages

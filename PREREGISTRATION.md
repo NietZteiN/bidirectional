@@ -2194,3 +2194,44 @@ a valid first-seed evaluation. No new catalogue task protocol or scientific meas
 criterion is introduced. The artificial GPU and per-project QoS caps remain disabled;
 Slurm resource limits still apply. The renewable detached controller continues analysis
 and paper refresh after logout. Earlier completion/pause receipts remain historical.
+
+## Amendment 59 — October 11, 2026: cross-domain paired judgments
+
+The user requests cleaner table descriptions and chooses to add a cross-domain
+paired-judgment baseline for translation and SQL. The original program-equivalence CFT
+remains code-specific; its n/a entries are not fabricated measurements. This is a newly
+designed baseline, not a claim that the original CFT recipe applies unchanged elsewhere.
+
+`configs/paired_judgment.json` fixes four seed17 cells: English-to-German and question-to-SQL,
+each at Llama3B/8B. PJ-5 replaces the same selected pair IDs as mix5 with binary matching
+judgments, preserving one training example per original pair and the remaining forward
+examples. No backward generation CE is added. The 325 selected pairs have 162 positive
+and 163 negative judgments. Original corpora have 6500 translation and 6499 SQL training
+rows. The frozen recipe uses microbatch4/accumulation16, effective batch64, LoRA rank32,
+three epochs and the existing optimizer. Verify retained rows and actual steps against
+the original SFT adapters before admitting evaluation; do not infer token/FLOP equality.
+
+Training-only mismatches exclude identical sources and all observed matching targets.
+SQL negatives must use the same database, execute successfully and fail the unchanged
+Spider execution-equivalence check; execution/scorer failures cannot create labels.
+Labels are allocated deterministically among selected pairs that admit valid negatives,
+with nearly balanced class counts. Translation mismatch labels can contain unrecorded
+semantic matches, an explicit limitation. A shuffled-label control preserves the same
+input rows and label counts, randomizing the labels to test correspondence information.
+
+Workers are isolated in new result/adapter namespaces; no original corpus, prompt, scorer,
+arm registry source, baseline adapter or existing proof-pinned worker is edited. Every
+cell first trains both new arms for four actual optimizer steps on a separate 256-row
+smoke set (224 forward,16 Yes,16 No); all rows must survive token filtering. This smoke
+intentionally exercises both classes and is not a production dose estimate. Production
+training follows a valid matching smoke; a 40-pair shared generation check precedes full
+evaluation of base/SFT/mix5/PJ-5/shuffled-label adapters together. SQL scoring uses 192 GiB
+host-memory reservations after the earlier table evaluation exceeded64 GiB. Scientific
+settings and GPU/parser budgets are unchanged. One phase per cell and at most three
+attempts prevent duplicate/unbounded spending; deterministic failures require diagnosis.
+
+Report every complete cell regardless of sign, both directions, realized exposure and
+95% paired cluster-bootstrap differences (2000 draws) against SFT/mix5 and between new
+arms. Intervals are exploratory and unadjusted for multiplicity. Incomplete comparisons
+do not enter scientific tables; new paired-judgment tables are generated separately from
+the existing CFT comparison. No extra seed or task is introduced by this amendment.

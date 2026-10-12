@@ -41,6 +41,25 @@ See [table completion plan](docs/TABLE_COMPLETION_PLAN.md). Current job/phase pr
 [table scheduler](runs/feeder/table_completion_status.json). New results enter the paper
 only after full paired coverage, adapter effectiveness, source hashes and successful status checks.
 
+## New priority: cross-domain paired judgments — October 11
+
+- [x] Simplify main preservation/objective captions and appendix interval descriptions;
+      explain that CFT n/a means code-specific, rather than an unfinished measurement.
+- [x] Register PJ-5 and shuffled-label comparisons for translation/SQL at Llama3B/8B;
+      keep original CFT separate and preserve all existing worker/data signatures.
+- [x] Check full-corpus construction, training-only negative pools, SQL negative validity,
+      identical shuffled-control inputs and equal example budgets before GPU admission.
+- [x] Validate all eight tokenized corpora with zero dropped examples and unchanged
+      baseline bytes; pass 450 full-suite tests and 29 final targeted integrity checks.
+- [x] Queue four first-phase GPU checks (452104–452107); verify all five detached
+      controller health checks and a complete seven-stage pass with zero exit codes.
+      GPU checks are pending cluster priority; their success remains unmeasured.
+- [ ] Pass four training-smoke campaigns, each exercising both new adapters.
+- [ ] Train eight full adapters, pass shared generation checks, then evaluate all four cells.
+- [ ] Publish both directions and paired uncertainty automatically, retaining adverse results.
+
+See [paired-judgment plan](docs/PAIRED_JUDGMENT_PLAN.md).
+
 ## Background experiment queue — resumed October 11
 
 - [x] Stop automatic scheduling and hold all 32 current experiment jobs, including four

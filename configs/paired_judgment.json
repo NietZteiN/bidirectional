@@ -1,0 +1,23 @@
+{
+  "protocol": "paired_judgment_v1",
+  "amendment": 59,
+  "enabled": true,
+  "seed": 17,
+  "replacement_arm": "mix5",
+  "new_arms": ["paired_judge", "paired_judge_shuffle"],
+  "evaluation_arms": ["base", "sft", "mix5", "paired_judge", "paired_judge_shuffle"],
+  "recipe": "train/table_completion_aux.yaml",
+  "smoke_steps": 4,
+  "smoke_rows": 256,
+  "smoke_class_rows": 16,
+  "eval_smoke_pairs": 40,
+  "max_attempts": 3,
+  "negative_candidates": 64,
+  "sql_query_timeout_s": 3,
+  "cells": [
+    {"domain": "mt_en-de", "model": "llama32-3b"},
+    {"domain": "mt_en-de", "model": "llama31-8b"},
+    {"domain": "sql", "model": "llama32-3b"},
+    {"domain": "sql", "model": "llama31-8b"}
+  ]
+}

@@ -112,49 +112,48 @@ def full_adaptations(core):
     return '\n'.join([r'\begin{table*}[t]',r'\centering\footnotesize',
         grid(core,CORE_ARMS,['Base','SFT',r'1\%',r'5\%',r'10\%',r'25\%',r'50\%',
                             'Replay','Rev.',r'Fwd2$\times$','Flip','Multi'],dose_groups=True),
-        r'\caption{Full dose ladder and secondary controls, strict success (\%). '
-        r'Llama 3.2-3B, training seed 17. F/B means forward/backward. '
+        r'\caption{Forward (F) and backward (B) strict success (\%) across reversal '
+        r'proportions and additional controls. Model: Llama 3.2-3B; training seed: 17. '
         r'Replay replaces half of task examples with generic instructions; Rev. trains '
         r'backward only; Fwd2$\times$ doubles forward training; Flip trains both directions '
-        r'at doubled budget; Multi mixes other tasks. Each task uses the base model '
-        r'evaluated on the same examples as every adaptation. Dashes denote proportions '
-        r'not yet evaluated. Low-dose relation/execution experiments have fewer than one '
+        r'at doubled budget; Multi mixes other tasks. All methods in a task use the same '
+        r'test examples. Low-dose relation/execution experiments have fewer than one '
         r'effective batch of distinct reversed pairs; these exploratory additions are '
         r'excluded from the original dose-knee analysis.}\label{tab:full-adaptations}',r'\end{table*}'])
 
 
 def render(core, contrastive, auxiliary):
-    intro = (r'Strict success (\%); F/B denotes forward/backward. '
-             r'Blue highlights small reversed-pair doses; red highlights SFT backward '
+    intro = (r'Forward (F) and backward (B) strict success (\%). '
+             r'Blue marks reversal mixtures; red marks forward-SFT backward '
              r'success at most half the base rate (a descriptive threshold). ')
     primary = '\n'.join([r'\begin{table*}[!t]',r'\centering\footnotesize',
         grid(core,['base','sft','mix1','mix5'],['Base','Forward SFT',r'1\% reversal',r'5\% reversal']),
-        r'\caption{'+intro+r'Llama 3.2-3B, training seed 17, all eleven task orientations. '
-        r'Dose columns replace that share of forward pairs with their reversals, keeping '
-        r'instances and optimizer steps fixed. Preservation starts from the base checkpoint; '
-        r'this is not repair after forward-only training. Full doses and controls appear '
+        r'\caption{'+intro+r'Model: Llama 3.2-3B; training seed: 17. Base is evaluated before '
+        r'fine-tuning; Forward SFT trains only the named direction. The 1\%/5\% mixtures '
+        r'replace that share of forward pairs with reversals, keeping training-example '
+        r'counts and optimizer steps fixed. All methods in a task use the same test '
+        r'examples. Full doses and controls appear '
         r'in Table~\ref{tab:full-adaptations}, and variation across training runs in '
-        r'Table~\ref{tab:main-seed-variation}. Dashes denote proportions not yet evaluated. '
+        r'Table~\ref{tab:main-seed-variation}. '
         r'Relation/execution low doses are exploratory small-corpus additions.}'
         r'\label{tab:main-adaptations}',r'\end{table*}'])
     pieces = [r'\begin{table*}[!t]',r'\centering\footnotesize',
-              r'\textbf{(a) Contrastive objectives and exposure controls}\par\smallskip',
+              r'\textbf{(a) Contrastive learning and controls}\par\smallskip',
         grid(contrastive,CL_ARMS,['Base','SFT',r'5\%','Replay','Rev.','CL-F','CL-M',
                                'Shuffle','CE-F+','CE-M+'],True)]
     if auxiliary:
         pieces += [r'\par\medskip\textbf{(b) Other auxiliary objectives}\par\smallskip',
             grid(auxiliary,['base','sft','mix5','cft','unlikelihood','roundtrip'],
                  ['Base','SFT',r'5\%','CFT','Unlikelihood','Round-trip'],True)]
-    pieces += [r'\caption{Strict success (\%); F/B means forward/backward. '
-        r'Colors follow Table~\ref{tab:main-adaptations}. Contrastive and other auxiliary '
-        r'objectives, training seed 17. Each task/model comparison evaluates its own '
-        r'base and adaptations on the same examples. '
-        r'L/G denotes Llama/Gemma; B denotes billions of parameters. The $5\%$ column is '
-        r'ordinary reversed-pair SFT. CL-F/M adds alignment to forward/mixed-direction CE; '
-        r'Shuffle randomizes positive pairs; CE-F+/M+ adds CE as an exposure proxy; '
-        r'CFT is the reconstructed code-equivalence contrastive fine-tuning recipe. '
-        r'Dashes denote objectives not yet evaluated; n/a marks code-equivalence CFT '
-        r'outside code. Paired contrasts and variation across training runs appear '
+    pieces += [r'\caption{Forward (F) and backward (B) strict success (\%) for preservation '
+        r'methods and controls (training seed 17). Each task/model comparison uses the same '
+        r'test examples. L/G denotes Llama/Gemma; model size is in billions of parameters. '
+        r'The $5\%$ column uses ordinary reversed-pair SFT. CL-F/M adds contrastive alignment '
+        r'to forward-only/5\%-mixed CE; Shuffle breaks positive-pair correspondence; '
+        r'CE-F+/M+ adds ordinary CE on those examples. CFT trains code-equivalence '
+        r'judgments: n/a means this code-specific method does not apply to translation '
+        r'or SQL. Colors follow Table~\ref{tab:main-adaptations}. Paired uncertainty and '
+        r'variation across training runs appear '
         r'in Appendix~\ref{app:complete-main-comparisons}.}'
         r'\label{tab:main-loss-baselines}',r'\end{table*}']
     return primary, '\n'.join(pieces)

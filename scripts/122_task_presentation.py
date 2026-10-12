@@ -301,7 +301,7 @@ def auxiliary_intervals(main,sources):
                     {'cft':'CFT','unlikelihood':'Unlikelihood','roundtrip':'Round-trip'}[method],
                     'Forward SFT' if reference=='sft' else r'5\% reversal',
                     *[f"{q['delta_pp']:+.1f} [{q['ci_lo']:+.1f}, {q['ci_hi']:+.1f}]" for q in pair]])+r' \\')
-    lines += [r'\bottomrule\end{tabular}',r'\caption{Auxiliary-objective differences from forward-only and reversed-pair SFT, in percentage points with 95\% paired cluster-bootstrap intervals. Every completed compatible objective comparison is included. Intervals are exploratory and unadjusted for multiplicity; small point-estimate gains do not establish an objective-specific benefit.}\label{tab:auxiliary-intervals}\end{table*}']
+    lines += [r'\bottomrule\end{tabular}',r'\caption{Forward and backward changes relative to the named comparison method, in percentage points, with 95\% paired cluster-bootstrap intervals. Positive values favor the objective in that row. Comparisons use the same test examples; intervals measure test-example uncertainty and are not adjusted for multiple comparisons.}\label{tab:auxiliary-intervals}\end{table*}']
     (PAPER/'tables/auxiliary_intervals.tex').write_text('\n'.join(lines)+'\n')
     return records
 

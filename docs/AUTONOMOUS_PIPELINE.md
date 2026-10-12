@@ -26,6 +26,12 @@ When disabled, an enabled exclusive table plan selects only table work, analysis
 refresh. Mode changes persist across CPU-host renewal; reload an existing controller after
 changing controller source. See [background plan](BACKGROUND_RUN_PLAN.md) for current scope.
 
+Amendment59 adds a separate `paired_judgment` stage for the four translation/SQL comparisons.
+Its scheduler requires a current full-data/token-length preflight, then advances one GPU
+phase at a time after matching training and generation checks. The worker uses isolated
+adapters and unchanged original generation scorers. Completed results and paired intervals
+enter the appendix automatically; code-specific CFT remains a distinct baseline.
+
 Training packs resume from fully saved adapters, run remaining arms back to back, and
 schedule dependent within-pass evaluations. Valid seed-17 contrastive cells automatically
 admit seeds42/1234 regardless of measured effect sign. Future arms select larger microbatches

@@ -3796,7 +3796,7 @@
     }
   },
   "source_sha256": {
-    "/work/jvl210002/migration/bidirectional/scripts/122_task_presentation.py": "7048bd7679b7704b6f8a1f6be910138171ddbdf68b4b2a64b2da8b58ff1c18ff",
+    "/work/jvl210002/migration/bidirectional/scripts/122_task_presentation.py": "8416411f4e1858082ad58e011a43d7bbbb78140cff66860006364829c460e3e6",
     "/work/jvl210002/migration/bidirectional/src/bidir/prompts.py": "e1e433487269c0c83eff392bc3ac8cb670c52836f18a0d80bbb2c69f5670316f",
     "/scratch/juno/jvl210002/bidir/runs/adapters/code/llama32-3b/sft_r32_s17/training_summary.json": "127d429ffd075efbe669e1cf072154540aa0967d64c560a92a7f81fc80c1e41f",
     "/scratch/juno/jvl210002/bidir/runs/adapters/code/llama32-3b/mix1_r32_s17/training_summary.json": "e4b038e73a71c93d5259f4036b4d65e04bb79a4346293d7358288da388dd34b6",
@@ -3956,6 +3956,6 @@
     "/scratch/juno/jvl210002/bidir/results/2026-10-11/sql/llama32-3b/attrib_table_fill_s17/summary.json": "11c6d88ddabd73b651404c2abdd951f8d76ad7b04c06216e46f96aae28cb06a2",
     "/scratch/juno/jvl210002/bidir/results/2026-10-11/sql/llama32-3b/attrib_table_fill_s17/followup_contrasts.json": "372e1f1c4fdf5ad6b91afb3c4304200b509391b8c08836e930875c0e6dd92671"
   },
-  "generator_sha256": "7048bd7679b7704b6f8a1f6be910138171ddbdf68b4b2a64b2da8b58ff1c18ff",
+  "generator_sha256": "8416411f4e1858082ad58e011a43d7bbbb78140cff66860006364829c460e3e6",
   "note": "Presentation only: original prompts, training and scorers unchanged. Missing historical upstream revisions are not inferred."
 }

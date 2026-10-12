@@ -210,3 +210,31 @@ checked before table generation; failed adapter loading excludes an evaluation. 
 historical training code and upstream dataset revisions were not retained, so reproducible
 result analysis does not imply exact historical training reconstruction. These missing
 versions are explicit limitations, rather than inferred from a current cached dataset.
+
+\subsection{Cross-domain paired-judgment baseline}
+\label{app:paired-judgment-method}
+Code-equivalence CFT is specific to programs. We separately define a paired-judgment
+extension for English--German translation and question--SQL pairs, comparing Llama3B
+and Llama8B at training seed 17.
+
+PJ-5 selects the same pairs as the $5\%$ reversal mixture and replaces their generation
+targets with Yes/No judgments. The remaining $95\%$ retain ordinary forward targets.
+The model receives both sides and judges whether the German sentence translates the
+English source, or whether the SQL query answers the question in the supplied schema.
+Judgment classes differ by at most one example. There are 325 judgments among 6,500
+translation rows and 325 among 6,499 SQL rows. No backward generation target is used.
+Training-example counts and optimizer steps match SFT and reversal; token counts and
+runtime may differ and are recorded separately.
+
+Positive judgments use original paired examples. Negative candidates come only from the
+training split and exclude duplicate sources and every observed correct target for that
+source. Translation uses mismatched training sentences; occasional unrecorded semantic
+matches remain a label-noise limitation. SQL negatives stay within the same database:
+both queries must execute, and the frozen execution-equivalence check must reject the
+candidate. A scorer error cannot supply a negative label. Negative labels are allocated
+deterministically among the selected pairs that admit such candidates. A shuffled-label
+control uses identical inputs and class counts with randomized Yes/No labels.
+All methods are evaluated together on the original held-out generation tasks with their
+unchanged correctness checks. Paired 95\% cluster-bootstrap intervals compare both
+directions against SFT, $5\%$ reversal, and the shuffled control.
+\IfFileExists{tables/paired_judgment_results.tex}{\input{tables/paired_judgment_results.tex}}{}

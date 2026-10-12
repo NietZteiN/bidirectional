@@ -89,5 +89,5 @@ def test_background_resume_preserves_frozen_table_plan(tmp_path,monkeypatch):
     exclusive,stages=daemon.controller_stages()
     assert not exclusive
     assert [s[0] for s in stages]==[
-        'watchdog','capacity','a30_admission','runner','followup_analysis','paper_snapshot']
+        'watchdog','capacity','a30_admission','runner','paired_judgment','followup_analysis','paper_snapshot']
     assert table.read_bytes()==frozen

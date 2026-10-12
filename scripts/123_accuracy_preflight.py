@@ -119,6 +119,8 @@ def paper_audit():
     reports = {name: read(PAPER / (name + '.json')) for name in [
         'MAIN_RESULTS', 'EVIDENCE_SNAPSHOT', 'TASK_METHODS', 'MANUSCRIPT_COMPLETION',
         'MECHANISM_DIAGNOSTICS', 'PUBLICATION_ANALYSIS']}
+    if (PAPER/'PAIRED_JUDGMENT_RESULTS.json').exists():
+        reports['PAIRED_JUDGMENT_RESULTS']=read(PAPER/'PAIRED_JUDGMENT_RESULTS.json')
     expected_hashes = {}
     for name, report in reports.items():
         sources = report.get('source_sha256', report.get('sources', {}))
@@ -185,6 +187,23 @@ def paper_audit():
     for block, cells, arms in zip(blocks, [main['contrastive'], main['auxiliary']],
                                  [renderer.CL_ARMS, ['base','sft','mix5','cft','unlikelihood','roundtrip']]):
         table_count += verify_grid_text(block, cells, arms, raw, renderer.TASKS, renderer.MODELS)
+    pj=reports.get('PAIRED_JUDGMENT_RESULTS',{})
+    if pj:
+        if pj['complete']!=len(pj['records']) or pj['complete']+len(pj['pending'])!=pj['total']:
+            raise ValueError('incorrect paired-judgment completion counts')
+        for cell in pj['records']:
+            campaign(cell)
+            for c in cell['contrasts']:
+                expected=100*(raw[cell['run']][c['a']][c['direction']]-raw[cell['run']][c['b']][c['direction']])
+                if abs(c['delta_pp']-expected)>1e-8 or c['confidence']!=.95:
+                    raise ValueError('incorrect paired-judgment difference/confidence')
+        text=(PAPER/'tables/paired_judgment_results.tex').read_text()
+        blocks=re.findall(r'\\begin\{tabular\}.*?\\end\{tabular\}',text,re.S)
+        if pj['records']:
+            if len(blocks)!=2:raise ValueError('missing paired-judgment table block')
+            table_count += verify_grid_text(blocks[0],pj['records'],
+                ['base','sft','mix5','paired_judge','paired_judge_shuffle'],raw,renderer.TASKS,renderer.MODELS)
+        elif blocks:raise ValueError('unmeasured paired-judgment table')
 
     expected_numbers = {}
     matched = 0
@@ -254,7 +273,8 @@ def paper_audit():
         report_sha256={name:digest(PAPER/(name+'.json')) for name in reports},
         presentation_sha256={name:digest(PAPER/name) for name in [
             'main.tex','planned_evaluations.tex','task_methods.tex','numbers.tex','main.pdf',
-            'tables/main_adaptations.tex','tables/main_adaptations_full.tex','tables/main_loss_baselines.tex']},
+        'tables/main_adaptations.tex','tables/main_adaptations_full.tex','tables/main_loss_baselines.tex',
+        *(['tables/paired_judgment_results.tex'] if pj else [])]},
         corpus_splits=split_count, translation_threshold_rows=len(reports['TASK_METHODS']['translation_thresholds']),
         checked_means=mean_count, main_table_scores=table_count,
         registered_numeric_values=len(main['numbers']), core_combinations=len(ids),

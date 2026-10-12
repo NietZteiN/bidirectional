@@ -1,0 +1,37 @@
+# Cross-domain paired judgments — October 11, 2026
+
+The user chooses a separately labeled paired-judgment baseline for translation and SQL.
+Original code-equivalence CFT remains code-specific. Its n/a cells mean not applicable;
+the new PJ-5 comparisons will appear separately after measurement.
+
+- Four cells: English→German and question→SQL, Llama3B and Llama8B, seed17.
+- Two new adapters per cell: PJ-5 and a shuffled-label control.
+- PJ-5 uses the same selected pair IDs as 5% reversal, replacing generation with nearly
+  balanced Yes/No judgments. All remaining rows are forward generation. There is no
+  backward generation CE. Example counts and optimizer steps match the saved SFT runs;
+  tokens/runtime are measured separately.
+- Translation has 6500 rows; SQL has 6499. Each replaces 325 rows with 162 positive
+  and 163 negative judgments. All negative candidates come from training data. SQL
+  candidates stay in the same database and must execute and fail the frozen equivalence
+  check; errors cannot manufacture negatives. Unrecorded translation paraphrases remain
+  a potential source of negative-label noise.
+- Shuffled labels retain identical inputs and class counts. Compare PJ-5 against
+  SFT, 5% reversal and that control in both original generation tasks.
+- Four-step training checks explicitly consume 256 rows (224 forward,16 Yes,16 No).
+  After both new arms pass, train full adapters, check shared generation on40 pairs,
+  then evaluate the complete held-out test split with a fresh base/SFT/mix5 comparison.
+- At most one phase per cell, three bounded attempts and no automatic retry of a
+  deterministic failure. SQL evaluation reserves192 GiB host memory; other phases64 GiB.
+- New sources/outputs use an isolated namespace and preserve all existing worker signatures.
+  The detached controller runs `125_paired_judgment_queue.py`; paper refresh runs
+  `126_paired_judgment_report.py`. Completed tables/paired intervals appear automatically
+  in the appendix, including adverse outcomes. Pending runs never supply table values.
+
+Live queue: `runs/feeder/paired_judgment_status.json`. Configuration:
+`configs/paired_judgment.json`. Methods: `paper/bidir/planned_evaluations.tex`.
+Source audit: `paper/bidir/PAIRED_JUDGMENT_RESULTS.json`.
+
+Run `python scripts/127_paired_judgment_preflight.py` in the existing CPU allocation
+before admitting jobs. It validates baseline adapter bytes and token filtering for all
+eight new arms. The scheduler rejects missing, incomplete or changed preflight records.
+The GPU checks remain mandatory after this CPU/data check.

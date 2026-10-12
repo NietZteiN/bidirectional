@@ -2,6 +2,8 @@
 > all twelve missing comparisons are measured and no numeric table entries remain missing.
 > The final SQL evaluation completed at 09:19 CDT. The user's continuation request now
 > resumes the 32 previously held jobs and registered background pipeline (Amendment58).
+> Amendment59 adds four translation/SQL paired-judgment campaigns, with separate adapters,
+> shuffled-label controls and checked automatic reporting. Original CFT remains code-specific.
 > See [table completion plan](../../docs/TABLE_COMPLETION_PLAN.md) and
 > [remaining table gaps](TABLE_COMPLETION_AUDIT.json).
 > Amendment 55's resumed campaign and the completed sprint remain historical records.
