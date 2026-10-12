@@ -170,8 +170,7 @@ supervises the backward conditional using the same underlying relationship.
 
 \paragraph{Models, controls and uncertainty.}
 We evaluate Llama 3B/8B, Gemma 4B/12B, and OLMo 1B, primarily with LoRA. The main
-reference comparison uses Llama 3B. Main preservation and objective comparisons use
-training seed 17; additional models and training runs appear in
+reference comparison uses Llama 3B; additional models and training runs appear in
 Appendix~\ref{app:complete-main-comparisons}. Generic instruction replay replaces half
 of task examples, backward-only training tests backward learnability, and longer-forward
 and both-direction controls use additional budget. The full dose ladder and controls are
@@ -219,17 +218,15 @@ Generic replay and doubled forward training do not yield comparable backward ben
 in these comparisons (Table~\ref{tab:full-adaptations}). More forward optimization is
 not a substitute for supplying backward targets.
 
-The $1\%$ benefits recur across \NUM{main-repeat-fmt-runs} formatting runs and
-\NUM{main-repeat-code-runs} code runs with different training seeds.
-Table~\ref{tab:main-seed-variation} reports the range of forward and backward changes
-for every task with repeated low-dose measurements.
+The $1\%$ benefits recur across repeated training runs in formatting and code
+(Appendix~\ref{app:complete-main-comparisons}).
 
 \begin{figure*}[t]
 \centering
 \includegraphics[width=\textwidth]{figures/preservation_focus.pdf}
 \caption{The preservation tradeoff for four tasks, comparing only the base model,
-forward-only SFT, and 1\%/5\% reversal. Each panel evaluates Llama3B on the same examples
-(training seed 17). Bars show marginal 95\% cluster-bootstrap intervals over test examples.
+forward-only SFT, and 1\%/5\% reversal. Each panel evaluates Llama3B on the same examples.
+Bars show marginal 95\% cluster-bootstrap intervals over test examples.
 Table~\ref{tab:preservation-paired} gives paired differences; Table~\ref{tab:main-seed-variation}
 shows variation across training runs.}
 \label{fig:dose-tradeoff-draft}
@@ -255,9 +252,9 @@ when training factorization, $1\%$ reversal lowers backward expansion success fr
 \NUM{main-algebra-rev-sft-backward}\% to \NUM{main-algebra-rev-mix1-backward}\%.
 At $5\%$ it is \NUM{main-algebra-rev-mix5-backward}\%. Thus a dose that maintains one
 conditional can harm the other; the mixture must be judged jointly with forward performance
-and relative to the existing capability. The adverse $1\%$ expansion result occurs in all
-\NUM{main-repeat-algebra-rev-runs} factorization-training runs. A uniform $1\%$ rule
-would obscure this finding.
+and relative to the existing capability. The adverse $1\%$ expansion result also recurs
+under repeated training (Appendix~\ref{app:complete-main-comparisons}). A uniform $1\%$
+rule would obscure this finding.
 
 The full ladder evaluates $1$, $5$, $10$, $25$, and $50\%$ replacement where available.
 The complete comparisons and dose criterion are in Appendix~\ref{app:dose-ladder}.
@@ -428,6 +425,11 @@ reconstruction beyond the retained corpora and result analysis.
 \label{app:complete-main-comparisons}
 The main comparison displays one reference training run, while the tables below retain
 variation across runs, paired test uncertainty, the full dose ladder and objective controls.
+The main preservation and objective comparisons and preservation figure use training
+seed 17. The repeated low-dose comparisons in Table~\ref{tab:main-seed-variation} use
+seeds 17, 42, and 1234. The $1\%$ benefits recur across \NUM{main-repeat-fmt-runs}
+formatting runs and \NUM{main-repeat-code-runs} code runs; the adverse backward-expansion
+result occurs in all \NUM{main-repeat-algebra-rev-runs} factorization-training runs.
 The severe-loss highlighting is descriptive rather than a statistical significance claim.
 Repeated evaluations use the latest complete result, chosen without inspecting the effect
 sign; earlier results remain in the accompanying data.
