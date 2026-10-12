@@ -11,17 +11,17 @@
           "forward": 0.999,
           "reverse": 0.63
         },
-        "base": {
-          "forward": 0.344,
-          "reverse": 0.6
+        "mix50": {
+          "forward": 0.999,
+          "reverse": 1.0
         },
         "replay": {
           "forward": 0.999,
           "reverse": 0.548
         },
-        "mix50": {
-          "forward": 0.999,
-          "reverse": 1.0
+        "base": {
+          "forward": 0.344,
+          "reverse": 0.6
         },
         "rev": {
           "forward": 0.0,
@@ -39,17 +39,17 @@
           "forward": 0.999,
           "reverse": 0.616
         },
-        "base": {
-          "forward": 0.349,
-          "reverse": 0.609
+        "mix50": {
+          "forward": 0.999,
+          "reverse": 1.0
         },
         "replay": {
           "forward": 0.997,
           "reverse": 0.165
         },
-        "mix50": {
-          "forward": 0.999,
-          "reverse": 1.0
+        "base": {
+          "forward": 0.349,
+          "reverse": 0.609
         },
         "rev": {
           "forward": 0.001,
@@ -67,17 +67,17 @@
           "forward": 0.999,
           "reverse": 0.666
         },
-        "base": {
-          "forward": 0.344,
-          "reverse": 0.6
+        "mix50": {
+          "forward": 1.0,
+          "reverse": 1.0
         },
         "replay": {
           "forward": 0.997,
           "reverse": 0.157
         },
-        "mix50": {
-          "forward": 1.0,
-          "reverse": 1.0
+        "base": {
+          "forward": 0.344,
+          "reverse": 0.6
         },
         "rev": {
           "forward": 0.011,
@@ -95,17 +95,17 @@
           "forward": 0.97,
           "reverse": 0.703
         },
-        "base": {
-          "forward": 0.399,
-          "reverse": 0.469
+        "mix50": {
+          "forward": 0.951,
+          "reverse": 0.899
         },
         "replay": {
           "forward": 0.922,
           "reverse": 0.65
         },
-        "mix50": {
-          "forward": 0.951,
-          "reverse": 0.899
+        "base": {
+          "forward": 0.399,
+          "reverse": 0.469
         },
         "rev": {
           "forward": 0.387,
@@ -123,17 +123,17 @@
           "forward": 0.973,
           "reverse": 0.733
         },
-        "base": {
-          "forward": 0.399,
-          "reverse": 0.469
+        "mix50": {
+          "forward": 0.938,
+          "reverse": 0.88
         },
         "replay": {
           "forward": 0.929,
           "reverse": 0.73
         },
-        "mix50": {
-          "forward": 0.938,
-          "reverse": 0.88
+        "base": {
+          "forward": 0.399,
+          "reverse": 0.469
         },
         "rev": {
           "forward": 0.272,
@@ -151,17 +151,17 @@
           "forward": 0.972,
           "reverse": 0.712
         },
-        "base": {
-          "forward": 0.399,
-          "reverse": 0.469
+        "mix50": {
+          "forward": 0.944,
+          "reverse": 0.886
         },
         "replay": {
           "forward": 0.944,
           "reverse": 0.704
         },
-        "mix50": {
-          "forward": 0.944,
-          "reverse": 0.886
+        "base": {
+          "forward": 0.399,
+          "reverse": 0.469
         },
         "rev": {
           "forward": 0.091,
@@ -179,17 +179,17 @@
           "forward": 1.0,
           "reverse": 0.35
         },
-        "base": {
-          "forward": 0.862,
-          "reverse": 0.95
+        "mix50": {
+          "forward": 1.0,
+          "reverse": 1.0
         },
         "replay": {
           "forward": 0.092,
           "reverse": 0.0
         },
-        "mix50": {
-          "forward": 1.0,
-          "reverse": 1.0
+        "base": {
+          "forward": 0.862,
+          "reverse": 0.95
         },
         "rev": {
           "forward": 0.0,
@@ -207,17 +207,17 @@
           "forward": 1.0,
           "reverse": 0.727
         },
-        "base": {
-          "forward": 0.862,
-          "reverse": 0.95
+        "mix50": {
+          "forward": 0.85,
+          "reverse": 1.0
         },
         "replay": {
           "forward": 0.361,
           "reverse": 0.305
         },
-        "mix50": {
-          "forward": 0.85,
-          "reverse": 1.0
+        "base": {
+          "forward": 0.862,
+          "reverse": 0.95
         },
         "rev": {
           "forward": 0.0,
@@ -235,17 +235,17 @@
           "forward": 0.748,
           "reverse": 0.558
         },
-        "base": {
-          "forward": 0.862,
-          "reverse": 0.95
+        "mix50": {
+          "forward": 0.735,
+          "reverse": 1.0
         },
         "replay": {
           "forward": 0.023,
           "reverse": 0.0
         },
-        "mix50": {
-          "forward": 0.735,
-          "reverse": 1.0
+        "base": {
+          "forward": 0.862,
+          "reverse": 0.95
         },
         "rev": {
           "forward": 0.0,
@@ -263,17 +263,17 @@
           "forward": 1.0,
           "reverse": 0.0
         },
-        "base": {
-          "forward": 0.842,
-          "reverse": 1.0
+        "mix50": {
+          "forward": 1.0,
+          "reverse": 0.484
         },
         "replay": {
           "forward": 0.996,
           "reverse": 0.994
         },
-        "mix50": {
-          "forward": 1.0,
-          "reverse": 0.484
+        "base": {
+          "forward": 0.842,
+          "reverse": 1.0
         },
         "rev": {
           "forward": 0.0,
@@ -291,17 +291,17 @@
           "forward": 1.0,
           "reverse": 0.0
         },
-        "base": {
-          "forward": 0.859,
-          "reverse": 1.0
+        "mix50": {
+          "forward": 0.018,
+          "reverse": 0.0
         },
         "replay": {
           "forward": 0.999,
           "reverse": 0.994
         },
-        "mix50": {
-          "forward": 0.018,
-          "reverse": 0.0
+        "base": {
+          "forward": 0.859,
+          "reverse": 1.0
         },
         "rev": {
           "forward": 0.0,
@@ -319,17 +319,17 @@
           "forward": 1.0,
           "reverse": 0.0
         },
-        "base": {
-          "forward": 0.859,
-          "reverse": 1.0
+        "mix50": {
+          "forward": 1.0,
+          "reverse": 0.001
         },
         "replay": {
           "forward": 0.959,
           "reverse": 0.978
         },
-        "mix50": {
-          "forward": 1.0,
-          "reverse": 0.001
+        "base": {
+          "forward": 0.859,
+          "reverse": 1.0
         },
         "rev": {
           "forward": 0.0,

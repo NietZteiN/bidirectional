@@ -1,6 +1,7 @@
 {
-  "enabled": true,
+  "enabled": false,
   "amendment": 60,
   "poll_seconds": 5,
-  "scope": "PJ-5 smoke/train/generation-check/full-evaluation take exclusive project GPU priority; pause other GPU jobs on first start, resume only our recorded holds after all four cells complete."
+  "scope": "PJ-5 smoke/train/generation-check/full-evaluation take exclusive project GPU priority; pause other GPU jobs on first start, resume only our recorded holds after all four cells complete.",
+  "completed_utc": "2026-10-12T05:13:55.264509+00:00"
 }

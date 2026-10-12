@@ -1,13 +1,17 @@
 # Experiment and task checklist
 
-Updated October 11, 2026. All seven prioritized table-completion campaigns are finished:
+Updated October 12, 2026. All seven prioritized table-completion campaigns are finished:
 all twelve missing arm/task/model combinations are measured, with no missing numeric
-table entries. The final SQL evaluation completed at 09:19 CDT and the paper refreshed.
+table entries. The final SQL evaluation completed October11 at 09:19 CDT and the paper refreshed.
 The user has requested continuation after table completion. Amendment58 resumes the
 32 earlier held jobs and the registered background campaign; the detached controller
 will collect results and rebuild the paper automatically.
-Amendment60 now gives PJ-5 exclusive project GPU priority: 25 background jobs are held
-until its four translation/SQL campaigns finish; completed background results remain available.
+All four PJ-5 translation/SQL campaigns finished at 00:12 CDT on October12. Their eight
+adapters, generation checks and full evaluations passed; tables now include both directions
+and paired uncertainty. The priority guard released its 25 recorded background holds at
+00:13 CDT. All 19 explanatory production jobs and six invertibility-ladder cells are complete.
+The current GPU queue contains the repaired-format Gemma12B contrastive training pack and
+its dependent evaluation; subsequent seeds remain conditional on that first evaluation.
 The completed sprint draft is frozen at Git commit34de8d0; its
 [completion checklist](archive/task_checklists/TASKS-2026-10-10-sprint-complete.md) and
 [receipts](paper/bidir/SPRINT_COMPLETION.json) remain historical evidence.
@@ -62,8 +66,13 @@ only after full paired coverage, adapter effectiveness, source hashes and succes
       with a five-second guard; resume only recorded holds after all four cells complete.
 - [x] Reduce 27 publication captions to essential definitions and units; retain methods
       in the text/appendix and preserve every table body.
-- [ ] Train eight full adapters, pass shared generation checks, then evaluate all four cells.
-- [ ] Publish both directions and paired uncertainty automatically, retaining adverse results.
+- [x] Train eight full adapters, pass shared generation checks, then evaluate all four cells.
+      All sixteen phase jobs completed with exit code zero, without retries.
+- [x] Populate separate PJ-5 tables with both directions and paired uncertainty, retaining
+      adverse results. Reversed-pair SFT has higher backward success in three of four cells;
+      the fourth comparison is unresolved. Meaningful labels do not consistently beat shuffling.
+- [x] Release only the 25 recorded background holds after full completion; restore
+      detached background scheduling and retain all completed evidence.
 
 See [paired-judgment plan](docs/PAIRED_JUDGMENT_PLAN.md).
 
@@ -90,14 +99,14 @@ The controller's background mode persists after logout and CPU-host renewal.
       32 released jobs are pending priority/dependencies at this checkpoint.
 
 - [x] Reopen the original campaign by disabling the completed sprint's admission guard.
-- [ ] Finish the remaining19 registered explanatory production jobs across all three seeds,
+- [x] Finish the remaining19 registered explanatory production jobs across all three seeds,
       both modes and the mandatory units null control. The original panel remains24 jobs.
 - [ ] Finish repaired-format Gemma12B contrastive seed17, then automatically admit42/1234
       only after a proof-valid seed17 evaluation, regardless of measured effect sign.
 - [x] Finish eight ready repaired-domain seed42/1234 evaluations: typed Python/C++ at
       Llama8B/Gemma12B, formatting contract at Llama8B and units contract at Gemma12B.
-- [ ] Resume six missing invertibility-ladder training/evaluation packs at Llama8B,
-      covering fmt_det75/50/25 and seeds42/1234; retain fully saved arms.
+- [x] Finish six invertibility-ladder training/evaluation cells at Llama8B,
+      covering fmt_det75/50/25 and seeds42/1234; all evaluations completed successfully.
 - [x] Collect completed checked contrasts, preserve trials and refresh the working paper evidence.
 - [x] Verify a complete healthy controller pass, detached stdin and CPU-host renewal.
       All five health checks and43 distinct targeted regression tests pass. Initial admission queues
