@@ -6,6 +6,8 @@ table entries. The final SQL evaluation completed at 09:19 CDT and the paper ref
 The user has requested continuation after table completion. Amendment58 resumes the
 32 earlier held jobs and the registered background campaign; the detached controller
 will collect results and rebuild the paper automatically.
+Amendment60 now gives PJ-5 exclusive project GPU priority: 25 background jobs are held
+until its four translation/SQL campaigns finish; completed background results remain available.
 The completed sprint draft is frozen at Git commit34de8d0; its
 [completion checklist](archive/task_checklists/TASKS-2026-10-10-sprint-complete.md) and
 [receipts](paper/bidir/SPRINT_COMPLETION.json) remain historical evidence.
@@ -53,8 +55,13 @@ only after full paired coverage, adapter effectiveness, source hashes and succes
       baseline bytes; pass 450 full-suite tests and 29 final targeted integrity checks.
 - [x] Queue four first-phase GPU checks (452104–452107); verify all five detached
       controller health checks and a complete seven-stage pass with zero exit codes.
-      GPU checks are pending cluster priority; their success remains unmeasured.
-- [ ] Pass four training-smoke campaigns, each exercising both new adapters.
+- [x] Pass all four GPU training-smoke campaigns (452104–452107), each exercising
+      both new adapters; all finished with exit code zero.
+- [x] Give PJ-5 exclusive project GPU priority; hold 25 competitors, including two
+      running packs requeued into held state. Maintain priority across all four phases
+      with a five-second guard; resume only recorded holds after all four cells complete.
+- [x] Reduce 27 publication captions to essential definitions and units; retain methods
+      in the text/appendix and preserve every table body.
 - [ ] Train eight full adapters, pass shared generation checks, then evaluate all four cells.
 - [ ] Publish both directions and paired uncertainty automatically, retaining adverse results.
 

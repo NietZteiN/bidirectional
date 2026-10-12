@@ -1,0 +1,733 @@
+{
+  "checked_utc": "2026-10-12T03:09:21.889303+00:00",
+  "paper": {
+    "source_hashes": 774,
+    "replayed_campaigns": 125,
+    "report_sha256": {
+      "MAIN_RESULTS": "a0dd1f33448cba4c52abd4b857764d680c15cfdbfaeba953bb2c492a4327a025",
+      "EVIDENCE_SNAPSHOT": "b5d2176b83b980021005230fb5b97e04a3c04e263b813bb8baabbc32ee5c66dd",
+      "TASK_METHODS": "a82993842bed9e1bb5b9507d61d68ebae0707dae067d0bd59ac883a13d94518d",
+      "MANUSCRIPT_COMPLETION": "b3ad933bdb5fcb7e9c9ed4d5146ac04997d263523fd336fca9652f229555de04",
+      "MECHANISM_DIAGNOSTICS": "8559ce831d3d625728f65adabb6a002982018ffadc9fcac705575ea1009bd662",
+      "PUBLICATION_ANALYSIS": "df54fca8e2c3ae9309201a648694bb35e4d08dea349f658f60fbf9a6d2fec004",
+      "PAIRED_JUDGMENT_RESULTS": "2770bbff360a05c67819fe95d91b48e852e95bd99b9376d6e47491d90fc54aa6",
+      "PUBLICATION_CAPTIONS": "c88f05dfea36d59161205d240041c210eb6dd4e45373bc29bf2b48b27d97974d"
+    },
+    "presentation_sha256": {
+      "main.tex": "5f8b2c767b167e346d0ac088f3aa15dd35b8210667b98424930605f4ce0b6ecf",
+      "planned_evaluations.tex": "33b1e4d2dff572fc13349865cfc9b9e1034a30e75464125121a41976106c87a3",
+      "task_methods.tex": "f7ae15984777dc4d02e1c894d49cc1aad5b072b7840ce32f44f493e4a02705fe",
+      "numbers.tex": "f7694f31f7904687492e6beb181337da4e92842ae3729d11f31275c2d0f608a9",
+      "main.pdf": "85b5c585486158c6d4844fad132d661f9e43d6416dfa7bd8b017b15286cdc021",
+      "tables/main_adaptations.tex": "656db9e683930ab5a3f0e2bd10a498a60252e1f170c61f370495c427a3cd693c",
+      "tables/main_adaptations_full.tex": "d0cc230ee1d649c940e982130ebd289b199490f4ed4ce8a638a92a35244ff444",
+      "tables/main_loss_baselines.tex": "a114d156782eb44e606dd35d0bd95a9d1e776bbefe1c498bf2dd1354af0a1d97",
+      "tables/paired_judgment_results.tex": "01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b"
+    },
+    "corpus_splits": 21,
+    "translation_threshold_rows": 20,
+    "checked_means": 1908,
+    "main_table_scores": 564,
+    "registered_numeric_values": 333,
+    "core_combinations": 91,
+    "published_numeric_macros": 48,
+    "severe_losses": 52,
+    "matched_training_summaries": 66,
+    "repeat_task_orientations": 9,
+    "pending_campaign_arms": 0
+  },
+  "pdf_check": "ARR: body 7/8 pages; total 24; abstract 126 words; A4 portrait; 0 unembedded fonts\nDraft: 0 unfilled numbers; unresolved references: False; missing assets: False\n",
+  "gpu_smoke_proofs": {
+    "mt_en-de_llama32-3b_s17": true,
+    "mt_en-de_llama31-8b_s17": true,
+    "sql_llama32-3b_s17": true,
+    "sql_llama31-8b_s17": true
+  },
+  "controller": {
+    "finished_utc": "2026-10-12T03:04:39.059658+00:00",
+    "checks": {
+      "fresh_heartbeat": true,
+      "supervisor_matches_controller": true,
+      "stages_ok": true,
+      "renewal_successor": true,
+      "logout_detached": true
+    },
+    "fault_test": false,
+    "supervisor_fault_test": false,
+    "host": "c-01-06",
+    "passed": true
+  },
+  "priority_guard": {
+    "updated_utc": "2026-10-12T03:09:14.117108+00:00",
+    "active": true,
+    "started": true,
+    "priority_running": [
+      452136,
+      452137,
+      452138
+    ],
+    "recorded_holds": 25,
+    "actions": [],
+    "errors": []
+  },
+  "recorded_holds": {
+    "451150": {
+      "identity": {
+        "job_id": 451150,
+        "name": "ev_mx_hf_fmt_llama32-3b_s42",
+        "user_id": 736106,
+        "current_working_directory": "/work/jvl210002/migration/bidirectional",
+        "command": "/work/jvl210002/migration/bidirectional/runs/slurm/ev_mx_hf_fmt_llama32-3b_s42.sbatch"
+      },
+      "operation": "hold",
+      "state": "held"
+    },
+    "451151": {
+      "identity": {
+        "job_id": 451151,
+        "name": "ev_mx_layers_fmt_llama32-3b_s42",
+        "user_id": 736106,
+        "current_working_directory": "/work/jvl210002/migration/bidirectional",
+        "command": "/work/jvl210002/migration/bidirectional/runs/slurm/ev_mx_layers_fmt_llama32-3b_s42.sbatch"
+      },
+      "operation": "hold",
+      "state": "held"
+    },
+    "451152": {
+      "identity": {
+        "job_id": 451152,
+        "name": "ev_mx_hf_fmt_llama32-3b_s1234",
+        "user_id": 736106,
+        "current_working_directory": "/work/jvl210002/migration/bidirectional",
+        "command": "/work/jvl210002/migration/bidirectional/runs/slurm/ev_mx_hf_fmt_llama32-3b_s1234.sbatch"
+      },
+      "operation": "hold",
+      "state": "held"
+    },
+    "451153": {
+      "identity": {
+        "job_id": 451153,
+        "name": "ev_mx_layers_fmt_llama32-3b_s1234",
+        "user_id": 736106,
+        "current_working_directory": "/work/jvl210002/migration/bidirectional",
+        "command": "/work/jvl210002/migration/bidirectional/runs/slurm/ev_mx_layers_fmt_llama32-3b_s1234.sbatch"
+      },
+      "operation": "hold",
+      "state": "held"
+    },
+    "451154": {
+      "identity": {
+        "job_id": 451154,
+        "name": "ev_mx_layers_mt_de-en_llama32-3b_s17",
+        "user_id": 736106,
+        "current_working_directory": "/work/jvl210002/migration/bidirectional",
+        "command": "/work/jvl210002/migration/bidirectional/runs/slurm/ev_mx_layers_mt_de-en_llama32-3b_s17.sbatch"
+      },
+      "operation": "hold",
+      "state": "held"
+    },
+    "451155": {
+      "identity": {
+        "job_id": 451155,
+        "name": "ev_mx_hf_mt_de-en_llama32-3b_s42",
+        "user_id": 736106,
+        "current_working_directory": "/work/jvl210002/migration/bidirectional",
+        "command": "/work/jvl210002/migration/bidirectional/runs/slurm/ev_mx_hf_mt_de-en_llama32-3b_s42.sbatch"
+      },
+      "operation": "hold",
+      "state": "held"
+    },
+    "451156": {
+      "identity": {
+        "job_id": 451156,
+        "name": "ev_mx_layers_mt_de-en_llama32-3b_s42",
+        "user_id": 736106,
+        "current_working_directory": "/work/jvl210002/migration/bidirectional",
+        "command": "/work/jvl210002/migration/bidirectional/runs/slurm/ev_mx_layers_mt_de-en_llama32-3b_s42.sbatch"
+      },
+      "operation": "hold",
+      "state": "held"
+    },
+    "451157": {
+      "identity": {
+        "job_id": 451157,
+        "name": "ev_mx_hf_mt_de-en_llama32-3b_s1234",
+        "user_id": 736106,
+        "current_working_directory": "/work/jvl210002/migration/bidirectional",
+        "command": "/work/jvl210002/migration/bidirectional/runs/slurm/ev_mx_hf_mt_de-en_llama32-3b_s1234.sbatch"
+      },
+      "operation": "hold",
+      "state": "held"
+    },
+    "451158": {
+      "identity": {
+        "job_id": 451158,
+        "name": "ev_mx_layers_mt_de-en_llama32-3b_s1234",
+        "user_id": 736106,
+        "current_working_directory": "/work/jvl210002/migration/bidirectional",
+        "command": "/work/jvl210002/migration/bidirectional/runs/slurm/ev_mx_layers_mt_de-en_llama32-3b_s1234.sbatch"
+      },
+      "operation": "hold",
+      "state": "held"
+    },
+    "451159": {
+      "identity": {
+        "job_id": 451159,
+        "name": "ev_mx_layers_mt_de-en_gemma3-4b_s17",
+        "user_id": 736106,
+        "current_working_directory": "/work/jvl210002/migration/bidirectional",
+        "command": "/work/jvl210002/migration/bidirectional/runs/slurm/ev_mx_layers_mt_de-en_gemma3-4b_s17.sbatch"
+      },
+      "operation": "hold",
+      "state": "held"
+    },
+    "451160": {
+      "identity": {
+        "job_id": 451160,
+        "name": "ev_mx2_hf_mt_de-en_gemma3-4b_s42",
+        "user_id": 736106,
+        "current_working_directory": "/work/jvl210002/migration/bidirectional",
+        "command": "/work/jvl210002/migration/bidirectional/runs/slurm/ev_mx2_hf_mt_de-en_gemma3-4b_s42.sbatch"
+      },
+      "operation": "hold",
+      "state": "held"
+    },
+    "451161": {
+      "identity": {
+        "job_id": 451161,
+        "name": "ev_mx_layers_mt_de-en_gemma3-4b_s42",
+        "user_id": 736106,
+        "current_working_directory": "/work/jvl210002/migration/bidirectional",
+        "command": "/work/jvl210002/migration/bidirectional/runs/slurm/ev_mx_layers_mt_de-en_gemma3-4b_s42.sbatch"
+      },
+      "operation": "hold",
+      "state": "held"
+    },
+    "451162": {
+      "identity": {
+        "job_id": 451162,
+        "name": "ev_mx2_hf_mt_de-en_gemma3-4b_s1234",
+        "user_id": 736106,
+        "current_working_directory": "/work/jvl210002/migration/bidirectional",
+        "command": "/work/jvl210002/migration/bidirectional/runs/slurm/ev_mx2_hf_mt_de-en_gemma3-4b_s1234.sbatch"
+      },
+      "operation": "hold",
+      "state": "held"
+    },
+    "451163": {
+      "identity": {
+        "job_id": 451163,
+        "name": "ev_mx_layers_mt_de-en_gemma3-4b_s1234",
+        "user_id": 736106,
+        "current_working_directory": "/work/jvl210002/migration/bidirectional",
+        "command": "/work/jvl210002/migration/bidirectional/runs/slurm/ev_mx_layers_mt_de-en_gemma3-4b_s1234.sbatch"
+      },
+      "operation": "hold",
+      "state": "held"
+    },
+    "451164": {
+      "identity": {
+        "job_id": 451164,
+        "name": "ev_mx_layers_units_gemma3-12b_s17",
+        "user_id": 736106,
+        "current_working_directory": "/work/jvl210002/migration/bidirectional",
+        "command": "/work/jvl210002/migration/bidirectional/runs/slurm/ev_mx_layers_units_gemma3-12b_s17.sbatch"
+      },
+      "operation": "hold",
+      "state": "held"
+    },
+    "451165": {
+      "identity": {
+        "job_id": 451165,
+        "name": "ev_mx2_hf_units_gemma3-12b_s42",
+        "user_id": 736106,
+        "current_working_directory": "/work/jvl210002/migration/bidirectional",
+        "command": "/work/jvl210002/migration/bidirectional/runs/slurm/ev_mx2_hf_units_gemma3-12b_s42.sbatch"
+      },
+      "operation": "hold",
+      "state": "held"
+    },
+    "451166": {
+      "identity": {
+        "job_id": 451166,
+        "name": "ev_mx_layers_units_gemma3-12b_s42",
+        "user_id": 736106,
+        "current_working_directory": "/work/jvl210002/migration/bidirectional",
+        "command": "/work/jvl210002/migration/bidirectional/runs/slurm/ev_mx_layers_units_gemma3-12b_s42.sbatch"
+      },
+      "operation": "hold",
+      "state": "held"
+    },
+    "451167": {
+      "identity": {
+        "job_id": 451167,
+        "name": "ev_mx2_hf_units_gemma3-12b_s1234",
+        "user_id": 736106,
+        "current_working_directory": "/work/jvl210002/migration/bidirectional",
+        "command": "/work/jvl210002/migration/bidirectional/runs/slurm/ev_mx2_hf_units_gemma3-12b_s1234.sbatch"
+      },
+      "operation": "hold",
+      "state": "held"
+    },
+    "451168": {
+      "identity": {
+        "job_id": 451168,
+        "name": "ev_mx_layers_units_gemma3-12b_s1234",
+        "user_id": 736106,
+        "current_working_directory": "/work/jvl210002/migration/bidirectional",
+        "command": "/work/jvl210002/migration/bidirectional/runs/slurm/ev_mx_layers_units_gemma3-12b_s1234.sbatch"
+      },
+      "operation": "hold",
+      "state": "held"
+    },
+    "451169": {
+      "identity": {
+        "job_id": 451169,
+        "name": "tr_fmt_contract_v2_gemma3-12b_s17_contrastive_pilot",
+        "user_id": 736106,
+        "current_working_directory": "/work/jvl210002/migration/bidirectional",
+        "command": "/work/jvl210002/migration/bidirectional/runs/slurm/tr_fmt_contract_v2_gemma3-12b_s17_contrastive_pilot.2.sbatch"
+      },
+      "operation": "hold",
+      "state": "held"
+    },
+    "451170": {
+      "identity": {
+        "job_id": 451170,
+        "name": "ev_fmt_contract_v2_gemma3-12b_s17_contrastive_pilot",
+        "user_id": 736106,
+        "current_working_directory": "/work/jvl210002/migration/bidirectional",
+        "command": "/work/jvl210002/migration/bidirectional/runs/slurm/ev_fmt_contract_v2_gemma3-12b_s17_contrastive_pilot.2.sbatch"
+      },
+      "operation": "hold",
+      "state": "held"
+    },
+    "451183": {
+      "identity": {
+        "job_id": 451183,
+        "name": "tr_fmt_det25_llama31-8b_s42_repair_legacy_pilot",
+        "user_id": 736106,
+        "current_working_directory": "/work/jvl210002/migration/bidirectional",
+        "command": "/work/jvl210002/migration/bidirectional/runs/slurm/tr_fmt_det25_llama31-8b_s42_repair_legacy_pilot.sbatch"
+      },
+      "operation": "requeuehold",
+      "state": "held"
+    },
+    "451184": {
+      "identity": {
+        "job_id": 451184,
+        "name": "ev_fmt_det25_llama31-8b_s42_repair_legacy_pilot",
+        "user_id": 736106,
+        "current_working_directory": "/work/jvl210002/migration/bidirectional",
+        "command": "/work/jvl210002/migration/bidirectional/runs/slurm/ev_fmt_det25_llama31-8b_s42_repair_legacy_pilot.2.sbatch"
+      },
+      "operation": "hold",
+      "state": "held"
+    },
+    "451185": {
+      "identity": {
+        "job_id": 451185,
+        "name": "tr_fmt_det75_llama31-8b_s1234_repair_legacy_pilot",
+        "user_id": 736106,
+        "current_working_directory": "/work/jvl210002/migration/bidirectional",
+        "command": "/work/jvl210002/migration/bidirectional/runs/slurm/tr_fmt_det75_llama31-8b_s1234_repair_legacy_pilot.2.sbatch"
+      },
+      "operation": "requeuehold",
+      "state": "held"
+    },
+    "451186": {
+      "identity": {
+        "job_id": 451186,
+        "name": "ev_fmt_det75_llama31-8b_s1234_repair_legacy_pilot",
+        "user_id": 736106,
+        "current_working_directory": "/work/jvl210002/migration/bidirectional",
+        "command": "/work/jvl210002/migration/bidirectional/runs/slurm/ev_fmt_det75_llama31-8b_s1234_repair_legacy_pilot.2.sbatch"
+      },
+      "operation": "hold",
+      "state": "held"
+    }
+  },
+  "project_gpu_queue": [
+    {
+      "job_id": 451150,
+      "name": "ev_mx_hf_fmt_llama32-3b_s42",
+      "job_state": [
+        "PENDING"
+      ],
+      "state_reason": "JobHeldUser"
+    },
+    {
+      "job_id": 451151,
+      "name": "ev_mx_layers_fmt_llama32-3b_s42",
+      "job_state": [
+        "PENDING"
+      ],
+      "state_reason": "JobHeldUser"
+    },
+    {
+      "job_id": 451152,
+      "name": "ev_mx_hf_fmt_llama32-3b_s1234",
+      "job_state": [
+        "PENDING"
+      ],
+      "state_reason": "JobHeldUser"
+    },
+    {
+      "job_id": 451153,
+      "name": "ev_mx_layers_fmt_llama32-3b_s1234",
+      "job_state": [
+        "PENDING"
+      ],
+      "state_reason": "JobHeldUser"
+    },
+    {
+      "job_id": 451154,
+      "name": "ev_mx_layers_mt_de-en_llama32-3b_s17",
+      "job_state": [
+        "PENDING"
+      ],
+      "state_reason": "JobHeldUser"
+    },
+    {
+      "job_id": 451155,
+      "name": "ev_mx_hf_mt_de-en_llama32-3b_s42",
+      "job_state": [
+        "PENDING"
+      ],
+      "state_reason": "JobHeldUser"
+    },
+    {
+      "job_id": 451156,
+      "name": "ev_mx_layers_mt_de-en_llama32-3b_s42",
+      "job_state": [
+        "PENDING"
+      ],
+      "state_reason": "JobHeldUser"
+    },
+    {
+      "job_id": 451157,
+      "name": "ev_mx_hf_mt_de-en_llama32-3b_s1234",
+      "job_state": [
+        "PENDING"
+      ],
+      "state_reason": "JobHeldUser"
+    },
+    {
+      "job_id": 451158,
+      "name": "ev_mx_layers_mt_de-en_llama32-3b_s1234",
+      "job_state": [
+        "PENDING"
+      ],
+      "state_reason": "JobHeldUser"
+    },
+    {
+      "job_id": 451159,
+      "name": "ev_mx_layers_mt_de-en_gemma3-4b_s17",
+      "job_state": [
+        "PENDING"
+      ],
+      "state_reason": "JobHeldUser"
+    },
+    {
+      "job_id": 451160,
+      "name": "ev_mx2_hf_mt_de-en_gemma3-4b_s42",
+      "job_state": [
+        "PENDING"
+      ],
+      "state_reason": "JobHeldUser"
+    },
+    {
+      "job_id": 451161,
+      "name": "ev_mx_layers_mt_de-en_gemma3-4b_s42",
+      "job_state": [
+        "PENDING"
+      ],
+      "state_reason": "JobHeldUser"
+    },
+    {
+      "job_id": 451162,
+      "name": "ev_mx2_hf_mt_de-en_gemma3-4b_s1234",
+      "job_state": [
+        "PENDING"
+      ],
+      "state_reason": "JobHeldUser"
+    },
+    {
+      "job_id": 451163,
+      "name": "ev_mx_layers_mt_de-en_gemma3-4b_s1234",
+      "job_state": [
+        "PENDING"
+      ],
+      "state_reason": "JobHeldUser"
+    },
+    {
+      "job_id": 451164,
+      "name": "ev_mx_layers_units_gemma3-12b_s17",
+      "job_state": [
+        "PENDING"
+      ],
+      "state_reason": "JobHeldUser"
+    },
+    {
+      "job_id": 451165,
+      "name": "ev_mx2_hf_units_gemma3-12b_s42",
+      "job_state": [
+        "PENDING"
+      ],
+      "state_reason": "JobHeldUser"
+    },
+    {
+      "job_id": 451166,
+      "name": "ev_mx_layers_units_gemma3-12b_s42",
+      "job_state": [
+        "PENDING"
+      ],
+      "state_reason": "JobHeldUser"
+    },
+    {
+      "job_id": 451167,
+      "name": "ev_mx2_hf_units_gemma3-12b_s1234",
+      "job_state": [
+        "PENDING"
+      ],
+      "state_reason": "JobHeldUser"
+    },
+    {
+      "job_id": 451168,
+      "name": "ev_mx_layers_units_gemma3-12b_s1234",
+      "job_state": [
+        "PENDING"
+      ],
+      "state_reason": "JobHeldUser"
+    },
+    {
+      "job_id": 451169,
+      "name": "tr_fmt_contract_v2_gemma3-12b_s17_contrastive_pilot",
+      "job_state": [
+        "PENDING"
+      ],
+      "state_reason": "JobHeldUser"
+    },
+    {
+      "job_id": 451170,
+      "name": "ev_fmt_contract_v2_gemma3-12b_s17_contrastive_pilot",
+      "job_state": [
+        "PENDING"
+      ],
+      "state_reason": "JobHeldUser"
+    },
+    {
+      "job_id": 451183,
+      "name": "tr_fmt_det25_llama31-8b_s42_repair_legacy_pilot",
+      "job_state": [
+        "PENDING"
+      ],
+      "state_reason": "JobHeldUser"
+    },
+    {
+      "job_id": 451184,
+      "name": "ev_fmt_det25_llama31-8b_s42_repair_legacy_pilot",
+      "job_state": [
+        "PENDING"
+      ],
+      "state_reason": "JobHeldUser"
+    },
+    {
+      "job_id": 451185,
+      "name": "tr_fmt_det75_llama31-8b_s1234_repair_legacy_pilot",
+      "job_state": [
+        "PENDING"
+      ],
+      "state_reason": "JobHeldUser"
+    },
+    {
+      "job_id": 451186,
+      "name": "ev_fmt_det75_llama31-8b_s1234_repair_legacy_pilot",
+      "job_state": [
+        "PENDING"
+      ],
+      "state_reason": "JobHeldUser"
+    },
+    {
+      "job_id": 452136,
+      "name": "pj_train_mt_en-de_llama32-3b_s17",
+      "job_state": [
+        "RUNNING"
+      ],
+      "state_reason": "None"
+    },
+    {
+      "job_id": 452137,
+      "name": "pj_train_mt_en-de_llama31-8b_s17",
+      "job_state": [
+        "RUNNING"
+      ],
+      "state_reason": "None"
+    },
+    {
+      "job_id": 452138,
+      "name": "pj_train_sql_llama32-3b_s17",
+      "job_state": [
+        "RUNNING"
+      ],
+      "state_reason": "None"
+    },
+    {
+      "job_id": 452139,
+      "name": "pj_train_sql_llama31-8b_s17",
+      "job_state": [
+        "PENDING"
+      ],
+      "state_reason": "Priority"
+    }
+  ],
+  "original_campaign_preflight": {
+    "checked_utc": "2026-10-12T03:04:38.449056+00:00",
+    "pipeline": {
+      "campaigns": [
+        {
+          "cell": "relation_llama32-3b_s17",
+          "ready": "complete",
+          "completed": [
+            "eval_smoke",
+            "eval"
+          ],
+          "live": {},
+          "microbatch": 16,
+          "gradient_accumulation": 4
+        },
+        {
+          "cell": "exec_llama32-3b_s17",
+          "ready": "complete",
+          "completed": [
+            "smoke",
+            "train",
+            "eval_smoke",
+            "eval"
+          ],
+          "live": {},
+          "microbatch": 16,
+          "gradient_accumulation": 4
+        },
+        {
+          "cell": "code_llama32-3b_s17",
+          "ready": "complete",
+          "completed": [
+            "smoke",
+            "train",
+            "eval_smoke",
+            "eval"
+          ],
+          "live": {},
+          "microbatch": 4,
+          "gradient_accumulation": 16
+        },
+        {
+          "cell": "mt_en-de_llama32-3b_s17",
+          "ready": "complete",
+          "completed": [
+            "smoke",
+            "train",
+            "eval_smoke",
+            "eval"
+          ],
+          "live": {},
+          "microbatch": 4,
+          "gradient_accumulation": 16
+        },
+        {
+          "cell": "mt_en-de_llama31-8b_s17",
+          "ready": "complete",
+          "completed": [
+            "smoke",
+            "train",
+            "eval_smoke",
+            "eval"
+          ],
+          "live": {},
+          "microbatch": 4,
+          "gradient_accumulation": 16
+        },
+        {
+          "cell": "sql_llama32-3b_s17",
+          "ready": "complete",
+          "completed": [
+            "smoke",
+            "train",
+            "eval_smoke",
+            "eval"
+          ],
+          "live": {},
+          "microbatch": 4,
+          "gradient_accumulation": 16
+        },
+        {
+          "cell": "sql_llama31-8b_s17",
+          "ready": "complete",
+          "completed": [
+            "smoke",
+            "train",
+            "eval_smoke",
+            "eval"
+          ],
+          "live": {},
+          "microbatch": 4,
+          "gradient_accumulation": 16
+        }
+      ],
+      "verified_prerequisite_adapters": 43,
+      "runtime_modules": [
+        "torch",
+        "transformers",
+        "trl",
+        "peft",
+        "vllm",
+        "sacrebleu",
+        "sympy",
+        "yaml"
+      ],
+      "comet_environment": true,
+      "sql_combined_gpu_fraction": 0.9,
+      "scratch_free_gb": 25039.9
+    }
+  },
+  "tests": {
+    "result": "34 passed in 5.83s",
+    "sha256": "a5a035f3f281f26db3e8ccc91ef758c83ec2eb944b4c864b460b8ba4983b4aa9"
+  },
+  "caption_count": 27,
+  "unchanged_table_body_sha256": {
+    "paper/bidir/tables/auxiliary_intervals.tex": "640ce63451c063b526a79eaf93e5005e3d34425e4912edf672fe54eb93e3bab4",
+    "paper/bidir/tables/contrastive_controls.tex": "fc35510ab2f567ae51b5a7fd9602cfc8e577cbb821bc3b9b11ad6aba1ee1349d",
+    "paper/bidir/tables/contrastive_snapshot.tex": "8ab30d5f763807c097f37656e00f2278d4bf1a755006f3f3deb0f63cba9892ee",
+    "paper/bidir/tables/core_inventory.tex": "71739d0fce7ed298de40f573f9db42ac0dee1dce67053d25a50024289b6b03b2",
+    "paper/bidir/tables/domain_gates_snapshot.tex": "929aa1b41023d3d40eb645c9f0a4cecdc3a7bfd8ce073a47721a441533cddbcc",
+    "paper/bidir/tables/fullft_snapshot.tex": "24266326eebf05c052e917fa7547f76bfa557cfa1493656d38dc4762b8704c6c",
+    "paper/bidir/tables/generality_snapshot.tex": "4868a81f98b8d1be147256499bc00a31fc4c3f3ed328c79e69518bcf4f4a26a8",
+    "paper/bidir/tables/initial_failure_reasons.tex": "1d1826e5600a7a4c7eb79ddc1cfed486b0671fc9b466d2b5313fed88905d9f8a",
+    "paper/bidir/tables/main_adaptations.tex": "3b73b6a93608c68d96b0d5880b34005bd4044a0d4e653f48969f966eac1f301f",
+    "paper/bidir/tables/main_adaptations_full.tex": "e0a8722e1d952141612705c0244b1a6f5cb461da27063454dae7e5c6c194b986",
+    "paper/bidir/tables/main_loss_baselines.tex": "9c3f08b3150d1073249d8180d41611dc37f18b1b9859677fe1eb56be7f178bb7",
+    "paper/bidir/tables/main_seed_variation.tex": "97e84615acf09bf9d6dabae859869d1b46284e274613471a902fce3ccb9066a1",
+    "paper/bidir/tables/mechanism_sprint.tex": "c7b138d4c34080cc750fc4a2ad8582398e2728b536aa480dd0a4a3595d318e58",
+    "paper/bidir/tables/methods_details.tex": "8048decdaae5530fcfe404166df0dfe0f571316b38424d33e32408a60c550942",
+    "paper/bidir/tables/paper_finish_protocol.tex": "63fc3c3a96de981cc1b9d81cc8e08a6a1457d1032b07df82932dfd2e4c5ec181",
+    "paper/bidir/tables/preservation_costs.tex": "a6de42f5d2bbe0bdd2282ef6349621450a63bc6a789fc21ec7b1fdfaabf2fa02",
+    "paper/bidir/tables/preservation_paired.tex": "fae0f35dc39c85c4881ff130f4e234aae13dc831b65f211eb119c9c78ff66900",
+    "paper/bidir/tables/preservation_summary.tex": "d9bcb6125b12bc97f7ab18ec38ed529584f55edd4371e56752717f79e1a10ab6",
+    "paper/bidir/tables/publication_probe_ranges.tex": "01fea017a57c0dd5a1098e2a86fc0d4a7a7f6082d420ffb5151fbc696681e598",
+    "paper/bidir/tables/publication_recipe_ranges.tex": "ffa04feaa18d8f77006d0ff3fed95feb730f1c61dfb5de17487baf694a90e75d",
+    "paper/bidir/tables/publication_robust_ranges.tex": "abcb8e60112c41f13f58fd7d062413c1210ebd90a515e314b2c3542a9eb369ce",
+    "paper/bidir/tables/revised_domain_results.tex": "2967824d3d4f8a25c5cfa574e178ecbbdad365fe0fbae2211a36b41ebe58697f",
+    "paper/bidir/tables/task_definitions.tex": "c2716c9a5258b659aa71445c482d2f5a52022d149372d2316409ee1807f4d159",
+    "paper/bidir/tables/transfer_boundaries.tex": "b24a61ae975255a92933d2815246da3681268d2eac6811942a74dbc56b970da9"
+  },
+  "table_comparison_commit": "6ed994c19a95e3a32d39f21550728e149bd16bad",
+  "source_sha256": {
+    "/work/jvl210002/migration/bidirectional/scripts/128_paired_judgment_priority.py": "a01ace0a8f3fbdf5b8e54e26e824fd77adbbee6948c44dbffbcb64d771057d1e",
+    "/work/jvl210002/migration/bidirectional/scripts/129_publication_captions.py": "7e4cca897e002f71185bf672ab2a8b2439be9f6c48adab39cb5b94ebd379ed48",
+    "/work/jvl210002/migration/bidirectional/runs/feeder/daemon.py": "d4ee368d0d54ff3643d363db74bf22648055a311e1f4118b56025c9711c198bb",
+    "/work/jvl210002/migration/bidirectional/configs/paired_judgment_priority.json": "c1df69c671cca5d115aea2d322392f20200c6df07af7fca912a351529d089b79"
+  },
+  "scope": "Four training-smoke campaigns passed. Production training/evaluation is incomplete. Exclusive project GPU priority and recorded-hold resumption persist after logout. Captions changed; all 24 table bodies match the previous commit."
+}

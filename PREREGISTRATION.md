@@ -2235,3 +2235,24 @@ Report every complete cell regardless of sign, both directions, realized exposur
 arms. Intervals are exploratory and unadjusted for multiplicity. Incomplete comparisons
 do not enter scientific tables; new paired-judgment tables are generated separately from
 the existing CFT comparison. No extra seed or task is introduced by this amendment.
+
+## Amendment 60 — October 11, 2026: exclusive paired-judgment GPU priority
+
+The user requests that PJ-5 have the highest priority within this project's GPU queue
+and that other experiments stop when it begins running. Hold other pending project GPU
+jobs immediately; requeue running competitors into held state after the first PJ-5 job
+starts. Completed adapters and results survive, but an unfinished optimizer run may restart.
+Keep that exclusive priority across the four cells' smoke, training, generation-check and
+full-evaluation phases, including gaps between phases. No scientific settings change.
+
+An independent operational policy in `configs/paired_judgment_priority.json` and a
+five-second detached-controller guard enforce this request. Only this user's GPU jobs
+with this repository's working directory and submission-script path are eligible. The
+shared CPU host, its successor and unrelated projects remain outside this policy. Broad
+experiment scheduling is disabled until all four PJ-5 cells complete. Then release only
+the job identities recorded as held by this policy and restore the previous background
+mode. Pre-existing or administrator holds are never released. A blocked PJ-5 campaign
+does not silently relinquish the priority. Cluster scheduling still determines allocation.
+
+Table captions are reduced to results, units, abbreviations and necessary uncertainty
+definitions. Methods remain in the text/appendix; no numerical cell or scoring rule changes.

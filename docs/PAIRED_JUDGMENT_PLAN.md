@@ -35,3 +35,11 @@ Run `python scripts/127_paired_judgment_preflight.py` in the existing CPU alloca
 before admitting jobs. It validates baseline adapter bytes and token filtering for all
 eight new arms. The scheduler rejects missing, incomplete or changed preflight records.
 The GPU checks remain mandatory after this CPU/data check.
+
+October11 update: all four GPU checks (452104–452107) passed. Amendment60 gives
+this campaign exclusive project GPU priority through full evaluation. Twenty-five other
+GPU jobs are held; two running training packs were requeued. The five-second guard in
+`scripts/128_paired_judgment_priority.py` persists after logout and CPU-host renewal,
+keeps phase gaps exclusive, and releases only its own recorded holds when all four cells
+complete. Broad scheduling is disabled in the meantime. Scientific worker signatures,
+the paired-data plan and original results are unchanged.

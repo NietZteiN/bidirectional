@@ -21,6 +21,6 @@ Polynomial factorization & 6500 & 500 & 2500 & 6500 & 2500 & 306 & $4\times16$ \
 Execution prediction & 302 & 100 & 200 & 302 & 200 & 15 & $16\times4$ \\
 \bottomrule
 \end{tabular}
-\caption{Built paired-corpus sizes and recorded forward-SFT training/evaluation counts for the main-table reference campaigns. Train/validation/test counts are verified against the current frozen JSONL files; retained rows, steps and batch shapes come from each saved training manifest/summary. These are distinct provenance records: the code campaign retains fewer training rows than the current built corpus. Historical training data bytes are not inferred from a current file hash. Eval. counts paired instances per arm and direction. Opposite task orientations reuse task families; they are not independent datasets.}
+\caption{Paired-corpus sizes and recorded reference training counts. Retained rows, optimizer steps, and batch sizes describe the actual SFT runs.}
 \label{tab:reference-methods}
 \end{table*}

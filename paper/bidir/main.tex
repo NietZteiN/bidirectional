@@ -431,6 +431,10 @@ of the half-reversal model's backward success. This within-task criterion is nei
 common absolute target nor a statistical equivalence test. Small relation/execution corpora
 yield fewer than one effective batch of distinct reversed examples at low doses; their
 later exploratory measurements are excluded from the original knee analysis.
+Replay replaces half of task examples with generic instructions; Rev. trains backward
+only; Fwd2$\times$ doubles forward training; Flip trains both directions at twice the
+example budget; Multi mixes other tasks. All methods within a task/model/run use the
+same test examples.
 \input{tables/main_adaptations_full.tex}
 \begin{figure}[t]
 \centering

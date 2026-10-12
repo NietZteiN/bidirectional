@@ -54,5 +54,5 @@ Question $\to$ SQL & L3B & F & 49.1 & 62.0 & \textcolor{blue!60!black}{\textbf{6
  &  & B & 51.4 & \textcolor{red!70!black}{\textbf{24.1}} & \textcolor{blue!60!black}{\textbf{55.4}} & \textit{n/a} & 3.6 & 48.9 \\
 \bottomrule
 \end{tabular}
-\caption{Forward (F) and backward (B) strict success (\%) for preservation methods and controls (training seed 17). Each task/model comparison uses the same test examples. L/G denotes Llama/Gemma; model size is in billions of parameters. The $5\%$ column uses ordinary reversed-pair SFT. CL-F/M adds contrastive alignment to forward-only/5\%-mixed CE; Shuffle breaks positive-pair correspondence; CE-F+/M+ adds ordinary CE on those examples. CFT trains code-equivalence judgments: n/a means this code-specific method does not apply to translation or SQL. Colors follow Table~\ref{tab:main-adaptations}. Paired uncertainty and variation across training runs appear in Appendix~\ref{app:complete-main-comparisons}.}\label{tab:main-loss-baselines}
+\caption{Preservation objectives: forward (F) and backward (B) strict success (\%), seed 17. CL-F/M: contrastive alignment with forward/mixed CE; CE-F+/M+: additional CE; Shuffle: shuffled pairs. L/G: Llama/Gemma; suffix: billions of parameters. CFT is code-specific (n/a elsewhere). Colors follow Table~\ref{tab:main-adaptations}.}\label{tab:main-loss-baselines}
 \end{table*}

@@ -121,6 +121,10 @@ def paper_audit():
         'MECHANISM_DIAGNOSTICS', 'PUBLICATION_ANALYSIS']}
     if (PAPER/'PAIRED_JUDGMENT_RESULTS.json').exists():
         reports['PAIRED_JUDGMENT_RESULTS']=read(PAPER/'PAIRED_JUDGMENT_RESULTS.json')
+    if (PAPER/'PUBLICATION_CAPTIONS.json').exists():
+        reports['PUBLICATION_CAPTIONS']=read(PAPER/'PUBLICATION_CAPTIONS.json')
+        for path,sha in reports['PUBLICATION_CAPTIONS']['table_sha256'].items():
+            if digest(path)!=sha:raise ValueError('publication table changed: '+path)
     expected_hashes = {}
     for name, report in reports.items():
         sources = report.get('source_sha256', report.get('sources', {}))

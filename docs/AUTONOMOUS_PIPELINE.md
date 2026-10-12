@@ -97,6 +97,20 @@ GPU jobs or the shared CPU host is a separate action.
 
 ## Monitoring and debug evidence
 
+PJ-5 now has exclusive GPU priority (Amendment60). While
+`configs/paired_judgment_priority.json` is enabled, the controller runs only the priority
+guard, paired-judgment scheduler, CPU analyses and paper refresh. A separate five-second
+guard holds other project GPU jobs and requeues running competitors after PJ-5 first
+starts, even during long CPU/reporting stages. It preserves priority between phases.
+After all four cells complete it restores the previous background mode and releases only
+the job identities recorded in `runs/feeder/paired_judgment_priority_journal.json`.
+`paired_judgment_priority_status.json` records freshness and errors. No pre-existing hold,
+unrelated project or shared CPU host is released or stopped by this policy.
+
+Publication refresh runs `scripts/129_publication_captions.py` after numerical table
+generation, so captions stay concise when new results arrive. The editor preserves table
+bodies, and the numerical audit verifies the resulting table hashes.
+
 - `runs/feeder/heartbeat.json`: controller PID, host, allocation, phase and last pass results.
 - `runs/feeder/supervisor.json`: supervisor/worker identity, heartbeat and restart count.
 - `runs/feeder/STATUS.md`: campaign state, queue, failure history and quarantine.

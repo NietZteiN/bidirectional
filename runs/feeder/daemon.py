@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 """One bounded controller pass per minute; Slurm owns all training/evaluation jobs."""
 import fcntl
+import importlib.util
 import json
 import os
 from pathlib import Path
@@ -9,6 +10,7 @@ import signal
 import subprocess
 import sys
 import time
+import threading
 from datetime import datetime,timezone
 
 ROOT=Path(__file__).resolve().parents[2]
@@ -102,6 +104,14 @@ def controller_stages():
     table_scope=json.loads(table_plan.read_text()) if table_plan.exists() else {}
     background_plan=ROOT/'configs/background_campaign.json'
     background_scope=json.loads(background_plan.read_text()) if background_plan.exists() else {}
+    priority_plan=ROOT/'configs/paired_judgment_priority.json'
+    priority_scope=json.loads(priority_plan.read_text()) if priority_plan.exists() else {}
+    if priority_scope.get('enabled'):
+        return True,[
+            ('paired_priority',[sys.executable,'scripts/128_paired_judgment_priority.py'],120),
+            ('paired_judgment',[sys.executable,'scripts/125_paired_judgment_queue.py'],300),
+            ('followup_analysis',[sys.executable,'scripts/102_followup_analysis.py'],600),
+            ('paper_snapshot',[sys.executable,'scripts/99_paper_evidence.py','--if-changed','--build'],600)]
     exclusive=bool(table_scope.get('enabled') and table_scope.get('exclusive')
                    and not background_scope.get('enabled'))
     stages=([('table_completion',[sys.executable,'scripts/119_table_completion.py'],300)] if exclusive else [
@@ -115,12 +125,28 @@ def controller_stages():
     return exclusive,stages
 
 
+def priority_guard():
+    # Poll independently of long CPU/reporting stages, and survive controller renewal.
+    spec=importlib.util.spec_from_file_location('paired_priority_guard',ROOT/'scripts/128_paired_judgment_priority.py')
+    guard=importlib.util.module_from_spec(spec);spec.loader.exec_module(guard)
+    while not shutdown and not STOP.exists():
+        try:guard.reconcile()
+        except Exception as exc:
+            atomic_json(F/'paired_judgment_priority_status.json',dict(
+                updated_utc=datetime.now(timezone.utc).isoformat(),active=True,
+                errors=[f'{type(exc).__name__}: {exc}']))
+        for _ in range(10):
+            if shutdown or STOP.exists():return
+            time.sleep(.5)
+
+
 def main():
     signal.signal(signal.SIGTERM,terminate);signal.signal(signal.SIGINT,terminate)
     os.chdir(ROOT)
     with (F/'.lock').open('w') as lock:
         try: fcntl.flock(lock,fcntl.LOCK_EX|fcntl.LOCK_NB)
         except BlockingIOError: return 0
+        threading.Thread(target=priority_guard,daemon=True).start()
         interval=float(os.environ.get('BIDIR_FEEDER_INTERVAL','60'))
         with (F/'feeder.log').open('a',buffering=1) as log:
             while not shutdown and not STOP.exists():

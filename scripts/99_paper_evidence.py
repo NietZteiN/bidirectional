@@ -42,7 +42,8 @@ def main():
     tracked.update(STATUS.glob('*.json'))
     tracked.update([Path(__file__),PAPER/'main.tex',ROOT/'scripts/93_numbers.py',ROOT/'scripts/117_main_results.py',
                     ROOT/'scripts/118_manuscript_completion.py',ROOT/'scripts/121_table_audit.py',
-                    ROOT/'scripts/122_task_presentation.py',ROOT/'scripts/126_paired_judgment_report.py',PAPER/'refs.bib'])
+                    ROOT/'scripts/122_task_presentation.py',ROOT/'scripts/126_paired_judgment_report.py',
+                    ROOT/'scripts/129_publication_captions.py',PAPER/'refs.bib'])
     tracked.update(RESULTS_DIR.glob('paired_judgment_v1/*/*/production_s17/trials.jsonl'))
     tracked.update(RESULTS_DIR.glob('paired_judgment_v1/*/*/production_s17/summary.json'))
     tracked.update((ROOT/'data').glob('*/build_report.json'))
@@ -269,6 +270,7 @@ def build_paper():
     subprocess.run([sys.executable,str(ROOT/'scripts/118_manuscript_completion.py')],cwd=ROOT,check=True,timeout=180)
     subprocess.run([sys.executable,str(ROOT/'scripts/122_task_presentation.py')],cwd=ROOT,check=True,timeout=180)
     subprocess.run([sys.executable,str(ROOT/'scripts/126_paired_judgment_report.py')],cwd=ROOT,check=True,timeout=180)
+    subprocess.run([sys.executable,str(ROOT/'scripts/129_publication_captions.py')],cwd=ROOT,check=True,timeout=60)
     subprocess.run([sys.executable,str(ROOT/'scripts/121_table_audit.py')],cwd=ROOT,check=True,timeout=180)
     subprocess.run([sys.executable,str(ROOT/'scripts/93_numbers.py')],cwd=ROOT,check=True,timeout=180)
     completed=subprocess.run(['make','paper'],cwd=ROOT,capture_output=True,text=True,timeout=180)

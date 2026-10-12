@@ -1,5 +1,5 @@
 {
-  "generated_utc": "2026-10-12T02:32:55.414610+00:00",
+  "generated_utc": "2026-10-12T03:08:29.941866+00:00",
   "resolved": {
     "audited-core-cells": {
       "value": "91",
@@ -259,8 +259,12 @@
         "/scratch/juno/jvl210002/bidir/results/2026-10-11/sql/llama31-8b/attrib_table_fill_s17/trials.jsonl",
         "/scratch/juno/jvl210002/bidir/results/2026-10-11/sql/llama32-3b/attrib_table_fill_s17/followup_contrasts.json",
         "/scratch/juno/jvl210002/bidir/results/2026-10-11/sql/llama32-3b/attrib_table_fill_s17/trials.jsonl",
+        "/scratch/juno/jvl210002/bidir/results/2026-10-12/fmt_det25/llama31-8b/repair_legacy_pilot_s1234/followup_contrasts.json",
+        "/scratch/juno/jvl210002/bidir/results/2026-10-12/fmt_det25/llama31-8b/repair_legacy_pilot_s1234/trials.jsonl",
         "/scratch/juno/jvl210002/bidir/results/2026-10-12/fmt_det50/llama31-8b/repair_legacy_pilot_s1234/followup_contrasts.json",
-        "/scratch/juno/jvl210002/bidir/results/2026-10-12/fmt_det50/llama31-8b/repair_legacy_pilot_s1234/trials.jsonl"
+        "/scratch/juno/jvl210002/bidir/results/2026-10-12/fmt_det50/llama31-8b/repair_legacy_pilot_s1234/trials.jsonl",
+        "/scratch/juno/jvl210002/bidir/results/2026-10-12/fmt_det50/llama31-8b/repair_legacy_pilot_s42/followup_contrasts.json",
+        "/scratch/juno/jvl210002/bidir/results/2026-10-12/fmt_det50/llama31-8b/repair_legacy_pilot_s42/trials.jsonl"
       ]
     },
     "core-collapse-cells": {
@@ -521,8 +525,12 @@
         "/scratch/juno/jvl210002/bidir/results/2026-10-11/sql/llama31-8b/attrib_table_fill_s17/trials.jsonl",
         "/scratch/juno/jvl210002/bidir/results/2026-10-11/sql/llama32-3b/attrib_table_fill_s17/followup_contrasts.json",
         "/scratch/juno/jvl210002/bidir/results/2026-10-11/sql/llama32-3b/attrib_table_fill_s17/trials.jsonl",
+        "/scratch/juno/jvl210002/bidir/results/2026-10-12/fmt_det25/llama31-8b/repair_legacy_pilot_s1234/followup_contrasts.json",
+        "/scratch/juno/jvl210002/bidir/results/2026-10-12/fmt_det25/llama31-8b/repair_legacy_pilot_s1234/trials.jsonl",
         "/scratch/juno/jvl210002/bidir/results/2026-10-12/fmt_det50/llama31-8b/repair_legacy_pilot_s1234/followup_contrasts.json",
-        "/scratch/juno/jvl210002/bidir/results/2026-10-12/fmt_det50/llama31-8b/repair_legacy_pilot_s1234/trials.jsonl"
+        "/scratch/juno/jvl210002/bidir/results/2026-10-12/fmt_det50/llama31-8b/repair_legacy_pilot_s1234/trials.jsonl",
+        "/scratch/juno/jvl210002/bidir/results/2026-10-12/fmt_det50/llama31-8b/repair_legacy_pilot_s42/followup_contrasts.json",
+        "/scratch/juno/jvl210002/bidir/results/2026-10-12/fmt_det50/llama31-8b/repair_legacy_pilot_s42/trials.jsonl"
       ]
     },
     "core-domain-count": {
@@ -783,8 +791,12 @@
         "/scratch/juno/jvl210002/bidir/results/2026-10-11/sql/llama31-8b/attrib_table_fill_s17/trials.jsonl",
         "/scratch/juno/jvl210002/bidir/results/2026-10-11/sql/llama32-3b/attrib_table_fill_s17/followup_contrasts.json",
         "/scratch/juno/jvl210002/bidir/results/2026-10-11/sql/llama32-3b/attrib_table_fill_s17/trials.jsonl",
+        "/scratch/juno/jvl210002/bidir/results/2026-10-12/fmt_det25/llama31-8b/repair_legacy_pilot_s1234/followup_contrasts.json",
+        "/scratch/juno/jvl210002/bidir/results/2026-10-12/fmt_det25/llama31-8b/repair_legacy_pilot_s1234/trials.jsonl",
         "/scratch/juno/jvl210002/bidir/results/2026-10-12/fmt_det50/llama31-8b/repair_legacy_pilot_s1234/followup_contrasts.json",
-        "/scratch/juno/jvl210002/bidir/results/2026-10-12/fmt_det50/llama31-8b/repair_legacy_pilot_s1234/trials.jsonl"
+        "/scratch/juno/jvl210002/bidir/results/2026-10-12/fmt_det50/llama31-8b/repair_legacy_pilot_s1234/trials.jsonl",
+        "/scratch/juno/jvl210002/bidir/results/2026-10-12/fmt_det50/llama31-8b/repair_legacy_pilot_s42/followup_contrasts.json",
+        "/scratch/juno/jvl210002/bidir/results/2026-10-12/fmt_det50/llama31-8b/repair_legacy_pilot_s42/trials.jsonl"
       ]
     },
     "main-algebra-base-backward": {

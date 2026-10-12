@@ -34,6 +34,6 @@ units & gemma3-12b & sft\_extra\_ce & 166.9 & 306 & 788819 \\
 units & gemma3-12b & mix5\_extra\_ce & 168.0 & 306 & 788819 \\
 \bottomrule
 \end{tabular}
-\caption{Recorded seed-17 trainer runtimes (minutes), optimizer steps, and sequence tokens in the tokenized CE corpus (before epoch repetition). Auxiliary encoded-side exposure remains separately recorded in the analysis; these token counts are not total objective FLOPs. Runtime varies with GPU/training layout and is not a claim of matched wall time. Missing measurements are unavailable, never inferred.}
+\caption{Training runtime (minutes), optimizer steps, and CE-corpus sequence tokens before epoch repetition (seed 17). Token counts exclude auxiliary encoded-side exposure.}
 \label{tab:preservation-costs}
 \end{table*}
